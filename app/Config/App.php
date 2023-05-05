@@ -19,6 +19,21 @@ class App extends BaseConfig
      */
     public string $baseURL = 'http://localhost:8080/';
 
+	/* Check if we are on the development server or the live server IMF */
+//	if (strpos(dirname(__FILE__),'Documents') > 0) {
+		/* On Mac using LAMP */
+///		public string $baseURL = 'https://bits:8890/';
+/*	} elseif (strpos(dirname(__FILE__),'wamp64') > 0 ) {
+		/* On Windows using WAMP */
+/*		public string $baseURL] = 'http://bits/';
+	} else {
+		if (strpos($_SERVER['SERVER_NAME'],'testconxchina') > 0) {
+			public string $baseURL = 'https://www.testconxchina.org/';
+		} else {
+			public string $baseURL = 'https://www.testconx.org/';
+		}
+	}
+*/
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
      * If you want to accept multiple Hostnames, set this.
@@ -42,7 +57,7 @@ class App extends BaseConfig
      * something else. If you are using mod_rewrite to remove the page set this
      * variable so that it is blank.
      */
-    public string $indexPage = 'index.php';
+    public string $indexPage = 'tools4.php';
 
     /**
      * --------------------------------------------------------------------------
