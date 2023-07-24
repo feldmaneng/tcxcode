@@ -14,6 +14,13 @@ class Database extends Config
      * and Seeds directories.
      */
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
+    
+    /**
+     * Lets you choose which connection group to
+     * use if no other is specified.
+     */
+    public string $defaultGroup = 'default';
+
 
 /* IMF - Reference a secure file for databse settings to avoid putting the passwords in the Git Repo */
 /* uses secure directory located above public_html */
@@ -43,11 +50,6 @@ public array $default = [
         'port'     => 3306,
     ];
 
-    /**
-     * Lets you choose which connection group to
-     * use if no other is specified.
-     */
-//    public string $defaultGroup = 'default';
 
     /**
      * The default database connection.
