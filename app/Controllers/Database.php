@@ -39,7 +39,7 @@ class Database extends BaseController {
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/database/contacts') . ">Contacts</a></LI>";
 
-/* UPDATE
+/* UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
 		echo "</OL>";
 		echo "<br><br>";

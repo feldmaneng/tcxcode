@@ -21,40 +21,10 @@ class Database extends Config
      */
     public string $defaultGroup = 'default';
 
-
-/* IMF - Reference a secure file for databse settings to avoid putting the passwords in the Git Repo */
-/* uses secure directory located above public_html */
-
-
-	//include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."secure/codeigniter_database_combo4.php");
-
-//	require ('/Users/ira/Documents/htdocs/bitsworkshop/secure/codeigniter_database_combo4.php');
-
-public array $default = [
-		'DSN'	=> '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => '94022mysql',
-		'database' => 'bitswork_contac2',  // Read Only account
-        'DBDriver' => 'MySQLi',
-        'DBPrefix' => '',
-        'pConnect' => false,
-        'DBDebug'  => true,
-        'charset'  => 'utf8',
-        'DBCollat' => 'utf8_general_ci',
-        'swapPre'  => '',
-        'encrypt'  => false,
-        'compress' => false,
-        'strictOn' => false,
-        'failover' => [],
-        'port'     => 3306,
-    ];
-
-
     /**
      * The default database connection.
      */
-/*    public array $default = [
+    public array $default = [
         'DSN'      => '',
         'hostname' => 'localhost',
         'username' => '',
@@ -73,7 +43,7 @@ public array $default = [
         'failover' => [],
         'port'     => 3306,
     ];
-*/
+
     /**
      * This database connection is used when
      * running PHPUnit database tests.

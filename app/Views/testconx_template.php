@@ -17,10 +17,8 @@ foreach($css_files as $file) { ?>
 
 <!-- Beginning header -->
  <div>
- 	<a href='<?php echo site_url('example/customers')?>'>Customers</a>
- </div>
- 
-<!--
+ 	<!-- <a href='<?php echo site_url('example/customers')?>'>Customers</a> -->
+
  		<h1>TestConX Office Use Only</h1>
  		
         <a href='<?php echo site_url()?>'>Menu</a> 
@@ -45,7 +43,6 @@ foreach($css_files as $file) { ?>
 		?>
 		
     </div>
--->
 
 
 <!-- End of header-->
