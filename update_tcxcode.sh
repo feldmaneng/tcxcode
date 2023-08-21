@@ -1,5 +1,5 @@
 set -x
-cd ~/tcxscode
+cd ~/tcxcode
 git fetch origin
 git reset --hard origin/master
 
