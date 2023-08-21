@@ -39,10 +39,10 @@ class Database extends BaseController {
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/database/contacts') . ">Contacts</a></LI>";
 
-/* UPDATE LATER
+//UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
 		echo "</OL>";
-		echo "<br><br>";
+		/*echo "<br><br>";
 		echo "<ul>";
 		echo "<LI>Process <a href=" . site_url('/s2_match_db') . ">WordPress / s2member</a></LI>";
 		echo "<LI>Tools for <a href=" . site_url('/mailinglist') . ">Mailing lists</a></LI>";		
@@ -167,11 +167,11 @@ class Database extends BaseController {
         
         	
 		
-		$crud->columns ('CompanyID','Name','ParentID', 'IsParent');
+		$crud->columns (['CompanyID','Name','ParentID', 'IsParent']);
 		
-		/* Turn off for now...
 		
-		$crud->fields ('CompanyID','Name','ParentID','IsParent',
+		
+		$crud->fields (['CompanyID','Name','ParentID','IsParent',
 			'URL', 'Stock_Market','Ticker_Symbol',
 			'Research','BiTS_DB','BiTS_Attend','BiTS_Expo','BiTS_Sponsor',
 			'BiTS_Outreach', 'BiTS_China', 'FEC_Client', 'Acquired',
@@ -180,23 +180,24 @@ class Database extends BaseController {
 			'PhoneCountryCode','Phone',
 			'Market1', 'Market2', 'Market3', 'Market4', 'Market5', 'Market6', 
 			'Market7', 'Market8', 'MarketTestConX',
-			'Added', 'Updated');
+			'Added', 'Updated']);
 			
 		// Grocery Crud does not allow a set_relation back into the same table...
 		//$crud->set_relation('ParentID','company','{Name}'); // {IsParent}',null,'Name ASC');
-		$crud->set_relation('Market1','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market2','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market3','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market4','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market5','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market6','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market7','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('Market8','markets','{Market} ({ID})',null,'Market ASC');
-		$crud->set_relation('MarketTestConX','markets','{Market} ({ID})',null,'Market ASC');
+		$crud->setRelation('Market1','markets','{Market} - {ID}');
+		$crud->setRelation('Market2','markets','{Market} - {ID}');
+		$crud->setRelation('Market3','markets','{Market} - {ID}');
+		$crud->setRelation('Market4','markets','{Market} - {ID}');
+		$crud->setRelation('Market5','markets','{Market} - {ID}');
+		$crud->setRelation('Market6','markets','{Market} - {ID}');
+		$crud->setRelation('Market7','markets','{Market} - {ID}');
+		$crud->setRelation('Market8','markets','{Market} - {ID}');
+		$crud->setRelation('MarketTestConX','markets','{Market} - {ID}');
 		
-		$crud->fieldType('CompanyID','readonly');
-		$crud->fieldType('Added','readonly');
-		$crud->fieldType('Updated','readonly');
+		//$crud->fieldType('CompanyID','readonly');
+	//	$crud->fieldType('Added','readonly');
+		//$crud->fieldType('Updated','readonly');
+		$crud->readOnlyFields(['CompanyID','Added','Updated']);
 		
 		$crud->fieldType('IsParent','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Research','dropdown',['0' => 'No', '1'=>'Yes']);
@@ -210,7 +211,7 @@ class Database extends BaseController {
 		$crud->fieldType('TSensors','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Rosenberger-OSI','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Acquired','dropdown',['0' => 'No', '1'=>'Yes']);
-	*/
+
 	
 		$output = $crud->render();
       	return $this->_example_output($output);
