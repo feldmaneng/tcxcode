@@ -151,12 +151,7 @@ class Database extends BaseController {
 /*
    function companies()
 	{
-		/* Old way
-		$crud = new grocery_CRUD();
 
-		$crud->set_theme('bootstrap'); 
-		$crud->set_table('company');
-		*/
 		
 		// New way
 		$crud = $this->_getGroceryCrudEnterprise();
