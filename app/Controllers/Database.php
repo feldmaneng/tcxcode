@@ -147,14 +147,9 @@ class Database extends BaseController {
       	return $this->_example_output($output);
 	}  
 
-   function companies()
+  /*  function companies()
 	{
-		/* Old way
-		$crud = new grocery_CRUD();
-
-		$crud->set_theme('bootstrap'); 
-		$crud->set_table('company');
-		*/
+		
 		
 		// New way
 		$crud = $this->_getGroceryCrudEnterprise();
@@ -215,7 +210,7 @@ class Database extends BaseController {
 	
 		$output = $crud->render();
       	return $this->_example_output($output);
-	}  
+	}   */
 	
 	// Determine who the current user is 
 	function determine_user() {
