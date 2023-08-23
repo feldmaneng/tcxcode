@@ -148,6 +148,7 @@ class Database extends BaseController {
       	return $this->_example_output($output);
 	}  
 
+/*
    function companies()
 	{
 		/* Old way
@@ -217,6 +218,7 @@ class Database extends BaseController {
 		$output = $crud->render();
       	return $this->_example_output($output);
 	}  
+*/
 	
 	// Determine who the current user is 
 	function determine_user() {
