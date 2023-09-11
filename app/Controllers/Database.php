@@ -91,7 +91,11 @@ class Database extends BaseController {
 		//For some reason DBuser does not work after Notes in the fields list 
 		// Not using 'Solicitation'
 		
-	//$crud->setRelation('ParentCompanyID','company','{Name} (ID:{CompanyID}, IsParent:{IsParent})',"ParentID IS NULL OR IsParent = '1'",'Name ASC');
+
+	
+		$crud->setRelation('ParentCompanyID','company','{Name} (ID:{CompanyID} IsParent:{IsParent})',"(IsParent = '1' OR ParentID IS NULL)");	
+		//GC V3 does not support ORDER BY Name ASC]);
+
 	
 		
 		//4 $crud->fieldType('ContactID','readonly');
@@ -146,9 +150,12 @@ class Database extends BaseController {
       	return $this->_example_output($output);
 	}  
 
-    function companies()
+
+/*
+   function companies()
+
 	{
-		
+
 		
 		// New way
 		$crud = $this->_getGroceryCrudEnterprise();
@@ -209,7 +216,10 @@ class Database extends BaseController {
 	
 		$output = $crud->render();
       	return $this->_example_output($output);
-	}   
+
+	}  
+*/
+
 	
 	// Determine who the current user is 
 	function determine_user() {
