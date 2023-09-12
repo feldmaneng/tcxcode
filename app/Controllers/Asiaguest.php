@@ -31,7 +31,7 @@ echo "<h1>Please use the special link provided to you.</h1>";//Just an example t
 die();
 }
 
- // Ask Ira about the CSRFTOKEN functions
+ // Ask Ira about the CSRFTOKEN functions, ask ira about _getGroceryCrudEnterprise,https://www.grocerycrud.com/v2.x/docs/grocery-crud-enterprise-codeigniter-3
 public function company4667227()
 {
 		$crud = $this->_getGroceryCrudEnterprise();
@@ -40,7 +40,7 @@ public function company4667227()
         $crud->setCsrfTokenValue(csrf_hash());
 	
 	
-	$db->setDatabase('RegistrationDataBase');
+	$db->setDatabase('bits_registration');
    	// Ask Ira about connecting to different databases, config files	
 	
 	$crud->setTable('chinacompany');
@@ -76,7 +76,7 @@ public function contact585442()
         $crud->setCsrfTokenValue(csrf_hash());
 		
 	
-	$db->setDatabase('RegistrationDataBase');
+	$db->setDatabase('bits_registration');
 	$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
@@ -96,14 +96,14 @@ public function contact585442()
 	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
 	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
 // ask ira call back rules, google setRules grocery crud double check grocery crud functions for valid email ...
-	$crud->setRules('Email','Email Address 电邮地址','required|valid_email|callback_uniqueEmail[Email]'); 
-	$crud->setRules('Company', 'Company Name 公司名称（英文）', 'callback_companyVerify[CN_Company]');
-	$crud->setRules('CN_Company', 'Chinese Company Name<br>公司名称（中文）', 'callback_companyVerify[Company]');
-	$crud->setRules('GivenName', 'Given (First) Name 名（英文）', 'callback_givenNameVerify[ChineseName]');
-	$crud->setRules('FamilyName', 'Family (Last) Name 姓（英文）', 'callback_familyNameVerify[ChineseName]');
-	$crud->setRules('ChineseName', 'Chinese Name 名', 'callback_givenNameVerify[FamilyName]');
-	$crud->setRules('Phone', 'Work Phone 单位电话', 'callback_phoneVerify[Mobile]');
-	$crud->setRules('Mobile', 'Mobile Phone 手机', 'callback_phoneVerify[Phone]');
+	$crud->setRule('Email','required|email|callback_uniqueEmail[Email]'); 
+	$crud->setRule('Company','callback_companyVerify[CN_Company]');
+	$crud->setRule('CN_Company','callback_companyVerify[Company]');
+	$crud->setRule('GivenName','callback_givenNameVerify[ChineseName]');
+	$crud->setRule('FamilyName','callback_familyNameVerify[ChineseName]');
+	$crud->setRule('ChineseName','callback_givenNameVerify[FamilyName]');
+	$crud->setRule('Phone','callback_phoneVerify[Mobile]');
+	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
 		
 	$crud->displayAs('InvitedByCompanyID','Invited by');
 	$crud->displayAs('Email','Email Address<br>电邮地址');
@@ -186,7 +186,7 @@ $id = ltrim($link, "https://www.testconx.org/tools/secure.php/testconxbadge/Mept
 echo  $id;
 
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
-	$db->setDatabase('RegistrationDataBase');
+	$db->setDatabase('bits_registration');
 	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
 	$crud->from('guests');
 	
@@ -337,7 +337,7 @@ public function stats397927( $raw = FALSE )
 {
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
-	$db->setDatabase('RegistrationDataBase');
+	$db->setDatabase('bits_registration');
 	$crud->setTable('chinacompany');
 	$crud->defaultOrdering('chinacompany.Company', 'ASC');
 	$query = $crud->getWhere(['EventYear'=> EventYear]);
@@ -472,7 +472,7 @@ public function guest_list()
 		$secretKey = $_SESSION["SecretKey"];
 	}
 // ask ira update with correct database name
-	$db->setDatabase('RegistrationDataBase');
+	$db->setDatabase('bits_registration');
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
    $crud->where('SecretKey', $secretKey);
@@ -550,14 +550,14 @@ public function guest_list()
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile','ToPrint']);
 
 	
-	$crud->setRules('Email','Email Address 电邮地址','required|valid_email|callback_uniqueEmail[Email]');
-	$crud->setRules('Company', 'Company Name 公司名称（英文）', 'callback_companyVerify[CN_Company]');
-	$crud->setRules('CN_Company', 'Chinese Company Name<br>公司名称（中文）', 'callback_companyVerify[Company]');
-	$crud->setRules('GivenName', 'Given (First) Name 名（英文）', 'callback_givenNameVerify[ChineseName]');
-	$crud->setRules('FamilyName', 'Family (Last) Name 姓（英文）', 'callback_familyNameVerify[ChineseName]');
-	$crud->setRules('ChineseName', 'Chinese Name（中文）', 'callback_familyNameVerify[FamilyName]');
-	$crud->setRules('Phone', 'Work Phone 单位电话', 'callback_phoneVerify[Mobile]');
-	$crud->setRules('Mobile', 'Mobile Phone 手机', 'callback_phoneVerify[Phone]');
+	$crud->setRule('Email','required|email|callback_uniqueEmail[Email]');
+	$crud->setRule('Company','callback_companyVerify[CN_Company]');
+	$crud->setRule('CN_Company','callback_companyVerify[Company]');
+	$crud->setRule('GivenName','callback_givenNameVerify[ChineseName]');
+	$crud->setRule('FamilyName','callback_familyNameVerify[ChineseName]');
+	$crud->setRule('ChineseName','callback_familyNameVerify[FamilyName]');
+	$crud->setRule('Phone','callback_phoneVerify[Mobile]');
+	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
 		
 	$crud->displayAs('Email','Email Address<br>电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
@@ -610,7 +610,7 @@ public function guest_list()
 
 	$this->_one_company_output($output);        
 }
- 
+ // ask ira form validation
 public function companyVerify($company, $otherField) {
   $this->form_validation->set_message('companyVerify','Use English or Chinese company name. 请使用英文公司名或中文公司名');
   return (trim($company) != '' || trim($this->input->post($otherField)) != '');
@@ -634,12 +634,12 @@ public function phoneVerify($phone, $otherField) {
 public function uniqueEmail($str)
 {
 // ask ira
-  $db2 = $this->load->database('RegistrationDataBase', TRUE);
+  $db2 -> $setdatabase('bits_registration');
 
   $db2->select('Email');
   //ask ira this takes part of the uri, you can find it in the old codeigniter 3 docs
   $id = $this->uri->segment(4);
-    
+   // ask ira get where query
   if(!empty($id) && is_numeric($id))
   {
    $email_old = $db2->where("ContactId",$id)->get('guests')->row()->Email;
