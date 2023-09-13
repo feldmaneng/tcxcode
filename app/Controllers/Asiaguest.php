@@ -1,8 +1,6 @@
 <?php  
 
-// Some variables for each year
-define ("BiTSEvent", "TestConX China 2019"); // What is displayed
-define("EventYear", "China2019"); // For selecting records only for this year's event.
+
 
 // When updating for each year, don't forget to change the random numbers at the end of
 // the company and contact function calls
@@ -13,13 +11,15 @@ use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
 use App\Libraries\PdfLibrary;
 
-
-class Asiaguest extends CI_Controller {
+// Some variables for each year
+define ("BiTSEvent", "TestConX China 2019"); // What is displayed
+define("EventYear", "China2019"); // For selecting records only for this year's event.
+class Asiaguest extends BaseController {
 
  
 function __construct()
 {
-        parent::__construct();
+      
  
 helper('text');
  
@@ -32,7 +32,9 @@ die();
 }
 
  // Ask Ira about the CSRFTOKEN functions, ask ira about _getGroceryCrudEnterprise,https://www.grocerycrud.com/v2.x/docs/grocery-crud-enterprise-codeigniter-3
-public function company4667227()
+
+
+function company4667227()
 {
 		$crud = $this->_getGroceryCrudEnterprise();
 
