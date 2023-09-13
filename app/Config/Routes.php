@@ -37,6 +37,8 @@ $routes->get('/database/companies', 'Database::companies');
 $routes->post('/database/companies', 'Database::companies');
 $routes->get('/Asiaguest/company4667227', 'Asiaguest::company4667227');
 $routes->post('/Asiaguest/company4667227', 'Asiaguest::company4667227');
+$routes->get('/test', 'Asiaguest::testhello');
+$routes->post('/test', 'Asiaguest::testhello');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
