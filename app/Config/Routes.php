@@ -39,6 +39,8 @@ $routes->get('/Asiaguest/company4667227', 'Asiaguest::company4667227');
 $routes->post('/Asiaguest/company4667227', 'Asiaguest::company4667227');
 $routes->get('/test', 'Asiaguest::testhello');
 $routes->post('/test', 'Asiaguest::testhello');
+$routes->get('/test', 'Asiaguest::customers');
+$routes->post('/test', 'Asiaguest::customers');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

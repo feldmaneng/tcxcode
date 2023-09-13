@@ -34,6 +34,20 @@ die();
  // Ask Ira about the CSRFTOKEN functions, ask ira about _getGroceryCrudEnterprise,https://www.grocerycrud.com/v2.x/docs/grocery-crud-enterprise-codeigniter-3
 
 
+public function customers()
+{
+    $crud = $this->_getGroceryCrudEnterprise();
+
+    $crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
+
+    $crud->setTable('contacts');
+    $crud->setSubject('User', 'Users');
+
+    $output = $crud->render();
+
+    return $this->_example_output($output);
+}
 function company4667227()
 {
 	//old
