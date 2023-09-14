@@ -57,7 +57,7 @@ public function company123()
         $crud->setCsrfTokenName(csrf_token());
         $crud->setCsrfTokenValue(csrf_hash());
 	
-	
+	$db = \Config\Database::connect();
 	$db->setDatabase('bits_registration');
    	// Ask Ira about connecting to different databases, config files	
 	
