@@ -36,7 +36,7 @@ die();
 
 public function customers()
 {
-	$db = \Config\Database::connect('registration');
+	$db = \Config\Database::connect('default',TRUE);
 	//$db->setDatabase('bitswork_registration');
     $crud = $this->_getGroceryCrudEnterprise();
 
