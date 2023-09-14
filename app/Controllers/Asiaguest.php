@@ -203,7 +203,9 @@ echo $link;
 $id = ltrim($link, "https://www.testconx.org/tools/secure.php/testconxbadge/Meptecsingle/");
 echo  $id;
 
+	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
+	$db = \Config\Database::connect();
 	$db->setDatabase('bits_registration');
 	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
 	$crud->from('guests');
