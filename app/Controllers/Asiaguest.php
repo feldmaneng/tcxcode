@@ -36,8 +36,8 @@ die();
 
 public function customers()
 {
-	$db = \Config\Database::connect('registration');
-	//$db->setDatabase('bitswork_registration');
+	$db = \Config\Database::connect('default');
+	$db->setDatabase('bitswork_registration');
     $crud = $this->_getGroceryCrudEnterprise();
 
     $crud->setCsrfTokenName(csrf_token());
