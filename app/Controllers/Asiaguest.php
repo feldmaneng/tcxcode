@@ -43,7 +43,7 @@ public function customers()
     $crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 
-    $crud->setTable('contacts');
+    $crud->setTable('chinacompany');
     $crud->setSubject('User', 'Users');
 
     $output = $crud->render();
