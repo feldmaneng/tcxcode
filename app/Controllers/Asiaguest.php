@@ -48,7 +48,7 @@ public function customers()
 
     return $this->_example_output($output);
 }
-function company4667227()
+public function company123()
 {
 	//old
 		//$crud = $this->_getGroceryCrudEnterprise();
@@ -58,7 +58,7 @@ function company4667227()
         $crud->setCsrfTokenValue(csrf_hash());
 	
 	
-	$db->setDatabase('bits_registration');
+	$db=setDatabase('bits_registration');
    	// Ask Ira about connecting to different databases, config files	
 	
 	$crud->setTable('chinacompany');
@@ -705,11 +705,7 @@ function setSecretKey ($post_array) {
 	return $post_array;
 }
 		 
-function _example_output($output = null)
- 
-{
-$this->load->view('bits_template.php',$output);    
-}
+
 
 function _one_company_output($output = null)
  
@@ -717,7 +713,37 @@ function _one_company_output($output = null)
 $this->load->view('one_company.php',$output);    
 }
 
+
+ private function _example_output($output = null) {
+        if (isset($output->isJSONResponse) && $output->isJSONResponse) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo $output->output;
+            exit;
+        }
+
+        return view('testconx_template.php', (array)$output);
+    }
+
+    private function _getDbData() {
+        $db = (new ConfigDatabase())->default;
+        return [
+            'adapter' => [
+                'driver' => 'Pdo_Mysql',
+                'host'     => $db['hostname'],
+                'database' => $db['database'],
+                'username' => $db['username'],
+                'password' => $db['password'],
+                'charset' => 'utf8'
+            ]
+        ];
+    }
+    private function _getGroceryCrudEnterprise($bootstrap = true, $jquery = true) {
+        $db = $this->_getDbData();
+
+        $config = (new ConfigGroceryCrud())->getDefaultConfig();
+
+        $groceryCrud = new GroceryCrud($config, $db);
+        return $groceryCrud;
+    }    
 }
  
-/* End of file Main.php */
-/* Location: ./application/controllers/Main.php */
