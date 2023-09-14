@@ -36,14 +36,14 @@ die();
 
 public function customers()
 {
-	$db = \Config\Database::connect('default');
+	$db = \Config\Database::connect();
 	//$db->setDatabase('bitswork_registration');
     $crud = $this->_getGroceryCrudEnterprise();
 
     $crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 
-    $crud->setTable('guests');
+    $crud->setTable('contacts');
     $crud->setSubject('User', 'Users');
 
     $output = $crud->render();
