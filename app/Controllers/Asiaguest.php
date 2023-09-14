@@ -73,12 +73,13 @@ public function company123()
 	
 	$crud->displayAs('StaffID', 'Exhibitor Staff');
 	
-	//$this->grocery_crud->callback_before_insert(array($this,'setSecretKey'));
+	$this->grocery_crud->callback_before_insert(array($this,'setSecretKey'));
 	$crud->callbackBeforeInsert(function ($stateParameters) {
 			$stateParameters->data['DBUser'] = $this->determine_user();
 			$stateParameters = $this->setSecretKey($stateParameters);
 			return $stateParameters;
 		});
+		
 	$output = crud->render();
 
 	return $this->_example_output($output);        
