@@ -36,8 +36,30 @@ die();
 
 public function customers()
 {
-	$db = \Config\Database::connect('registration');
-	$db->setDatabase('bitswork_registration');
+	
+	
+	$registration = [
+        'DSN'      => '',
+        'hostname' => 'localhost',
+        'username' => 'testconx',
+        'password' => 'jPWU01iM5*#2yLJTJ^yh',
+        'database' => 'bitswork_registration',
+        'DBDriver' => 'MySQLi',
+        'DBPrefix' => '',
+        'pConnect' => false,
+        'DBDebug'  => true,
+        'charset'  => 'utf8',
+        'DBCollat' => 'utf8_general_ci',
+        'swapPre'  => '',
+        'encrypt'  => false,
+        'compress' => false,
+        'strictOn' => false,
+        'failover' => [],
+        'port'     => 3306,
+    ];
+	
+	$db = \Config\Database::connect($registration);
+	//$db->setDatabase('bitswork_registration');
     $crud = $this->_getGroceryCrudEnterprise();
 
     $crud->setCsrfTokenName(csrf_token());
