@@ -36,28 +36,17 @@ die();
 
 public function customers()
 {
+		//$db = \Config\Database::connect();
+	$db = db_connect('registration');
+	
+	$result=$db->query(sql: 'select * from chinacompany');
+//	where ContactID = 11810');
+	foreach($result->getResultArray() as $contact){
+		print_r($contact);
+		//->Email.'<br>';
 	
 	
-	$registration = [
-        'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => 'testconx',
-        'password' => 'jPWU01iM5*#2yLJTJ^yh',
-        'database' => 'bitswork_registration',
-        'DBDriver' => 'MySQLi',
-        'DBPrefix' => '',
-        'pConnect' => false,
-        'DBDebug'  => true,
-        'charset'  => 'utf8',
-        'DBCollat' => 'utf8_general_ci',
-        'swapPre'  => '',
-        'encrypt'  => false,
-        'compress' => false,
-        'strictOn' => false,
-        'failover' => [],
-        'port'     => 3306,
-    ];
-	
+/* 	
 	$db = \Config\Database::connect($registration);
 	//$db->setDatabase('bitswork_registration');
     $crud = $this->_getGroceryCrudEnterprise();
@@ -70,7 +59,7 @@ public function customers()
 
     $output = $crud->render();
 
-    return $this->_example_output($output);
+    return $this->_example_output($output); */
 }
 public function company123()
 {
