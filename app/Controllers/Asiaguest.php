@@ -68,13 +68,13 @@ public function company123()
 {
 	//old
 		//$crud = $this->_getGroceryCrudEnterprise();
-		$crud = $this->_getGroceryCrudEnterprise();
+		$crud = $this->_getGroceryCrudEnterprise('registration');
 
         $crud->setCsrfTokenName(csrf_token());
         $crud->setCsrfTokenValue(csrf_hash());
 	
-	$db = \Config\Database::connect();
-	$db->setDatabase('bitswork_registration');
+	//$db = \Config\Database::connect();
+	//$db->setDatabase('bitswork_registration');
    	// Ask Ira about connecting to different databases, config files	
 	
 	$crud->setTable('chinacompany');
