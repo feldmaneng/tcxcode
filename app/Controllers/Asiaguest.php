@@ -742,9 +742,9 @@ $this->load->view('one_company.php',$output);
         return view('testconx_template.php', (array)$output);
     }
 
-    private function _getDbData() {
+    private function _getDbData($dbgroup = 'default') {
        // $db = (new ConfigDatabase())->default;
-		$db = (new ConfigDatabase())->registration;
+		$db = (new ConfigDatabase())->$dbgroup;
         return [
             'adapter' => [
                 'driver' => 'Pdo_Mysql',
@@ -757,7 +757,7 @@ $this->load->view('one_company.php',$output);
         ];
     }
     private function _getGroceryCrudEnterprise($bootstrap = true, $jquery = true) {
-        $db = $this->_getDbData();
+        $db = $this->_getDbData('registration');
 
         $config = (new ConfigGroceryCrud())->getDefaultConfig();
 
