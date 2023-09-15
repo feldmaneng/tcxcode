@@ -38,7 +38,7 @@ public function customers()
 {
 
 		//$db = \Config\Database::connect();
-	$db = db_connect('registration');
+	//$db = db_connect('registration');
 	/* $result=$db->query(sql: 'select * from chinacompany');
 //	where ContactID = 11810');
 	foreach($result->getResultArray() as $contact){
@@ -51,12 +51,13 @@ public function customers()
 	//$db = \Config\Database::connect($registration);
 	//$db->setDatabase('bitswork_registration');
 
-    $crud = $this->_getGroceryCrudEnterprise('registration');
+    //$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud = $this->_getGroceryCrudEnterprise();
 
     $crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 
-    $crud->setTable('company');
+    $crud->setTable('chinacompany');
     $crud->setSubject('User', 'Users');
 
     $output = $crud->render();
