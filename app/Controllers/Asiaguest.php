@@ -44,8 +44,9 @@ public function customers()
 	foreach($result->getResultArray() as $contact){
 		print_r($contact);
 		//->Email.'<br>';
-	
+	}
 	die();
+	
 /* 	
 	$db = \Config\Database::connect($registration);
 	//$db->setDatabase('bitswork_registration');
