@@ -106,13 +106,13 @@ public function contact585442()
 {
     //include 'singleprint.php';
 	
-		$crud = $this->_getGroceryCrudEnterprise();
+		$crud = $this->_getGroceryCrudEnterprise('registration');
 
         $crud->setCsrfTokenName(csrf_token());
         $crud->setCsrfTokenValue(csrf_hash());
 		
 	
-	$db->setDatabase('bits_registration');
+	//$db->setDatabase('bits_registration');
 	$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
@@ -120,7 +120,7 @@ public function contact585442()
 	
 	
 	
-   	$crud->where('guests.EventYear', EventYear); 
+   	$crud->where(['guests.EventYear', EventYear]); 
 	
 	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
 	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
