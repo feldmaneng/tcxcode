@@ -52,7 +52,7 @@ public function customers()
 	//$db->setDatabase('bitswork_registration');
 
     //$crud = $this->_getGroceryCrudEnterprise('registration');
-	$crud = $this->_getGroceryCrudEnterprise();
+	$crud = $this->_getGroceryCrudEnterprise('registration');
 
     $crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
