@@ -13,7 +13,7 @@ use App\Libraries\PdfLibrary;
 
 // Some variables for each year
 define ("BiTSEvent", "TestConX China 2019"); // What is displayed
-//define("EventYear", "China2019"); // For selecting records only for this year's event.
+define("EventYear", "China2019"); // For selecting records only for this year's event.
 class Asiaguest extends BaseController {
 
  
@@ -79,10 +79,10 @@ public function company123()
 	
 	$crud->setTable('guests');
    //$crud->setTable('guests');
-	$crud->where(['guests.EventYear' => 'China2019']);
+	$crud->where(['guests.EventYear' => EventYear]);
    	//$crud->setTable('chinacompany');	
 	
-	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
