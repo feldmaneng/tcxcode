@@ -51,7 +51,7 @@ public function customers()
 	//$db = \Config\Database::connect($registration);
 	//$db->setDatabase('bitswork_registration');
 
-    $crud = $this->_getGroceryCrudEnterprise();
+    $crud = $this->_getGroceryCrudEnterprise('registration');
 
     $crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
@@ -756,8 +756,8 @@ $this->load->view('one_company.php',$output);
             ]
         ];
     }
-    private function _getGroceryCrudEnterprise($bootstrap = true, $jquery = true) {
-        $db = $this->_getDbData('registration');
+    private function _getGroceryCrudEnterprise($dbgroup = 'default', $bootstrap = true, $jquery = true) {
+        $db = $this->_getDbData($dbgroup);
 
         $config = (new ConfigGroceryCrud())->getDefaultConfig();
 
