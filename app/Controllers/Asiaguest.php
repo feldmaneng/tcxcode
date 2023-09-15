@@ -45,7 +45,7 @@ public function customers()
 		print_r($contact);
 		//->Email.'<br>';
 	
-	
+	die();
 /* 	
 	$db = \Config\Database::connect($registration);
 	//$db->setDatabase('bitswork_registration');
