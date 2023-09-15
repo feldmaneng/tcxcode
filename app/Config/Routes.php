@@ -49,6 +49,8 @@ $routes->get('/test4', 'Database::customers');
 $routes->post('/test4', 'Database::customers');
 $routes->get('/Asiaguest2/test2', 'Asiaguest2::customers');
 $routes->post('/Asiaguest2/test2', 'Asiaguest2::customers');
+$routes->get('/test6', 'Asiaguest::contact585442');
+$routes->post('/test6', 'Asiaguest::contact585442');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
