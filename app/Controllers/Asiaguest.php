@@ -79,7 +79,7 @@ public function company123()
 	
 	$crud->setTable('chinacompany');
    
-	$crud->where('guests.EventYear',EventYear);
+	//$crud->where('guests.EventYear',EventYear);
    		
 	
 	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
