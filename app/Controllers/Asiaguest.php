@@ -191,7 +191,7 @@ public function contact585442()
 		 '
    ); 
 	
-	$crud->setLanguage("english-chinese");
+	//$crud->setLanguage("english-chinese");
 			
 	$output = $crud->render();
 
