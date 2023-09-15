@@ -113,7 +113,7 @@ public function contact585442()
 		
 	
 	//$db->setDatabase('bits_registration');
-	$crud->setTheme('bootstrap');
+	//$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	
