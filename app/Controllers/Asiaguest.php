@@ -193,7 +193,7 @@ public function contact585442()
 	
 	$crud->setLanguage("english-chinese");
 			
-	$output = crud->render();
+	$output = $crud->render();
 
 	return $this->_example_output($output);         
 } 
