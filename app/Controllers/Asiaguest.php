@@ -743,7 +743,8 @@ $this->load->view('one_company.php',$output);
     }
 
     private function _getDbData() {
-        $db = (new ConfigDatabase())->default;
+       // $db = (new ConfigDatabase())->default;
+		$db = (new ConfigDatabase())->registration;
         return [
             'adapter' => [
                 'driver' => 'Pdo_Mysql',
