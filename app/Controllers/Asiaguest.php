@@ -77,12 +77,12 @@ public function company123()
 	//$db->setDatabase('bitswork_registration');
    	// Ask Ira about connecting to different databases, config files	
 	
-	$crud->setTable('guests');
-   //$crud->setTable('guests');
-	$crud->where(['guests.EventYear' => EventYear]);
-   	//$crud->setTable('chinacompany');	
+	$crud->setTable('chinacompany');
+   
+	$crud->where(['chinacompany.EventYear' => EventYear]);
+   		
 	
-	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
