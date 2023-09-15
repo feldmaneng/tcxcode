@@ -82,7 +82,7 @@ public function company123()
 	$crud->where('guests.EventYear',EventYear);
    		
 	
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
+	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
