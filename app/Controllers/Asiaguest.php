@@ -370,7 +370,7 @@ function edit_master_contact_URL($primary_key, $row)
 {
 	$url = '';
 	if ($row->MasterContactID > 0) {
-		$url = 'https://www.testconx.org/tools/secure.php/database/contacts/edit/'. $row->MasterContactID;
+		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->MasterContactID;
 	};
 	return $url;
 }
