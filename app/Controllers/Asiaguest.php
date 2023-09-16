@@ -123,11 +123,11 @@ public function contact585442()
    	$crud->where(['guests.EventYear', EventYear]); 
 	
 	//$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	/* $crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
-
+ */
 
 	//$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
 	//$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
@@ -186,14 +186,14 @@ public function contact585442()
 
 	// Force a refresh after a delete in case the number of guests falls below the guest 
 	// limit so the add button is shown again	
-	$crud->setLangString('delete_success_message',
+	/* $crud->setLangString('delete_success_message',
 		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
 		 <script type="text/javascript">
 		  window.location = "'.site_url(strtolower(__CLASS__).'/'.strtolower(__FUNCTION__)).'";
 		 </script>
 		 <div style="display:none">
 		 '
-   ); 
+   );  */
 	
 	//$crud->setLanguage("english-chinese");
 			
