@@ -128,10 +128,12 @@ public function contact585442()
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
 
-	// Since these fields are to be hidden don't set the relationship
-	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
-	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
-// ask ira call back rules, google setRules grocery crud double check grocery crud functions for valid email ...
+
+	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
+	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
+	/* $crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
+	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]); */
+	
 	$crud->setRule('Email','required|email|callback_uniqueEmail[Email]'); 
 	$crud->setRule('Company','callback_companyVerify[CN_Company]');
 	$crud->setRule('CN_Company','callback_companyVerify[Company]');
@@ -141,7 +143,7 @@ public function contact585442()
 	$crud->setRule('Phone','callback_phoneVerify[Mobile]');
 	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
 		
-	$crud->displayAs('InvitedByCompanyID','Invited by');
+	/* $crud->displayAs('InvitedByCompanyID','Invited by');
 	$crud->displayAs('Email','Email Address<br>电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
 	$crud->displayAs('FamilyName','Family (Last) Name<br>姓（英文）');
@@ -164,18 +166,20 @@ public function contact585442()
 	$crud->displayAs('NoShow',"Did they no show? (yes = didn't attend)");
 	$crud->displayAs('BusinessCard','Do we have their business card?');
 
-	//$this->grocery_crud->field_type('BanquetCompanyID','hidden');
-	//$this->grocery_crud->field_type('MasterContactID','readonly');
+
 	
 	$crud->fieldType('EventYear', 'hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','enum',array('No','Yes'));
 	$crud->fieldType('NoShow','enum',array('No','Yes'));
-	$crud->fieldType('BusinessCard','enum',array('No','Yes'));
+	$crud->fieldType('BusinessCard','enum',array('No','Yes')); */
+	
 	//Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
-	$crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
-	$crud->setActionButton('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image'); //,array($this,'Meptecinvoice'));
+	/* $crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
+	$crud->setActionButton('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image'); */
+	
+	//,array($this,'Meptecinvoice'));
 	//$crud->add_action('Print Label', '', site_url('/china/Meptecsinglelabel/'),'ui-icon-image');
 	//No need to do this as a callback since can set value with hidden type immediately above
 	//$this->grocery_crud->callback_before_insert(array($this,'set_invited_by'));
