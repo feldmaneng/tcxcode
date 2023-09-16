@@ -176,9 +176,9 @@ public function contact585442()
 	
 	//Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
-	$crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
+	/* $crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
 	$crud->setActionButton('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image');
-	
+	 */
 	//,array($this,'Meptecinvoice'));
 	//$crud->add_action('Print Label', '', site_url('/china/Meptecsinglelabel/'),'ui-icon-image');
 	//No need to do this as a callback since can set value with hidden type immediately above
@@ -186,14 +186,14 @@ public function contact585442()
 
 	// Force a refresh after a delete in case the number of guests falls below the guest 
 	// limit so the add button is shown again	
-	/* $crud->setLangString('delete_success_message',
+	$crud->setLangString('delete_success_message',
 		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
 		 <script type="text/javascript">
 		  window.location = "'.site_url(strtolower(__CLASS__).'/'.strtolower(__FUNCTION__)).'";
 		 </script>
 		 <div style="display:none">
 		 '
-   );  */
+   ); 
 	
 	//$crud->setLanguage("english-chinese");
 			
