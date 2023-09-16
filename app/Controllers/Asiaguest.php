@@ -120,7 +120,7 @@ public function contact585442()
 	
 	
 	
-   	$crud->where(['guests.EventYear', EventYear]); 
+   	$crud->where(['guests.EventYear' => EventYear]);
 	
 	//$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
 	/* $crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
