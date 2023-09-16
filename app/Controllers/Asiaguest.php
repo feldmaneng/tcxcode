@@ -115,19 +115,19 @@ public function contact585442()
 	//$db->setDatabase('bits_registration');
 	//$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
-	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
+	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	
 	
 	
 	
    	$crud->where(['guests.EventYear' => EventYear]);
 	
-	//$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	/* $crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
+	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
- */
+
 
 	//$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
 	//$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
