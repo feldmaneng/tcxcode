@@ -129,7 +129,7 @@ public function contact585442()
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
 
 
-	//$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
+	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
 	//$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
 	/* $crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
 	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]); */
