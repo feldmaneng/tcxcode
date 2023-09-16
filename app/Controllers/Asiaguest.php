@@ -143,7 +143,7 @@ public function contact585442()
 	$crud->setRule('Phone','callback_phoneVerify[Mobile]');
 	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
 		
-	/* $crud->displayAs('InvitedByCompanyID','Invited by');
+	$crud->displayAs('InvitedByCompanyID','Invited by');
 	$crud->displayAs('Email','Email Address<br>电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
 	$crud->displayAs('FamilyName','Family (Last) Name<br>姓（英文）');
@@ -172,7 +172,7 @@ public function contact585442()
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','enum',array('No','Yes'));
 	$crud->fieldType('NoShow','enum',array('No','Yes'));
-	$crud->fieldType('BusinessCard','enum',array('No','Yes')); */
+	$crud->fieldType('BusinessCard','enum',array('No','Yes'));
 	
 	//Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
