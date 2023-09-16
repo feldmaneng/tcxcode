@@ -134,14 +134,14 @@ public function contact585442()
 	/* $crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
 	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]); */
 	
-	$crud->setRule('Email','required|email|callback_uniqueEmail[Email]'); 
+	/* $crud->setRule('Email','required|email|callback_uniqueEmail[Email]'); 
 	$crud->setRule('Company','callback_companyVerify[CN_Company]');
 	$crud->setRule('CN_Company','callback_companyVerify[Company]');
 	$crud->setRule('GivenName','callback_givenNameVerify[ChineseName]');
 	$crud->setRule('FamilyName','callback_familyNameVerify[ChineseName]');
 	$crud->setRule('ChineseName','callback_givenNameVerify[FamilyName]');
 	$crud->setRule('Phone','callback_phoneVerify[Mobile]');
-	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
+	$crud->setRule('Mobile','callback_phoneVerify[Phone]'); */
 		
 	/* $crud->displayAs('InvitedByCompanyID','Invited by');
 	$crud->displayAs('Email','Email Address<br>电邮地址');
