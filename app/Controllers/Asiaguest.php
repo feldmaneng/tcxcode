@@ -176,9 +176,9 @@ public function contact585442()
 	
 	//Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
-	/* $crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
-	$crud->setActionButton('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image');
-	 */
+	$crud->setActionButton('Edit Master Contact','','','ui-icon-contact',array($this,'edit_master_contact_URL'));
+	//$crud->setActionButton('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image');
+	
 	//,array($this,'Meptecinvoice'));
 	//$crud->add_action('Print Label', '', site_url('/china/Meptecsinglelabel/'),'ui-icon-image');
 	//No need to do this as a callback since can set value with hidden type immediately above
