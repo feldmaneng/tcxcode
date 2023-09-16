@@ -130,7 +130,7 @@ public function contact585442()
 
 
 	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['EventYear' => EventYear]);
-	//$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
+	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['EventYear' => EventYear]);
 	/* $crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
 	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]); */
 	
