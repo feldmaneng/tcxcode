@@ -520,9 +520,9 @@ public function guest_list()
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
-   $crud->where(['SecretKey'=> $secretKey]);
+  // $crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
-   	$query = $crud->get('chinacompany',1);
+   	$query = $crud->getWhere(['SecretKey'=> $secretKey], 1,0);
 	$row = $query->row();
 	
 	if ($query->num_rows() != 1) {
