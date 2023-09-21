@@ -523,7 +523,7 @@ public function guest_list()
   // $crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
    	$query = $crud->getWhere(['SecretKey'=> $secretKey],1,1);
-	$row = $query->getRow();
+	$row = $query->getRow(0);
 	
 	if ($query->num_rows() != 1) {
 		sleep(20); /* slow down a brute force */ 
