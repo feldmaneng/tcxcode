@@ -516,7 +516,7 @@ public function guest_list()
 // ask ira update with correct database name
 
 	$crud = $this->_getGroceryCrudEnterprise('registration');
-
+	$crud->setTable('chinacompany');
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
