@@ -522,7 +522,7 @@ public function guest_list()
 	//$this->db->select('*');
   // $crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
-   	$query = $crud->getWhere(['SecretKey'=> $secretKey], 1,0);
+   	$query = $crud->getWhere(['SecretKey'=> $secretKey],1,1);
 	$row = $query->getRow();
 	
 	if ($query->num_rows() != 1) {
