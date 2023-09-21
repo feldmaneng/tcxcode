@@ -501,10 +501,10 @@ public function stats397927raw()
 public function guest_list()
 {
 	
-	echo "<h1>Exhibitor guest invitations have closed for TestConX China.<br>";
+	//echo "<h1>Exhibitor guest invitations have closed for TestConX China.<br>";
 	//	Please email us at china@bitsworkshop.org with any additional guests you would like to add.</h1>";
-	echo "Please see the on-site registration desk for assistance.";
-	die();
+	//echo "Please see the on-site registration desk for assistance.";
+	//die();
 	
 	/* Check if a secret key is passed */
 	if (isset($_GET["id"]))  {
@@ -514,12 +514,15 @@ public function guest_list()
 		$secretKey = $_SESSION["SecretKey"];
 	}
 // ask ira update with correct database name
-	$db->setDatabase('bits_registration');
+
+	$crud = $this->_getGroceryCrudEnterprise('registration');
+
+	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
-   $crud->where('SecretKey', $secretKey);
+   $crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
-   	$query = $this->db->get('chinacompany',1);
+   	$query = $crud->get('chinacompany',1);
 	$row = $query->row();
 	
 	if ($query->num_rows() != 1) {
@@ -544,7 +547,7 @@ public function guest_list()
 	
 		//$this->db->select('*');
 		//$this->db->where('ContactID', $staffID);
-		$crud->where('ContactID', $staffID);
+		$crud->where(['ContactID'=> $staffID]);
 		$query = $this->db->get('guests',1);
 		$row = $query->row();
 	
@@ -556,9 +559,9 @@ public function guest_list()
 	//$this->db->select('*');
 	//$this->db->where('InvitedByCompanyID', $companyID);
 	//$this->db->where('EventYear', EventYear); 
-	$crud->where('InvitedByCompanyID', $companyID);
-	$crud->where('EventYear', EventYear);
-	$query = $this->db->get('guests');
+	$crud->where(['InvitedByCompanyID'=> $companyID]);
+	$crud->where(['EventYear'=> EventYear]);
+	$query = $crud->get('guests');
 	if ($query->num_rows() >= $guestLimit) {
 		$this->grocery_crud->unset_add();
 	} 
@@ -576,12 +579,12 @@ public function guest_list()
    	echo "You are entitled to invite ". $guestLimit . " guests\n";
    	echo "</pre>";
    	*/
-   	$crud->where('InvitedByCompanyID',$companyID);
-   	$crud->where('EventYear', EventYear); 
+   	$crud->where(['InvitedByCompanyID'=>$companyID]);
+   	$crud->where(['EventYear'=> EventYear]); 
 	/* $crud->set_theme('datatables');
 	$crud->set_subject('Guest 来宾');
 	$crud->set_table('guests'); */
-	$crud->setTheme('bootstrap');
+	//$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
@@ -676,7 +679,8 @@ public function phoneVerify($phone, $otherField) {
 public function uniqueEmail($str)
 {
 // ask ira
-  $db2 -> $setdatabase('bits_registration');
+	$crud = $this->_getGroceryCrudEnterprise('registration');
+ // $db2 -> $setdatabase('bits_registration');
 
   $db2->select('Email');
   //ask ira this takes part of the uri, you can find it in the old codeigniter 3 docs
@@ -688,10 +692,10 @@ public function uniqueEmail($str)
    $db2->where("Email !=",$email_old);
   }
       
-   $db2->where('Email',$str);
+   $db2->where(['Email'=>$str]);
 
   	// Only look for email dupes for this event year. The person may have attended in prior years. 
-	$db2->where('EventYear', EventYear); 
+	$db2->where(['EventYear'=> EventYear]); 
 	$row_count = $db2->get('guests')->num_rows();
 
      
