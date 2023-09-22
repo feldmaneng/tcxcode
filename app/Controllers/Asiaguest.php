@@ -523,9 +523,9 @@ public function guest_list()
   // $crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
    	$query = $crud->getWhere(['SecretKey'=> $secretKey],1,1);
-	$row = $query->getRow(0);
+	$row = $query->getResult(0);
 	
-	if ($query->num_rows() != 1) {
+	if ($crud->countAllResults()!= 1) {
 		sleep(20); /* slow down a brute force */ 
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
