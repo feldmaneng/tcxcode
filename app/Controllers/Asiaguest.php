@@ -514,16 +514,28 @@ public function guest_list()
 		$secretKey = $_SESSION["SecretKey"];
 	}
 // ask ira update with correct database name
-
-	$crud = $this->_getGroceryCrudEnterprise('registration');
-	$crud->setTable('chinacompany');
-	
+$crud = db_connect('registration');
+	//$crud = $this->_getGroceryCrudEnterprise('registration');
+	//$crud->setTable('chinacompany');
+	//$crud->$db->table('chinacompany');
+	//print_r();
+	//die;
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
-  // $crud->where(['SecretKey'=> $secretKey]);
+  //$crud->where(['SecretKey'=> $secretKey]);
    //look into get and query statements
-   	$query = $crud->getWhere(['SecretKey'=> $secretKey],1,1);
-	print_r($query);
+   	$query = $crud->getWhere(['SecretKey'=>$secretKey]);
+	
+	$row = $query->getFirstRow();
+	$query = $crud->get();
+	
+	//$query = $builder->get();
+
+foreach ($query->getResult() as $row) {
+    echo $row->title;
+}
+	//print_r($query);
+	die;
 	//$row = $query->getFirstRow();
 	
 	if ($crud->countAllResults()!= 1) {
