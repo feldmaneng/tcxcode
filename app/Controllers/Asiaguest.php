@@ -514,7 +514,9 @@ public function guest_list()
 		$secretKey = $_SESSION["SecretKey"];
 	}
 // ask ira update with correct database name
-$crud = db_connect('registration');
+$db = db_connect('registration');
+$builder = $db->table('chinacompany');
+
 	//$crud = $this->_getGroceryCrudEnterprise('registration');
 	//$crud->setTable('chinacompany');
 	//$crud->$db->table('chinacompany');
@@ -522,23 +524,23 @@ $crud = db_connect('registration');
 	//die;
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	//$this->db->select('*');
-  //$crud->where(['SecretKey'=> $secretKey]);
+  //$builder->where('SecretKey', $secretKey);
    //look into get and query statements
-   	$query = $crud->getWhere(['SecretKey'=>$secretKey]);
+   	$query = $builder->getWhere(['SecretKey'=>$secretKey],1,1);
 	
+	
+	//$query = $crud->get();
 	$row = $query->getFirstRow();
-	$query = $crud->get();
-	
 	//$query = $builder->get();
 
 foreach ($query->getResult() as $row) {
     echo $row->title;
 }
 	//print_r($query);
-	die;
+	
 	//$row = $query->getFirstRow();
 	
-	if ($crud->countAllResults()!= 1) {
+	if ($builder->countAllResults()!= 1) {
 		sleep(20); /* slow down a brute force */ 
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
@@ -558,11 +560,13 @@ foreach ($query->getResult() as $row) {
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	// ask ira
+	$builder = $db->table('guests');
+	$query = $builder->getWhere(['ContactID'=>$staffID]);
 	
 		//$this->db->select('*');
 		//$this->db->where('ContactID', $staffID);
-		$crud->where(['ContactID'=> $staffID]);
-		$query = $this->db->get('guests',1);
+		//$crud->where(['ContactID'=> $staffID]);
+		//$query = $this->db->get('guests',1);
 		$row = $query->row();
 	
 		$staffName = $row->GivenName . " " . $row->FamilyName;
