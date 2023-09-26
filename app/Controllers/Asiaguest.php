@@ -5,7 +5,7 @@
 // When updating for each year, don't forget to change the random numbers at the end of
 // the company and contact function calls
 namespace App\Controllers;
-
+//resync grocery
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
