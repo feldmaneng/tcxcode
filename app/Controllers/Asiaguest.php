@@ -10,10 +10,15 @@ use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
 use App\Libraries\PdfLibrary;
+use CodeIgniter\Database\RawSql;
+use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
 define ("BiTSEvent", "TestConX China 2019"); // What is displayed
-define("EventYear", "China2019"); // For selecting records only for this year's event.
+define("EventYear", "China2019");// For selecting records only for this year's event.
+
+session_start(); 
+
 class Asiaguest extends BaseController {
 
  
@@ -517,7 +522,7 @@ public function guest_list()
 $db = db_connect('registration');
 $builder = $db->table('chinacompany');
 
-	//$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud = $this->_getGroceryCrudEnterprise('registration');
 	//$crud->setTable('chinacompany');
 	//$crud->$db->table('chinacompany');
 	//print_r();
@@ -526,21 +531,32 @@ $builder = $db->table('chinacompany');
 	//$this->db->select('*');
   //$builder->where('SecretKey', $secretKey);
    //look into get and query statements
-   	$query = $builder->getWhere(['SecretKey'=>$secretKey],1,1);
-	
-	
-	//$query = $crud->get();
-	$row = $query->getFirstRow();
+  //$builder->where('SecretKey',$secretKey);
+   	//$query = $builder->getWhere(['SecretKey'=>$secretKey],10,20);
+	//$builder->limit(1);
+	//$statement='SELECT * FROM chinacompany LIMIT 1 WHERE SecretKey = ?';
+	//$query = $db->query($statement,[$secretKey]);
+	//$query = $db->query('SELECT * FROM chinacompany LIMIT 1 WHERE SecretKey = '.$db->escape($secretKey).'');
 	//$query = $builder->get();
+	//$query = $crud->get();
+	$builder->where('SecretKey', $secretKey);
+	$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	$query =$db->query($sql, [$secretKey]);
+	$row = $query->getRow();
+	//sgcte72p09
+    echo $row->Company;
 
-foreach ($query->getResult() as $row) {
-    echo $row->title;
-}
-	//print_r($query);
+	//print_r($row);
 	
 	//$row = $query->getFirstRow();
+	echo $secretKey;
+	//$builder->from('chinacompany');
 	
-	if ($builder->countAllResults()!= 1) {
+	
+	//echo $builder->countAllResults(false);
+	//echo $builder->countAllResults(false);
+	
+	if ($builder->countAllResults(false) != 1) {
 		sleep(20); /* slow down a brute force */ 
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
@@ -561,13 +577,16 @@ foreach ($query->getResult() as $row) {
 	if ($staffID > 0) {
 	// ask ira
 	$builder = $db->table('guests');
-	$query = $builder->getWhere(['ContactID'=>$staffID]);
+	$sql = 'SELECT * FROM guests Where ContactID = ?;';
+	$query =$db->query($sql, [$staffID]);
+	$row = $query->getRow();
+	//$query = $builder->getWhere(['ContactID'=>$staffID]);
 	
 		//$this->db->select('*');
-		//$this->db->where('ContactID', $staffID);
+		//$builder->where('ContactID', $staffID);
 		//$crud->where(['ContactID'=> $staffID]);
 		//$query = $this->db->get('guests',1);
-		$row = $query->row();
+		//$row = $query->row();
 	
 		$staffName = $row->GivenName . " " . $row->FamilyName;
 	}
@@ -577,11 +596,11 @@ foreach ($query->getResult() as $row) {
 	//$this->db->select('*');
 	//$this->db->where('InvitedByCompanyID', $companyID);
 	//$this->db->where('EventYear', EventYear); 
-	$crud->where(['InvitedByCompanyID'=> $companyID]);
-	$crud->where(['EventYear'=> EventYear]);
-	$query = $crud->get('guests');
-	if ($query->num_rows() >= $guestLimit) {
-		$this->grocery_crud->unset_add();
+	$builder->where('InvitedByCompanyID' , $companyID);
+	$builder->orWhere('EventYear', EventYear);
+	$query = $builder->get();
+	if ($builder->countAllResults(false) >= $guestLimit) {
+		$crud->unsetAdd();
 	} 
 	
 /*
@@ -670,8 +689,8 @@ foreach ($query->getResult() as $row) {
 			
 
 	$output = $crud->render();
-
-	$this->_one_company_output($output);        
+	//return $this->_example_output($output);
+	return $this->_one_company_output($output);        
 }
  // ask ira form validation
 public function companyVerify($company, $otherField) {
@@ -756,7 +775,8 @@ function setSecretKey ($post_array) {
 function _one_company_output($output = null)
  
 {
-$this->load->view('one_company.php',$output);    
+//$this->load->view('one_company.php',$output);    
+return view('one_company.php', (array)$output);
 }
 
 
