@@ -599,9 +599,9 @@ $builder = $db->table('chinacompany');
 	$builder->where('InvitedByCompanyID' , $companyID);
 	$builder->orWhere('EventYear', EventYear);
 	$query = $builder->get();
-	/* if ($builder->countAllResults(false) >= $guestLimit) {
+	if ($builder->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
-	}  */
+	} 
 	
 /*
    echo "<pre>";
@@ -622,8 +622,8 @@ $builder = $db->table('chinacompany');
 	$crud->set_table('guests'); */
 	//$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
-	$crud->where(['guests.InvitedByCompanyID'=>$companyID]);
-   	$crud->where(['guests.EventYear'=> EventYear]); 
+	$crud->where(['InvitedByCompanyID'=>$companyID,
+					'EventYear'=> EventYear]); 
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
