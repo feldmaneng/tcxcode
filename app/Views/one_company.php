@@ -41,11 +41,7 @@ $company = $_SESSION["Company"];
 $staffName = $_SESSION["StaffName"];
 $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
-echo $_SESSION["SecretKey"];
-echo  $_SESSION["Event"];
-echo  $_SESSION["Company"];
-echo $_SESSION["StaffName"];
-echo $_SESSION["GuestLimit"];
+
 
 
 $var = "Hello World!";
