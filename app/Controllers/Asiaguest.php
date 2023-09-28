@@ -17,7 +17,7 @@ use CodeIgniter\Database\BaseBuilder;
 define ("BiTSEvent", "TestConX China 2019"); // What is displayed
 define("EventYear", "China2019");// For selecting records only for this year's event.
 
-session_start(); 
+$session = session(); 
 
 class Asiaguest extends BaseController {
 
@@ -66,8 +66,8 @@ public function customers()
     $crud->setSubject('User', 'Users');
 
     $output = $crud->render();
-
-    return $this->_example_output($output);
+	return $this->_one_company_output($output); 
+    //return $this->_example_output($output);
 }
 public function company123()
 {
@@ -149,22 +149,22 @@ public function contact585442()
 	$crud->setRule('Mobile','callback_phoneVerify[Phone]');
 		
 	$crud->displayAs('InvitedByCompanyID','Invited by');
-	$crud->displayAs('Email','Email Address<br>电邮地址');
-	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
-	$crud->displayAs('FamilyName','Family (Last) Name<br>姓（英文）');
-	$crud->displayAs('ChineseName','Chinese Name<br>（中文）');
-	$crud->displayAs('Company','Company Name<br>公司名称（英文）');
-	$crud->displayAs('CN_Company','Chinese Company Name<br>公司名称（中文）');
-	$crud->displayAs('NameOnBadge','Given Name on Badge<br>名牌显示名');
-	$crud->displayAs('Title','Job Title<br>抬头');
-	$crud->displayAs('Address1','Street<br>地址行1');
-	$crud->displayAs('Address2','Street<br>地址行2');
-	$crud->displayAs('City','City<br>城市');
-	$crud->displayAs('State','State/Province<br>州/省');
-	$crud->displayAs('PCode','Postal/Zip Code<br>邮编');
-	$crud->displayAs('Country','Country<br>国家');
-	$crud->displayAs('Phone','Work Phone<br>单位电话');
-	$crud->displayAs('Mobile','Mobile Phone<br>手机');
+	$crud->displayAs('Email','Email Address 电邮地址');
+	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
+	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
+	$crud->displayAs('ChineseName','Chinese Name （中文）');
+	$crud->displayAs('Company','Company Name 公司名称（英文）');
+	$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
+	$crud->displayAs('NameOnBadge','Given Name on Badge 名牌显示名');
+	$crud->displayAs('Title','Job Title 抬头');
+	$crud->displayAs('Address1','Street 地址行1');
+	$crud->displayAs('Address2','Street 地址行2');
+	$crud->displayAs('City','City 城市');
+	$crud->displayAs('State','State/Province 州/省');
+	$crud->displayAs('PCode','Postal/Zip Code 邮编');
+	$crud->displayAs('Country','Country 国家');
+	$crud->displayAs('Phone','Work Phone 单位电话');
+	$crud->displayAs('Mobile','Mobile Phone 手机');
 	$crud->displayAs('ToPrint','Queue badge for printing');
 	$crud->displayAs('Message','Message to show to guest');
 	$crud->displayAs('OfficeNotes','Internal office notes');
@@ -505,7 +505,7 @@ public function stats397927raw()
 //ask ira leave alone and circleback
 public function guest_list()
 {
-	
+	$session = session(); 
 	//echo "<h1>Exhibitor guest invitations have closed for TestConX China.<br>";
 	//	Please email us at china@bitsworkshop.org with any additional guests you would like to add.</h1>";
 	//echo "Please see the on-site registration desk for assistance.";
@@ -544,12 +544,12 @@ $builder = $db->table('chinacompany');
 	$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//sgcte72p09
-    echo $row->Company;
+    //echo $row->Company;
 
 	//print_r($row);
 	
 	//$row = $query->getFirstRow();
-	echo $secretKey;
+	//echo $secretKey;
 	//$builder->from('chinacompany');
 	
 	
@@ -599,9 +599,9 @@ $builder = $db->table('chinacompany');
 	$builder->where('InvitedByCompanyID' , $companyID);
 	$builder->orWhere('EventYear', EventYear);
 	$query = $builder->get();
-	if ($builder->countAllResults(false) >= $guestLimit) {
+	/* if ($builder->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
-	} 
+	}  */
 	
 /*
    echo "<pre>";
@@ -616,20 +616,42 @@ $builder = $db->table('chinacompany');
    	echo "You are entitled to invite ". $guestLimit . " guests\n";
    	echo "</pre>";
    	*/
-   	$crud->where(['InvitedByCompanyID'=>$companyID]);
-   	$crud->where(['EventYear'=> EventYear]); 
+   	
 	/* $crud->set_theme('datatables');
 	$crud->set_subject('Guest 来宾');
 	$crud->set_table('guests'); */
 	//$crud->setTheme('bootstrap');
 	$crud->setTable('guests');
+	$crud->where(['guests.InvitedByCompanyID'=>$companyID]);
+   	$crud->where(['guests.EventYear'=> EventYear]); 
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
-	$crud->columns (['Email','GivenName','FamilyName','ChineseName','Company','CN_Company']);
-	$crud->fields (['Email','GivenName','FamilyName', 'InvitedByCompanyID', 'EventYear',
-		'CN_FamilyName','CN_GivenName','NameOnBadge','Title','Company','CN_Company',
-		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile','ToPrint']);
+	 $crud->columns(['Email',
+	'GivenName',
+	'FamilyName',
+	'ChineseName',
+	'Company',
+	'CN_Company']); 
+	$crud->fields(['Email',
+	'GivenName',
+	'FamilyName',
+	'InvitedByCompanyID',
+	'EventYear',
+	'ChineseName',
+	'NameOnBadge',
+	'Title',
+	'Company',
+	'CN_Company',
+	'Address1',
+	'Address2',
+	'City',
+	'State',
+	'PCode',
+	'Country',
+	'Phone',
+	'Mobile',
+	'ToPrint']);
 
 	
 	$crud->setRule('Email','required|email|callback_uniqueEmail[Email]');
@@ -663,11 +685,12 @@ $builder = $db->table('chinacompany');
 	// Need to be passed in the grocery_crud->fields list
 	//$this->grocery_crud->field_type('InvitedByCompanyID','hidden', $companyID);
 	
-	$crud->fieldType('InvitedByCompanyID','hidden');
+	/* $crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden'); // if we've edited it or added it we should set it to print
+	$crud->fieldType('ToPrint','hidden');  */
+	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
@@ -676,19 +699,31 @@ $builder = $db->table('chinacompany');
 
 	// Force a refresh after a delete in case the number of guests falls below the guest 
 	// limit so the add button is shown again	
-	$crud->setLangString('delete_success_message',
+	/* $crud->setLangString('delete_success_message',
 		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
 		 <script type="text/javascript">
 		  window.location = "'.site_url(strtolower(__CLASS__).'/'.strtolower(__FUNCTION__)).'";
 		 </script>
 		 <div style="display:none">
 		 '
-   ); 
+   );  */
 	
-	$crud->setLanguage("english-chinese");
-			
-
+	//$crud->setLanguage("english-chinese");
 	$output = $crud->render();
+	$newdata = [
+    "SecretKey"  => $secretKey,
+    "CompanyID"     => $companyID,
+    "Company" => $row->Company,
+	"GuestLimit" => $guestLimit,
+	"Event" => BiTSEvent,
+	"StaffName" => $staffName,
+	"Output" => $output,
+];
+
+$session->set($newdata);		
+	
+	
+	
 	//return $this->_example_output($output);
 	return $this->_one_company_output($output);        
 }
@@ -775,8 +810,15 @@ function setSecretKey ($post_array) {
 function _one_company_output($output = null)
  
 {
+	
+	  if (isset($output->isJSONResponse) && $output->isJSONResponse) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo $output->output;
+            exit;
+        }
+
 //$this->load->view('one_company.php',$output);    
-return view('one_company.php', (array)$output);
+return view('one_company.php',(array)$output);
 }
 
 

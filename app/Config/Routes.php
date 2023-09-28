@@ -35,12 +35,12 @@ $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
 $routes->get('/database/companies', 'Database::companies');
 $routes->post('/database/companies', 'Database::companies');
-$routes->get('/test1', 'Asiaguest::company123');
-$routes->post('/test1', 'Asiaguest::company123');
-$routes->get('/test2', 'Asiaguest::contact585442');
-$routes->post('/test2', 'Asiaguest::contact585442');
+$routes->get('/test1', 'Asiaguest::customers');
+$routes->post('/test1', 'Asiaguest::customers');
+$routes->get('/test2', 'Testglobal::passtest');
+$routes->post('/test2', 'Testglobal::passtest');
 $routes->get('/test3', 'Asiaguest::guest_list');
-$routes->post('/test3', 'Asiaguest::Guest_list');
+$routes->post('/test3', 'Asiaguest::guest_list');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
