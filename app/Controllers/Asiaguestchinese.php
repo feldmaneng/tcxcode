@@ -647,22 +647,22 @@ $builder = $db->table('chinacompany');
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
 		
-	$crud->displayAs('Email','Email Address');
-	$crud->displayAs('GivenName','Given (First) Name');
-	$crud->displayAs('FamilyName','Family (Last) Name');
+	$crud->displayAs('Email','Email Address<br>电邮地址');
+	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
+	$crud->displayAs('FamilyName','Family (Last) Name<br>姓（英文）');
 	$crud->displayAs('ChineseName','Chinese/Korean Name）');
-	$crud->displayAs('Company','Company Name');
-	$crud->displayAs('CN_Company','Chinese Company Name');
-	$crud->displayAs('NameOnBadge','First Name on Badge');
-	$crud->displayAs('Title','Job Title');
-	$crud->displayAs('Address1','Street');
-	$crud->displayAs('Address2','Street');
-	$crud->displayAs('City','City');
-	$crud->displayAs('State','State/Province');
-	$crud->displayAs('PCode','Postal/Zip Code');
-	$crud->displayAs('Country','Country');
-	$crud->displayAs('Phone','Work Phone');
-	$crud->displayAs('Mobile','Mobile Phone');
+	$crud->displayAs('Company','Company Name<br>公司名称（英文）');
+	$crud->displayAs('CN_Company','Chinese Company Name<br>公司名称（中文）');
+	$crud->displayAs('NameOnBadge','First Name on Badge<br>名牌显示名');
+	$crud->displayAs('Title','Job Title<br>抬头');
+	$crud->displayAs('Address1','Street<br>地址行1');
+	$crud->displayAs('Address2','Street<br>地址行2');
+	$crud->displayAs('City','City<br>城市');
+	$crud->displayAs('State','State/Province<br>州/省');
+	$crud->displayAs('PCode','Postal/Zip Code<br>邮编');
+	$crud->displayAs('Country','Country<br>国家');
+	$crud->displayAs('Phone','Work Phone<br>单位电话');
+	$crud->displayAs('Mobile','Mobile Phone<br>手机');
 
 	
 	$crud->fieldType('ContactID', 'hidden');
