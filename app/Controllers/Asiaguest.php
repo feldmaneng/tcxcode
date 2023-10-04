@@ -16,7 +16,7 @@ use CodeIgniter\Database\BaseBuilder;
 // Some variables for each year
 define ("BiTSEvent", "TestConX China 2019"); // What is displayed
 define("EventYear", "China2019");// For selecting records only for this year's event.
-
+define("Language","Korean");
 $session = session(); 
 
 class Asiaguest extends BaseController {
@@ -40,7 +40,7 @@ die();
 
 
 
-public function company123()
+public function company48392()
 {
 	
 		$crud = $this->_getGroceryCrudEnterprise('registration');
@@ -485,7 +485,7 @@ $builder = $db->table('chinacompany');
 		die();
 	}
 	
-	//ask ira
+	
 	$companyID = $row->CompanyID;
 	$_SESSION["CompanyID"] = $companyID; 
 	$_SESSION["Company"] = $row->Company;
@@ -496,7 +496,7 @@ $builder = $db->table('chinacompany');
 	
 	$staffName = "TBD";
 	if ($staffID > 0) {
-	// ask ira
+	
 	$builder = $db->table('guests');
 	$sql = 'SELECT * FROM guests Where ContactID = ?;';
 	$query =$db->query($sql, [$staffID]);
@@ -518,7 +518,7 @@ $builder = $db->table('chinacompany');
 	$crud->setTable('guests');
 	$crud->where(['InvitedByCompanyID'=>$companyID,
 					'EventYear'=> EventYear]); 
-	$crud->setSubject('Guest 来宾', 'Guests 来宾');
+	$crud->setSubject('Guest', 'Guests');
 
 	
 	 $crud->columns(['Email',
@@ -555,15 +555,41 @@ $builder = $db->table('chinacompany');
   $text=trim($value);
 
   if ($text === null || $text === '') {
-  if($fields['CN_Company'] || $fields['CN_Company']){
-	  return false;
-  }
+	  $text=trim($fields['CN_Company']);
+	  if($text !== null && $text !== '')
+	  {
+		  return true;
+	  }
+	 /*  if($fields['CN_Company'] || $fields['Company']){
+		  return true;
+	  } */
   return false;
 }
   return true;
   
 
-}, 'Use English or Chinese company name. 请使用英文公司名或中文公司名');
+}, 'Use English or '.Language.' company name. 请使用英文公司名或中文公司名');
+
+
+
+\Valitron\Validator::addRule('checkCN_Company', function($field, $value, array $params, array $fields) {
+  $text=trim($value);
+
+  if ($text === null || $text === '') {
+	  $text=trim($fields['Company']);
+	  if($text !== null && $text !== '')
+	  {
+		  return true;
+	  }
+	 /*  if($fields['CN_Company'] || $fields['Company']){
+		  return true;
+	  } */
+  return false;
+}
+  return true;
+  
+
+}, 'Use English or '.Language.' company name. 请使用英文公司名或中文公司名');
 
 
 
@@ -578,7 +604,7 @@ $builder = $db->table('chinacompany');
 
 
 
-}, 'English Family (Last) or Chinese Name required. 请输入中文/英文姓');
+}, 'English Family (Last) or '.Language.' Name required. 请输入中文/英文姓');
 	
 	
  
@@ -626,7 +652,7 @@ $builder = $db->table('chinacompany');
 	return true;
 	
 	
-},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.<br>该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
+},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique. 该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
 
@@ -637,8 +663,9 @@ $builder = $db->table('chinacompany');
 	$crud->setRule('Email','email');
 	$crud->setRule('Email','checkEmail');
 	$crud->setRule('Company','checkCompany');
-	$crud->setRule('Company','required');
-	$crud->setRule('CN_Company','checkCompany');
+	$crud->setRule('Company','requiredWithout',['CN_Company']);
+	$crud->setRule('CN_Company','checkCN_Company');
+	$crud->setRule('CN_Company','requiredWithout',['Company']);
 	$crud->setRule('GivenName','checkFamilyName');
 	$crud->setRule('GivenName','required');
 	$crud->setRule('FamilyName','checkFamilyName');
@@ -650,9 +677,9 @@ $builder = $db->table('chinacompany');
 	$crud->displayAs('Email','Email Address');
 	$crud->displayAs('GivenName','Given (First) Name');
 	$crud->displayAs('FamilyName','Family (Last) Name');
-	$crud->displayAs('ChineseName','Chinese/Korean Name）');
+	$crud->displayAs('ChineseName',Language.' Name');
 	$crud->displayAs('Company','Company Name');
-	$crud->displayAs('CN_Company','Chinese Company Name');
+	$crud->displayAs('CN_Company',Language.' Company Name');
 	$crud->displayAs('NameOnBadge','First Name on Badge');
 	$crud->displayAs('Title','Job Title');
 	$crud->displayAs('Address1','Street');

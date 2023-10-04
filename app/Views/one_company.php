@@ -47,20 +47,19 @@ $output2 = $_SESSION["Output"];
 $var = "Hello World!";
 $html = <<<EOT
 <div>
-   Secret Key:   
+    
 		
 		
-		$secretKey
+		
 		
 		<br>
  		<h1> $event; </h1>
    		<h2> 	 $company</h2>
    		<p>TestConX EXPO Staff 展商员工: $staffName <br>
-   		(The person in charge of your booth. They will receive a Full Conference registration.<br>
-   		该人员为负责贵展位的直接联系人，将获得全场会议通行证。)</p>
+   		(The person in charge of your booth. They will receive a Full Conference registration.)</p>
    		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration.
    			For customers, staff, and other guests.<br>
-   			贵司有权邀请  $guestLimit 张额外全场会议通行证，供贵司员工、客户或相关客人入场。</p>
+   			</p>
     </div>
 </div>
 EOT;
