@@ -531,6 +531,24 @@ $builder = $db->table('chinacompany');
 	'Company',
 	'CN_Company']); 
 	$crud->fields(['ContactID',
+	'Stamp',
+	'EventYear',
+	'Invited',
+	'Related',
+	'BanquetCompanyID',
+	'OfficeNotes',
+	'NoShow',
+	'BusinessCard',
+	'MasterContactID',
+	'Type',
+	'Tutorial',
+	'Control',
+	'Fees',
+	'Complimentary',
+	'Author',
+	'HardCopy',
+	'SpecialNeeds',
+	'Dinner',
 	'Email',
 	'GivenName',
 	'FamilyName',
@@ -701,15 +719,38 @@ $builder = $db->table('chinacompany');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden'); 
+	//cmpv set print to yes
 	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
 	
 	//No need to do this as a callback since can set value with hidden type immediately above
 	//$this->grocery_crud->callback_before_insert(array($this,'set_invited_by'));
+//var_dump(intval($companyID));
+//die();
+$crud->fieldTypeAddForm('InvitedByCompanyID', 'numeric');
 
+/* $crud->callbackAddForm(function ($fields) {
+	
+	
+    $fields['EventYear'] = EventYear;
+	$fields['InvitedByCompanyID'] =(int)$companyID;
+	$fields['ToPrint'] = 'Yes';
+    return $fields;
+}); */
+
+$crud->callbackBeforeInsert(function ($stateParameters) {
+    $stateParameters->data['EventYear'] = EventYear;
+	$stateParameters->data['InvitedByCompanyID'] = intval($_SESSION["CompanyID"]);
+	$stateParameters->data['ToPrint'] = 'Yes';
+	
+	
+  
+    return $stateParameters;
+});
 	// Force a refresh after a delete in case the number of guests falls below the guest 
 	// limit so the add button is shown again	
+	//cmpv fix below
 	/* $crud->setLangString('delete_success_message',
 		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
 		 <script type="text/javascript">
@@ -735,7 +776,7 @@ $session->set($newdata);
 	
 	
 	
-	//return $this->_example_output($output);
+
 	return $this->_one_company_output($output);        
 }
                                   
