@@ -476,7 +476,6 @@ $builder = $db->table('chinacompany');
 	$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	
-	
 	if ($builder->countAllResults(false) != 1) {
 		sleep(20); /* slow down a brute force */ 
 		echo "<pre>";
@@ -493,7 +492,7 @@ $builder = $db->table('chinacompany');
 	$_SESSION["GuestLimit"] = $guestLimit;
 	$staffID = $row->StaffID;
 	$_SESSION["Event"] = BiTSEvent;
-	
+	//die($guestLimit);
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	
@@ -506,11 +505,15 @@ $builder = $db->table('chinacompany');
 		$staffName = $row->GivenName . " " . $row->FamilyName;
 	}
 	$_SESSION["StaffName"] = $staffName;
-	
+	$builder = $db->table('guests');
 	$builder->where('InvitedByCompanyID' , $companyID);
-	$builder->orWhere('EventYear', EventYear);
+	//$builder->where('EventYear', EventYear);
 	$query = $builder->get();
-	if ($builder->countAllResults(false) >= $guestLimit) {
+	$test4 = $query->getNumRows();
+	//die('3');
+	//var_dump ($test4);
+	//die();
+	if ($test4 >= $guestLimit) {
 		$crud->unsetAdd();
 	} 
 	
