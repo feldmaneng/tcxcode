@@ -55,7 +55,7 @@ $html = <<<EOT
 		<br>
  		<h1> $event; </h1>
    		<h2> 	 $company</h2>
-   		<p>TestConX EXPO Staff 展商员工: $staffName <br>
+   		<p>TestConX EXPO Staff: $staffName <br>
    		(The person in charge of your booth. They will receive a Full Conference registration.)</p>
    		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration.
    			For customers, staff, and other guests.<br>
