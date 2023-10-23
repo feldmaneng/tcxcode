@@ -60,8 +60,8 @@ $routes->post('/upload/upload', 'Upload2::upload');
 
 $routes->get('/upload1', 'Upload::index');          
 $routes->post('/upload1/upload1', 'Upload::do_upload');
-$routes->get('/Expo', 'Expo::index');          
-$routes->post('/Expo', 'Expo::index');
+$routes->get('/expo', 'Expo::index');          
+$routes->post('/expo', 'Expo::index');
 $routes->get('/Expo/contact', 'Expo::contact1337');          
 $routes->post('/Expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
