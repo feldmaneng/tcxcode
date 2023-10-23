@@ -41,6 +41,38 @@ $routes->get('/test2', 'Testglobal::passtest');
 $routes->post('/test2', 'Testglobal::passtest');
 $routes->get('/test3', 'Asiaguest::guest_list');
 $routes->post('/test3', 'Asiaguest::guest_list');
+$routes->get('/test4', 'Asiaguest::guest_test');
+$routes->post('/test4', 'Asiaguest::guest_test');
+
+$routes->get('/test5', 'Form::form_show');
+$routes->post('/test5', 'Form::form_show');
+$routes->post('/form/data_submitted', 'Form::data_submitted');
+
+
+$routes->post('/upload/do_upload', 'Upload::do_upload');
+
+
+
+
+$routes->get('/upload', 'Upload2::form_show');          
+$routes->post('/upload/upload', 'Upload2::upload'); 
+
+
+$routes->get('/upload1', 'Upload::index');          
+$routes->post('/upload1/upload1', 'Upload::do_upload');
+$routes->get('/Expo', 'Expo::index');          
+$routes->post('/Expo', 'Expo::index');
+$routes->get('/Expo/contact', 'Expo::contact1337');          
+$routes->post('/Expo/contact', 'Expo::contact1337');
+$routes->get('/Expo/duplicate', 'Expo::duplicate');          
+$routes->post('/Expo/duplicate', 'Expo::duplicate');
+$routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa'); 
+$routes->get('/expo/list_expo_entries_suzhou', 'Expo::list_expo_entries_suzhou'); 
+$routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzhen'); 
+$routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
+$routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
+$routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
