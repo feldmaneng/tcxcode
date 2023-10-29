@@ -57,13 +57,17 @@ $routes->post('/upload/do_upload', 'Upload::do_upload');
 $routes->get('/upload', 'Upload2::form_show');          
 $routes->post('/upload/upload', 'Upload2::upload'); 
 
+$routes->get('/cert', 'Certificate::index');          
+$routes->post('/cert', 'Certificate::index'); 
+$routes->get('/cert/cert', 'Certificate::CertificatesGeneral');          
+$routes->post('/cert/cert', 'Certificate::CertificatesGeneral'); 
 
 $routes->get('/upload1', 'Upload::index');          
 $routes->post('/upload1/upload1', 'Upload::do_upload');
 $routes->get('/expo', 'Expo::index');          
 $routes->post('/expo', 'Expo::index');
-$routes->get('/Expo/contact', 'Expo::contact1337');          
-$routes->post('/Expo/contact', 'Expo::contact1337');
+$routes->get('/expo/contact', 'Expo::contact1337');          
+$routes->post('/expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
 $routes->post('/Expo/duplicate', 'Expo::duplicate');
 $routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa'); 
