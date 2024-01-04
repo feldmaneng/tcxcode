@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
+$routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -39,10 +39,21 @@ $routes->get('/test1', 'Asiaguest::customers');
 $routes->post('/test1', 'Asiaguest::customers');
 $routes->get('/test2', 'Testglobal::passtest');
 $routes->post('/test2', 'Testglobal::passtest');
+
 $routes->get('/test3', 'Asiaguest::guest_list');
-$routes->post('/test3', 'Asiaguest::guest_list');
+$routes->get('/test3/(:any)', 'Asiaguest::guest_list/$1');
+$routes->post('/test3/(:any)', 'Asiaguest::guest_list/$1');
+//$routes->post('/test3', 'Asiaguest::guest_list');
+
 $routes->get('/test4', 'Asiaguest::guest_test');
 $routes->post('/test4', 'Asiaguest::guest_test');
+
+$routes->get('/start', 'shorttest::customers');
+$routes->post('/start', 'shorttest::customers');
+
+$routes->get('/start/1', 'shorttest::codetest');
+$routes->post('/start/1', 'shorttest::codetest');
+
 
 $routes->get('/test5', 'Form::form_show');
 $routes->post('/test5', 'Form::form_show');
@@ -51,16 +62,23 @@ $routes->post('/form/data_submitted', 'Form::data_submitted');
 
 $routes->post('/upload/do_upload', 'Upload::do_upload');
 
+$routes->get('/directory', 'Form::form_show');
+$routes->post('/directory', 'Form::form_show');
+
+
 
 
 
 $routes->get('/upload', 'Upload2::form_show');          
 $routes->post('/upload/upload', 'Upload2::upload'); 
 
-$routes->get('/cert', 'Certificate::index');          
-$routes->post('/cert', 'Certificate::index'); 
-$routes->get('/cert/cert', 'Certificate::CertificatesGeneral');          
-$routes->post('/cert/cert', 'Certificate::CertificatesGeneral'); 
+$routes->get('/Certificate', 'Certificate::index');          
+$routes->post('/Certificate', 'Certificate::index'); 
+$routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
+$routes->post('/Certificate/Certificates', 'Certificate::Certificates'); 
+
+$routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
+$routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral'); 
 
 $routes->get('/upload1', 'Upload::index');          
 $routes->post('/upload1/upload1', 'Upload::do_upload');

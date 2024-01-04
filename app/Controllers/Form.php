@@ -34,7 +34,7 @@ function __construct()
 helper('text');
 helper('form');
 helper('html');
-//$this->session->set_userdata('updated', "unset");
+
 }
 	
 
@@ -47,11 +47,9 @@ helper('html');
 		if ( !empty($_GET["key"]) ) {
 			
 			$session->set('secretKey', $_GET["key"]);
-			/* if (isset($_SESSION['secretKey'])) {
-    die($_GET["key"]);
-} */
-$keyreturn = session('secretKey');
-//not in original code
+			
+			$keyreturn = session('secretKey');
+			//not in original code
 			//$session->set('success', "saved");
 			$session->set('success', "");
 			//$test = $_SESSION["secretKey"];
@@ -86,7 +84,7 @@ $keyreturn = session('secretKey');
 		);
 
        echo view('view_form', $data);
-	   return redirect()->to('/test5?key='.session('secretKey'));
+	   return redirect()->to('/directory?key='.session('secretKey'));
     }
     
     public function index()

@@ -5,6 +5,7 @@
 <title>Upload Form</title>
 </head>
 <body>
+<?= validation_list_errors() ?>
 
 <?= form_open_multipart('upload/do_upload') ?>
     <input type="file" name="userfile" size="20">

@@ -16,6 +16,6 @@ echo "<h3>Your file, $upload_file, was successfully uploaded!</h3>";
 ?>
 <p><?=
 //$keys = session('secretKey');
- anchor('test5?key='.session('secretKey'), 'Upload Another File!') ?></p>
+ anchor('directory?key='.session('secretKey'), 'Return to TestConX EXPO Directory Entry') ?></p>
 </body>
 </html>

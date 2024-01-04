@@ -271,7 +271,7 @@
 					$builder->update($data_update);
 								
 						//return redirect()->back();	
-						return redirect()->to('/test5?key='.$demo_key);							
+						return redirect()->to('/directory?key='.$demo_key);							
 				//return redirect('/test5?key='.session('secretKey'));
 					
 				}
