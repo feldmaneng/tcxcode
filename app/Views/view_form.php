@@ -236,9 +236,13 @@
 //ask ira about input->post
 						
 					if ($request->getPost('approve') || $request->getPost('draft')) {
-						if($request->getPost('cancel'))
+						
+						
+						if($request->getPost('cancel')){
 							header("Location: https://www.testconx.org/");
+						}
 						if ($request->getPost('approve') || $request->getPost('draft')) {
+							
 							$saved = 'saved';
 							$session->set('success', $saved);
 							if($request->getPost('approve')) {
