@@ -36,6 +36,9 @@
 					$builder->where('SecretKey', $demo_key);
 					$sql = 'SELECT * FROM expodirectory Where SecretKey = ? LIMIT 1;';
 					$query =$db->query($sql, [$demo_key]);
+					
+					// We should check to make sure we actually returned a single row, if not die
+					
 					$row = $query->getRow();
 					$entryid = $row->EntryID;
 					$session->set('entryIDname', $entryid);
@@ -234,9 +237,13 @@
 					echo "</div>";
 					$request = \Config\Services::request();
 //ask ira about input->post
-					if (isset($company_name)) {
-						if($request->getPost('cancel'))
+
+					// This seems like bad code as $company_name isn't set anywhere that I see
+					//if (isset($company_name)) {
+						if($request->getPost('cancel')) {
 							header("Location: https://www.testconx.org/");
+						}
+						
 						if ($request->getPost('approve') || $request->getPost('draft')) {
 							$saved = 'saved';
 							$session->set('success', $saved);
@@ -244,40 +251,40 @@
 								$status = 'Approved';
 								$session->set('updated', "approve");
 								echo "<h3>Your data was successfully updated as Approved.</h3>";
-					}
-					else {
-						$status = 'Draft';
-						$session->set('updated', "draft");
-						echo "<h3>Your data was successfully updated as Draft.</h3>";
-					}
-					$upload_status = $session->set('upload_status');
-					$data_update = array(
-					'CompanyName' => $company_name,
-					'Line1' => $coordinator_name,
-					'Line2' => $email_address,
-					'Line3' => $address1_change,
-					'Line4' => $address2_change,
-					'Line5' => $phone_change,
-					'Line6' => $website_change,
-					'Description' => $description_change,
-					'Updated' => date("Y-m-d H:i:s"),
-					'Status' => $status,
-					'Upload' => $upload_status
-					);
+							} else {
+								$status = 'Draft';
+								$session->set('updated', "draft");
+								echo "<h3>Your data was successfully updated as Draft.</h3>";
+							}
+							
+							$upload_status = $session->set('upload_status');
+							$data_update = array(
+							'CompanyName' => $company_name,
+							'Line1' => $coordinator_name,
+							'Line2' => $email_address,
+							'Line3' => $address1_change,
+							'Line4' => $address2_change,
+							'Line5' => $phone_change,
+							'Line6' => $website_change,
+							'Description' => $description_change,
+							'Updated' => date("Y-m-d H:i:s"),
+							'Status' => $status,
+							'Upload' => $upload_status
+							);
 					
-					$builder->where('SecretKey', $demo_key);
-					//$this->db->where('SecretKey', $demo_key);
-					//$this->db->update('test', $data_update);
-					$builder->update($data_update);
+							$builder->where('SecretKey', $demo_key);
+							//$this->db->where('SecretKey', $demo_key);
+							//$this->db->update('test', $data_update);
+							$builder->update($data_update);
 								
-						//return redirect()->back();	
-						return redirect()->to('/directory?key='.$demo_key);							
-				//return redirect('/test5?key='.session('secretKey'));
+								//return redirect()->back();	
+								return redirect()->to('/directory?key='.$demo_key);							
+						//return redirect('/test5?key='.session('secretKey'));
 					
-				}
-			}
+					}
+				//}
 				
-		}
+			}
 				
 				?> 
 				
