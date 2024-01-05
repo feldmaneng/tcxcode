@@ -27,6 +27,7 @@ class Upload extends BaseController {
         {
 			//die('test9');
 			$session = session();
+
 			$file = $this->request->getFile('userfile');
 			if(! $this->validate(
 			[
@@ -43,8 +44,10 @@ class Upload extends BaseController {
 						'error' => $this->validator->getErrors(),
 						]);
 			}
+
 				
 				
+
 				
 				
 				$originalName = $file->getClientName();
@@ -59,10 +62,15 @@ class Upload extends BaseController {
 					  return view('upload_error',$error);
             //return view('upload_form', ['error' => 'upload failed']);
 					}
+
 					//$tempfile = $file->getTempName();
 					//die($tempfile.' test1');
 					//$path = $this->request->getFile('userfile')->store('/EXPOdirectory/logo_upload/');
+					
 					$data = ['upload_file_path' => $path];
+					
+				/// Missing file rename code here
+					
 					$upload_stat = 'New';
 					$data_update = [
 							'Upload' => $upload_stat
