@@ -235,7 +235,7 @@
 					$request = \Config\Services::request();
 //ask ira about input->post
 						
-					//if (isset($company_name)) {
+					if ($request->getPost('approve') || $request->getPost('draft')) {
 						if($request->getPost('cancel'))
 							header("Location: https://www.testconx.org/");
 						if ($request->getPost('approve') || $request->getPost('draft')) {
@@ -278,7 +278,7 @@
 				}
 			}
 				
-		//}
+		}
 				
 				?> 
 				
