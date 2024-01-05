@@ -8,7 +8,7 @@
     <body> 
         <div class="main">
             <div id="content">
-                <h1 id='form_head'>TestConX EXPO Workshop Guide</h1>
+                <h1 id='form_head'><?php echo 'Current PHP version: ' . phpversion();?>TestConX EXPO Workshop Guide <?php echo \CodeIgniter\CodeIgniter::CI_VERSION;?></h1>
 				              
                 <div id="form_input">
                     <?php

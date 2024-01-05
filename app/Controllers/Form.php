@@ -82,7 +82,7 @@ helper('html');
 			'website_change' => $request->getPost('website_change'),
 			'description_change' => $request->getPost('description_change')
 		);
-
+		
        echo view('view_form', $data);
 	   return redirect()->to('/directory?key='.session('secretKey'));
     }
