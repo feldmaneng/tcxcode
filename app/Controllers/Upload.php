@@ -27,33 +27,41 @@ class Upload extends BaseController {
         {
 			//die('test9');
 			$session = session();
-			
-			$this->validate([
-				'userfile' => [
-					'uploaded[userfile]',
-					'max_size[userfile,2048]',
-					'mime_in[userfile,image/gif,image/jpg,image/png,image/jpeg,image/pdf,image/ai]',
-					'ext_in[userfile,gif|jpg|png|jpeg|pdf|ai]',
-					'max_dims[userfile,2048,2048]',
-				],
-       		]);
-				
+
 			$file = $this->request->getFile('userfile');
-			$originalName = $file->getClientName();
-				//$file = $this->request->getFile('userfile')->store('/EXPOdirectory/logo_upload/');
+			if(! $this->validate(
+			[
+            'userfile' => 
 				
-				//$path=$file->store('/EXPOdirectory/logo_upload/');
-				//die($path);
+                'uploaded[userfile]|max_size[userfile,2048]|mime_in[userfile,image/gif,image/jpg,image/png,image/jpeg,image/pdf,image/ai]|ext_in[userfile,gif,jpg,png,jpeg,pdf,ai]|max_dims[userfile,2048,2048]'
 				
-				//$entryIDname = session('entryIDname');
-				
-				// Check if the file got uploaded
-				// Needs to be improved - when upload is clicked without selecting
-			   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$originalName ) ){
-				   $error =$validation->getErrors();
-				  return view('upload_error',$error);
-				}
+			])
+			){
 					
+					 // $error = $this->validator->getErrors();
+					  
+					  return view('upload_error',[
+						'error' => $this->validator->getErrors(),
+						]);
+			}
+
+				
+				
+
+				
+				
+				$originalName = $file->getClientName();
+				$idName= session('entryIDname');
+				//echo $idname;
+				$newName = $idName."-".$originalName;
+				//echo $newName;
+				
+				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
+					  echo $path;
+					  $error =$validation->getErrors();
+					  return view('upload_error',$error);
+            //return view('upload_form', ['error' => 'upload failed']);
+					}
 
 					//$tempfile = $file->getTempName();
 					//die($tempfile.' test1');
@@ -64,11 +72,14 @@ class Upload extends BaseController {
 				/// Missing file rename code here
 					
 					$upload_stat = 'New';
-					$data_update = array(
+					$data_update = [
+							'Upload' => $upload_stat
+						];
+					/* $data_update = array(
 						'Upload' => $upload_stat
-					);
-						$file_name = $file->getName();
-						$session->set('upload_filename', $file_name);
+					); */
+						//$file_name = $file->getName();
+						$session->set('upload_filename', $originalName);
 						$session->set('upload_status', "New");
 					//echo view('upload_success', $data);
 						
@@ -76,10 +87,20 @@ class Upload extends BaseController {
 						//IMF not needed and loads wrong (i.e. the default database) $this->load->database();
 						$db = db_connect('registration');
 						$builder = $db->table('expodirectory');
-						//$this->db = $this->load->database('RegistrationDataBase',TRUE);
+						 
+						
+						$data = [
+							'Upload' => $upload_stat 
+						];
+						echo $secretkey."test1";
 						$builder->where('SecretKey', $secretkey);
+						$builder->update($data);
+						//$this->db = $this->load->database('RegistrationDataBase',TRUE);
+						//$builder->where('SecretKey', $secretkey);
 						//IMF $this->db->update('test', $data_update);
-						$builder->update($data_update);			
+						//$builder->set('Upload',$upload_stat);
+						//$builder->insert();
+						
 
                         echo view('upload_success', $data);
 				} 
