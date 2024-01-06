@@ -275,6 +275,7 @@
 							$builder->where('SecretKey', $demo_key);
 							//$this->db->where('SecretKey', $demo_key);
 							//$this->db->update('test', $data_update);
+							dd($data_update);
 							$builder->update($data_update);
 								
 								//return redirect()->back();	
