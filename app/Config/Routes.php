@@ -65,7 +65,8 @@ $routes->post('/upload/do_upload', 'Upload::do_upload');
 $routes->get('/directory', 'Form::form_show');
 $routes->post('/directory', 'Form::form_show');
 
-
+$routes->get('/dir2', 'ExhibitorDirectory::form_show');
+$routes->post('/dir2', 'ExhibitorDirectory::form_show'); // Not sure if this should be form_show
 
 
 
