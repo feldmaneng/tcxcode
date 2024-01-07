@@ -243,8 +243,11 @@
 						if($request->getPost('cancel')) {
 							header("Location: https://www.testconx.org/");
 						}
-						
+						//dd($request);
 						if ($request->getPost('approve') || $request->getPost('draft')) {
+							//echo "<h1>About to do the Post for approve and draft commands</h1>";
+							//print_r($request);
+							//die();
 							$saved = 'saved';
 							$session->set('success', $saved);
 							if($request->getPost('approve')) {
@@ -275,11 +278,12 @@
 							$builder->where('SecretKey', $demo_key);
 							//$this->db->where('SecretKey', $demo_key);
 							//$this->db->update('test', $data_update);
-							dd($data_update);
+							//dd($data_update);
 							$builder->update($data_update);
 								
 								//return redirect()->back();	
-								return redirect()->to('/directory?key='.$demo_key);							
+								return redirect()->to('/directory?key='.$demo_key);	
+					
 						//return redirect('/test5?key='.session('secretKey'));
 					
 					}

@@ -85,6 +85,7 @@ helper('html');
 		
        echo view('view_form', $data);
 	   return redirect()->to('/directory?key='.session('secretKey'));
+
     }
     
     public function index()
