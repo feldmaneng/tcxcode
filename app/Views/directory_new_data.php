@@ -13,7 +13,7 @@
                 <div id="form_input">
                     <?php
 
-					echo form_open('/exhibitordirectory/data_submitted');
+					echo form_open('/directory'); ///data_submitted');
 					
 					echo form_label('Company Name:' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
                     $data_name = array(

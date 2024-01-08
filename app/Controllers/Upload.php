@@ -23,7 +23,7 @@ class Upload extends BaseController {
                 return view('upload_form', ['error' => ' ']);
         }
 
-        public function do_upload()
+        public function postDo_upload()
         {
         	$model = model(DirectoryEntry::class);
 			$session = session();
@@ -36,10 +36,7 @@ class Upload extends BaseController {
                 'uploaded[userfile]|max_size[userfile,2048]|mime_in[userfile,image/gif,image/jpg,image/png,image/jpeg,image/pdf,image/ai]|ext_in[userfile,gif,jpg,png,jpeg,pdf,ai]|max_dims[userfile,2048,2048]'
 				
 			])
-			){
-					
-					 // $error = $this->validator->getErrors();
-					  
+			){					  
 					  return view('upload_error',[
 						'error' => $this->validator->getErrors(),
 						]);
@@ -64,10 +61,7 @@ class Upload extends BaseController {
 					$data_update = [
 							'Upload' => $upload_stat
 						];
-
-					//$session->set('upload_filename', $originalName);
-					//$session->set('upload_status', "New");
-					
+		
 					$secretKey = session('secretKey');
 
 					$update_status = $model->updateEntry($secretKey, $data_update);
@@ -76,12 +70,10 @@ class Upload extends BaseController {
 					} else {
 						$session->set('statusMessage', "Your file, $originalName, was successfully uploaded!");
 					}
-		
-       
-       				//echo view('upload_success', $data);
+	
        			
        		 //later return to a variable set in session()
-	  		 return redirect()->to('/dir2?key='.session('secretKey'));
+	  		 return redirect()->to('/directory?key='.session('secretKey'));
 				 
 
 					

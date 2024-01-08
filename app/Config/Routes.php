@@ -68,10 +68,11 @@ $routes->get('/directory', 'Form::form_show');
 $routes->post('/directory', 'Form::form_show');
 */
 
-$routes->get('/dir2', 'ExhibitorDirectory::form_show');
-$routes->post('/dir2', 'ExhibitorDirectory::form_show'); // Not sure if this should be form_show0
+$routes->get('directory', 'ExhibitorDirectory::form_show');
+$routes->post('directory', 'ExhibitorDirectory::data_submitted');
 
-//$routes->post('exhibitordirectory', 'ExhibitorDirectory::data_submitted');
+//$routes->post('directory/data_submitted', [ExhibitorDirectory::class, 'data_submitted']); //getUpdateEntry']);
+//$routes->post('directory', [ExhibitorDirectory::class, 'data_submitted']);
 
 /*
 $routes->get('/upload', 'Upload2::form_show');          

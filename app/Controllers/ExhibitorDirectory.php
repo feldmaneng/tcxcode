@@ -95,7 +95,8 @@ helper('html');
     }
 	
 	//Posts the form fields and loads the view_form.php program
-    public function data_submitted() {
+    public function data_submitted() { 
+    	
 		$session = session(); 
 		$secretKey = session('secretKey');
 		
@@ -137,7 +138,7 @@ helper('html');
 			}
 		}
        
-	   return redirect()->to('/dir2?key='.session('secretKey'));
+	   return redirect()->to('/directory?key='.session('secretKey'));
 	
 		
     }
