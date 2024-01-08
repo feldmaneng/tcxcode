@@ -46,8 +46,7 @@ helper('html');
 			$session->set('secretKey', $_GET["key"]);
 			
 			//$keyreturn = session('secretKey');
-			
-			$session->set('success', "");
+			//$session->set('success', "");
 
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
@@ -96,6 +95,10 @@ helper('html');
 	
 	//Posts the form fields and loads the view_form.php program
     public function data_submitted() { 
+    	// Protect against CSRF - ref: https://codeigniter.com/user_guide/libraries/security.html
+    	if (! $this->request->is('post')) {
+ 		   return $this->response->setStatusCode(405)->setBody('Method Not Allowed');
+		}
     	
 		$session = session(); 
 		$secretKey = session('secretKey');
@@ -103,6 +106,10 @@ helper('html');
 		$model = model(DirectoryEntry::class);
     	
 		$request = \Config\Services::request();
+		
+		if (! $this->request->is('post')) {
+ 		   return $this->response->setStatusCode(405)->setBody('Method Not Allowed');
+		}
 		
 		if($request->getPost('cancel')) {
 			return redirect()->to(base_url());
