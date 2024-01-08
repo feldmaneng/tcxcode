@@ -37,42 +37,12 @@ $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
 $routes->get('/database/companies', 'Database::companies');
 $routes->post('/database/companies', 'Database::companies');
-$routes->get('/test1', 'Asiaguest::customers');
-$routes->post('/test1', 'Asiaguest::customers');
-$routes->get('/test2', 'Testglobal::passtest');
-$routes->post('/test2', 'Testglobal::passtest');
 
-$routes->get('/test3', 'Asiaguest::guest_list');
-$routes->get('/test3/(:any)', 'Asiaguest::guest_list/$1');
-$routes->post('/test3/(:any)', 'Asiaguest::guest_list/$1');
-//$routes->post('/test3', 'Asiaguest::guest_list');
-
-$routes->get('/test4', 'Asiaguest::guest_test');
-$routes->post('/test4', 'Asiaguest::guest_test');
-
-$routes->get('/start', 'shorttest::customers');
-$routes->post('/start', 'shorttest::customers');
-
-$routes->get('/start/1', 'shorttest::codetest');
-$routes->post('/start/1', 'shorttest::codetest');
-
-
-$routes->get('/test5', 'Form::form_show');
-$routes->post('/test5', 'Form::form_show');
-$routes->post('/form/data_submitted', 'Form::data_submitted');
-
-
-$routes->post('/upload/do_upload', 'Upload::do_upload');
-
-$routes->get('/directory', 'Form::form_show');
-$routes->post('/directory', 'Form::form_show');
 */
 
 $routes->get('directory', 'ExhibitorDirectory::form_show');
 $routes->post('directory', 'ExhibitorDirectory::data_submitted');
 
-//$routes->post('directory/data_submitted', [ExhibitorDirectory::class, 'data_submitted']); //getUpdateEntry']);
-//$routes->post('directory', [ExhibitorDirectory::class, 'data_submitted']);
 
 /*
 $routes->get('/upload', 'Upload2::form_show');          
@@ -86,8 +56,6 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
 $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral'); 
 
-$routes->get('/upload1', 'Upload::index');          
-$routes->post('/upload1/upload1', 'Upload::do_upload');
 $routes->get('/expo', 'Expo::index');          
 $routes->post('/expo', 'Expo::index');
 $routes->get('/expo/contact', 'Expo::contact1337');          
