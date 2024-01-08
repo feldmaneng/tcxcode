@@ -10,19 +10,16 @@
 //   Remove need for the upload button - upload upon choose file?
 
 namespace App\Controllers;
-//resync grocery
+
+// Probably need to recheck what is really necessary here...
 use Config\Database as ConfigDatabase;
-//use Config\GroceryCrud as ConfigGroceryCrud;
-//use GroceryCrud\Core\GroceryCrud;
-//use App\Libraries\PdfLibrary;
+
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Files\File;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
-// Some variables for each year
-
 
 
 class ExhibitorDirectory extends BaseController {
@@ -58,30 +55,16 @@ helper('html');
 				'Event' => "Mesa",
 				'Entry' => $model->getEntry($secretKey),
 				'PriorEntryImage' => "example.png", //Default image, updated below
-				'StatusMessage' => "",
+				'StatusMessage' => session('statusMessage'),
 				'PromptMessage' => "Please make any changes below and press either Approve, Save Draft, or Cancel button.",
 			);
 			
 			$status = $data['Entry']->Status;
+			$session->set('entryID', $data['Entry']->EntryID); // used in upload file name
 
 			if (!empty($data['Entry']->SampleEntry)) {
 				$data['PriorEntryImage'] = $data['Entry']->SampleEntry;
 			}
-			
-			//dd($status);
-			
-			/* echo view('view_form');
-			
-			$session->set('updated', "unset");
-			//$updated = $this->session->userdata('updated');
-			*/
-								/* if(session('success') == 'saved') {
-						echo '<h1>Your information was successfully updated.<h1>';
-						//echo heading('Your information was successfully updated.', 1, 'style="color:#52D017"');
-					}
-					*/
-					
-
 
 			if ($status != "Draft") {
 				$data['PromptMessage'] = "Please contact the TestConX Office if you require any further changes.";
@@ -99,10 +82,12 @@ helper('html');
 			echo view('directory_new_data', $data);
 		
 			if ($status == "Draft") {		
-				echo view('directory_buttons');
+				echo view('directory_buttons', $data);
 			}
 			
 			echo view('directory_footer');
+			
+			$session->set('statusMessage',"");
 			
 		} else {
 			$this->index();
@@ -113,65 +98,24 @@ helper('html');
     public function data_submitted() {
 		$session = session(); 
 		$secretKey = session('secretKey');
-		//dd($secretKey);
 		
 		$model = model(DirectoryEntry::class);
     	
 		$request = \Config\Services::request();
 		
-		/*
-		$data = array(
-            'company_name' =>$request->getPost('comp_name'),
-            'coordinator_name' => $request->getPost('coord_name'),
-            'email_address' => $request->getPost('comp_email'),
-			'address1_change' =>$request->getPost('address1_change'),
-			'address2_change' => $request->getPost('address2_change'),
-			'phone_change' => $request->getPost('phone_change'),
-			'website_change' => $request->getPost('website_change'),
-			'description_change' => $request->getPost('description_change')
-		);
-		*/
-		
 		if($request->getPost('cancel')) {
-			header("Location: https://www.testconx.org/");
-		}
-						
-		//dd($request);
-						
+			return redirect()->to(base_url());
+		}					
 						
 		if ($request->getPost('approve') || $request->getPost('draft')) {
-							//echo "<h1>About to do the Post for approve and draft commands</h1>";
-							//print_r($request);
-							//die();
-							//$saved = 'saved';
-							//$session->set('success', $saved);
-							
-							
+
 			if($request->getPost('approve')) {
 				$status = 'Approved';
-				//$session->set('updated', "approve");
-				//echo "<h3>Your data was successfully updated as Approved.</h3>";
+				$session->set('statusMessage', "Your data was successfully updated as Approved.");
 			} else {
 				$status = 'Draft';
-				//$session->set('updated', "draft");
-				//echo "<h3>Your data was successfully updated as Draft.</h3>";
+				$session->set('statusMessage', "Your data was successfully updated as Draft");
 			}
-		
-			$upload_status = $session->set('upload_status');
-			
-			/*$data_update = array(
-				'CompanyName' => $company_name,
-				'Line1' => $coordinator_name,
-				'Line2' => $email_address,
-				'Line3' => $address1_change,
-				'Line4' => $address2_change,
-				'Line5' => $phone_change,
-				'Line6' => $website_change,
-				'Description' => $description_change,
-				'Updated' => date("Y-m-d H:i:s"),
-				'Status' => $status,
-				'Upload' => $upload_status
-			); */
 			
 			$data_update = array(
 				'CompanyName' => $request->getPost('comp_name'),
@@ -184,27 +128,14 @@ helper('html');
 				'Description' => $request->getPost('description_change'),
 				'Updated' => date("Y-m-d H:i:s"),
 				'Status' => $status,
-				'Upload' => $upload_status
+				'Upload' => session('upload_status')
 			); 
 				
 			$update_status = $model->updateEntry($secretKey, $data_update);
-			// Do something with status?
+			if (!$update_status) {
+				$session->set('statusMessage', "ERROR: Update failure.");
+			}
 		}
-			
-			
-			/*
-							$builder->where('SecretKey', $demo_key);
-							//$this->db->where('SecretKey', $demo_key);
-							//$this->db->update('test', $data_update);
-							//dd($data_update);
-							$builder->update($data_update);
-								
-								//return redirect()->back();	
-								
-								return redirect()->to('/directory?key='.$demo_key);	
-		
-		
-       echo view('view_form', $data);*/
        
 	   return redirect()->to('/dir2?key='.session('secretKey'));
 	
@@ -213,8 +144,8 @@ helper('html');
     
     public function index()
 	{
-	echo "<h1>Please use the special link provided to you.</h1>";
-	die('index');
+		echo "<h1>Please use the special link provided to you.</h1>";
+		die('index');
 	}
 	
 }

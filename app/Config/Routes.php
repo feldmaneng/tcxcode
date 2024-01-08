@@ -30,6 +30,8 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 //$routes->get('/', 'Home::index');
+
+/*
 $routes->get('/', 'Database::index');
 $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
@@ -64,12 +66,14 @@ $routes->post('/upload/do_upload', 'Upload::do_upload');
 
 $routes->get('/directory', 'Form::form_show');
 $routes->post('/directory', 'Form::form_show');
+*/
 
 $routes->get('/dir2', 'ExhibitorDirectory::form_show');
-$routes->post('/dir2', 'ExhibitorDirectory::form_show'); // Not sure if this should be form_show
+$routes->post('/dir2', 'ExhibitorDirectory::form_show'); // Not sure if this should be form_show0
 
+//$routes->post('exhibitordirectory', 'ExhibitorDirectory::data_submitted');
 
-
+/*
 $routes->get('/upload', 'Upload2::form_show');          
 $routes->post('/upload/upload', 'Upload2::upload'); 
 
@@ -95,6 +99,7 @@ $routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzh
 $routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
 $routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
 $routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china');
+*/
 
 /*
  * --------------------------------------------------------------------
