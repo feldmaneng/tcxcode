@@ -34,6 +34,8 @@ class Database extends BaseController {
  
 	public function index()
 	{
+		//die("In Database.php");
+		
 		echo "<h1>TestConX Database - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";

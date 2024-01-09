@@ -9,14 +9,15 @@
     <strong>Internal Use Only</strong>  
 
 	<div id="form_input">
-    <?php  
 	
-		echo form_open('main'); //login_action');  
-  
-		//echo validation_errors();  
+	<?= validation_list_errors() ?>
+	
+    <?php  
+		
+		echo form_open('main'); 
   
 		echo "<p>Username: ";  
-		echo form_input('username'); //, $this->input->post('username'));  
+		echo form_input('username'); 
 		echo "</p>";  
   
 		echo "<p>Password: ";  

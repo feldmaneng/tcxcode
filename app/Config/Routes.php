@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false); //true);
 
 /*
  * --------------------------------------------------------------------
@@ -34,13 +34,12 @@ $routes->setAutoRoute(true);
 
 $routes->get('/', 'Main::index');
 $routes->post('main', 'Main::login_action');
-/*
+
+$routes->get('database', 'Database::index');
 $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
 $routes->get('/database/companies', 'Database::companies');
 $routes->post('/database/companies', 'Database::companies');
-
-*/
 
 $routes->get('directory', 'ExhibitorDirectory::form_show');
 $routes->post('directory', 'ExhibitorDirectory::data_submitted');
