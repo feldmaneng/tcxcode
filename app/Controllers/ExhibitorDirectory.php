@@ -58,6 +58,10 @@ helper('html');
 				'PromptMessage' => "Please make any changes below and press either Approve, Save Draft, or Cancel button.",
 			);
 			
+			if (!isset($data['Entry'])) {
+				return view('link_invalid');
+			}
+			
 			$status = $data['Entry']->Status;
 			$session->set('entryID', $data['Entry']->EntryID); // used in upload file name
 
