@@ -23,7 +23,7 @@ class DirectoryEntry extends Model
 		if ($query->getNumRows() !== 1) {
 			return NULL;
 		} else {
-			return $builder->get()->getRow();
+			return $query->getRow();
 		} 	
 	}				
 			

@@ -31,8 +31,10 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 //$routes->get('/', 'Home::index');
 
+
+$routes->get('/', 'Main::index');
+$routes->post('main', 'Main::login_action');
 /*
-$routes->get('/', 'Database::index');
 $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
 $routes->get('/database/companies', 'Database::companies');
