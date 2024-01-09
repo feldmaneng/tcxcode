@@ -23,7 +23,7 @@ class Upload extends BaseController {
                 return view('upload_form', ['error' => ' ']);
         }
 
-        public function postDo_upload()
+        public function do_upload()
         {
         	$model = model(DirectoryEntry::class);
 			$session = session();
