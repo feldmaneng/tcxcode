@@ -280,7 +280,7 @@
 							//$this->db->update('test', $data_update);
 							//dd($data_update);
 							$builder->update($data_update);
-								
+							
 								//return redirect()->back();	
 								return redirect()->to('/directory?key='.$demo_key);	
 					

@@ -11,6 +11,14 @@ use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
 
+// Make sure you are logged in to access these functions.
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+} 
+
 class Database extends BaseController {
 
  
@@ -29,11 +37,14 @@ class Database extends BaseController {
 		/* ------------------ */ 
 
 		//X $this->load->library('grocery_CRUD');
+		
+
  
 	}
  
 	public function index()
 	{
+			
 		echo "<h1>TestConX Database - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
@@ -52,14 +63,7 @@ class Database extends BaseController {
 
     function contacts()
 	{
-		/* Old way
-		$crud = new grocery_CRUD();
 
-		$crud->set_theme('bootstrap'); 
-		$crud->set_table('contacts');
-		*/
-		
-		// New way
 		$crud = $this->_getGroceryCrudEnterprise();
 
         $crud->setCsrfTokenName(csrf_token());
@@ -224,9 +228,11 @@ class Database extends BaseController {
 	// Determine who the current user is 
 	function determine_user() {
 
-		if (isset($_SERVER['REMOTE_USER'])) {
-	 		$user = $_SERVER['REMOTE_USER'];		
- 		} else {
+		$session = session();
+		
+		if (isset($session->tcx_userdata) && isset($session->tcx_userdata['username'])) {
+			$user = $session->tcx_userdata['username'];
+		} else {
 	 		$user =  "local_user"; 	
 	 	}
 	 	

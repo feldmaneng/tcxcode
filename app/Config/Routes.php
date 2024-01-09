@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false); 
 
 /*
  * --------------------------------------------------------------------
@@ -30,45 +30,24 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 //$routes->get('/', 'Home::index');
-$routes->get('/', 'Database::index');
+
+
+$routes->get('/', 'Main::index');
+$routes->get('logout', 'Main::logout');
+
+$routes->post('main', 'Main::login_action');
+
+$routes->get('database', 'Database::index');
 $routes->get('/database/contacts', 'Database::contacts');
 $routes->post('/database/contacts', 'Database::contacts');
 $routes->get('/database/companies', 'Database::companies');
 $routes->post('/database/companies', 'Database::companies');
-$routes->get('/test1', 'Asiaguest::customers');
-$routes->post('/test1', 'Asiaguest::customers');
-$routes->get('/test2', 'Testglobal::passtest');
-$routes->post('/test2', 'Testglobal::passtest');
 
-$routes->get('/test3', 'Asiaguest::guest_list');
-$routes->get('/test3/(:any)', 'Asiaguest::guest_list/$1');
-$routes->post('/test3/(:any)', 'Asiaguest::guest_list/$1');
-//$routes->post('/test3', 'Asiaguest::guest_list');
+$routes->get('directory', 'ExhibitorDirectory::form_show');
+$routes->post('directory', 'ExhibitorDirectory::data_submitted');
+$routes->post('upload/do_upload', 'Upload::do_upload');
 
-$routes->get('/test4', 'Asiaguest::guest_test');
-$routes->post('/test4', 'Asiaguest::guest_test');
-
-$routes->get('/start', 'shorttest::customers');
-$routes->post('/start', 'shorttest::customers');
-
-$routes->get('/start/1', 'shorttest::codetest');
-$routes->post('/start/1', 'shorttest::codetest');
-
-
-$routes->get('/test5', 'Form::form_show');
-$routes->post('/test5', 'Form::form_show');
-$routes->post('/form/data_submitted', 'Form::data_submitted');
-
-
-$routes->post('/upload/do_upload', 'Upload::do_upload');
-
-$routes->get('/directory', 'Form::form_show');
-$routes->post('/directory', 'Form::form_show');
-
-
-
-
-
+/*
 $routes->get('/upload', 'Upload2::form_show');          
 $routes->post('/upload/upload', 'Upload2::upload'); 
 
@@ -80,8 +59,6 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
 $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral'); 
 
-$routes->get('/upload1', 'Upload::index');          
-$routes->post('/upload1/upload1', 'Upload::do_upload');
 $routes->get('/expo', 'Expo::index');          
 $routes->post('/expo', 'Expo::index');
 $routes->get('/expo/contact', 'Expo::contact1337');          
@@ -94,6 +71,7 @@ $routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzh
 $routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
 $routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
 $routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china');
+*/
 
 /*
  * --------------------------------------------------------------------

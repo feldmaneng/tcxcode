@@ -65,7 +65,8 @@ class App extends BaseConfig
      * something else. If you are using mod_rewrite to remove the page set this
      * variable so that it is blank.
      */
-    public string $indexPage = 'tools/menu.php'; //tools4.php';
+     
+    public string $indexPage = 'forms.php'; //tools/menu.php'; //tools4.php';
 
     /**
      * --------------------------------------------------------------------------
