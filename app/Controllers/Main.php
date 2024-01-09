@@ -20,8 +20,7 @@ class Main extends BaseController {
     {  
  		$session = session();
  		
-	    if (isset($session->tcx_logged_in) && $session->tcx_logged_in ) {
-
+		if ( $session->tcx_logged_in ) {
 	    	return redirect()->to('database');
 	    	
 	    } else {
@@ -67,7 +66,7 @@ class Main extends BaseController {
             $session->set('tcx_logged_in',$loggedIn);
 
             if ($loggedIn) {
-            	return redirect()->to('Database');
+            	return redirect()->to('database');
             } else {
             	return view('login');
             }
@@ -80,10 +79,11 @@ class Main extends BaseController {
   
     public function logout()  
     {  
-
+		$session = session();
+		
         $session->destroy();  
              
-        redirect('Main');
+        return redirect()->to('/');
        
     }  
   

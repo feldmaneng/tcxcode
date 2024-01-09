@@ -23,7 +23,9 @@ foreach($css_files as $file) { ?>
  		
         <a href='<?php echo site_url()?>'>Menu</a> 
 
-		|  Hello <?php	if (isset($_SERVER['REMOTE_USER'])) {
+		|  Hello <?php	
+		
+				/*if (isset($_SERVER['REMOTE_USER'])) {
  					echo " ".$_SERVER['REMOTE_USER']. " -- ";
  					
  					// Logout code does not appear to be working in Chrome
@@ -35,6 +37,18 @@ foreach($css_files as $file) { ?>
  				} else {
 	 				echo "local_user"; 	 
 	 			} 
+	 			*/
+	 			
+	 				$session = session();
+		
+					if (isset($session->tcx_userdata) && isset($session->tcx_userdata['username'])) {
+						echo $session->tcx_userdata['username'] . " | ";
+						// Add logout code here
+						echo '<a href="../logout">logout</a>';
+						
+					} else {
+						echo "local_user"; 	
+					}
 	 		?>
 		<?php
  		//echo "<pre>";

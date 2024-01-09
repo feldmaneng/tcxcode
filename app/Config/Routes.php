@@ -33,6 +33,8 @@ $routes->setAutoRoute(false); //true);
 
 
 $routes->get('/', 'Main::index');
+$routes->get('logout', 'Main::logout');
+
 $routes->post('main', 'Main::login_action');
 
 $routes->get('database', 'Database::index');
