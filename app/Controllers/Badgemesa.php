@@ -21,7 +21,7 @@ if ( !$session->tcx_logged_in ) {
 
 }
  
-class Badgemesa extends CI_Controller {
+class Badgemesa extends BaseController {
 
  
 	function __construct()
