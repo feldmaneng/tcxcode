@@ -7,6 +7,13 @@ use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
 
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+}
+ 
 class Badgemesa extends CI_Controller {
 
  
@@ -75,15 +82,15 @@ class Badgemesa extends CI_Controller {
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'tinyml2023'
+    'guests.EventYear' => 'Mesa2023'
 ]);
 		
 		$crud->columns (['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Type','Tutorial']);
 
 		$crud->uniqueFields(['ContactID']);
 
-		$this->grocery_crud->add_action('Print Badge', '', site_url('/badgemesa/TestConXsingle/'),'ui-icon-image'); 
-		
+		//$this->grocery_crud->add_action('Print Badge', '', site_url('/badgemesa/TestConXsingle/'),'ui-icon-image'); 
+		$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
 		// Try restricting fields...
 		$crud->fields (['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		$crud ->fieldtype('Type','enum',array('Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny'));
@@ -407,21 +414,28 @@ private function printEXPOBadge ($label, $nickname, $firstname, $lastname,$compa
 
 function Testbadge($convention = "testconx",$event = "test2022", $graphics = FALSE,$type = "Professional")
 {
-
-	$this->db = $this->load->database('RegistrationDataBase', TRUE);
-
-	$this->db->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
-	$this->db->from('guests');
-	$this->db->where('EventYear', $event);
-	$this->db->where('ToPrint', 'Yes');
-	$this->db->where('Type', $type);
-
-	$this->db->order_by('FamilyName ASC, GivenName ASC');
-
-	$query = $this->db->get();
-	$people = $query->num_rows();
 	
-	$results = $query->result_array();
+	$db      = \Config\Database::connect('Registration');
+	$builder = $db->table('guests');
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	$builder->where('EventYear', $event);
+	$builder->where('ToPrint', 'Yes');
+	$builder->where('Type', $type);
+	$builder->orderBy('FamilyName ASC, GivenName ASC');
+	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
+
+	//$this->db->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	//$this->db->from('guests');
+	//$this->db->where('EventYear', $event);
+	//$this->db->where('ToPrint', 'Yes');
+	//$this->db->where('Type', $type);
+
+	//$this->db->order_by('FamilyName ASC, GivenName ASC');
+
+	$query = $builder->get();
+	$people = $query->getNumRows();
+	
+	$results = $query->getResultArray();
 	
 	$height = '158.75';
 	$width = '107.95';
