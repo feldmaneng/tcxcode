@@ -21,6 +21,7 @@ if ( !$session->tcx_logged_in ) {
 	die ("Login failure"); // Shouldn't execute but here just in case.
 
 } 
+
 // Some variables for each year
 
 $session = session(); 
