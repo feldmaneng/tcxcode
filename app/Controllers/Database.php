@@ -58,6 +58,9 @@ class Database extends BaseController {
 		echo "<LI>Process <a href=" . site_url('/s2_match_db') . ">WordPress / s2member</a></LI>";
 		echo "<LI>Tools for <a href=" . site_url('/mailinglist') . ">Mailing lists</a></LI>";		
 */
+		echo "<br><br>";
+		echo "<ul>";
+		echo "<LI>EXPO <a href=" . site_url('/expo') . "></a></LI>";
 		echo "</ul>";
 	}
 
