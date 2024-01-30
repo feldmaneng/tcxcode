@@ -6,6 +6,13 @@ namespace App\Controllers;
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
+use App\Libraries\PdfLibrary;
+use CodeIgniter\Database\RawSql;
+use CodeIgniter\Database\BaseBuilder;
+use CodeIgniter\Files\File;
+use CodeIgniter\CLI\BaseCommand;
+use CodeIgniter\CLI\CLI;
+use CodeIgniter\Controller;
 
 $session = session();
 if ( !$session->tcx_logged_in ) {
