@@ -52,16 +52,17 @@ class Database extends BaseController {
 
 //UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
-		echo "</OL>";
+	
 		/*echo "<br><br>";
 		echo "<ul>";
 		echo "<LI>Process <a href=" . site_url('/s2_match_db') . ">WordPress / s2member</a></LI>";
 		echo "<LI>Tools for <a href=" . site_url('/mailinglist') . ">Mailing lists</a></LI>";		
 */
 		echo "<br><br>";
-		echo "<ul>";
+		
 		echo "<LI><a href=" . site_url('/expo') . ">EXPO ENTRIES</a></LI>";
-		echo "</ul>";
+		
+		echo "</OL>";
 	}
 
     function contacts()
