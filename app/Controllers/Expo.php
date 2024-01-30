@@ -13,6 +13,7 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
 
+
 // Make sure you are logged in to access these functions.
 $session = session();
 if ( !$session->tcx_logged_in ) {
@@ -20,7 +21,6 @@ if ( !$session->tcx_logged_in ) {
 	die ("Login failure"); // Shouldn't execute but here just in case.
 
 } 
-
 
 // Some variables for each year
 
@@ -90,7 +90,7 @@ helper('text');
 	
 		public function contact1337()
 		{
-	$year=2023;
+	$year=2024;
     //include 'singleprint.php';
     //Global $year;
     $year2=$year+1;
