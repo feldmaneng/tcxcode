@@ -51,17 +51,21 @@ $routes->post('upload/do_upload', 'Upload::do_upload');
 
 $routes->get('/expo', 'Expo::index');          
 $routes->post('/expo', 'Expo::index');
+
 $routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa');
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
 $routes->post('/Expo/duplicate', 'Expo::duplicate');
+
 $routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa'); 
 $routes->get('/expo/list_expo_entries_suzhou', 'Expo::list_expo_entries_suzhou'); 
 $routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzhen'); 
 $routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
 $routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
+
 $routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china'); */
+
 
 /*
 $routes->get('/upload', 'Upload2::form_show');          
@@ -75,18 +79,12 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
 $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral'); 
 
-$routes->get('/expo', 'Expo::index');          
-$routes->post('/expo', 'Expo::index');
+
 $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
 $routes->post('/Expo/duplicate', 'Expo::duplicate');
-$routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa'); 
-$routes->get('/expo/list_expo_entries_suzhou', 'Expo::list_expo_entries_suzhou'); 
-$routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzhen'); 
-$routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
-$routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
-$routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china');
+
 */
 
 /*
