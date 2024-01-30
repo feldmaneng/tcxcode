@@ -60,7 +60,7 @@ class Database extends BaseController {
 */
 		echo "<br><br>";
 		echo "<ul>";
-		echo "<LI>EXPO <a href=" . site_url('/expo') . "></a></LI>";
+		echo "<LI><a href=" . site_url('/expo') . ">EXPO ENTRIES</a></LI>";
 		echo "</ul>";
 	}
 
