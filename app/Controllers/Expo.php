@@ -13,10 +13,19 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
 
+// Make sure you are logged in to access these functions.
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+} 
+
+
 // Some variables for each year
 
 $session = session(); 
-$year=2023;
+$year=2024;
 class Expo extends BaseController {
 
  
@@ -274,7 +283,7 @@ $NewSecret=substr(str_shuffle($Permittedcharacters),0,10);
 	}
 		
 	
-	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2023, $PriorYear = 2022) 
+	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2024, $PriorYear = 2023) 
 	// Reads the BiTS EXPO registration database and dumps the entries
 	{
 		//$Year = 2022;
