@@ -849,7 +849,7 @@ $pdf->Output('My-File-Name.pdf', 'I');
 
 function Blankbadge($convention = "testconx", $event = "test2022", $graphics = FALSE,$type = "Professional")
 {
-	$db      = \Config\Database::connect('Registration');
+	$db      = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
 	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
