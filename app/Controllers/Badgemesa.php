@@ -849,21 +849,21 @@ $pdf->Output('My-File-Name.pdf', 'I');
 
 function Blankbadge($convention = "testconx", $event = "test2022", $graphics = FALSE,$type = "Professional")
 {
-
-	$this->db = $this->load->database('RegistrationDataBase', TRUE);
-
-	$this->db->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
-	$this->db->from('guests');
-	$this->db->where('EventYear', $event);
-	$this->db->where('ToPrint', 'Yes');
-	$this->db->where('Type', $type);
-
-	$this->db->order_by('FamilyName ASC, GivenName ASC');
-
-	$query = $this->db->get();
-	$people = $query->num_rows();
+	$db      = \Config\Database::connect('Registration');
+	$builder = $db->table('guests');
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	$builder->where('EventYear', $event);
+	$builder->where('ToPrint', 'Yes');
+	$builder->where('Type', $type);
+	$builder->orderBy('FamilyName ASC, GivenName ASC');
 	
-	$results = $query->result_array();
+
+
+
+	$query = $builder->get();
+	$people = $query->getNumRows();
+	
+	$results = $query->getResultArray();
 	
 	// $height = '158.75';
 // 	$width = '107.95';
