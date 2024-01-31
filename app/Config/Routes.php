@@ -55,6 +55,9 @@ $routes->post('/expo', 'Expo::index');
 $routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa');
 $routes->get('/badge', 'Badgemesa::index');          
 $routes->post('/badge', 'Badgemesa::index');
+$routes->get('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');          
+$routes->post('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');
+
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
