@@ -42,7 +42,8 @@ class Autoload extends AutoloadConfig
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
-		 'TCPDF' =>'ThirdParty/tcpdf'// For custom app namespace
+		 'TCPDF' => APPPATH .'ThirdParty\tcpdf',// For custom app namespace
+		 'PHPQR' => APPPATH .'ThirdParty\phpqrcode'//
     ];
 
     /**
@@ -63,7 +64,8 @@ class Autoload extends AutoloadConfig
      * @var array<string, string>
      */
     public $classmap = [
-	'TCPDF' =>APPPATH . 'ThirdParty/tcpdf/tcpdf.php'
+	'TCPDF' =>APPPATH . 'ThirdParty/tcpdf/tcpdf.php',
+	'QRcode' =>APPPATH . 'ThirdParty/phpqrcode/qrlib.php'
 	];
 
     /**

@@ -55,8 +55,29 @@ $routes->post('/expo', 'Expo::index');
 $routes->get('/expo/list_expo_entries_mesa', 'Expo::list_expo_entries_mesa');
 $routes->get('/badge', 'Badgemesa::index');          
 $routes->post('/badge', 'Badgemesa::index');
-$routes->get('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');          
-$routes->post('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');
+$routes->get('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgesMesaBlankProfessional');          
+$routes->post('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgesMesaBlankProfessional');
+$routes->get('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');          
+$routes->post('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');
+
+$routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
+$routes->post('/testtcpdf', 'Badges\Tcpdfexample');
+
+$routes->get('/mypdf', 'mypdf::index');          
+$routes->post('/mypdf', 'mypdf::index');
+
+$routes->get('/mypdf2', 'Mypdf2');          
+$routes->post('/mypdf2', 'Mypdf2');
+
+$routes->get('/certificates', 'Certificate::index');          
+$routes->post('/certificates', 'Certificate::index');
+
+$routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
+$routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');
+
+$routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
+$routes->post('/Certificate/Certificates', 'Certificate::Certificates');
+
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');

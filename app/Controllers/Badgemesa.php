@@ -6,7 +6,7 @@ namespace App\Controllers;
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
-use App\Libraries\PdfLibrary;
+//use tcpdf\tcpdf;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Files\File;
@@ -23,10 +23,10 @@ if ( !$session->tcx_logged_in ) {
  
 class Badgemesa extends BaseController {
 
- 
+  
 	function __construct()
 	{
-		
+		//parent::__construct();
 		helper('text');
 		
 	}
@@ -173,7 +173,7 @@ $pageLayout = array($width, $height);
 
 
 
-$pdf = new Pdf('P', 'MM',$pageLayout, true, 'UTF-8', false);
+$pdf = new \TCPDF('P', 'MM',$pageLayout, true, 'UTF-8', false);
 $pdf->SetTitle('Badge Single');
 $pdf->SetMargins(10,10,10,10);
 $pdf->SetHeaderMargin(0);
@@ -320,7 +320,7 @@ $pdf->Output('My-File-Name.pdf', 'I');
 function qrstamp($a,$b,$c,$d)
  {
 	
-//include('/phpqrcode/qrlib.php'); 
+//include('phpqrcode/qrlib.php'); 
 //file_put_contents("test5.png",file_get_contents("test6.png"));
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $d; 
  
@@ -334,25 +334,13 @@ function qrstamp($a,$b,$c,$d)
     $codeContents .= 'END:VCARD'; 
 	
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
-	return QRcode::png($codeContents, $tempDir.'08.png', QR_ECLEVEL_L, 200,0);
+	return \QRcode::png($codeContents, $tempDir.'08.png', QR_ECLEVEL_L, 200,0);
 	}
 	
 private function printBadge ($label, $nickname, $firstname, $lastname,$company, $QRfile,$type) {
 
 echo '<div id = "rect1"><h1>';
-/*switch ($label) {
-    case "0":
-        echo '<p class="Tutorial">&nbsp;</p><h1>';
-        break;
-    case "1":
-        echo '<p class="Tutorial">Tutorial</p><h1>';
-        break;
-    case "2":
-        echo '<p class="Tutorial">Companion</p><h1>';
-        break;
-    default:
-        echo '<p class="Tutorial">&nbsp;</p><h1>';
-}*/
+
 		
 			echo $nickname;
 			echo '</h1><p><h3 class="small">'. $firstname. " " .$lastname."<br>".$company."</h3></p>";
@@ -368,7 +356,7 @@ private function printPDFBadge ($label, $nickname, $firstname, $lastname,$compan
 
 
 
-$pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+$pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 $pdf->SetTitle('My Title');
 $pdf->SetHeaderMargin(0);
 $pdf->SetTopMargin(0);
@@ -426,7 +414,7 @@ function Testbadge($convention = "testconx",$event = "test2022", $graphics = FAL
 	$builder = $db->table('guests');
 	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
-	$builder->where('ToPrint', 'Yes');
+	//$builder->where('ToPrint', 'Yes');
 	$builder->where('Type', $type);
 	$builder->orderBy('FamilyName ASC, GivenName ASC');
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
@@ -449,7 +437,7 @@ function Testbadge($convention = "testconx",$event = "test2022", $graphics = FAL
 $pageLayout = array($width, $height);
 
 
-$pdf = new Pdf('P', 'MM',$pageLayout, true, 'UTF-8', false);
+$pdf = new \TCPDF('P', 'MM',$pageLayout, true, 'UTF-8', false);
 $pdf->SetTitle('My Title');
 $pdf->SetMargins(10,10,10,10);
 $pdf->SetHeaderMargin(0);
@@ -768,12 +756,7 @@ if($convention == "emea"){
 		}
 		
 		
-	// 	if($type=="EXPO"){
-// 		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-// 		}
-// 		else{
-// 		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-// 		}
+	
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -843,15 +826,17 @@ $pdf->AddPage('P',$pageLayout);
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-		
+echo($pdf);			
 
 	} 
 
-function Blankbadge($convention = "testconx", $event = "test2022", $graphics = FALSE,$type = "Professional")
+function Blankbadge($convention = 'testconx', $event = 'Mesa2019', $graphics = FALSE,$type = 'Professional')
 {
-	$db      = \Config\Database::connect('registration');
+
+	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
 	$builder->where('ToPrint', 'Yes');
 	$builder->where('Type', $type);
@@ -870,10 +855,10 @@ function Blankbadge($convention = "testconx", $event = "test2022", $graphics = F
 	
 	 $height = '152.4';
  	$width = '101.6';
-$pageLayout = array($width, $height);
+	$pageLayout = array($width, $height);
 
-
-$pdf = new Pdf('P', 'MM',$pageLayout, true, 'UTF-8', false);
+//$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new \TCPDF('P', 'MM',$pageLayout, true, 'UTF-8', false);
 $pdf->SetTitle('My Title');
 $pdf->SetMargins(10,10,10,10);
 $pdf->SetHeaderMargin(0);
@@ -890,119 +875,7 @@ $pdf->setPrintFooter(false);
 		$filler=0;
 		$pages=0;
 		
-// for($i=1; $i<=$people; $i++){ 
-// 		$n = $i-1;
-// 		// Define what special labels go on the badges
-// 		$label ="0";
-// 		
-// 		
-// 		if (!empty($results[$n]["GivenName"])){
-// 		$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
-// 	}
-// 	
-// 		$NameOnBadge=$results[$n]["NameOnBadge"];
-// 		
-// 		$GivenName=$results[$n]["GivenName"];
-// 		echo "<h1>".$GivenName."</h1>";
-// 		
-// 		
-// 		$CN_Company=$results[$n]["CN_Company"];
-// 		$FamilyName=$results[$n]["FamilyName"];
-// 		$EventYear=$results[$n]["EventYear"];
-// 		$Company=$results[$n]["Company"];
-// 		$ContactID=$results[$n]["ContactID"];
-// 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
-// 		$HardCopy=$results[$n]["HardCopy"];
-// 		$Tutorial=$results[$n]["Tutorial"];
-// 		$Control=$results[$n]["Control"];
-// 		
-// 		$pdf->AddPage('P',$pageLayout);
-// 		
-// 		if($HardCopy==1){
-// 		$HardCopy="HC";
-// 		}
-// 		else{
-// 		$HardCopy="0";
-// 		}
-// 		if($convention == "testconx"){
-// 			if($Tutorial==1){
-// 			$Tutorial="TUTORIAL";
-// 			}
-// 			else{
-// 			$Tutorial="";
-// 			}
-// 		}
-// 		if($convention == "tinyml"){
-// 			if($Tutorial==1){
-// 			$Tutorial="SYMPOSIUM";
-// 			}
-// 			else{
-// 			$Tutorial="";
-// 			}
-// 		}
-// 		
-// 		
-// 		$pdf->SetFont('stsongstdlight', 'B', 75);
-// 		$pdf->SetFillColor(255, 255, 255);
-// 		$pdf->SetTextColor(0,0,0);
-// 		$pdf->SetFont('helvetica', 'B', 75);
-// 		$pdf->Ln(40);
-// 	if (!empty($results[$n]["NameOnBadge"])){
-// 		$pdf->SetFont('helvetica', 'B', 55);
-// 		$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
-// 		
-// 		$pdf->SetFont('stsongstdlight', 'B', 25);
-// 
-// 			
-// 	}
-// 	else if (!empty($results[$n]["GivenName"])){
-// 		$pdf->SetFont('helvetica', 'B', 55);
-// 		$pdf->Cell(0, 0, $GivenName, 0, 1, 'C', 0, '', 1);
-// 		
-// 		$pdf->SetFont('stsongstdlight', 'B', 25);
-// 		
-// 		
-// 	}
-// 	else {
-// 		$pdf->SetFont('stsongstdlight', 'B', 55);
-// 		
-// 		
-// 	}
-// 		$pdf->SetFont('stsongstdlight', 'B', 25);
-// 	
-// 		$pdf->Cell(0, 0,$CN_Company, 0, 1, 'C', 0, '', 1);
-// 		$pdf->SetFont('helvetica', 'B', 25);
-// 		if(strlen($FamilyName)>8){
-// 		$pdf->SetFont('helvetica', 'B', 22);
-// 		}
-// 		$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
-// 		$pdf->SetFont('helvetica', 'B', 25);
-// 		if(strlen($Company)>12){
-// 		$pdf->SetFont('helvetica', 'B', 17);
-// 		}
-// 		$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
-// 		
-// 		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 4,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-// 		
-// 		$pdf->SetFillColor(224,146,47);
-// 		$pdf->SetTextColor(255,255,255);
-// 		$pdf->SetFont('helvetica', 'B', 15);
-// 		$pdf->setCellPaddings(0, 6, 0, 0);
-// 		
-// 		$pdf->setCellPaddings(0, 0, 0, 0);
-// 		$pdf->SetFillColor(255,255,255);
-// 		$pdf->SetTextColor(0,0,0);
-// 		
-// 		$pdf->SetFont('helvetica', '', 10);
-// 		
-// 		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
-// 			
-// 		 $q++;
-// 		 		 
-// 	 
-// 	 
-// 	 
-// 	 }
+
  
 for($i=1; $i<=$people; $i++){ 
 		$n = $i-1;
@@ -1352,7 +1225,7 @@ if($convention == "emea"){
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-		
+echo($pdf);		
 
 	} 
 
@@ -1388,17 +1261,19 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge("testconx","Mesa2023", FALSE,"Professional");
+	$this->Blankbadge('testconx','Mesa2019', FALSE,'Professional');
+	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
-	$this->Blankbadge("testconx","Mesa2023", FALSE,"Exhibitor");
+	$this->Blankbadge("testconx","Mesa2019", FALSE,"Exhibitor");
 }
 function BadgesMesaBlankEXPO (){
-	$this->Blankbadge("testconx","Mesa2023", FALSE,"EXPO");
+	$this->Blankbadge("testconx","Mesa2019", FALSE,"EXPO");
 }
 
 function BadgestinymlBlankProfessional (){
-	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
+	//$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
+	$this->Blankbadge("testconx","tinyml2023", FALSE,"Summit");
 }
 function BadgestinymlBlankExhibitor (){
 	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Symposium");

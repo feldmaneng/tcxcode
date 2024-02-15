@@ -15,7 +15,7 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
 
-session_start(); // Remember things across pages
+
 class Certificate extends BaseController {
 
 function __construct()
@@ -44,7 +44,7 @@ helper('html');
 
 	function CertificatesGeneral()
  { 
- 
+
 $db = db_connect();
 $builder = $db->table('presentations');
 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
@@ -61,32 +61,14 @@ $builder -> orderBy('Title','ASC');
 $query = $builder->get(); 
 $people = $query->getNumRows();
 $results = $query->getResultArray();
-	//test
-/* $this->db->select('*');    
-$this->db->from('presentations');
-$this->db->join('authors', 'presentations.PresentationID = authors.PresentationID');
-$this->db->where('Year', 2023);
-$this->db->where('Event', 'Mesa');
-$this->db->where('Session !=', 'Cancel');
-$this->db->where('Session !=', 'Cancel-Poster');
-$this->db->where('Session !=', '3AB');
-$this->db->where('Session !=', '2AB');
-$this->db->where('Session !=', 'Best Poster');
-$this->db->where('Session !=', 'dropped');
 
-	$this->db->order_by('Session ASC, PresentationNumber ASC');
-	$this->db->order_by('Title ASC');
-
-	$query = $this->db->get();
-	$people = $query->num_rows();
-	$results = $query->result_array();  */
-		
-//echo $people;
     $width = 279.4;  
 	$height = 215.9;
 	$pageLayout = array($width, $height);
 	
-$pdf = new PdfLibrary('L', 'mm', $pageLayout, true, 'UTF-8', false);
+$pdf = new \TCPDF('L', 'mm', $pageLayout, true, 'UTF-8', false);
+
+
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('CMPVTESTCONX');
@@ -140,7 +122,8 @@ $pdf->SetFont('helvetica', '', 10);
 //for($i=1 ; $i <= 1 ; $i++)
 
 
-for($i=1 ; $i <= $people ; $i++)
+//for($i=1 ; $i <= $people ; $i++)
+for($i=1 ; $i <= 5; $i++)
 {
 //this determines how many rows the sheet has
 
@@ -153,7 +136,10 @@ $LASTNAME=$results[$n]["FamilyName"];
 $TITLE=$results[$n]["Title"];
 $SESSION=$results[$n]["Session"];
 
-   
+
+
+
+
     $pdf->setCellMargins(0,0,0,0);
   //  $pdf->setCellMargins(0,0,2.5,0);
     
@@ -217,14 +203,14 @@ $SESSION=$results[$n]["Session"];
 // ---------------------------------------------------------
 ob_end_clean();
 //Close and output PDF document
-$pdf->Output(md5(time()).'.pdf', 'D');
+$pdf->Output('certificates.pdf', 'I');
+echo($pdf);
 }	
  
   
  function Certificates()
  { 
- 
- 
+
 
 $db = db_connect();
 $builder = $db->table('presentations');
@@ -242,33 +228,16 @@ $builder -> orderBy('PresentationNumber','ASC');
 $builder -> orderBy('Title','ASC');
 $query = $builder->get(); 
 $people = $query->getNumRows();
-$results = $query->getResult();
+$results = $query->getResultArray();
 	
-/* 	
-$this->db->select('*');    
-$this->db->from('presentations');
-$this->db->join('authors', 'presentations.PresentationID = authors.PresentationID');
-$this->db->where('Year', 2020);
-$this->db->where('Event', 'Mesa');
-$this->db->where('Session !=', 'Cancel');
-$this->db->where('Session !=', 'Cancel-Poster');
-$this->db->where('Session !=', '3AB');
-$this->db->where('Session !=', '2AB');
-$this->db->where('Session !=', 'Best Poster');
 
-	$this->db->order_by('Session ASC, PresentationNumber ASC');
-	//$this->db->order_by('Title ASC');
-
-	$query = $this->db->get();
-	$people = $query->num_rows();
-	$results = $query->result_array();  */
 		
-echo $people;
+
     $width = 279.4;  
 	$height = 215.9;
 	$pageLayout = array($width, $height);
 	
-$pdf = new TCPDF('L', 'mm', $pageLayout, true, 'UTF-8', false);
+$pdf = new \TCPDF('L', 'mm', $pageLayout, true, 'UTF-8', false);
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('CMPVTESTCONX');
@@ -320,7 +289,6 @@ $pdf->SetFont('helvetica', '', 10);
 
 
 
-
 for($i=1 ; $i <= $people ; $i++)
 {
 //this determines how many rows the sheet has
@@ -337,8 +305,10 @@ $SESSION=$results[$n]["Session"];
     $pdf->setCellMargins(0,0,2.5,0);
     // The width is set to the the same as the cell containing the name.
     // The Y position is also adjusted slightly.
-  // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/return2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
-   $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
+  // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
+   //$pdf->Image('C:\wamp64\www\TestConX\tcxcode\app\Controllers\TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', '',true,100, '', false, false, 0, false, false, false);
+	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279.5, 215.4, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+	
 	$y=55;
 	$z=10;
    $pdf->SetFont('times', '', 24);  
@@ -390,6 +360,7 @@ $SESSION=$results[$n]["Session"];
 ob_end_clean();
 //Close and output PDF document
 $pdf->Output('certificates.pdf', 'I');
+echo($pdf);
 }	
 
  
