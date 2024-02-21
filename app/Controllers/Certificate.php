@@ -207,6 +207,7 @@ ob_end_clean();
 //Close and output PDF document
 $pdf->Output('certificates.pdf', 'I');
 echo($pdf);
+echo("end");
 }	
  
   
