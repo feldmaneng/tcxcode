@@ -147,7 +147,7 @@ $SESSION=$results[$n]["Session"];
     // The Y position is also adjusted slightly.
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/return2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
-	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279.5, 215.4, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 	$y=55;
 	$z=10;
@@ -166,6 +166,9 @@ $SESSION=$results[$n]["Session"];
     else if($SESSION == 'Keynote')
     {
     $pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
+    } else if($SESSION == 'Tutorial1' || $SESSION == 'Tutorial2')
+    {
+    $pdf->MultiCell(100, 25,"for the Tutorial", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
     } else
    {
    $pdf->MultiCell(100, 25,"for the presentation", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
@@ -205,7 +208,7 @@ $SESSION=$results[$n]["Session"];
 // ---------------------------------------------------------
 ob_end_clean();
 //Close and output PDF document
-$pdf->Output('certificates.pdf', 'F');
+$pdf->Output('certificates2024.pdf', 'I');
 echo($pdf);
 exit;
 }	
