@@ -147,7 +147,7 @@ $SESSION=$results[$n]["Session"];
     // The Y position is also adjusted slightly.
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/return2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
-	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 10, 10, 270, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 5, 5, 270, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 	$y=55;
 	$z=10;
