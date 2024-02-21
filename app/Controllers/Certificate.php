@@ -48,7 +48,7 @@ helper('html');
 $db = db_connect();
 $builder = $db->table('presentations');
 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
-$builder -> where('Year', 2023);
+$builder -> where('Year', 2024);
 $builder -> where('Event', 'Mesa');
 $builder -> where('Session !=', 'Cancel');
 $builder -> where('Session !=', 'Cancel-Poster');;
