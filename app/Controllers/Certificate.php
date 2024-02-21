@@ -66,7 +66,7 @@ $results = $query->getResultArray();
 	$height = 215.9;
 	$pageLayout = array($width, $height);
 	
-$pdf = new \TCPDF('L', 'mm', $pageLayout, true, 'UTF-8', false);
+$pdf = new TCPDF('L', 'mm', $pageLayout, true, 'UTF-8', false);
 
 
 // set document information
