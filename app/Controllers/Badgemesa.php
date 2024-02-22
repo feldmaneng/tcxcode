@@ -3,6 +3,7 @@
 
 namespace App\Controllers;
 
+
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
@@ -81,6 +82,13 @@ class Badgemesa extends BaseController {
     'guests.EventYear' => 'tinyml2023'
 ]);	 */
 // New way
+
+        $crud = $this->_getGroceryCrudEnterprise();
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+
+
 		$crud = $this->_getGroceryCrudEnterprise();
 
         $crud->setCsrfTokenName(csrf_token());
