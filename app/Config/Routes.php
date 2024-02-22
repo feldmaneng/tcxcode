@@ -63,6 +63,10 @@ $routes->post('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');
 $routes->get('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');          
 $routes->post('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');
 
+$routes->get('/badgemesa/testconx_guests', 'Badgemesa::testconx_guests');          
+$routes->post('/badgemesa/testconx_guests', 'Badgemesa::testconx_guests');
+
+
 $routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
 $routes->post('/testtcpdf', 'Badges\Tcpdfexample');
 
