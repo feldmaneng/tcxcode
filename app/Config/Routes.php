@@ -60,6 +60,9 @@ $routes->post('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgesMesaBl
 $routes->get('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');          
 $routes->post('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');
 
+$routes->get('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');          
+$routes->post('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');
+
 $routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
 $routes->post('/testtcpdf', 'Badges\Tcpdfexample');
 
