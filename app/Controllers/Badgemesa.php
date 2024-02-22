@@ -1261,7 +1261,7 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge('testconx','Mesa2019', FALSE,'Professional');
+	$this->Blankbadge('testconx','Mesa2023', FALSE,'Professional');
 	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
@@ -1273,7 +1273,7 @@ function BadgesMesaBlankEXPO (){
 
 function BadgestinymlBlankProfessional (){
 	//$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
-	$this->Blankbadge("testconx","tinyml2023", FALSE,"Summit");
+	$this->Blankbadge("testconx","mesa2023", FALSE,"Summit");
 }
 function BadgestinymlBlankExhibitor (){
 	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Symposium");
