@@ -410,11 +410,11 @@ private function printEXPOBadge ($label, $nickname, $firstname, $lastname,$compa
 function Testbadge($convention = "testconx",$event = "test2022", $graphics = FALSE,$type = "Professional")
 {
 	
-	$db      = \Config\Database::connect('Registration');
+	$db      = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
 	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
-	//$builder->where('ToPrint', 'Yes');
+	$builder->where('ToPrint', 'Yes');
 	$builder->where('Type', $type);
 	$builder->orderBy('FamilyName ASC, GivenName ASC');
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
