@@ -118,19 +118,19 @@ class Badgemesa extends BaseController {
 		
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Type','Tutorial']);
 
-		$crud->uniqueFields(['ContactID']);
+		//$crud->uniqueFields(['ContactID']);
 
 		//$this->grocery_crud->add_action('Print Badge', '', site_url('/badgemesa/TestConXsingle/'),'ui-icon-image'); 
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
 		// Try restricting fields...
-		$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
-		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
-		$crud ->fieldtype('ToPrint','enum',['Yes','No']);
+		//$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
+		//$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
+		//$crud ->fieldtype('ToPrint','enum',['Yes','No']);
 		
 		
 	
 		$output = $crud->render();
-echo($output);
+
 	return $this->_example_output($output);  
 
 		
@@ -144,8 +144,7 @@ echo($output);
 	$this->load->view('bits_template.php',$output);    
 }  */
 
-
- private function _example_output($output = null) {
+private function _example_output($output = null) {
         if (isset($output->isJSONResponse) && $output->isJSONResponse) {
             header('Content-Type: application/json; charset=utf-8');
             echo $output->output;
@@ -154,6 +153,7 @@ echo($output);
 
         return view('testconx_template.php', (array)$output);
     }
+ 
 
 function TestConXsingle($graphics = TRUE)
  {
