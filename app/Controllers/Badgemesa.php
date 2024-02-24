@@ -80,7 +80,7 @@ class Badgemesa extends BaseController {
 	 
 
     private function _getDbData() {
-        $db = (new ConfigDatabase())->'registration';
+        $db = (new ConfigDatabase())->$registration;
         return [
             'adapter' => [
                 'driver' => 'Pdo_Mysql',
