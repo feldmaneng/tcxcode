@@ -78,14 +78,7 @@ class Badgemesa extends BaseController {
 	
 	function testconx_guests()
 	{
-	/* $this->db = $this->load->database('RegistrationDataBase', TRUE);
-	$this->grocery_crud->set_theme('bootstrap');
-	$this->grocery_crud->set_subject('Badge');
-	$this->grocery_crud->set_table('guests');
-	$this->grocery_crud->where([
-    'guests.EventYear' => 'tinyml2023'
-]);	 */
-// New way
+	
 
         $crud = $this->_getGroceryCrudEnterprise();
 
