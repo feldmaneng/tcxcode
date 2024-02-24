@@ -77,6 +77,14 @@ class Badgemesa extends BaseController {
 		echo "<br><br>";
 		
 	}
+	 private function _getGroceryCrudEnterprise($bootstrap = true, $jquery = true) {
+        $db = $this->_getDbData();
+
+        $config = (new ConfigGroceryCrud())->getDefaultConfig();
+
+        $groceryCrud = new GroceryCrud($config, $db);
+        return $groceryCrud;
+    }    
 	
 	function testconxguests()
 	{
