@@ -77,6 +77,29 @@ class Badgemesa extends BaseController {
 		echo "<br><br>";
 		
 	}
+	 private function _example_output($output = null) {
+        if (isset($output->isJSONResponse) && $output->isJSONResponse) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo $output->output;
+            exit;
+        }
+
+        return view('testconx_template.php', (array)$output);
+    }
+
+    private function _getDbData() {
+        $db = (new ConfigDatabase())->default;
+        return [
+            'adapter' => [
+                'driver' => 'Pdo_Mysql',
+                'host'     => $db['hostname'],
+                'database' => $db['database'],
+                'username' => $db['username'],
+                'password' => $db['password'],
+                'charset' => 'utf8'
+            ]
+        ];
+    }
 	 private function _getGroceryCrudEnterprise($bootstrap = true, $jquery = true) {
         $db = $this->_getDbData();
 
