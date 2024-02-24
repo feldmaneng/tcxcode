@@ -80,16 +80,11 @@ class Badgemesa extends BaseController {
 	{
 	
 
-        $crud = $this->_getGroceryCrudEnterprise();
+       
+		//$crud = $this->_getGroceryCrudEnterprise();
 
-        $crud->setCsrfTokenName(csrf_token());
-        $crud->setCsrfTokenValue(csrf_hash());
-
-
-		$crud = $this->_getGroceryCrudEnterprise();
-
-        $crud->setCsrfTokenName(csrf_token());
-        $crud->setCsrfTokenValue(csrf_hash());
+        //$crud->setCsrfTokenName(csrf_token());
+       // $crud->setCsrfTokenValue(csrf_hash());
 
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
