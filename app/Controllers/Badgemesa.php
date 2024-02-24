@@ -130,7 +130,7 @@ class Badgemesa extends BaseController {
 		
 	
 		$output = $crud->render();
-
+echo('poop');
 	return $this->_example_output($output);  
 
 		
