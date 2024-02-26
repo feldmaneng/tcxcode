@@ -556,17 +556,17 @@ for($i=1; $i<=$people; $i++){
 			}
 		if($type == "Professional"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 2023.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Professional - Front 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Exhibitor"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20235.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Exhibitor - Front 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPO"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20233.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/EXPO Only - Front 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Summit"){
@@ -810,17 +810,17 @@ $pdf->AddPage('P',$pageLayout);
 
 		if($type == "Professional"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20232.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Professional - Back 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Exhibitor"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20236.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Exhibitor - Back 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPO"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20234.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/EXPO Only - Back 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}	 
 		if($type == "Summit"){
@@ -1263,13 +1263,13 @@ echo($pdf);
 	
 
 function BadgesMesaProfessional () {
-	$this->Testbadge("testconx","Mesa2023", TRUE,"Professional");
+	$this->Testbadge("testconx","Mesa2024", TRUE,"Professional");
 }
 function BadgesMesaExhibitor () {
-	$this->Testbadge("testconx","Mesa2023", True,"Exhibitor");
+	$this->Testbadge("testconx","Mesa2024", True,"Exhibitor");
 }
 function BadgesMesaEXPOONLY () {
-	$this->Testbadge("testconx","Mesa2023", True,"EXPO");
+	$this->Testbadge("testconx","Mesa2024", True,"EXPO");
 }
 
 
@@ -1285,19 +1285,19 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge('testconx','Mesa2023', FALSE,'Professional');
+	$this->Blankbadge('testconx','Mesa2024', FALSE,'Professional');
 	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
-	$this->Blankbadge("testconx","Mesa2019", FALSE,"Exhibitor");
+	$this->Blankbadge("testconx","Mesa2024", FALSE,"Exhibitor");
 }
 function BadgesMesaBlankEXPO (){
-	$this->Blankbadge("testconx","Mesa2019", FALSE,"EXPO");
+	$this->Blankbadge("testconx","Mesa2024", FALSE,"EXPO");
 }
 
 function BadgestinymlBlankProfessional (){
 	//$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
-	$this->Blankbadge("testconx","mesa2023", FALSE,"Summit");
+	$this->Blankbadge("testconx","Mesa2024", FALSE,"Summit");
 }
 function BadgestinymlBlankExhibitor (){
 	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Symposium");
