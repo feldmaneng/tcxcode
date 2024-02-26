@@ -561,7 +561,7 @@ for($i=1; $i<=$people; $i++){
 		}
 		if($type == "Exhibitor"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Exhibitor - Front 2024.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Exhibitor - Front 20244.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPO"){
