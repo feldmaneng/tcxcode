@@ -646,10 +646,10 @@ if($convention == "testconx"){
 		
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 			}
 		 $q++;
 }	
@@ -1070,10 +1070,10 @@ if($convention == "testconx"){
 		
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 			}
 		 $q++;
 }	
@@ -1155,10 +1155,10 @@ if($convention == "tinyml"){
 		}
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
 			}
 		
 		 $q++;
