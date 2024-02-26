@@ -66,7 +66,7 @@ $routes->post('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfess
 $routes->get('/badgemesa/BadgesMesaExhibitor', 'Badgemesa::BadgesMesaExhibitor');          
 $routes->post('/badgemesa/BadgesMesaExhibitor', 'Badgemesa::BadgesMesaExhibitor');
 
-$routes->get('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPONLY');          
+$routes->get('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');          
 $routes->post('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');
 
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
