@@ -122,6 +122,8 @@ class Badgemesa extends BaseController {
 
 		//$this->grocery_crud->add_action('Print Badge', '', site_url('/badgemesa/TestConXsingle/'),'ui-icon-image'); 
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
+		$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'
+		);
 		// Try restricting fields...
 		$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
@@ -173,19 +175,27 @@ $link .= $_SERVER['REQUEST_URI'];
       
 // Print the link 
 echo $link;
-$id = ltrim($link, "https://www.testconx.org/tools/secure.php/badgemesa/TestConXsingle/");
+$id = ltrim($link, "https://www.testconx.org/form.php/badgemesa/TestConXsingle/");
 echo  $id;
 
-	$this->db = $this->load->database('RegistrationDataBase', TRUE);
 
-	$this->db->select('NameOnBadge,GivenName,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Dinner');
-	$this->db->from('guests');
-	$this->db->where('ContactID', $id);
-	$this->db->order_by('FamilyName ASC, GivenName ASC');
+	
+	$db  = \Config\Database::connect('registration');
+	$builder = $db->table('guests');
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	
+	$builder->where('ContactID', $id);
+	
+	$builder->orderBy('FamilyName ASC, GivenName ASC');
+	
 
-	$query = $this->db->get();
-	$people = $query->num_rows();
-	$results = $query->result_array();
+
+
+	$query = $builder->get();
+	$people = $query->getNumRows();
+	
+	$results = $query->getResultArray();
 	
 	 $height = '152.4';
  	$width = '101.6';
