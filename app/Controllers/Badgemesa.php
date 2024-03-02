@@ -126,7 +126,7 @@ class Badgemesa extends BaseController {
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
 
 		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-    			return '/TestConXsingle/' . $row->ContactID;
+    			return '#/TestConXsingle/' . $row->ContactID;
 		});
 
 		// Try restricting fields...
