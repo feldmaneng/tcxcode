@@ -259,7 +259,7 @@ for($i=1; $i<=$people; $i++){
 		$type = $results[$n]["Type"];
 		
 		$pdf->AddPage('P',$pageLayout);
-		
+		$Dinnertext="";
 		if($HardCopy==1){
 		$HardCopy="HC";
 		}
