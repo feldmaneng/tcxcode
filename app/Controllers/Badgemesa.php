@@ -115,7 +115,7 @@ class Badgemesa extends BaseController {
 		$crud->where([
     'guests.EventYear' => 'Mesa2024'
 ]);
-		echo site_url('/badgemesa/TestConXsingle/');
+		//echo site_url('/badgemesa/TestConXsingle/');
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Type','Tutorial']);
 
 		$crud->uniqueFields(['ContactID']);
