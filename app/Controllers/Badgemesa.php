@@ -258,7 +258,7 @@ for($i=1; $i<=$people; $i++){
 		$Dinner=$results[$n]["Dinner"];
 		$type = $results[$n]["Type"];
 		
-		$pdf->AddPage('P',$pageLayout);
+		//$pdf->AddPage('P',$pageLayout);
 		$Dinnertext="";
 		if($HardCopy==1){
 		$HardCopy="HC";
