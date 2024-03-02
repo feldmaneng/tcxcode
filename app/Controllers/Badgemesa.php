@@ -113,7 +113,7 @@ class Badgemesa extends BaseController {
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'Mesa2023'
+    'guests.EventYear' => 'Mesa2024'
 ]);
 		
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Type','Tutorial']);
