@@ -354,7 +354,8 @@ for($i=1; $i<=$people; $i++){
 	 
 	 }
 ob_clean();
-$pdf->Output('My-File-Name.pdf', 'I');	
+$pdf->Output('My-File-Name.pdf', 'I');
+echo($pdf);		
 }
 function qrstamp($a,$b,$c,$d)
  {
