@@ -122,8 +122,10 @@ class Badgemesa extends BaseController {
 
 		//$this->grocery_crud->add_action('Print Badge', '', site_url('/badgemesa/TestConXsingle/'),'ui-icon-image'); 
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
-		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
-		
+		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'),true);
+		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
+    return '/TestConXsingle/' . $row->ContactID;
+});
 		// Try restricting fields...
 		$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
