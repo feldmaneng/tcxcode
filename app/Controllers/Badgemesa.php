@@ -125,9 +125,9 @@ class Badgemesa extends BaseController {
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'),true);
 		$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
 
-$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-    return '/TestConXsingle/' . $row->ContactID;
-});
+		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
+    			return '/TestConXsingle/' . $row->ContactID;
+		});
 		// Try restricting fields...
 		$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
