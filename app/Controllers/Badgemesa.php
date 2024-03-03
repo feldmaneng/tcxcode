@@ -290,7 +290,14 @@ for($i=1; $i<=$people; $i++){
 			$Dinnertext="";
 			}
 			}
-		
+		if($convention == "testconx"){
+			if($Tutorial==1){
+			$Tutorial="TUTORIAL";
+			}
+			else{
+			$Tutorial="";
+			}
+			}
 		
 		$pdf->SetFont('stsongstdlight', 'B', 75);
 		$pdf->SetFillColor(255, 255, 255);
