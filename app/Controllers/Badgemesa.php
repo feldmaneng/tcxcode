@@ -1085,10 +1085,10 @@ if($convention == "testconx"){
 		
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,150, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control."-".$i, 0, 'R', 0, 0, -8.5,144, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,150, true);
+		$pdf->MultiCell(90,10,$Tutorial." ".$Control."-".$i, 0, 'R', 0, 0, -8.5,144, true);
 			}
 		 $q++;
 }	
