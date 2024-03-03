@@ -131,7 +131,7 @@ class Badgemesa extends BaseController {
 		});
 
 		// Try restricting fields...
-		$crud->fields(['Email','GivenName']);
+		$crud->fields(['Email','GivenName','ContactID']);
 		
 		//$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		//$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
