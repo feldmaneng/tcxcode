@@ -117,7 +117,7 @@ class Badgemesa extends BaseController {
 ]);
 		//echo site_url('/badgemesa/TestConXsingle/');
 		//$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Type','Tutorial']);
-		$crud->columns(['Email']);
+		$crud->columns(['Email','GivenName']);
 
 		//$crud->uniqueFields(['ContactID']);
 
@@ -131,7 +131,7 @@ class Badgemesa extends BaseController {
 		});
 
 		// Try restricting fields...
-		$crud->fields(['Email']);
+		$crud->fields(['Email','GivenName']);
 		
 		//$crud->fields(['ContactID','EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner']);
 		//$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
