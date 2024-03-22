@@ -159,10 +159,9 @@ class Database extends BaseController {
 	}  
 
 
-/*
-   function companies()
 
-	{
+   function companies()
+   {
 
 		
 		// New way
@@ -226,7 +225,7 @@ class Database extends BaseController {
       	return $this->_example_output($output);
 
 	}  
-*/
+
 
 	
 	// Determine who the current user is 
