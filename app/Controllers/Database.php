@@ -184,7 +184,7 @@ class Database extends BaseController {
 			'Research','BiTS_DB','BiTS_Attend','BiTS_Expo','BiTS_Sponsor',
 			'BiTS_Outreach', 'BiTS_China', 'FEC_Client', 'Acquired',
 			'Summary', 'Notes',
-			'Street1','Street2','City','State','Postal','Country',
+			'Street1','Street2','City','State','Postal','Country', 'CN_Address',
 			'PhoneCountryCode','Phone',
 			'Market1', 'Market2', 'Market3', 'Market4', 'Market5', 'Market6', 
 			'Market7', 'Market8', 'MarketTestConX',
@@ -221,6 +221,7 @@ class Database extends BaseController {
 		$crud->fieldType('Acquired','dropdown',['0' => 'No', '1'=>'Yes']);
 
 		$crud->displayAs('CN_Name','Chinese Name');
+		$crud->displayAs('CN_Address','Chinese Address');
 		
 		$output = $crud->render();
       	return $this->_example_output($output);
