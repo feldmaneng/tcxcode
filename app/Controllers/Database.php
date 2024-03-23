@@ -175,11 +175,11 @@ class Database extends BaseController {
         
         	
 		
-		$crud->columns (['CompanyID','Name','ParentID', 'IsParent']);
+		$crud->columns (['CompanyID','Name','CN_Name'.'ParentID', 'IsParent']);
 		
 		
 		
-		$crud->fields (['CompanyID','Name','ParentID','IsParent',
+		$crud->fields (['CompanyID','Name','CN_Name','ParentID','IsParent',
 			'URL', 'Stock_Market','Ticker_Symbol',
 			'Research','BiTS_DB','BiTS_Attend','BiTS_Expo','BiTS_Sponsor',
 			'BiTS_Outreach', 'BiTS_China', 'FEC_Client', 'Acquired',
@@ -220,7 +220,8 @@ class Database extends BaseController {
 		$crud->fieldType('Rosenberger-OSI','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Acquired','dropdown',['0' => 'No', '1'=>'Yes']);
 
-	
+		$crud->displayAs('CN_Name','Chinese Name');
+		
 		$output = $crud->render();
       	return $this->_example_output($output);
 
