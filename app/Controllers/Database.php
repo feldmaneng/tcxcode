@@ -191,7 +191,7 @@ class Database extends BaseController {
 			'Added', 'Updated']);
 			
 		// Grocery Crud does not allow a set_relation back into the same table...
-		$crud->set_relation('ParentID','company','Parent Name'); //'{Name}'); // {IsParent}',null,'Name ASC');
+		$crud->setRelation('ParentID','company','Parent Name'); //'{Name}'); // {IsParent}',null,'Name ASC');
 		$crud->setRelation('Market1','markets','{Market} - {ID}');
 		$crud->setRelation('Market2','markets','{Market} - {ID}');
 		$crud->setRelation('Market3','markets','{Market} - {ID}');
