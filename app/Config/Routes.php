@@ -79,6 +79,25 @@ $routes->get('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 $routes->post('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 
 
+$routes->get('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');          
+$routes->post('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');
+
+$routes->get('badgemesa/BadgestinymlSymposium', 'Badgemesa::BadgestinymlSymposium');          
+$routes->post('badgemesa/BadgestinymlSymposium', 'Badgemesa::BadgestinymlSymposium');
+
+$routes->get('/badgemesa/BadgestinymlEXPOONLY', 'Badgemesa::BadgestinymlEXPOONLY');          
+$routes->post('/badgemesa/BadgestinymlEXPOONLY', 'Badgemesa::BadgestinymlEXPOONLY');
+
+$routes->get('/badgemesa/BadgestinymlBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');          
+$routes->post('/badgemesa/BadgestinymlBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');
+
+$routes->get('/badgemesa/BadgestinymlBlankExhibitor', 'Badgemesa::BadgestinymlBlankExhibitor');          
+$routes->post('/badgemesa/BadgestinymlBlankExhibitor', 'Badgemesa::BadgestinymlBlankExhibitor');
+
+$routes->get('/badgemesa/BadgestinymlBlankEXPO', 'Badgemesa::BadgestinymlBlankEXPO');          
+$routes->post('/badgemesa/BadgestinymlBlankEXPO', 'Badgemesa::BadgestinymlBlankEXPO');
+
+
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
