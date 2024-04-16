@@ -40,8 +40,8 @@ class Badgemesa extends BaseController {
  
 	public function index()
 	{
-		/* 
-echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
+		
+		echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml Summit Confidential</h4>";
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/badgemesa/testconxguests') . ' target="_blank" ">Manage badge</a></LI>';
@@ -52,7 +52,8 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankProfessional') . ' target="_blank" ">Blank Summit</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankExhibitor') . ' target="_blank" ">Blank Symposium</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankEXPO') . ' target="_blank" ">Blank EXPOtinyml ONLY</a></LI>';
-		"</OL>";
+		echo"</OL>";
+		/*
 		echo "<h1>Tinyml EMEA Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml EMEA Confidential</h4>";
 		echo "<OL>";
@@ -62,8 +63,8 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEABlankAttendee') . ' target="_blank" ">Blank Attendee</a></LI>';
 		
-		"</OL>";
- */
+		echo"</OL>";
+ 		*/
 		echo "<h1>TestConX Badges - TestConX Office use only</h1>";
 		echo "<h4>TestConX Workshop Confidential</h4>";
 		echo "<OL>";
