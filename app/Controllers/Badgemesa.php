@@ -1291,13 +1291,13 @@ function BadgesMesaEXPOONLY () {
 
 
 function BadgestinymlProfessional () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"Summit");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"Summit");
 }
 function BadgestinymlSymposium () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"Symposium");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"Symposium");
 }
 function BadgestinymlEXPOONLY () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"EXPOtiny");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"EXPOtiny");
 }
 
 
