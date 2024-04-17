@@ -594,17 +594,17 @@ for($i=1; $i<=$people; $i++){
 		}
 		if($type == "Summit"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Summit.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsummit.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Symposium"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Symposium.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsymposium.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPOtiny"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023EXPO.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsummitexpo.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Attendee"){
@@ -848,17 +848,17 @@ $pdf->AddPage('P',$pageLayout);
 		}	 
 		if($type == "Summit"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Symposium"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPOtiny"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Attendee"){
