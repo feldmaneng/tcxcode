@@ -713,6 +713,7 @@ if($convention == "tinyml"){
 		$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 		$pdf->Ln(5);
 		if($convention == 'tinyml'){
+			if($type != "EXPOtiny"){
 		$pdf->SetFont('helvetica', 'B', 16);
 		$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
 			if(strlen($Message)>8){
@@ -721,7 +722,7 @@ if($convention == "tinyml"){
 		
 		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
 		}
-		
+		}
 		
 		if($type=="EXPO"){
 		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
