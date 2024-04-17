@@ -668,7 +668,7 @@ if($convention == "testconx"){
 		$pdf->SetTextColor(0,0,0);
 		
 		$pdf->SetFont('helvetica', '', 10);
-		if($type=="EXPO"){
+		if($type == "EXPO"){
 		$pdf->MultiCell(90,10,$Tutorial." ".$Control."-".$i, 0, 'R', 0, 0, -8.5,150, true);
 		}
 		else{
@@ -740,14 +740,8 @@ if($convention == "tinyml"){
 		
 		$pdf->SetFont('helvetica', '', 10);
 		
-		if($type=="Symposium"){
-		$pdf->Rect(45, 123, 80, 30, 'F',array(), array(118,215,61));
-		}
-		if($type=="EXPOtiny"){
-		$pdf->Rect(45, 123, 80, 30, 'F',array(), array(250,174,2));
-		}
 		
-		if($type=="EXPO"){
+		if($type == "EXPO"){
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 		}
 		else{
