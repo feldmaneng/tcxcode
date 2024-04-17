@@ -604,7 +604,7 @@ for($i=1; $i<=$people; $i++){
 		}
 		if($type == "EXPOtiny"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsummitexpo.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLexpo.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Attendee"){
