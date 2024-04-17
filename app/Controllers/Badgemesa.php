@@ -738,7 +738,7 @@ if($convention == "tinyml"){
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetTextColor(255,255,255);
 		
-		$pdf->SetFont('helvetica', '', 10);
+		$pdf->SetFont('helvetica', '', 14);
 		
 		
 		if($type == "EXPO"){
