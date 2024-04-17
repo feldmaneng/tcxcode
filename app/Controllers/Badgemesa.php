@@ -736,7 +736,7 @@ if($convention == "tinyml"){
 		
 		$pdf->setCellPaddings(0, 0, 0, 0);
 		$pdf->SetFillColor(255,255,255);
-		$pdf->SetTextColor(0,0,0);
+		$pdf->SetTextColor(255,255,255);
 		
 		$pdf->SetFont('helvetica', '', 10);
 		
