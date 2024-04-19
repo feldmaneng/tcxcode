@@ -91,7 +91,7 @@ $pdf->Cell(0, 0, 'TEST CELL STRETCH: no stretch', 1, 1, 'C', 0, '', 0);
  
 		
 			
-ob_clean();
+//ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
 echo($pdf);			
 
