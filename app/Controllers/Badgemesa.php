@@ -1314,14 +1314,14 @@ function BadgesMesaBlankEXPO (){
 }
 
 function BadgestinymlBlankProfessional (){
-	//$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
-	$this->Blankbadge("testconx","Mesa2024", FALSE,"Summit");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Summit");
+	//$this->Blankbadge("testconx","Mesa2024", FALSE,"Summit");
 }
 function BadgestinymlBlankExhibitor (){
-	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Symposium");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Symposium");
 }
 function BadgestinymlBlankEXPO (){
-	$this->Blankbadge("tinyml","tinyml2023", FALSE,"EXPOtiny");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"EXPOtiny");
 }
 
 function BadgesEMEAAttendee (){
