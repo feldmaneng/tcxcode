@@ -120,6 +120,9 @@ $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGene
 $routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
 $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 
+$routes->get('/Pdftest','Pdftest::testpdf');
+$routes->post('/Pdftest','Pdftest::testpdf');
+
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
