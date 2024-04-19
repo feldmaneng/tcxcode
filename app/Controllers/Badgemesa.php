@@ -370,7 +370,8 @@ for($i=1; $i<=$people; $i++){
 	 }
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);		
+//echo($pdf);
+exit();		
 }
 function qrstamp($a,$b,$c,$d)
  {
@@ -868,8 +869,8 @@ $pdf->AddPage('P',$pageLayout);
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);			
-
+//echo($pdf);			
+exit();
 	} 
 
 function Blankbadge($convention = 'testconx', $event = 'Mesa2019', $graphics = FALSE,$type = 'Professional')
@@ -1267,8 +1268,8 @@ if($convention == "emea"){
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);		
-
+//echo($pdf);		
+exit();
 	} 
 
 		
@@ -1315,7 +1316,7 @@ function BadgesMesaBlankEXPO (){
 
 function BadgestinymlBlankProfessional (){
 	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Summit");
-	//$this->Blankbadge("testconx","Mesa2024", FALSE,"Summit");
+	
 }
 function BadgestinymlBlankExhibitor (){
 	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Symposium");
