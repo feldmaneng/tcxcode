@@ -87,7 +87,7 @@ $pdf->setPrintFooter(false);
 
 $pdf->Cell(0, 0, 'TEST CELL STRETCH: no stretch', 1, 1, 'C', 0, '', 0);
 
-	 }
+	 
  
 		
 			
