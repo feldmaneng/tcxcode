@@ -46,9 +46,9 @@ class Badgemesa extends BaseController {
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/badgemesa/testconxguests') . ' target="_blank" ">Manage badge</a></LI>';
 		
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlSymposium') . ">Symposium</a></LI>";
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlEXPOONLY') . ">EXPOtinyml ONLY</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlSymposium') . ">Symposium</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlEXPOONLY') . ">EXPOtinyml ONLY</a></LI>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankProfessional') . ' target="_blank" ">Blank Summit</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankExhibitor') . ' target="_blank" ">Blank Symposium</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankEXPO') . ' target="_blank" ">Blank EXPOtinyml ONLY</a></LI>';
@@ -65,6 +65,7 @@ class Badgemesa extends BaseController {
 		
 		echo"</OL>";
  		*/
+ 		/*
 		echo "<h1>TestConX Badges - TestConX Office use only</h1>";
 		echo "<h4>TestConX Workshop Confidential</h4>";
 		echo "<OL>";
@@ -78,7 +79,7 @@ class Badgemesa extends BaseController {
 		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
 		echo "</OL>";
 		echo "<br><br>";
-		
+		*/
 	}
 	 
 
@@ -274,7 +275,7 @@ for($i=1; $i<=$people; $i++){
 		else{
 		$HardCopy="0";
 		}
-		if($EventYear == "tinyml2023"){
+		if($EventYear == "tinyml2024"){
 			if($Tutorial==1){
 			$Tutorial="SYMPOSIUM";
 			}
@@ -283,7 +284,7 @@ for($i=1; $i<=$people; $i++){
 			}
 			}
 			
-		if($EventYear == "tinyml2023"){
+		if($EventYear == "tinyml2024"){
 			if($Dinner==1){
 			$Dinnertext="Dinner";
 			}
