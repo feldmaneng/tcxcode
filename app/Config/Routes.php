@@ -123,6 +123,9 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/Pdftest','Pdftest::testpdf');
 $routes->post('/Pdftest','Pdftest::testpdf');
 
+$routes->get('badgemesa/clearprint','Badgemesa::clearprint');
+$routes->post('badgemesa/clearprint','Badgemesa::clearprint');
+
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
