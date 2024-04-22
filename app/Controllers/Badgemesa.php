@@ -1338,13 +1338,15 @@ function BadgesEMEABlankAttendee (){
 	{
 
 	
-	$this->db = $this->load->database('RegistrationDataBase', TRUE);
-
+	
+	$db  = \Config\Database::connect('registration');
+	$db  = \Config\Database::connect('registration');
+	$builder = $db->table('guests');
+	$builder->where('ToPrint', 'Yes');
 	$data = array (
 		'ToPrint' => 'No');
-	$this->db->where('ToPrint', 'Yes');
-		
-	$this->db->update('guests', $data);
+	$builder->update($data);
+	
 
 	}
 		
