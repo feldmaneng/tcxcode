@@ -1176,10 +1176,10 @@ if($convention == "tinyml"){
 		}
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,152, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,152, true);
 			}
 		
 		 $q++;
