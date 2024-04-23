@@ -265,7 +265,7 @@ for($i=1; $i<=$people; $i++){
 		$HardCopy=$results[$n]["HardCopy"];
 		$Tutorial=$results[$n]["Tutorial"];
 		$Control=$results[$n]["Control"];
-		//$Message=$results[$n]["Message"];
+		$Message=$results[$n]["Message"];
 		$Dinner=$results[$n]["Dinner"];
 		$type = $results[$n]["Type"];
 		
@@ -353,6 +353,18 @@ for($i=1; $i<=$people; $i++){
 		$pdf->setCellPaddings(0, 0, 0, 0);
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetTextColor(0,0,0);
+		
+		if($type == 'Summit'){
+			if($type != "EXPOtiny"){
+		$pdf->SetFont('helvetica', 'B', 16);
+		$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
+			if(strlen($Message)>8){
+			$pdf->SetFont('helvetica', 'B', 22);
+		}
+		
+		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
+		}
+		}
 		
 		if($type=="EXPOtiny"){
 		$pdf->SetFont('helvetica', '', 40);
