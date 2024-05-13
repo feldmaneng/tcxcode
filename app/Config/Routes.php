@@ -82,6 +82,11 @@ $routes->post('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
+$routes->get('/badgetest', 'Badgemesatest::index');          
+$routes->post('/badgetest', 'Badgemesatest::index');
+
+$routes->get('/badgemesatest/test', 'Badgemesatest::test');          
+$routes->post('/badgemesatest/test', 'Badgemesatest::test');
 
 $routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
 $routes->post('/testtcpdf', 'Badges\Tcpdfexample');
@@ -101,6 +106,8 @@ $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGene
 $routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
 $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 
+$routes->get('uploadtest', 'Uploadtest::index');          
+$routes->post('Uploadtest/upload', 'Uploadtest::upload'); 
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
