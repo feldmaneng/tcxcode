@@ -40,19 +40,21 @@ class Badgemesa extends BaseController {
  
 	public function index()
 	{
-		/* 
-echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
+		
+		echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml Summit Confidential</h4>";
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/badgemesa/testconxguests') . ' target="_blank" ">Manage badge</a></LI>';
 		
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlSymposium') . ">Symposium</a></LI>";
-		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlEXPOONLY') . ">EXPOtinyml ONLY</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlSymposium') . ">Symposium</a></LI>";
+		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlEXPOONLY') . ">EXPOtinyml ONLY</a></LI>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankProfessional') . ' target="_blank" ">Blank Summit</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankExhibitor') . ' target="_blank" ">Blank Symposium</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankEXPO') . ' target="_blank" ">Blank EXPOtinyml ONLY</a></LI>';
-		"</OL>";
+		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
+		echo"</OL>";
+		/*
 		echo "<h1>Tinyml EMEA Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml EMEA Confidential</h4>";
 		echo "<OL>";
@@ -62,8 +64,9 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEABlankAttendee') . ' target="_blank" ">Blank Attendee</a></LI>';
 		
-		"</OL>";
- */
+		echo"</OL>";
+ 		*/
+ 		/*
 		echo "<h1>TestConX Badges - TestConX Office use only</h1>";
 		echo "<h4>TestConX Workshop Confidential</h4>";
 		echo "<OL>";
@@ -77,7 +80,7 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
 		echo "</OL>";
 		echo "<br><br>";
-		
+		*/
 	}
 	 
 
@@ -115,7 +118,7 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'Mesa2024'
+    'guests.EventYear' => 'tinyml2024'
 ]);
 		//echo site_url('/badgemesa/TestConXsingle/');
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Email','Company','Type','Tutorial']);
@@ -135,10 +138,11 @@ echo "<h1>Tinyml Badges - tinyML Office use only</h1>";
 		// Try restricting fields...
 		//$crud->fields(['Email','GivenName']);
 		
-		$crud->fields(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial']);
+		$crud->fields(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner','Message']);
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
 		$crud ->fieldtype('ToPrint','enum',['Yes','No']);
-		$crud ->fieldtype('EventYear','enum',['Mesa2024']);
+		$crud ->fieldtype('Dinner','enum',['1','0']);
+		$crud ->fieldtype('EventYear','enum',['tinyml2024']);
 
 		
 		
@@ -261,7 +265,7 @@ for($i=1; $i<=$people; $i++){
 		$HardCopy=$results[$n]["HardCopy"];
 		$Tutorial=$results[$n]["Tutorial"];
 		$Control=$results[$n]["Control"];
-		//$Message=$results[$n]["Message"];
+		$Message=$results[$n]["Message"];
 		$Dinner=$results[$n]["Dinner"];
 		$type = $results[$n]["Type"];
 		
@@ -273,7 +277,7 @@ for($i=1; $i<=$people; $i++){
 		else{
 		$HardCopy="0";
 		}
-		if($EventYear == "tinyml2023"){
+		if($EventYear == "tinyml2024"){
 			if($Tutorial==1){
 			$Tutorial="SYMPOSIUM";
 			}
@@ -282,7 +286,7 @@ for($i=1; $i<=$people; $i++){
 			}
 			}
 			
-		if($EventYear == "tinyml2023"){
+		if($EventYear == "tinyml2024"){
 			if($Dinner==1){
 			$Dinnertext="Dinner";
 			}
@@ -350,6 +354,18 @@ for($i=1; $i<=$people; $i++){
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetTextColor(0,0,0);
 		
+		if($type == 'Summit'){
+			if($type != "EXPOtiny"){
+		$pdf->SetFont('helvetica', 'B', 16);
+		$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
+			if(strlen($Message)>8){
+			$pdf->SetFont('helvetica', 'B', 22);
+		}
+		
+		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
+		}
+		}
+		
 		if($type=="EXPOtiny"){
 		$pdf->SetFont('helvetica', '', 40);
 		$pdf->MultiCell(45, 20,"EXPO", 0, 'L', 0, 0, 45,120, true);
@@ -369,7 +385,8 @@ for($i=1; $i<=$people; $i++){
 	 }
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);		
+//echo($pdf);
+exit();		
 }
 function qrstamp($a,$b,$c,$d)
  {
@@ -593,17 +610,17 @@ for($i=1; $i<=$people; $i++){
 		}
 		if($type == "Summit"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Summit.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsummit.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Symposium"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Symposium.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLsymposium.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPOtiny"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023EXPO.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLexpo.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Attendee"){
@@ -667,7 +684,7 @@ if($convention == "testconx"){
 		$pdf->SetTextColor(0,0,0);
 		
 		$pdf->SetFont('helvetica', '', 10);
-		if($type=="EXPO"){
+		if($type == "EXPO"){
 		$pdf->MultiCell(90,10,$Tutorial." ".$Control."-".$i, 0, 'R', 0, 0, -8.5,150, true);
 		}
 		else{
@@ -712,6 +729,7 @@ if($convention == "tinyml"){
 		$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 		$pdf->Ln(5);
 		if($convention == 'tinyml'){
+			if($type != "EXPOtiny"){
 		$pdf->SetFont('helvetica', 'B', 16);
 		$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
 			if(strlen($Message)>8){
@@ -720,7 +738,7 @@ if($convention == "tinyml"){
 		
 		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
 		}
-		
+		}
 		
 		if($type=="EXPO"){
 		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
@@ -735,18 +753,12 @@ if($convention == "tinyml"){
 		
 		$pdf->setCellPaddings(0, 0, 0, 0);
 		$pdf->SetFillColor(255,255,255);
-		$pdf->SetTextColor(0,0,0);
+		$pdf->SetTextColor(255,255,255);
 		
-		$pdf->SetFont('helvetica', '', 10);
+		$pdf->SetFont('helvetica', '', 14);
 		
-		if($type=="Symposium"){
-		$pdf->Rect(45, 123, 80, 30, 'F',array(), array(118,215,61));
-		}
-		if($type=="EXPOtiny"){
-		$pdf->Rect(45, 123, 80, 30, 'F',array(), array(250,174,2));
-		}
 		
-		if($type=="EXPO"){
+		if($type == "EXPO"){
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 		}
 		else{
@@ -847,17 +859,17 @@ $pdf->AddPage('P',$pageLayout);
 		}	 
 		if($type == "Summit"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Symposium"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "EXPOtiny"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML2023Back.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/2024tinyMLback.png',0,0,107.95,158.75, 'PNG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		if($type == "Attendee"){
@@ -872,8 +884,8 @@ $pdf->AddPage('P',$pageLayout);
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);			
-
+//echo($pdf);			
+exit();
 	} 
 
 function Blankbadge($convention = 'testconx', $event = 'Mesa2019', $graphics = FALSE,$type = 'Professional')
@@ -1177,10 +1189,10 @@ if($convention == "tinyml"){
 		}
 		$pdf->SetFont('helvetica', '', 10);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,141, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,155, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,141, true);
 			}
 		
 		 $q++;
@@ -1271,8 +1283,8 @@ if($convention == "emea"){
 			
 ob_clean();
 $pdf->Output('My-File-Name.pdf', 'I');
-echo($pdf);		
-
+//echo($pdf);		
+exit();
 	} 
 
 		
@@ -1296,13 +1308,13 @@ function BadgesMesaEXPOONLY () {
 
 
 function BadgestinymlProfessional () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"Summit");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"Summit");
 }
 function BadgestinymlSymposium () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"Symposium");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"Symposium");
 }
 function BadgestinymlEXPOONLY () {
-	$this->Testbadge("tinyml","tinyml2023", TRUE,"EXPOtiny");
+	$this->Testbadge("tinyml","tinyml2024", TRUE,"EXPOtiny");
 }
 
 
@@ -1318,14 +1330,14 @@ function BadgesMesaBlankEXPO (){
 }
 
 function BadgestinymlBlankProfessional (){
-	//$this->Blankbadge("tinyml","tinyml2023", FALSE,"Summit");
-	$this->Blankbadge("testconx","Mesa2024", FALSE,"Summit");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Summit");
+	
 }
 function BadgestinymlBlankExhibitor (){
-	$this->Blankbadge("tinyml","tinyml2023", FALSE,"Symposium");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"Symposium");
 }
 function BadgestinymlBlankEXPO (){
-	$this->Blankbadge("tinyml","tinyml2023", FALSE,"EXPOtiny");
+	$this->Blankbadge("tinyml","tinyml2024", FALSE,"EXPOtiny");
 }
 
 function BadgesEMEAAttendee (){
@@ -1339,13 +1351,15 @@ function BadgesEMEABlankAttendee (){
 	{
 
 	
-	$this->db = $this->load->database('RegistrationDataBase', TRUE);
-
+	
+	$db  = \Config\Database::connect('registration');
+	$db  = \Config\Database::connect('registration');
+	$builder = $db->table('guests');
+	$builder->where('ToPrint', 'Yes');
 	$data = array (
 		'ToPrint' => 'No');
-	$this->db->where('ToPrint', 'Yes');
-		
-	$this->db->update('guests', $data);
+	$builder->update($data);
+	
 
 	}
 		

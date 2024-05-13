@@ -3,11 +3,19 @@
 
 class Contacts {
 
+
+	function __construct()
+	{
+		helper('text');
+
+
+
+	}
 	function __construct()
 	 {
  
 		/* Standard Libraries of codeigniter are required */
-		$CI =& get_instance();
+		//askira $CI =& get_instance();
 
 		$CI->load->helper('url');
 		$CI->load->database();
@@ -23,7 +31,7 @@ class Contacts {
 	// *
 	public function LookupPersonByEmail($email, $p_ReportNotFound = true) 
 	{
-		$CI =& get_instance();
+		//ask ira $CI =& get_instance();
 		
 		//$email = "15024354542@163.com";
 		//echo "<p>Checking email " . $email . "*</p>";
@@ -35,27 +43,29 @@ class Contacts {
 			// Not sure why the query wasn't clearing. First query was okay and subsequent ones had a wrong where ContactID = clause
 			// https://stackoverflow.com/questions/6246023/how-to-reset-codeigniter-active-record-for-consecutive-queries
 			// https://www.codeigniter.com/userguide3/database/query_builder.html#resetting-query-builder 
-			$CI->db->reset_query(); 
+			$db = \Config\Database::conect();
+			$CI = $db->table('contacts');
+			$CI->resetQuery(); 
 			
-			$CI->db->select('*');
-			$CI->db->from('contacts');
+			$CI->select('*');
+			
 		
-			$CI->db->where('Email',$email);
+			$CI->where('Email',$email);
 			
-			$query_people = $CI->db->get();
+			$query_people = $CI->get();
 			
 			//echo "<p>" . $CI->db->last_query() . "</p>";
 			
-			if ( $query_people->num_rows() > 0 ) {
+			if ( $query_people->getNumRows() > 0 ) {
 				// An email ID shouldn't be on more than one person, so we shouldn't have more than one row
-				if ( $query_people->num_rows() > 1 ) {
+				if ( $query_people->getNumRows() > 1 ) {
 					echo "Warning: Email query on ". $email . " yielded " .$query_people->num_rows() . "rows. (Multiple people.) <br>";
-					foreach ($query_people->results as $row) {
+					foreach ($query_people->getResult() as $row) {
 						echo "	ContactID ". $row->ContactID . "<br>\n\n\n\n";
 					}
 					//die();
 				}
-				$row = $query_people->row_array();
+				$row = $query_people->getResultArray();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
 				return $row['ContactID'];
 			} else {				
@@ -72,27 +82,28 @@ class Contacts {
 
 	public function LookupPersonByName($given, $family, $p_ReportNotFound = true) 
 	{
-		$CI =& get_instance();
+		//ask ira $CI =& get_instance();
 				
 		if (strlen($given.$family) > 0 ) {
-			$CI->db->select('*');
-			$CI->db->from('contacts');
 		
-			$CI->db->where('GivenName', $given);
-			$CI->db->where('FamilyName', $family);
+			$CI->select('*');
+			$CI->from('contacts');
+		
+			$CI->where('GivenName', $given);
+			$CI->where('FamilyName', $family);
 			
-			$query_people = $CI->db->get();
+			$query_people = $CI->get();
 			//echo "<p>" . $this->db->FamilyName_query() . "</p>";
-			if ( $query_people->num_rows() > 0 ) {
+			if ( $query_people->getNumRows() > 0 ) {
 				// An email ID shouldn't be on more than one person, so we shouldn't have more than one row
-				if ( $query_people->num_rows() > 1 ) {
-					echo "Warning: Email query on ". $given . " " . $family . " yielded " .$query_people->num_rows() . "rows. (Multiple people.) <br>";
-					foreach ($query_people->results as $row) {
+				if ( $query_people->getNumRows() > 1 ) {
+					echo "Warning: Email query on ". $given . " " . $family . " yielded " .$query_people->getNumRows() . "rows. (Multiple people.) <br>";
+					foreach ($query_people->getResult as $row) {
 						echo "	ContactID ". $row->ContactID . "<br>\n\n\n\n";
 					}
 					//die();
 				}
-				$row = $query_people->row_array();
+				$row = $query_people->getResultArray();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
 				return $row['ContactID'];
 			} else {				

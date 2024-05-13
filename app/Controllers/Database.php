@@ -159,10 +159,9 @@ class Database extends BaseController {
 	}  
 
 
-/*
-   function companies()
 
-	{
+   function companies()
+   {
 
 		
 		// New way
@@ -176,23 +175,23 @@ class Database extends BaseController {
         
         	
 		
-		$crud->columns (['CompanyID','Name','ParentID', 'IsParent']);
+		$crud->columns (['CompanyID','Name','CN_Name','ParentID', 'IsParent']);
 		
 		
 		
-		$crud->fields (['CompanyID','Name','ParentID','IsParent',
+		$crud->fields (['CompanyID','Name','CN_Name','ParentID','IsParent',
 			'URL', 'Stock_Market','Ticker_Symbol',
 			'Research','BiTS_DB','BiTS_Attend','BiTS_Expo','BiTS_Sponsor',
 			'BiTS_Outreach', 'BiTS_China', 'FEC_Client', 'Acquired',
 			'Summary', 'Notes',
-			'Street1','Street2','City','State','Postal','Country',
+			'Street1','Street2','City','State','Postal','Country', 'CN_Address',
 			'PhoneCountryCode','Phone',
 			'Market1', 'Market2', 'Market3', 'Market4', 'Market5', 'Market6', 
 			'Market7', 'Market8', 'MarketTestConX',
 			'Added', 'Updated']);
 			
 		// Grocery Crud does not allow a set_relation back into the same table...
-		//$crud->set_relation('ParentID','company','{Name}'); // {IsParent}',null,'Name ASC');
+		//$crud->setRelation('ParentID','company','Parent Name'); //'{Name}'); // {IsParent}',null,'Name ASC');
 		$crud->setRelation('Market1','markets','{Market} - {ID}');
 		$crud->setRelation('Market2','markets','{Market} - {ID}');
 		$crud->setRelation('Market3','markets','{Market} - {ID}');
@@ -221,12 +220,14 @@ class Database extends BaseController {
 		$crud->fieldType('Rosenberger-OSI','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Acquired','dropdown',['0' => 'No', '1'=>'Yes']);
 
-	
+		$crud->displayAs('CN_Name','Chinese Name');
+		$crud->displayAs('CN_Address','Chinese Address');
+		
 		$output = $crud->render();
       	return $this->_example_output($output);
 
 	}  
-*/
+
 
 	
 	// Determine who the current user is 
