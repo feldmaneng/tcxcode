@@ -109,10 +109,11 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/uploadtest', 'Uploadtest::index');          
 $routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
-$routes->get('/Smember', 'S2_match_db::index');  
+$routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember', 'S2_match_db::index');        
 
-
+$routes->get('/Smember', 'Smember::index');  
+$routes->post('/Smember', 'Smember::index');  
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
