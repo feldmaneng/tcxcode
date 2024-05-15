@@ -115,8 +115,8 @@ $routes->post('/Smember2', 'S2_match_db::index');
 $routes->get('/Smember', 'Smember::index');  
 $routes->post('/Smember', 'Smember::index');  
 
-$routes->get('/Smember/show_user', 'Smember::show_user');  
-$routes->post('/Smember/show_user', 'Smember::show_user');  
+$routes->get('/smember/show_user', 'Smember::show_user');  
+$routes->post('/smember/show_user', 'Smember::show_user');  
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
