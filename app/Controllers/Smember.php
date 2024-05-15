@@ -491,7 +491,7 @@ class Smember extends BaseController {
 		
 		
 		$row['WordPressID'] = $wp_ID;
-		$builder->where('ContactID' $ID);
+		$builder->where('ContactID', $ID);
 		//$this->db->where('ContactID', $ID);	
 		return $builder ->update($row);
 	}
