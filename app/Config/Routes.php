@@ -109,8 +109,8 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/uploadtest', 'Uploadtest::index');          
 $routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
-$routes->get('/S2', 'S2_match_db::index');  
-$routes->post('/S2', 'S2_match_db::index');        
+$routes->get('/Smember', 'S2_match_db::index');  
+$routes->post('/Smember', 'S2_match_db::index');        
 
 
 
