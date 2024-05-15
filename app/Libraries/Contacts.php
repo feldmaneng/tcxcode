@@ -1,5 +1,7 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php 
+namespace App\Controllers;
 
+use Config\Database as ConfigDatabase;
 
 class Contacts {
 
@@ -11,18 +13,7 @@ class Contacts {
 
 
 	}
-	function __construct()
-	 {
- 
-		/* Standard Libraries of codeigniter are required */
-		//askira $CI =& get_instance();
-
-		$CI->load->helper('url');
-		$CI->load->database();
-		
-			 
- 
-	 }
+	
 	
 	
 	// Find the Person Record with a given Email

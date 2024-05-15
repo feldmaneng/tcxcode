@@ -79,28 +79,14 @@ $routes->get('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 $routes->post('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 
 
-$routes->get('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');          
-$routes->post('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');
-
-$routes->get('badgemesa/BadgestinymlSymposium', 'Badgemesa::BadgestinymlSymposium');          
-$routes->post('badgemesa/BadgestinymlSymposium', 'Badgemesa::BadgestinymlSymposium');
-
-$routes->get('/badgemesa/BadgestinymlEXPOONLY', 'Badgemesa::BadgestinymlEXPOONLY');          
-$routes->post('/badgemesa/BadgestinymlEXPOONLY', 'Badgemesa::BadgestinymlEXPOONLY');
-
-$routes->get('/badgemesa/BadgestinymlBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');          
-$routes->post('/badgemesa/BadgestinymlBlankProfessional', 'Badgemesa::BadgestinymlBlankProfessional');
-
-$routes->get('/badgemesa/BadgestinymlBlankExhibitor', 'Badgemesa::BadgestinymlBlankExhibitor');          
-$routes->post('/badgemesa/BadgestinymlBlankExhibitor', 'Badgemesa::BadgestinymlBlankExhibitor');
-
-$routes->get('/badgemesa/BadgestinymlBlankEXPO', 'Badgemesa::BadgestinymlBlankEXPO');          
-$routes->post('/badgemesa/BadgestinymlBlankEXPO', 'Badgemesa::BadgestinymlBlankEXPO');
-
-
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
+$routes->get('/badgetest', 'Badgemesatest::index');          
+$routes->post('/badgetest', 'Badgemesatest::index');
+
+$routes->get('/badgemesatest/test', 'Badgemesatest::test');          
+$routes->post('/badgemesatest/test', 'Badgemesatest::test');
 
 $routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
 $routes->post('/testtcpdf', 'Badges\Tcpdfexample');
@@ -120,12 +106,14 @@ $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGene
 $routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
 $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 
-$routes->get('/Pdftest','Pdftest::testpdf');
-$routes->post('/Pdftest','Pdftest::testpdf');
+$routes->get('/uploadtest', 'Uploadtest::index');          
+$routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
-$routes->get('badgemesa/clearprint','Badgemesa::clearprint');
-$routes->post('badgemesa/clearprint','Badgemesa::clearprint');
+$routes->get('/Smember2', 'S2_match_db::index');  
+$routes->post('/Smember2', 'S2_match_db::index');        
 
+$routes->get('/Smember', 'Smember::index');  
+$routes->post('/Smember', 'Smember::index');  
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');

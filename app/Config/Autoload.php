@@ -65,7 +65,8 @@ class Autoload extends AutoloadConfig
      */
     public $classmap = [
 	'TCPDF' =>APPPATH . 'ThirdParty/tcpdf/tcpdf.php',
-	'QRcode' =>APPPATH . 'ThirdParty/phpqrcode/qrlib.php'
+	'QRcode' =>APPPATH . 'ThirdParty/phpqrcode/qrlib.php',
+	'Contacts'=>APPPATH . 'Library/Contacts'
 	];
 
     /**

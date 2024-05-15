@@ -24,9 +24,9 @@ define("MAXUSER", "4499");
 //require '/../bitscode/Kint/Kint.class.php';
 //include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."bitscode/Kint/Kint.class.php");
 //require 'kint.phar';
-include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."bitscode/Kint/build/kint.phar");
+//include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."bitscode/Kint/build/kint.phar");
 		
-class S2_match_db extends BaseController {
+class Smember extends BaseController {
 
  
 	function __construct()
@@ -41,47 +41,47 @@ class S2_match_db extends BaseController {
 	{
 		echo "<h1>s2member Helper Tools</h1>";
 		echo "<OL>";
-		echo "<LI>Test <a href=" . site_url('/s2_match_db/show_user') . ">one ID</a></LI>";
+		echo "<LI>Test <a href=" . site_url('/smember/show_user') . ">one ID</a></LI>";
 		echo "<br>";
 		echo "<LI>Cross check WordPress/s2 members to BiTS DB - ignores s2members with BiTS ID already<br>";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users1') . ">1-499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users500') . ">500-999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users1000') . ">1000-1499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users1500') . ">1500-1999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users2000') . ">2000-2499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users2500') . ">2500-2999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users3000') . ">3000-3499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users3500') . ">3500-3999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users4000') . ">4000-4500</a> ";
-		echo "<a href=" . site_url('/s2_match_db/crosscheck_users_all') . ">all</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users1') . ">1-499</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users500') . ">500-999</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users1000') . ">1000-1499</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users1500') . ">1500-1999</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users2000') . ">2000-2499</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users2500') . ">2500-2999</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users3000') . ">3000-3499</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users3500') . ">3500-3999</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users4000') . ">4000-4500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users_all') . ">all</a> ";
 		echo "</LI>";
 		echo "<LI>Redo/recheck cross check WordPress/s2 members to BiTS DB - forces full recheck even s2members with BiTS ID<br>";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck1') . ">1-499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck500') . ">500-999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck1000') . ">1000-1499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck1500') . ">1500-1999</a> ";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck2000') . ">2000-2499</a> ";
-		echo "<a href=" . site_url('/s2_match_db/recheck_crosscheck_all') . ">all</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck1') . ">1-499</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck500') . ">500-999</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck1000') . ">1000-1499</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck1500') . ">1500-1999</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck2000') . ">2000-2499</a> ";
+		echo "<a href=" . site_url('/smember/recheck_crosscheck_all') . ">all</a> ";
 		echo "</LI>";
 		
 		echo "<p>Note: all may not work due to server time out limit(s)</p>";
 		echo "<LI>Reset alll China users (s2member Level 1) to Level 0- guests<br>";
-		echo "<a href=" . site_url('/s2_match_db/reset_china_1') . ">1-100</a> ";
-		echo "<a href=" . site_url('/s2_match_db/reset_china_all') . ">all - 1-".MAXUSER."</a><br>";
+		echo "<a href=" . site_url('/smember/reset_china_1') . ">1-100</a> ";
+		echo "<a href=" . site_url('/smember/reset_china_all') . ">all - 1-".MAXUSER."</a><br>";
 		//echo "<a href=" . site_url('/s2_match_db/reset_china_500') . ">500-999</a> ";
 		//echo "<a href=" . site_url('/s2_match_db/reset_china_1000') . ">1000-1499</a> ";
 		//echo "<a href=" . site_url('/s2_match_db/reset_china_1500') . ">1500-1999</a> ";
 		echo "Note this may take about 20 minutes without any output until end...";
 		echo "</li>";
 		
-		echo "<li><a href=" . site_url('/s2_match_db/reset_mesa_all') . ">Reset Mesa users to either Level 0 or 1</a></li>";
+		echo "<li><a href=" . site_url('/smember/reset_mesa_all') . ">Reset Mesa users to either Level 0 or 1</a></li>";
 
-		echo "<li><a href=" . site_url('/s2_match_db/set_china_users') . ">Set China event users</a></li>";
-		echo "<li><a href=" . site_url('/s2_match_db/set_mesa_users') . ">Set Mesa event users</a></li>";
+		echo "<li><a href=" . site_url('/smember/set_china_users') . ">Set China event users</a></li>";
+		echo "<li><a href=" . site_url('/smember/set_mesa_users') . ">Set Mesa event users</a></li>";
 		
-		echo "<li><a href=" . site_url('/s2_match_db/preview_add_to_database') . ">Preview of Add missing s2 users to BiTS database</a></li>";
-		echo "<li><a href=" . site_url('/s2_match_db/add_to_database') . ">Add missing s2 users to BiTS database</a></li>";
-		echo "<li><a href=" . site_url('/s2_match_db/write_mailchimp_with_Chinese') . ">Write CSV for MailChimp WITH s2 usernames, s2 emails, & Chinese Names</a></li>";
+		echo "<li><a href=" . site_url('/smember/preview_add_to_database') . ">Preview of Add missing s2 users to BiTS database</a></li>";
+		echo "<li><a href=" . site_url('/smember/add_to_database') . ">Add missing s2 users to BiTS database</a></li>";
+		echo "<li><a href=" . site_url('/smember/write_mailchimp_with_Chinese') . ">Write CSV for MailChimp WITH s2 usernames, s2 emails, & Chinese Names</a></li>";
 
 		
 		
