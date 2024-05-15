@@ -11,18 +11,18 @@ class Contacts {
 
 
 	}
-	function __construct()
+	 function __construct()
 	 {
  
 		/* Standard Libraries of codeigniter are required */
-		//askira $CI =& get_instance();
+		//ask ira $CI =& get_instance();
 
 		$CI->load->helper('url');
 		$CI->load->database();
 		
 			 
  
-	 }
+	 } 
 	
 	
 	// Find the Person Record with a given Email
