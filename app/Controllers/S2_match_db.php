@@ -1,23 +1,12 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  
 
-
-
-// Some variables for each year
-//$BiTSEvent = "BiTS China 2016";
-
-//session_start(); // Remember things across pages
-
-// Due to very long run time of this script, need to have the following for the 
-// LiteSpeed server in .htaccess
-//		<IfModule Litespeed> 
-//		RewriteRule secure\.php - [E=noabort:1, E=noconntimeout:1]
-//		</IfModule>
-//
-// Probably something similar for an Apache server
+namespace App\Controllers;
 
 use Config\Database as ConfigDatabase;
-use Config\GroceryCrud as ConfigGroceryCrud;
-use GroceryCrud\Core\GroceryCrud;
+
+
+
+
 
 $session = session();
 if ( !$session->tcx_logged_in ) {
