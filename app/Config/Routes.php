@@ -106,11 +106,11 @@ $routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGene
 $routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
 $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 
-$routes->get('uploadtest', 'Uploadtest::index');          
-$routes->post('Uploadtest/upload', 'Uploadtest::upload'); 
+$routes->get('/uploadtest', 'Uploadtest::index');          
+$routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
-$routes->get('S2', 'S2_match_db::index');  
-$routes->post('S2', 'S2_match_db::index');        
+$routes->get('/S2', 'S2_match_db::index');  
+$routes->post('/S2', 'S2_match_db::index');        
 
 
 
