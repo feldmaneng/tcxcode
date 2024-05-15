@@ -110,7 +110,7 @@ $routes->get('/uploadtest', 'Uploadtest::index');
 $routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
 $routes->get('/Smember2', 'S2_match_db::index');  
-$routes->post('/Smember', 'S2_match_db::index');        
+$routes->post('/Smember2', 'S2_match_db::index');        
 
 $routes->get('/Smember', 'Smember::index');  
 $routes->post('/Smember', 'Smember::index');  

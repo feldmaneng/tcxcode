@@ -41,7 +41,7 @@ class Smember extends BaseController {
 	{
 		echo "<h1>s2member Helper Tools</h1>";
 		echo "<OL>";
-		echo "<LI>Test <a href=" . site_url('/s2_match_db/show_user') . ">one ID</a></LI>";
+		echo "<LI>Test <a href=" . site_url('/smember/show_user') . ">one ID</a></LI>";
 		echo "<br>";
 		echo "<LI>Cross check WordPress/s2 members to BiTS DB - ignores s2members with BiTS ID already<br>";
 		echo "<a href=" . site_url('/smember/crosscheck_users1') . ">1-499</a> ";
