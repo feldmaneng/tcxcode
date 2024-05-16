@@ -37,7 +37,7 @@ class Smember extends BaseController {
 		global $BiTS_api_keys;
 		
 	
-			include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"tcxcode")) ."secure/api_keys.php");
+			include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"tcxcode")) ."home/testconx/secure/api_keys.php");
 		
 
 
