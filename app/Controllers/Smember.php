@@ -32,7 +32,13 @@ class Smember extends BaseController {
 	function __construct()
 	{
 		helper('text');
-
+		
+/* IMF - Load our API keys */
+		global $BiTS_api_keys;
+		
+	
+			include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"tcxcode")) ."secure/api_keys.php");
+		
 
 
 	}
