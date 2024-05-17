@@ -98,7 +98,7 @@ class Smember extends BaseController {
 
 //takes in a list spits out a list with emails, pass array of ids
 	function find_user_list(){
-		$list = array(1,2,3,4);
+		$list = array(7572,6431,6374,7972);
 		foreach ($list as &$id) {
     $result = $this->s2_get_user_by_id($id);
 	if ($result && empty($result['error'])) {
