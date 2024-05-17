@@ -101,9 +101,17 @@ class Smember extends BaseController {
 		$list = array(7572,6431,6374,7972);
 		foreach ($list as &$id) {
     $result = $this->s2_get_user_by_id($id);
-	if ($result && empty($result['error'])) {
+	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
+			echo "</pre>";
+
+		} elseif (!empty($result['error'])) {
+			echo 'API error reads: '.$result['error'];
+		} */
+		if ($result && empty($result['error'])) {
+			echo "<pre>";
+			echo $result['data']['ID']." ".$result['data']['user_email'];  // Print full array.
 			echo "</pre>";
 
 		} elseif (!empty($result['error'])) {
