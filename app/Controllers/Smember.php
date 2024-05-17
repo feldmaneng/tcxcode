@@ -103,7 +103,7 @@ class Smember extends BaseController {
     $result = $this->s2_get_user_by_id($id);
 	if ($result && empty($result['error'])) {
 			echo "<pre>";
-			print_r($result['data'];  // Print full array.
+			print_r($result['data']);  // Print full array.
 			echo "</pre>";
 
 		} elseif (!empty($result['error'])) {
