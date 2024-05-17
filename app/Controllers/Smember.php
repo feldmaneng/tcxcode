@@ -96,6 +96,24 @@ class Smember extends BaseController {
 		// echo "<li><a href=" . site_url('/s2_match_db/clean_ccaps') . ">Clean s2member_ccaps</a></li>";
 	}
 
+//takes in a list spits out a list with emails, pass array of ids
+	function find_user_list(){
+		$list = array(1,2,3,4);
+		foreach ($list as &$id) {
+    $result = $this->s2_get_user_by_id($id);
+	if ($result && empty($result['error'])) {
+			echo "<pre>";
+			print_r($result['data'];  // Print full array.
+			echo "</pre>";
+
+		} elseif (!empty($result['error'])) {
+			echo 'API error reads: '.$result['error'];
+		}
+		}
+		
+	}
+	
+	
 	private function diag_log ($message) {
 		$message = "[" . date("Y-M-D H:i:s e") . "] " . basename(__file__, '.php') . ": " . $message . "\n";
 		error_log ($message, 3, substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."log_public/diagnostic_log");	
