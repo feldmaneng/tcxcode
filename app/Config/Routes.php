@@ -121,7 +121,7 @@ $routes->post('/smember/show_user', 'Smember::show_user');
 $routes->get('/smember/find_user_list', 'Smember::find_user_list');  
 $routes->post('/smember/find_user_list', 'Smember::find_user_list');  
 
-$routes->get('/smember', [Smember::class, 'index']);
+//$routes->get('/smember', [Smember::class, 'index']);
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
