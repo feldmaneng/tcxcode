@@ -177,7 +177,7 @@ $list = array_map('str_getcsv', file($target_file)); */
 
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
-			for ($id=1;$id<1000;$id++) {
+			for ($id=1;$id<10000;$id++) {
     $result = $this->s2_get_user_by_id($id);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
@@ -193,7 +193,9 @@ $list = array_map('str_getcsv', file($target_file)); */
 			echo "</pre>";
 
 		} elseif (!empty($result['error'])) {
+			echo "<pre>";
 			echo 'API error reads: '.$result['error'];
+			echo "</pre>";
 		}
 		}
 		
