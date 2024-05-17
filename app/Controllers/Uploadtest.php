@@ -22,7 +22,7 @@ class Uploadtest extends BaseController
                     'uploaded[userfile]',
                     'is_image[userfile]',
                     'mime_in[userfile,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                    'max_size[userfile,100]',
+                    'max_size[userfile,1000]',
                     'max_dims[userfile,1024,768]',
                 ],
             ],

@@ -46,6 +46,7 @@ class Smember extends BaseController {
  
 	public function index()
 	{
+		//$this->load->view('multidemoupload_zoomform', array('error' => ' ' ));
 		echo "<h1>s2member Helper Tools</h1>";
 		echo "<OL>";
 		echo "<LI>Test <a href=" . site_url('/smember/show_user') . ">one ID</a></LI>";
@@ -91,15 +92,92 @@ class Smember extends BaseController {
 		echo "<li><a href=" . site_url('/smember/write_mailchimp_with_Chinese') . ">Write CSV for MailChimp WITH s2 usernames, s2 emails, & Chinese Names</a></li>";
 
 		
-		
+		//return view('multidemoupload_zoomform');
 		// Was for a one time need - may be useful for fixing mistakes in future
 		// echo "<li><a href=" . site_url('/s2_match_db/clean_ccaps') . ">Clean s2member_ccaps</a></li>";
 	}
 
 //takes in a list spits out a list with emails, pass array of ids
 	function find_user_list(){
-		$list = array(7572,6431,6374,7972);
-		foreach ($list as &$id) {
+			/* $countFiles = count($_FILES['uploadedFiles']['name']);
+			$countUploadedFiles=0;
+			$countErrorUploadFiles=0;
+		for($i=0;$i<$countFiles;$i++)
+		{
+			$_FILES['uploadFile']['name'] = $_FILES['uploadedFiles']['name'][$i]; 
+			$_FILES['uploadFile']['type'] = $_FILES['uploadedFiles']['type'][$i];
+			$_FILES['uploadFile']['size'] = $_FILES['uploadedFiles']['size'][$i];
+			$_FILES['uploadFile']['tmp_name'] = $_FILES['uploadedFiles']['tmp_name'][$i];
+			$_FILES['uploadFile']['error'] = $_FILES['uploadedFiles']['error'][$i];
+
+			$uploadStatus = $this->uploadFile('uploadFile');
+			if($uploadStatus!=false)
+			{
+				$countUploadedFiles++;
+				$this->load->model('upload_file');
+				$data =array(
+					'img_path'=>$uploadStatus,
+					'upload_time'=>date('Y-m-d H:i:s'),
+				);
+				$this->upload_file->upload_data($data);
+			}
+			else
+			{
+				$countErrorUploadFiles++;
+			}
+
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//Old Code Below
+			
+			
+			$target_dir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/";
+			$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+			$uploadOk = 1;
+			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+		
+
+			// Check if file already exists
+			if (file_exists($target_file)) {
+			  echo "Sorry, file already exists.";
+			  $uploadOk = 0;
+			}
+
+			// Check file size
+			if ($_FILES["fileToUpload"]["size"] > 500000) {
+			  echo "Sorry, your file is too large.<br>";
+			  $uploadOk = 0;
+			}
+
+		
+
+			// Check if $uploadOk is set to 0 by an error
+			if ($uploadOk == 0) {
+			  echo "Sorry, your file was not uploaded.<br>";
+			// if everything is ok, try to upload file
+			} else {
+			  if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+				echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.<br>";
+			  } else {
+				echo "Sorry, there was an error uploading your file.<br>";
+			  }
+			}
+	
+echo "File used ".basename($_FILES["fileToUpload"]["name"])."<br>";
+$list = array_map('str_getcsv', file($target_file)); */
+
+		//$list = array(7572,6431,6374,7972);
+		//foreach ($list as &$id) {
+			for ($id=1;$id<1000;$id++) {
     $result = $this->s2_get_user_by_id($id);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
@@ -111,7 +189,7 @@ class Smember extends BaseController {
 		} */
 		if ($result && empty($result['error'])) {
 			echo "<pre>";
-			echo $result['data']['ID']." ".$result['data']['user_email'];  // Print full array.
+			echo $result['data']['ID'].",".$result['data']['user_email'];  // Print full array.
 			echo "</pre>";
 
 		} elseif (!empty($result['error'])) {
