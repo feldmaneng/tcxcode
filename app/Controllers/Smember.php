@@ -117,12 +117,11 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 		$row = 1;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
 if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
-	$list = fgetcsv($handle, 1000, ",");
-}
-	$num = count($list);
+	while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
+		$num = count($list);
 	echo $num;
-	
-	for ($c=0; $c < $num; $c++) {
+		
+		for ($c=0; $c < $num; $c++) {
 		echo $c;
 	echo $list[$c];
 		
@@ -151,6 +150,15 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 			echo "</pre>";
 		}
 		}
+		
+		
+		
+		
+	};
+}
+	
+	
+	
 		
 	}
 	
