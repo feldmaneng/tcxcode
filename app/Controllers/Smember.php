@@ -114,18 +114,20 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 }
 		
 		
-		
+		$row = 1;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
 if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 	$list = fgetcsv($handle, 1000, ",");
 }
-	
+	$num = count($list);
+	$row++;
+	for ($c=0; $c < $num; $c++) {
 		//$list = array(7572,6431,6374,7972);
-		foreach ($list as &$id) {
+		//foreach ($list as &$id) {
 			
 			
 			//for ($id=1;$id<10000;$id++) {
-    $result = $this->s2_get_user_by_id($id);
+    $result = $this->s2_get_user_by_id($list[c]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
