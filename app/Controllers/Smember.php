@@ -121,7 +121,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			//for ($id=1;$id<10000;$id++) {
 				
 				
-    $result = $this->s2_get_user_by_id($list[0][$c]);
+    $result = $this->s2_get_user_by_id(7572);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
