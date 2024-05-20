@@ -115,7 +115,7 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 		
 		
 		
-$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
+//$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
 if (($handle = fopen("listofdeadusers.csv", "r")) !== FALSE) {
 	$list = fgetcsv($handle, 1000, ",");
 }
