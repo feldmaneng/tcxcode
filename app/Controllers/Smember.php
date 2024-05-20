@@ -100,30 +100,17 @@ class Smember extends BaseController {
 
 //takes in a list spits out a list with emails, pass array of ids
 	function find_user_list(){
-		$row = 1;
-if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
-    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-        $num = count($data);
-        echo "<p> $num fields in line $row: <br /></p>\n";
-        $row++;
-        for ($c=0; $c < $num; $c++) {
-            echo $data[$c] . "<br />\n";
-        }
-    }
-    fclose($handle);
-}
 		
 		
-		$row = 1;
+		
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
 if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 	while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		$num = count($list);
-	echo $num;
+	
 		
 		for ($c=0; $c < $num; $c++) {
-		echo $c;
-	echo $list[$c];
+
 		
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
