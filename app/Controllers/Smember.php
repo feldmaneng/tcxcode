@@ -132,14 +132,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			echo "<pre>";
 			echo $result['data']['ID'].",".$result['data']['user_email'];  // Print full array.
 			echo "</pre>";
-
-		} elseif (!empty($result['error'])) {
-			echo "<pre>";
-			echo 'API error reads: '.$result['error'];
-			echo "</pre>";
-		}
-		}
-		if($result['data']['user_email']!=$list[1][$c]){
+			if($result['data']['user_email']!=$list[1][$c]){
 			echo "<pre>";
 			echo 'email mismatch';
 			echo "</pre>";
@@ -147,6 +140,14 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			
 			
 		}
+
+		} elseif (!empty($result['error'])) {
+			echo "<pre>";
+			echo 'API error reads: '.$result['error'];
+			echo "</pre>";
+		}
+		}
+		
 			
 		
 		
