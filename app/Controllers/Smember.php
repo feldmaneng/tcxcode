@@ -108,10 +108,10 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 	while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
 	$list = array_map('str_getcsv', file('emailIDtest.csv'));
-	$num = count($list[0]);
+	$num = count($list,COUNT_RECURSIVE);
 		echo $num;
 		
-		for ($c=0; $c < $num; $c++) {
+		for ($c=0; $c < $num/2; $c++) {
 
 		
 		//$list = array(7572,6431,6374,7972);
