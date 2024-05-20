@@ -109,7 +109,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 		
 	$list = array_map('str_getcsv', file('emailIDtest.csv'));
 	$key = array_search('ID', array_column($list, 0));
-	$emailc = array_search('Email',$csv[$key]);
+	$emailc = array_search('Email',$list[$key]);
 	$x = 0;
 //increment keyfirst to move to the first times one row down
 while($list[$key+$x][1] != NULL ){
