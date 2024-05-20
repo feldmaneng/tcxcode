@@ -108,11 +108,22 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
 	$list = array_map('str_getcsv', file('emailIDtest.csv'));
-	$num = count($list,COUNT_RECURSIVE);
-		echo "begin".$num."this is the num <br>";
-		
-		for ($c=0; $c < $num/2; $c++) {
+	$key = array_search('ID', array_column($list, 0));
+	$emailc = array_search('Email',$csv[$key]);
+	$x = 0;
+//increment keyfirst to move to the first times one row down
+while($list[$key+$x][1] != NULL ){
 
+	$x++;
+	
+	}
+	$keylast = $key + $x;
+	
+	
+	
+		
+		for ($c=0; $c < $keylast; $c++) {
+echo $list[$c][$key];
 		
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
@@ -121,7 +132,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			//for ($id=1;$id<10000;$id++) {
 				
 				
-    $result = $this->s2_get_user_by_id(7572);
+    $result = $this->s2_get_user_by_id($list[$c][$key]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
