@@ -119,6 +119,8 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			
 			
 			//for ($id=1;$id<10000;$id++) {
+				
+				echo $list[0][$c];
     $result = $this->s2_get_user_by_id($list[0][$c]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
