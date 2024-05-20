@@ -124,6 +124,8 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 	
 	for ($c=0; $c < $num; $c++) {
 		echo $c;
+	echo $list[$c];
+		
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
 			
