@@ -120,8 +120,10 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 	$list = fgetcsv($handle, 1000, ",");
 }
 	$num = count($list);
-	$row++;
+	echo $num;
+	
 	for ($c=0; $c < $num; $c++) {
+		echo $c;
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
 			
