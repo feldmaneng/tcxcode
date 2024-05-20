@@ -139,14 +139,15 @@ if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 		} */
 		if ($result && empty($result['error'])) {
 			echo "<pre>";
-			echo $result['data']['ID'].",".$result['data']['user_email'];  // Print full array.
+			echo $result['data']['ID'].",".$result['data']['user_email'];
+				if($result['data']['user_email']!=$list[$c][1]){
+				echo "<pre>";
+				echo ' email mismatch';
+				echo "</pre>";
+				$emailerror++;
+				}			// Print full array.
 			echo "</pre>";
-			 if($result['data']['user_email']!=$list[$c][1]){
-			echo "<pre>";
-			echo 'email mismatch';
-			echo "</pre>";
-			$emailerror++;
-			}
+			 
 
 		} elseif (!empty($result['error'])) {
 			echo "<pre>";
