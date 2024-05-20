@@ -102,12 +102,13 @@ class Smember extends BaseController {
 	function find_user_list(){
 		
 		
-		
+		$emailerror=0;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
+if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 	while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		$num = count($list);
-	
+		echo $num;
+	$list = array_map('str_getcsv', file('emailIDtest.csv'));
 		
 		for ($c=0; $c < $num; $c++) {
 
@@ -117,7 +118,7 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 			
 			
 			//for ($id=1;$id<10000;$id++) {
-    $result = $this->s2_get_user_by_id($list[$c]);
+    $result = $this->s2_get_user_by_id($list[0][$c]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
@@ -137,11 +138,21 @@ if (($handle = fopen("listofdeaduserstest.csv", "r")) !== FALSE) {
 			echo "</pre>";
 		}
 		}
+		if($result['data']['user_email']!=$list[1][$c]){
+			echo "<pre>";
+			echo 'email mismatch';
+			echo "</pre>";
+			$emailerror++;
+			
+			
+		}
+			
 		
 		
 		
 		
-	};
+	}
+	echo $emailerror;
 }
 	
 	
