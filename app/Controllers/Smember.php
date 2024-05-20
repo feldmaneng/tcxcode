@@ -104,10 +104,10 @@ class Smember extends BaseController {
 		
 		$emailerror=0;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
+if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('emailIDtest.csv'));
+	$list = array_map('str_getcsv', file('emailID.csv'));
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow); 
@@ -142,7 +142,7 @@ if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 			echo $result['data']['ID'].",".$result['data']['user_email'];
 				if($result['data']['user_email']!=$list[$c][1]){
 				
-				echo ' email mismatch';
+				echo ' <strong>email mismatch </strong>';
 				
 				$emailerror++;
 				}			// Print full array.
@@ -162,7 +162,9 @@ if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 		
 		
 	//}
-	echo $emailerror;
+	echo "<pre>";
+	echo "Number of mismatched emails: ".$emailerror;
+	echo "</pre>";
 }
 	
 	
