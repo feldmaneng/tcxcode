@@ -107,24 +107,18 @@ class Smember extends BaseController {
 if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('emailIDtest2.csv'));
-	$key = array_search('ID', array_column($list, 0));
-	$emailc = array_search('Email',$list[$key]);
-	$x = 0;
-	echo count($list,1);
-//increment keyfirst to move to the first times one row down
-while($list[$key+$x][1] != NULL ){
-echo $list[$key+$x][1];
-echo "<br>";
-	$x++;
+	$list = array_map('str_getcsv', file('emailIDtest.csv'));
 	
-	}
-	$keylast = $key + $x;
+	$idrow = array_column($list,0);
+	$numrows = count($idrow); 
+//increment keyfirst to move to the first times one row down
+
+	
 	
 	
 	
 		
-		for ($c=0; $c < $keylast; $c++) {
+		for ($c=0; $c < $numrows; $c++) {
 echo $list[$c][$key];
 		
 		//$list = array(7572,6431,6374,7972);
