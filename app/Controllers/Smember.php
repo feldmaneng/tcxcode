@@ -109,7 +109,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 		
 	$list = array_map('str_getcsv', file('emailIDtest.csv'));
 	$num = count($list,COUNT_RECURSIVE);
-		echo $num;
+		echo $num."this is the num <br>";
 		
 		for ($c=0; $c < $num/2; $c++) {
 
@@ -120,7 +120,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 			
 			//for ($id=1;$id<10000;$id++) {
 				
-				echo $list[0][$c];
+				echo $list[0][$c]."this is the $list[0][$c] <br>";
     $result = $this->s2_get_user_by_id($list[0][$c]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
