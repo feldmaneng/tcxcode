@@ -109,7 +109,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 		
 	$list = array_map('str_getcsv', file('emailIDtest.csv'));
 	$num = count($list,COUNT_RECURSIVE);
-		echo $num."this is the num <br>";
+		echo "begin".$num."this is the num <br>";
 		
 		for ($c=0; $c < $num/2; $c++) {
 
