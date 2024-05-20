@@ -113,7 +113,7 @@ if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
 	$x = 0;
 //increment keyfirst to move to the first times one row down
 while($list[$key+$x][1] != NULL ){
-
+echo $list[$key+$x][1];
 	$x++;
 	
 	}
