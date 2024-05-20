@@ -119,7 +119,7 @@ if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 	
 		
 		for ($c=0; $c < $numrows; $c++) {
-echo $list[$c][$key];
+echo $list[$c][0];
 		
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
@@ -128,7 +128,7 @@ echo $list[$c][$key];
 			//for ($id=1;$id<10000;$id++) {
 				
 				
-    $result = $this->s2_get_user_by_id($list[$c][$key]);
+    $result = $this->s2_get_user_by_id($list[$c][0]);
 	/* if ($result && empty($result['error'])) {
 			echo "<pre>";
 			print_r($result['data']);  // Print full array.
@@ -141,12 +141,12 @@ echo $list[$c][$key];
 			echo "<pre>";
 			echo $result['data']['ID'].",".$result['data']['user_email'];  // Print full array.
 			echo "</pre>";
-			/* if($result['data']['user_email']!=$list[1][$c]){
+			 if($result['data']['user_email']!=$list[$c][1]){
 			echo "<pre>";
 			echo 'email mismatch';
 			echo "</pre>";
 			$emailerror++;
-			} */
+			}
 
 		} elseif (!empty($result['error'])) {
 			echo "<pre>";
