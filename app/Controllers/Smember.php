@@ -102,6 +102,10 @@ class Smember extends BaseController {
 	function find_user_list(){
 		
 $list = array_map('str_getcsv', file('listofdeadusers.csv'));
+if (($handle = fopen("listofdeadusers.csv", "r")) !== FALSE) {
+	$list = fgetcsv($handle, 1000, ",")
+}
+	
 		//$list = array(7572,6431,6374,7972);
 		foreach ($list as &$id) {
 			
