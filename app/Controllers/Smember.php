@@ -104,10 +104,10 @@ class Smember extends BaseController {
 		
 		$emailerror=0;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("emailIDtest.csv", "r")) !== FALSE) {
+if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('emailIDtest.csv'));
+	$list = array_map('str_getcsv', file('emailIDtest2.csv'));
 	$key = array_search('ID', array_column($list, 0));
 	$emailc = array_search('Email',$list[$key]);
 	$x = 0;
