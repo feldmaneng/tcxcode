@@ -119,7 +119,7 @@ if (($handle = fopen("emailIDtest2.csv", "r")) !== FALSE) {
 	
 		
 		for ($c=0; $c < $numrows; $c++) {
-echo $list[$c][0];
+
 		
 		//$list = array(7572,6431,6374,7972);
 		//foreach ($list as &$id) {
