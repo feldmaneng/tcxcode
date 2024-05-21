@@ -142,7 +142,7 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 			echo $result['data']['ID'].",".$result['data']['user_email'];
 				if($result['data']['user_email']!=$list[$c][1]){
 				
-				echo ' <strong>email mismatch </strong>';
+				echo ',<strong>email mismatch </strong>';
 				
 				$emailerror++;
 				}			// Print full array.
