@@ -133,7 +133,7 @@ if (($handle = fopen("emailID3.csv", "r")) !== FALSE) {
 				
 				$emailerror++;
 				} else{
-					$result = $this->$s2_delete_user_by_id($id);
+					$result = $this->$s2_delete_user_by_id($list[$c][0]);
 					// Add error checking here for the delete operation
 					if ($result && empty($result['error']) && !empty($result['ID'])) {
 						echo ',Success Deleted user ID: '.$result['ID'];
