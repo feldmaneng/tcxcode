@@ -136,7 +136,7 @@ if (($handle = fopen("emailID3.csv", "r")) !== FALSE) {
 					$result = $this->$s2_delete_user_by_id($id);
 					// Add error checking here for the delete operation
 					if ($result && empty($result['error']) && !empty($result['ID'])) {
-    echo ',Success Deleted user ID: '.$result['ID'];
+						echo ',Success Deleted user ID: '.$result['ID'];
 					}
 					if(!empty($result['error'])) {
 						echo ',Delete Failed : '.$result['error'];
@@ -169,13 +169,7 @@ if (($handle = fopen("emailID3.csv", "r")) !== FALSE) {
 		
 	}
 	
-	    private function s2_get_user_by_id($id)
-	{
-		$data = array(
-			"user_id" => $id
-		);
-		return $this->s2_api("get_user", $data);
-	}
+	
 	
 	private function diag_log ($message) {
 		$message = "[" . date("Y-M-D H:i:s e") . "] " . basename(__file__, '.php') . ": " . $message . "\n";
