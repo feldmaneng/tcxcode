@@ -104,10 +104,10 @@ class Smember extends BaseController {
 		
 		$emailerror=0;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
+if (($handle = fopen("emailID3.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('emailID.csv'));
+	$list = array_map('str_getcsv', file('emailID3.csv'));
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow); 
@@ -120,23 +120,10 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 		
 		for ($c=0; $c < $numrows; $c++) {
 
-		
-		//$list = array(7572,6431,6374,7972);
-		//foreach ($list as &$id) {
-			
-			
-			//for ($id=1;$id<10000;$id++) {
-				
+	
 				
     $result = $this->s2_get_user_by_id($list[$c][0]);
-	/* if ($result && empty($result['error'])) {
-			echo "<pre>";
-			print_r($result['data']);  // Print full array.
-			echo "</pre>";
-
-		} elseif (!empty($result['error'])) {
-			echo 'API error reads: '.$result['error'];
-		} */
+	
 		if ($result && empty($result['error'])) {
 			echo "<pre>";
 			echo $result['data']['ID'].",".$result['data']['user_email'];
@@ -145,7 +132,16 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 				echo ',<strong>email mismatch </strong>';
 				
 				$emailerror++;
-				}			// Print full array.
+				} else{
+					$result = $this->$s2_delete_user_by_id($id);
+					// Add error checking here for the delete operation
+					if ($result && empty($result['error']) && !empty($result['ID'])) {
+    echo ',Success Deleted user ID: '.$result['ID'];
+					}
+					if(!empty($result['error'])) {
+						echo ',Delete Failed : '.$result['error'];
+					}
+				}					// Print full array.
 			echo "</pre>";
 			 
 
@@ -154,6 +150,7 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 			echo 'API error reads: '.$result['error'];
 			echo "</pre>";
 		}
+		
 		}
 		
 			
@@ -172,6 +169,13 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 		
 	}
 	
+	    private function s2_get_user_by_id($id)
+	{
+		$data = array(
+			"user_id" => $id
+		);
+		return $this->s2_api("get_user", $data);
+	}
 	
 	private function diag_log ($message) {
 		$message = "[" . date("Y-M-D H:i:s e") . "] " . basename(__file__, '.php') . ": " . $message . "\n";
@@ -211,6 +215,14 @@ if (($handle = fopen("emailID.csv", "r")) !== FALSE) {
 			"user_id" => $id
 		);
 		return $this->s2_api("get_user", $data);
+	}
+	   
+	private function s2_delete_user_by_id($id)
+	{
+		$data = array(
+			"user_id" => $id
+		);
+		return $this->s2_api("delete_user", $data);
 	}
 
 	// Lookup a person by username
