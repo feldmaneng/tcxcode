@@ -1,6 +1,5 @@
 <?php
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
- 
+namespace App\Controllers;
 //setup php for working with Unicode data
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
@@ -26,30 +25,37 @@ define("EventYear", "Mesa2023"); // For selecting records only for this year's e
 define("Event", "Mesa");
 define("Year", "2023");
 
-class Mailinglist extends CI_Controller {
+
+
+
+use Config\Database as ConfigDatabase;
+use Config\GroceryCrud as ConfigGroceryCrud;
+use GroceryCrud\Core\GroceryCrud;
+
+// Make sure you are logged in to access these functions.
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+} 
+
+class Mailinglist extends BaseController {
+
  
-	 function __construct()
-	 {
-		  parent::__construct();
- 
-		  /* Standard Libraries of codeigniter are required */
-		  $this->load->database();
-		$this->load->helper('url');
+	function __construct()
+	{
 		
+		helper('text');
+
+	
 		
-		  /* ------------------ */ 
+
  
-		 // $this->load->library('grocery_CRUD');
-		$this->load->library('contacts');
-		 
-		date_default_timezone_set('America/Los_Angeles'); //FI figure out how to get server time in correct timezone
- 
- 		// Load JQuery
- 		//echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>';
- 		//echo $debugbarRenderer->renderHead();
- 		
- 		
-	 }
+	}
+	
+	
+
 	 
  
 	  public function index()
@@ -106,23 +112,25 @@ class Mailinglist extends CI_Controller {
 		//echo "Encoding: " . mb_detect_encoding($email) . "<br>"; //, 'UTF8');
 		
 		if (strlen($email) > 0 ) {
-			$this->db->select('*');
-			$this->db->from('contacts');
-		
-			$this->db->where('LinkedInEmail',$email);
 			
-			$query_people = $this->db->get();
+			$db = \Config\Database::conect();
+			$builder = $db->table('contacts');
+			$builder->where('LinkedInEmail',$email);
+		
+		
+			
+			$query_people = $builder->get();
 			//echo "<p>" . $this->db->FamilyName_query() . "</p>";
-			if ( $query_people->num_rows() > 0 ) {
+			if ( $query_people->getNumRows() > 0 ) {
 				// An email ID shouldn't be on more than one person, so we shouldn't have more than one row
-				if ( $query_people->num_rows() > 1 ) {
+				if ( $query_people->getNumRows() > 1 ) {
 					echo "Warning: LinkedInEmail query on ". $email . " yielded " .$query_people->num_rows() . "rows. (Multiple people.) <br>";
-					foreach ($query_people->results as $row) {
+					foreach ($query_people->getResult() as $row) {
 						echo "	ContactID ". $row->ContactID . "<br>\n\n\n\n";
 					}
 					//die();
 				}
-				$row = $query_people->row_array();
+				$row = $query_people->getRowArrary();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
 				return $row['ContactID'];
 			} else {				
@@ -139,13 +147,18 @@ class Mailinglist extends CI_Controller {
 	private function FindCompanyByID($companyID, $ChinaDB)
 	{
 		if ( $companyID > 0 ) {
-			$ChinaDB->select('*');
+			
+			$db = \Config\Database::conect();
+			$builder = $db->table('chinacompany');
+			$builder->where('CompanyID',$companyID);
+			
+			/* $ChinaDB->select('*');
 			$ChinaDB->from('chinacompany');
 		
-			$ChinaDB->where('CompanyID',$companyID);
+			$ChinaDB->where('CompanyID',$companyID); */
 			
-			$query = $ChinaDB->get();
-			$row = $query->row_array();
+			$query = $builder->get();
+			$row = $query->getRowArray();
 			return $row['Company'];
 		}
 	}	
@@ -153,29 +166,19 @@ class Mailinglist extends CI_Controller {
 	function write_archive ($primary_key) {
 		//There may be a data structure with the original record somewhere, but haven't found it.
 		//So simply retrieve it prior to writing the updated record
-
-		$this->db->select('*');
-		$this->db->from('contacts');
-		$old_query = $this->db->where('ContactID', $primary_key);
-		$old_query = $this->db->get();
+			$db = \Config\Database::conect();
+			$builder = $db->table('contacts');
+			$builder->where('ContactID', $primary_key);
+			$old_query = $builder->get();
+		
 		// We've also assumed only one record got returned since primary_key is unique
 		// Better to check, etc.
 		 
 
-		/*if ($old_query->num_rows() != 1) {
-			if ($old_query->num_rows() < 1) {
-				$new_row = array (
-					'GivenName' => 'no rows found'
-				);
-			} else {
-				$new_row = array (
-					'GivenName' => 'too many rows found ' . $old_query->num_rows()
-				);
-			}
-		} else {*/
+	
 		
 		//If we have more than 1 row, for some reason, only the GivenName row will be written to the archive
-		$old_row = $old_query->row_array(); //result_array() row_array();
+		$old_row = $old_query->getRowArray(); //result_array() row_array();
 	
 		//Save the ContactID under OriginalContactID since the ForeignKey relationship will set 
 		//the ContactID to NULL when the record is deleted from Contacts	
@@ -197,8 +200,8 @@ class Mailinglist extends CI_Controller {
 		if (empty($new_row['Stamp'])) {
 			$new_row['Stamp'] = date('Y-m-d H:i:s ');
 		}
-				
-		$this->db->insert('contacts_archive', $new_row); 
+		$db->table('contacts_archive')->insert($new_row); 	
+		 
 		return;
 	}
 
@@ -224,6 +227,7 @@ class Mailinglist extends CI_Controller {
 		
 		  set_time_limit(120);
 		  // Set for UTF-16 Little-Endian
+		  //ask ira about this library 
 		  $this->load->library('tabreaderselect2');
 	 
 			 $filePath = './names_to_add.txt';
@@ -269,10 +273,10 @@ class Mailinglist extends CI_Controller {
 					);
 					
 					if ($p_write) {
-						$this->db->insert('contacts', $SQLdata);
+						$db->table('contacts')->insert($SQLdata); 
+						
 					}
-					//$query = $this->db->get();
-					//$row = $SQLdata; //$query->row_array();
+					
 					
 					$contactID = $this->LookupPersonByEmail($field['Email']);
 					
@@ -284,12 +288,13 @@ class Mailinglist extends CI_Controller {
 					}
 				}
 
+					$db = \Config\Database::conect();
+					$builder = $db->table('contacts');
+					$builder->select('*');
+					$builder->where('ContactID', $contactID);
 					
-					$this->db->select('*');
-					$this->db->from('contacts');
-					$this->db->where('ContactID', $contactID);
-					$query = $this->db->get();
-					$row = $query->row_array();
+					$query = $builder->get();
+					$row = $query->getRowArray();
 					
 				
 					$verbose .= $row['ContactID'] ."\t";
@@ -351,8 +356,8 @@ class Mailinglist extends CI_Controller {
 
 					if ($p_write) {
 						//d($row);
-						$this->db->where('ContactID', $contactID); 
-						$this->db->update('contacts', $row);
+						$builder->where('ContactID', $contactID); 
+						$builder->update($row);
 						$verbose .= "record updated ";
 					}
 			
@@ -360,7 +365,7 @@ class Mailinglist extends CI_Controller {
 				echo "<p>".$verbose."</p>";
 			}
 			
-			//print_r ($data['csvData']);
+			
 			
 			return;
 			
@@ -373,10 +378,7 @@ class Mailinglist extends CI_Controller {
 	}
 	
 	function read_tab_input_for_attendance ($p_write = false)
-	// This reads a tab delimited file from Google on Mac OS
-	// Don't forget to update the constants in the $attendance_row
 	
-	// set $p_write to true to do an actual write, otherwise it just previews
 	
 	 {
 		  define("YEAR", '2023');
@@ -384,6 +386,7 @@ class Mailinglist extends CI_Controller {
 		  
 		  set_time_limit(120);
 		  // Set for UTF-16 Little-Endian
+		  //ask ira
 		  $this->load->library('tabreaderselect2');
 	 
 			 $filePath = './names_to_add.txt';
@@ -421,8 +424,10 @@ class Mailinglist extends CI_Controller {
 					$verbose .= "Found - adding attendance\t";
 
 					// We found the person, check they aren't already in the attendnace record
-					$this->db->select('*');
-					$this->db->from('attendance');
+					$db = \Config\Database::conect();
+					$builder = $db->table('attendance');
+					$builder->select('*');
+					
 					
 					$where_criteria = array (
 						'Email' => $field['Email'],
@@ -430,9 +435,9 @@ class Mailinglist extends CI_Controller {
 						'Event' => EVENT
 					);					
 		
-					$this->db->where($where_criteria);
-					$query = $this->db->get();
-					if ( $query->num_rows() > 0 ) {
+					$builder->where($where_criteria);
+					$query = $builder->get();
+					if ( $query->getNumRows() > 0 ) {
 						echo "Attendance record already exists for ". $field['Email'] . " no update made<br>";
 					} else {
 						// Okay, now create their attendance record
@@ -474,7 +479,7 @@ class Mailinglist extends CI_Controller {
 							'Tutorial' => $tutorial
 						  );
 						if ($p_write) {
-							$this->db->insert('attendance', $attendance_row);	
+							$builder->insert($attendance_row);	
 						}	  
 					}						
 
@@ -491,6 +496,7 @@ class Mailinglist extends CI_Controller {
 
 	function read_tab_input_for_attendance_update()
 	{
+		//askira
 		return $this->read_tab_input_for_attendance ( TRUE );
 	}
 	
@@ -500,6 +506,7 @@ class Mailinglist extends CI_Controller {
 	 {
 		  
 		  set_time_limit(120);
+		  //ask ira
 		  $this->load->library('tabreaderselect2');
 	 
 			 $filePath = './inactive_names.txt';
@@ -519,20 +526,22 @@ class Mailinglist extends CI_Controller {
 					$verbose .= "Found\t";
 					// We already have the record selected based upon the LookupPersonByEmail
 					$this->write_archive($contactID); // Save a copy GivenName
-						
-					$this->db->select('*');
-					$this->db->from('contacts');
-					$this->db->where('ContactID', $contactID);
-					$query = $this->db->get();
-					$row = $query->row_array();
+					$db = \Config\Database::connect();
+					$builder = $db->table('contacts');
+					$builder->select('*');
+					$builder->where('ContactID', $contactID);
+					$query = $builder->get();
+					$row = $query->getRowArray();
+					
+					
 						
 					$row['Notes'] = $row['Notes'] . " - Hard Bouncing, removed";	
 					$row['DBuser'] = "script";
 					$row['Active'] = "0"; //Access uses -1 for TRUE
 					$row['Stamp'] = date('Y-m-d H:i:s ');
 					
-					$this->db->where('ContactID', $contactID); 
-					$this->db->update('contacts', $row);
+					$builder->where('ContactID', $contactID); 
+					$builder->update($row);
 					$verbose .= " - record updated ";
 				} else {
 					
@@ -567,13 +576,16 @@ class Mailinglist extends CI_Controller {
 	// Writes out CSV data for MailChimp, without the Chinese Fields
 	{
 
- 		$this->load->database('default',TRUE);
+ 		
 		$subscribers = 0;
 		
 		//echo "Number of rows in Contacts " . $this->db->count_all_results('Contacts') . "</p>";
-		
+			$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			
 
-		$this->db->select('*');
+		
 		
 		// Query updated with switch of Active to TINYINT (0,1)
 		$where_criteria = array (
@@ -581,12 +593,12 @@ class Mailinglist extends CI_Controller {
 			'Email is NOT NULL' => NULL,
 			'EmailBounce' =>"0"
 		);					
+		$builder->where($where_criteria);
 		
-		$this->db->where($where_criteria);
 
-		$this->db->from('contacts');
-		$query = $this->db->get();
-		$num = $query->num_rows();
+		
+		$query = $builder->get();
+		$num = $query->getNumRows();
 		
 		
 		echo "# BiTS Database Export<br>";
@@ -604,7 +616,7 @@ class Mailinglist extends CI_Controller {
 		}
 		echo "<br>";
 		
-		foreach ($query->result_array() as $row)
+		foreach ($query->getResultArray() as $row)
 		{	
 			
 			echo $row['ContactID'] . ',' . $row['Email'] . ',';
@@ -661,14 +673,17 @@ class Mailinglist extends CI_Controller {
 	function wrangler_list()
 	// Writes out CSV data for Wrangler Reference
 	{
-
- 		$this->load->database('default',TRUE);
+			$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			
+ 		
 		$subscribers = 0;
 		
 		//echo "Number of rows in Contacts " . $this->db->count_all_results('Contacts') . "</p>";
 		
 
-		$this->db->select('*');
+		
 		
 		// Query updated with switch of Active to TINYINT (0,1)
 		$where_criteria = array (
@@ -677,12 +692,12 @@ class Mailinglist extends CI_Controller {
 			'FamilyName <> "" ' => NULL
 		); 					
 		
-		$this->db->where($where_criteria);
+		$builder->where($where_criteria);
 
-		$this->db->from('contacts');
-		$this->db->order_by('Company ASC, FamilyName ASC, GivenName ASC');
-		$query = $this->db->get();
-		$num = $query->num_rows();
+	
+		$builder->orderby('Company ASC, FamilyName ASC, GivenName ASC');
+		$query = $builder->get();
+		$num = $query->getNumRows();
 		
 		echo "# BiTS Database Export<br>";
 		echo "# BiTS Workshop Confidential<br>";
@@ -695,7 +710,7 @@ class Mailinglist extends CI_Controller {
 		echo "Company Name,GivenName Name,FamilyName Name,Nickname,Title";
 		echo "<br>";
 		
-		foreach ($query->result_array() as $row)
+		foreach ($query->getResultArray() as $row)
 		{	
 			echo '"'. $row['Company'] . '",';
 			echo '"'. $row['GivenName'] . '","' . $row['FamilyName'] . '","' . $row['Nickname'] . '",';
@@ -724,9 +739,11 @@ class Mailinglist extends CI_Controller {
 	// main BiTS database. IF not, it tries to find the person
 	
 	{
-		$GuestDB = $this->load->database('RegistrationDataBase',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+			$db = \Config\Database::connect('RegistrationDataBase');
+			$builder = $db->table('guests');
+			$builder->select('*');
 		
-		$GuestDB->select('*');
+		
 		$where_criteria = array (
 			'EventYear' => EventYear,
 			//'Type !=' => "Professional",
@@ -734,12 +751,12 @@ class Mailinglist extends CI_Controller {
 			'Email is NOT NULL' => NULL
 		);					
 		
-		$GuestDB->where($where_criteria);
+		$builder->where($where_criteria);
 
-		$GuestDB->from('guests');
-		$query = $GuestDB->get();
+		$builder->from('guests');
+		$query = $builder->get();
 		
-		foreach ($query->result_array() as $field) {
+		foreach ($query->getResultArray as $field) {
 			$verbose= ""; //"Processing " . $field['Email'] . "\t";
 			
 			$contactID = $this->contacts->LookupPersonByEmail($field['Email'], FALSE);
@@ -766,9 +783,12 @@ class Mailinglist extends CI_Controller {
 	// main BiTS database
 	
 	{
-		$GuestDB = $this->load->database('RegistrationDataBase',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
 		
-		$GuestDB->select('*');
+		
+			$db = \Config\Database::connect('RegistrationDataBase');
+			$builder = $db->table('guests');
+			$builder->select('*');
+		
 		$where_criteria = array (
 			'EventYear' => EventYear,
 			'Type !=' => "Professional",
@@ -776,12 +796,12 @@ class Mailinglist extends CI_Controller {
 			'Email is NOT NULL' => NULL
 		);					
 		
-		$GuestDB->where($where_criteria);
+		$builder->where($where_criteria);
 
-		$GuestDB->from('guests');
-		$query = $GuestDB->get();
+		$builder->from('guests');
+		$query = $builder->get();
 		
-		foreach ($query->result_array() as $field) {
+		foreach ($query->getResultArray() as $field) {
 			$verbose= "Processing " . $field['Email'] . "\t";
 			
 			$contactID = $this->contacts->LookupPersonByEmail($field['Email'], FALSE);
@@ -811,7 +831,7 @@ class Mailinglist extends CI_Controller {
 						'Origin' => EventYear
 					);
 					if ( $update ) {
-						$this->db->insert('contacts', $SQLdata);
+						$builder->insert($SQLdata);
 						//$query = $this->db->get();
 						//$row = $SQLdata; //$query->row_array();
 			
@@ -827,12 +847,15 @@ class Mailinglist extends CI_Controller {
 
 			}
 
+			$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			$builder->where('ContactID', $contactID);
 			
-			$this->db->select('*');
-			$this->db->from('contacts');
-			$this->db->where('ContactID', $contactID);
-			$query = $this->db->get();
-			$row = $query->row_array();
+			
+		
+			$query = $builder->get();
+			$row = $query->getRowArray();
 		
 	if(! empty($row['ContactID'])){
 		$verbose .= $row['ContactID'];}
@@ -909,9 +932,9 @@ class Mailinglist extends CI_Controller {
 			//
 			$row['Stamp'] = date('Y-m-d H:i:s ');
 		
-			$this->db->where('ContactID', $contactID); 
+			$builder->where('ContactID', $contactID); 
 			if ($update) {
-				$this->db->update('contacts', $row);
+				$builder->update($row);
 				$verbose .= " - record updated ";
 			}
 			
@@ -932,10 +955,12 @@ class Mailinglist extends CI_Controller {
 	function China_MailChimp()
 	// Reads the BiTS China database and generates control information for MailChimp
 	
-	{
-		$ChinaDB = $this->load->database('ChinaDataBase',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+	{	
+	//askira
+		$db = \Config\Database::connect('ChinaDataBase');
+		$builder = $db->from('guests');
+		$query = $builder->get();
 		
-		$ChinaDB->select('*');
 		/* $where_criteria = array (
 			'Active' => "-1",
 			'Email is NOT NULL' => NULL
@@ -944,10 +969,9 @@ class Mailinglist extends CI_Controller {
 		//$ChinaDB->where($where_criteria);
 		echo "Email,ChinaControl,ChinaCompany,RegCode<br>";
 		
-		$ChinaDB->from('guests');
-		$query = $ChinaDB->get();
 		
-		foreach ($query->result_array() as $field) {
+		
+		foreach ($query->getResultArray() as $field) {
 			$company = $this->FindCompanyByID($field['InvitedByCompanyID'], $ChinaDB);
 			
 			$invited="Invited";
@@ -968,9 +992,11 @@ class Mailinglist extends CI_Controller {
 	function China_Name_Badges()
 	// Reads the BiTS China database and generates a CSV for the name badges
 	{
-		$ChinaDB = $this->load->database('ChinaDataBase',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+		$db = \Config\Database::connect('ChinaDataBase');
+		$builder = $db->from('guests');
+		$query = $builder->get();
 		
-		$ChinaDB->select('*');
+		
 		/* $where_criteria = array (
 			'Active' => "-1",
 			'Email is NOT NULL' => NULL
@@ -979,10 +1005,10 @@ class Mailinglist extends CI_Controller {
 		//$ChinaDB->where($where_criteria);
 		echo "ChineseName,Given FAMILY,Company,nnnnaaaa<br>";
 		
-		$ChinaDB->from('guests');
-		$query = $ChinaDB->get();
 		
-		foreach ($query->result_array() as $field) {
+		$query = $builder->get();
+		
+		foreach ($query->getResultArray() as $field) {
 		
 			$chineseName = $field['CN_FamilyNameName'] . $field['CN_GivenNameName'];
 			$company = $field['Company'];
@@ -1051,7 +1077,7 @@ class Mailinglist extends CI_Controller {
 						'Origin' => "BiTS China 2016 - JotForm"  //Change for each list import
 					);
 					if (! $test_run) {
-						$this->db->insert('contacts', $SQLdata);
+						$builder->insert($SQLdata);
 					}
 					//$query = $this->db->get();
 					//$row = $SQLdata; //$query->row_array();
@@ -1060,12 +1086,13 @@ class Mailinglist extends CI_Controller {
 					
 				}
 
-					
-				$this->db->select('*');
-				$this->db->from('contacts');
-				$this->db->where('ContactID', $contactID);
-				$query = $this->db->get();
-				$row = $query->row_array();
+			$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			$builder->where('ContactID', $contactID);
+				
+				$query = $builder->get();
+				$row = $query->getRowArray();
 				
 			
 				$verbose .= $row['ContactID'];
@@ -1138,8 +1165,8 @@ class Mailinglist extends CI_Controller {
 				$row['Stamp'] = date('Y-m-d H:i:s ');
 				
 				if (! $test_run) {
-					$this->db->where('ContactID', $contactID); 
-					$this->db->update('contacts', $row);
+					$builder->where('ContactID', $contactID); 
+					$builder->update($row);
 				}
 			
 				 
@@ -1164,6 +1191,7 @@ class Mailinglist extends CI_Controller {
 		  
 		  set_time_limit(120);
 		  // Set for UTF-16 Little-Endian
+		  //ask ira
 		  $this->load->library('tabreaderselect2');
 	 
 			 $filePath = './names_to_add.txt';
@@ -1203,7 +1231,10 @@ class Mailinglist extends CI_Controller {
 						'Origin' => "BiTS China 2016 - MikeCRM"  //Change for each list import
 					);
 					if (! $test_run) {
-						$this->db->insert('contacts', $SQLdata);
+						$db = \Config\Database::connect();
+						$builder = $db->table('contacts');
+						$builder->select('*');
+						$builder->insert($SQLdata);
 					}
 					//$query = $this->db->get();
 					//$row = $SQLdata; //$query->row_array();
@@ -1212,12 +1243,13 @@ class Mailinglist extends CI_Controller {
 					
 				}
 
-					
-				$this->db->select('*');
-				$this->db->from('contacts');
-				$this->db->where('ContactID', $contactID);
-				$query = $this->db->get();
-				$row = $query->row_array();
+				$db = \Config\Database::connect();
+				$builder = $db->table('contacts');
+				$builder->select('*');
+				$builder->where('ContactID', $contactID);]
+				
+				$query = $builder->get();
+				$row = $query->getRowArray();
 				
 			
 				$verbose .= $row['ContactID'];
@@ -1292,8 +1324,8 @@ class Mailinglist extends CI_Controller {
 				$row['Stamp'] = date('Y-m-d H:i:s ');
 				
 				if (! $test_run) {
-					$this->db->where('ContactID', $contactID); 
-					$this->db->update('contacts', $row);
+					$builder->where('ContactID', $contactID); 
+					$builder->update($row);
 				}
 			
 				 
@@ -1317,6 +1349,7 @@ class Mailinglist extends CI_Controller {
 		  
 		  set_time_limit(120);
 		  // Set for UTF-16 Little-Endian
+		  //ask ira
 		  $this->load->library('tabreaderselect2');
 	 
 			 $filePath = './emails_to_swap.txt';
@@ -1343,11 +1376,14 @@ class Mailinglist extends CI_Controller {
 					// We didn't find them using their primary email addressType
 					$contactID = $this->LookupPersonByLinkedInEmail($field['Email']);
 					if ($contactID > 0) {
-						$this->db->select('*');
-						$this->db->from('contacts');
-						$this->db->where('ContactID', $contactID);
-						$query = $this->db->get();
-						$row = $query->row_array();
+						$db = \Config\Database::connect();
+						$builder = $db->table('contacts');
+						$builder->select('*');
+						$builder->where('ContactID', $contactID);
+						
+						
+						$query = $builder->get();
+						$row = $query->getRowArray();
 
 						echo $row['Email'];
 					} else {
@@ -1363,25 +1399,26 @@ class Mailinglist extends CI_Controller {
 	
 	function lookup_expo_entry( $CompanyID, $Year, $Event)
 	{
-		$RegistrationDB = $this->load->database('registration',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+		$db = \Config\Database::connect('registration');
 		
-		$RegistrationDB->select('*');
+		$builder = $db -> from('expodirectory');
+		
+		
 		$where_criteria = array (
 			'CompanyID' => $CompanyID,
 			'Year' => $Year,
 			'Event' => $Event
 		);					
-		
-		$RegistrationDB->where($where_criteria);
-		$RegistrationDB->from('expodirectory');
+		$builder->where($where_criteria);
+
 		
 		// should probably check that there is only 1 row
-		$query = $RegistrationDB->get();
-		if ($query->num_rows() > 0) {
-			if ($query->num_rows() > 1 ) {
+		$query = $builder->get();
+		if ($query->getNumRows() > 0) {
+			if ($query->getNumRows() > 1 ) {
 				echo "Warning: more than row returned for CompanyID ". $CompanyID . " Year " . $Year . " Event " . $Event . "<br>";
 			}
-			$row = $query->row_array();
+			$row = $query->getRowArray();
 			return $row;
 					
 		} else {
@@ -1396,25 +1433,24 @@ class Mailinglist extends CI_Controller {
 		$Event = "Suzhou";
 		$PriorEvent = "Shanghai";
 		
-		$RegistrationDB = $this->load->database('registration',TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
-		
-		$RegistrationDB->select('*');
+		$db = \Config\Database::connect('registration');
+		$builder->from('expodirectory');
 		$where_criteria = array (
 			'Year' => $Year,
 			'Event' => $Event
 		);					
 		
-		$RegistrationDB->where($where_criteria);
-		$RegistrationDB->order_by('CompanyName','ASC');
+		$builder->where($where_criteria);
+		$builder->orderby('CompanyName','ASC');
 		
-		$RegistrationDB->from('expodirectory');
-		$query = $RegistrationDB->get();
+		
+		$query = $builder->get();
 		
 		echo "<h1>TestConX " . $Year . " " . $Event . " Exhibitor Directory Data</h1>";
 		echo date("Y-m-d h:i:sa") . "<br>";
 		echo "<br>";
 		
-		foreach ($query->result_array() as $field) {
+		foreach ($query->getResultArray() as $field) {
 			echo "<h2>" . $field['CompanyName'] . "</h2>";
 			echo "Status: " .$field['Status'] . "<br>";
 			if ( $field['Upload'] == "New" ) {
@@ -1454,22 +1490,21 @@ class Mailinglist extends CI_Controller {
 
 		$start_time = microtime(TRUE);
 		//$this->diag_log("mailinglist: starting function add_to_attendance_database");
+		$db = \Config\Database::connect('registration');
+		$builder->from('guests');
+		$builder->where('EventYear', EventYear);
 		
-		$this->registration_db = $this->load->database('RegistrationDataBase', TRUE);
-		//$this->db->order_by('Company', 'ASC');
-		$query = $this->registration_db->get_where('guests', array(
-			'EventYear'=> EventYear));
-			//'Type !=' => "Professional"));
+		$query = $builder->get();
 
 				
-	
-		$this->db = $this->load->database('default', TRUE);
+	//askira
+		//$this->db = $this->load->database('default', TRUE);
 		
 		echo "<h4>Event: " . EventYear . "</h4>";
-		echo "<p>Found  " . $query->num_rows() . " number of rows</p>";
+		echo "<p>Found  " . $query->getNumRows() . " number of rows</p>";
 		
 		echo "Record\tEmail\tContactID\tPayment<br>";
-		foreach ($query->result() as $row) {
+		foreach ($query->getResult() as $row) {
 			$status = $row->ContactID . "\t" . $row->Email . "\t";
 			
 			if ($row->MasterContactID > 0) {
@@ -1545,7 +1580,9 @@ class Mailinglist extends CI_Controller {
 
 			
 				if ($write) {
-					$this->db->insert('attendance', $SQLdata);
+					$db = \Config\Database::connect();
+					$builder = $db->from('attendance');
+					$builder->insert($SQLdata);
 					$status .= "\tAdded new attendance record\t";
 				} else {
 					$status .= "\tNot in write mode";

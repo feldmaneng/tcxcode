@@ -1,4 +1,5 @@
 <?php 
+//correct namespace?
 namespace App\Controllers;
 
 use Config\Database as ConfigDatabase;

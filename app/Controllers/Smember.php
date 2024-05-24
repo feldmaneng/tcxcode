@@ -417,7 +417,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		//echo "Encoding: " . mb_detect_encoding($email) . "<br>"; //, 'UTF8');
 		
 		if (strlen($email) > 0 ) {
-			$db = \Config\Database::conect();
+			$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->select('*');
 			$builder->where('Email',$email);
