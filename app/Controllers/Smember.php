@@ -1330,7 +1330,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 	
 	
 	function set_mesa_users() {
-		$this->set_event_users("2023", "Mesa", "2023", "t2023", 4);
+		$this->set_event_users("2024", "Mesa", "2024", "t2024", 4);
 	}
 	
 	// Not fully written / debugged - wait unitl March 2018 to run...
