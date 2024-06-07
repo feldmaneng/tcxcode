@@ -28,7 +28,7 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 	$idrow = array_column($list,0);
 	$numrows = count($idrow);
 	for ($i = 0; $i <= $numrows; $i++){
-		$email =$list[$i]; 
+		$email = $list[$i]; 
 	$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->select('*');
@@ -36,7 +36,7 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 			
 			$query = $builder->get();
 			$row = $query->getResultArray(); 
-			echo $email.",".$row['ContactID'] . "<br>\n";
+			echo $email[0].",".$row['ContactID'] . "<br>\n";
 						
 					
 			
