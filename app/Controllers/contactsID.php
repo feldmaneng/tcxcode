@@ -43,7 +43,7 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 				//print_r($row);		
 			}		
 			else{
-				echo $email[0].", Not found";
+				echo $email[0].", Not found <br>\n";
 			}
 			
 	}
