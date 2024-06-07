@@ -35,7 +35,9 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 			$builder->where('Email',$email);
 			
 			$row = $builder->get();
-			echo $email.",".$row->ContactID;
+			echo $email.",";
+			print_r $row->ContactID;
+			echo"<br>";
 			
 	}
 //increment keyfirst to move to the first times one row down
