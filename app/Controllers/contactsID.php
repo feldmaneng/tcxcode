@@ -36,7 +36,7 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 			
 			$query = $builder->get();
 			$query->getResultArray(); 
-			echo $email.",".$row['ContactID'] . "<br>\n";
+			echo "email,".$row['ContactID'] . "<br>\n";
 						
 					
 			
