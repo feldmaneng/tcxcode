@@ -35,9 +35,10 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 			$builder->where('Email',$email);
 			
 			$query = $builder->get();
-			foreach ($query->getResult() as $row) {
-						echo $email.",".$row->ContactID . "<br>\n";
-					}
+			$query->getResultArray() 
+						echo $email.",".$row['ContactID'] . "<br>\n";
+						
+					
 			
 			
 	}
