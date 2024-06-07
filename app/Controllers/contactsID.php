@@ -27,7 +27,7 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow);
-	for ($i = 0, $i <= $numrows, $i++){
+	for ($i = 0; $i <= $numrows; $i++){
 		$list[$i] = $email;
 	$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
