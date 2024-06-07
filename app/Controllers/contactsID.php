@@ -39,8 +39,8 @@ if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
 			if ( $query->getNumRows() > 0 ) {
 				
 			$row = $query->getResultArray(); 
-			echo $email[0].",".$row['ContactID'] . "<br>\n";
-						
+			//echo $email[0].",".$row['ContactID'] . "<br>\n";
+				print_r($row);		
 			}		
 			else{
 				echo $email[0].", Not found";
