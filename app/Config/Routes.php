@@ -122,7 +122,7 @@ $routes->get('/smember/find_user_list', 'Smember::find_user_list');
 $routes->post('/smember/find_user_list', 'Smember::find_user_list');  
 
 $routes->get('/contactsID/findID', 'contactsID::findID');  
-$routes->post('/smember/findID', 'contactsID::findID');  
+$routes->post('/contactsID/findID', 'contactsID::findID');  
 
 //$routes->get('/smember', [Smember::class, 'index']);
 
