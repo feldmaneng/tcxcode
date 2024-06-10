@@ -39,7 +39,7 @@ if (($handle = fopen("round3checkr2.csv", "r")) !== FALSE) {
 			if ( $query->getNumRows() > 0 ) {
 				
 			$row = $query->getResultArray(); 
-			echo $email[0].",".$row[0]['ContactID'] . "<br>\n";
+			echo $email[0].", ".$row[0]['ContactID'] . "<br>\n";
 				//print_r($row);		
 			}		
 			else{
