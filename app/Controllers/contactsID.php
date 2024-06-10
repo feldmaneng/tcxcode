@@ -20,10 +20,10 @@ function findID(){
 		
 		$emailerror=0;
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("koreareg.csv", "r")) !== FALSE) {
+if (($handle = fopen("round2check.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('koreareg.csv'));
+	$list = array_map('str_getcsv', file('round2check.csv'));
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow);
