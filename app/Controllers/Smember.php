@@ -1177,7 +1177,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		
 		$query = $builder->get();
 		
-		$message = $builder->getLastQuery();
+		$message = $db->getLastQuery();
 
 		$this->echo_diag_log($message);
 		$message = "Rows = " . $query->num_rows();
