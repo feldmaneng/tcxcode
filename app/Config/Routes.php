@@ -109,8 +109,8 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/uploadtest', 'Uploadtest::index');          
 $routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
-$routes->get('/Smember2', 'S2_match_db::index');  
-$routes->post('/Smember2', 'S2_match_db::index');        
+/* $routes->get('/Smember2', 'S2_match_db::index');  
+$routes->post('/Smember2', 'S2_match_db::index');   */      
 
 $routes->get('/Smember', 'Smember::index');  
 $routes->post('/Smember', 'Smember::index');  
@@ -138,7 +138,21 @@ $routes->post('/smember/set_china_users', 'Smember::set_china_users');
  
 $routes->get('/smember/set_mesa_users', 'Smember::set_mesa_users');  
 $routes->post('/smember/set_mesa_users', 'Smember::set_mesa_users'); 
- 
+
+$routes->get('/smember/preview_add_to_database', 'Smember::preview_add_to_database');  
+$routes->post('/smember/preview_add_to_database', 'Smember::preview_add_to_database'); 
+
+$routes->get('/smember/add_to_database', 'Smember::add_to_database');  
+$routes->post('/smember/add_to_database', 'Smember::add_to_database'); 
+
+$routes->get('/smember/write_mailchimp_with_Chinese', 'Smember::write_mailchimp_with_Chinese');  
+$routes->post('/smember/write_mailchimp_with_Chinese', 'Smember::write_mailchimp_with_Chinese'); 
+
+
+$routes->get('/smember/set_korea_users', 'Smember::set_korea_users');  
+$routes->post('/smember/set_korea_users', 'Smember::set_korea_users');  
+
+
 
 
 //$routes->get('/smember', [Smember::class, 'index']);
