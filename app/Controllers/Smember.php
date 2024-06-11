@@ -1325,7 +1325,13 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 	function set_china_users() {
 		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
 		// Do twice since we had two China events in 2018
-		$this->set_event_users("2019", "China", "c2019", "", 1);
+		$this->set_event_users("2020", "China", "c2019", "", 1);
+	}
+	
+	function set_korea_users() {
+		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
+		// Do twice since we had two China events in 2018
+		$this->set_event_users("2023", "Korea", "k2023", "", 1);
 	}
 	
 	
