@@ -122,7 +122,24 @@ $routes->get('/smember/find_user_list', 'Smember::find_user_list');
 $routes->post('/smember/find_user_list', 'Smember::find_user_list');  
 
 $routes->get('/contactsID/findID', 'contactsID::findID');  
-$routes->post('/contactsID/findID', 'contactsID::findID');  
+$routes->post('/contactsID/findID', 'contactsID::findID'); 
+
+
+$routes->get('/smember/reset_mesa_all', 'Smember::reset_mesa_all');  
+$routes->post('/smember/reset_mesa_all', 'Smember::reset_mesa_all');  
+
+$routes->get('/smember/reset_china_all', 'Smember::reset_china_all');  
+$routes->post('/smember/reset_china_all', 'Smember::reset_china_all'); 
+
+
+$routes->get('/smember/set_china_users', 'Smember::set_china_users');  
+$routes->post('/smember/set_china_users', 'Smember::set_china_users'); 
+
+ 
+$routes->get('/smember/set_mesa_users', 'Smember::set_mesa_users');  
+$routes->post('/smember/set_mesa_users', 'Smember::set_mesa_users'); 
+ 
+
 
 //$routes->get('/smember', [Smember::class, 'index']);
 
