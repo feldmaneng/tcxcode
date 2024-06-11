@@ -1180,7 +1180,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$message = $db->getLastQuery();
 
 		$this->echo_diag_log($message);
-		$message = "Rows = " . $query->num_rows();
+		$message = "Rows = " . $query->getNumRows();
 		$this->echo_diag_log($message);
 		//xdebug_break();	
 		//d($query->result_array());
