@@ -86,6 +86,8 @@ class Smember extends BaseController {
 		echo "<li><a href=" . site_url('/smember/reset_mesa_all') . ">Reset Mesa users to either Level 0 or 1</a></li>";
 
 		echo "<li><a href=" . site_url('/smember/set_china_users') . ">Set China event users</a></li>";
+		echo "<li><a href=" . site_url('/smember/set_korea_users') . ">Set Korea event users</a></li>";
+		
 		echo "<li><a href=" . site_url('/smember/set_mesa_users') . ">Set Mesa event users</a></li>";
 		
 		echo "<li><a href=" . site_url('/smember/preview_add_to_database') . ">Preview of Add missing s2 users to BiTS database</a></li>";
