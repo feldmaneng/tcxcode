@@ -577,7 +577,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$builder = $db->table('contacts');
 		$builder->select('WordPressID');
 		
-		$builder->where('ContactID', (int)$ID);
+		$builder->where('ContactID =', (int)$ID);
 		$query = $builder->get();
 		//should be a row not array
 		$row = $query->getResultArray();
@@ -585,7 +585,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		
 		
 		$row['WordPressID'] = $wp_ID;
-		$builder->where('ContactID', (int)$ID);
+		$builder->where('ContactID =', (int)$ID);
 		//$this->db->where('ContactID', $ID);	
 		return $builder->update($row);
 	}
