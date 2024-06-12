@@ -579,6 +579,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		
 		$builder->where('ContactID', $ID);
 		$query = $builder->get();
+		//should be a row not array
 		$row = $query->getResultArray();
 		
 		
@@ -586,7 +587,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$row['WordPressID'] = $wp_ID;
 		$builder->where('ContactID', $ID);
 		//$this->db->where('ContactID', $ID);	
-		return $builder ->update($row);
+		return $builder->update($row);
 	}
 
 	// Parse the s2member user record until we find the person in the BiTS Database
