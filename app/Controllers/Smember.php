@@ -210,6 +210,8 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$data = array(
 			"user_id" => $id
 		);
+		
+		
 		return $this->s2_api("get_user", $data);
 	}
 	   
@@ -1234,7 +1236,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 						}
 				
 				}
-
+						$wp_id = 8912;
 				// Look up s2member record, verify BiTS DB ID matches
 				$s2_data = $this->s2_get_user_by_id($wp_ID);
 				if ((empty($s2_data['error'])) && ($s2_data['s2member_custom_fields']['bits_id'] == $row['ContactID'])) {
