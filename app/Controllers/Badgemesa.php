@@ -826,12 +826,12 @@ if($convention == "emea"){
 		
 		$pdf->setCellPaddings(0, 0, 0, 0);
 		$pdf->SetFillColor(255,255,255);
-		$pdf->SetTextColor(0,0,0);
+		$pdf->SetTextColor(50,50,50);
 		
 		$pdf->SetFont('helvetica', '', 10);
 		
 		
-		$pdf->SetTextColor(255,255,255);
+		$pdf->SetTextColor(25,25,25);
 		if($type=="EXPO"){
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 		}
