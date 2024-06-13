@@ -46,7 +46,7 @@ class Badgemesa extends BaseController {
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/badgemesa/testconxguests') . ' target="_blank" ">Manage badge</a></LI>';
 		
-		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
+		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlProfessional') . ">Summit</a></LI>";
 		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlSymposium') . ">Symposium</a></LI>";
 		//echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlEXPOONLY') . ">EXPOtinyml ONLY</a></LI>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankProfessional') . ' target="_blank" ">Blank Summit</a></LI>';
@@ -838,7 +838,7 @@ if($convention == "emea"){
 		else{
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, 20,130, true);
 			}
-		echo $Control;
+		
 		 $q++;
 } 		 		 
 //back of badge	 
