@@ -833,10 +833,10 @@ if($convention == "emea"){
 		
 		$pdf->SetTextColor(25,25,25);
 		if($type=="EXPO"){
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
+		$pdf->MultiCell(80,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,148, true);
+		$pdf->MultiCell(80,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,148, true);
 			}
 		
 		 $q++;
