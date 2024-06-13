@@ -625,7 +625,7 @@ for($i=1; $i<=$people; $i++){
 		}
 		if($type == "Attendee"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML-EMEA2023-Badge-PRINT.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML-EMEA2024-Badge-Front-PRINT.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
 		$pdf->SetFont('stsongstdlight', 'B', 75);
@@ -838,8 +838,8 @@ if($convention == "emea"){
 		 $q++;
 } 		 		 
 //back of badge	 
-if ($convention != "emea")
-{
+
+
 $pdf->AddPage('P',$pageLayout);
 
 		if($type == "Professional"){
@@ -874,10 +874,10 @@ $pdf->AddPage('P',$pageLayout);
 		}
 		if($type == "Attendee"){
 		if($graphics){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/Combo Badge 20232.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/tinyML-EMEA2024-Badge-Back-PRINT.jpg',0,0,107.95,158.75, 'JPG', '', '',false, 10, 'C', false, false, 0, false, false, false);
 		}
 		}
-}
+
 	 }
  
 		
@@ -1341,11 +1341,11 @@ function BadgestinymlBlankEXPO (){
 }
 
 function BadgesEMEAAttendee (){
-	$this->Testbadge("emea","emea2023", TRUE,"Attendee");
+	$this->Testbadge("emea","emea2024", TRUE,"Attendee");
 }
 
 function BadgesEMEABlankAttendee (){
-	$this->Blankbadge("emea","emea2023", FALSE,"Attendee");
+	$this->Blankbadge("emea","emea2024", FALSE,"Attendee");
 }
 	function ClearPrint ()
 	{
