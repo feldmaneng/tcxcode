@@ -836,9 +836,9 @@ if($convention == "emea"){
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 		}
 		else{
-		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
+		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, 20,130, true);
 			}
-		
+		echo $Control;
 		 $q++;
 } 		 		 
 //back of badge	 
