@@ -812,7 +812,12 @@ if($convention == "emea"){
 		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
 		}
 		
-		
+		if($type=="EXPO"){
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
+		}
+		else{
+		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
+		}
 	
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
