@@ -60,6 +60,11 @@ $routes->post('/badgemesa/BadgesMesaBlankProfessional', 'Badgemesa::BadgesMesaBl
 $routes->get('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');          
 $routes->post('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');
 
+$routes->get('/badgemesa/clearprint', 'Badgemesa::clearprint');          
+$routes->post('/badgemesa/clearprint', 'Badgemesa::clearprint');
+
+
+
 $routes->get('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');          
 $routes->post('/badgemesa/BadgesMesaProfessional', 'Badgemesa::BadgesMesaProfessional');
 

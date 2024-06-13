@@ -54,18 +54,17 @@ class Badgemesa extends BaseController {
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankEXPO') . ' target="_blank" ">Blank EXPOtinyml ONLY</a></LI>';
 		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
 		echo"</OL>";
-		/*
+		
 		echo "<h1>Tinyml EMEA Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml EMEA Confidential</h4>";
 		echo "<OL>";
-		echo "<LI>Manage <a href=" . site_url('/badgemesa/testconxguests') . ' target="_blank" ">Manage badge</a></LI>';
 		
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEAAttendee') . ">Attendee</a></LI>";
 		
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEABlankAttendee') . ' target="_blank" ">Blank Attendee</a></LI>';
 		
 		echo"</OL>";
- 		*/
+ 		
  		/*
 		echo "<h1>TestConX Badges - TestConX Office use only</h1>";
 		echo "<h4>TestConX Workshop Confidential</h4>";
@@ -1352,7 +1351,7 @@ function BadgesEMEABlankAttendee (){
 
 	
 	
-	$db  = \Config\Database::connect('registration');
+	
 	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
 	$builder->where('ToPrint', 'Yes');
