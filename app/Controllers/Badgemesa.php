@@ -828,7 +828,7 @@ if($convention == "emea"){
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetTextColor(50,50,50);
 		
-		$pdf->SetFont('helvetica', '', 10);
+		$pdf->SetFont('helvetica', '', 8);
 		
 		
 		$pdf->SetTextColor(25,25,25);
