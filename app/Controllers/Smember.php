@@ -1221,9 +1221,10 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 										'WordpressID' => $wp_ID,
 								
 									];
-
-									$builder->where('ContactID', $row['ContactID']);
-									$builder->update($data);
+									$db2 = \Config\Database::connect();
+									$builder2 = $db2->table('contacts');
+									$builder2->where('ContactID', $row['ContactID']);
+									$builder2->update($data);
 										// Best to stuff it in the row table? Seems okay.
 										//doesn't work $row['WordPressID'] = $wp_ID;
 										$status .= "\tAdding user as WP ID\t" . $wp_ID ."\tusername:\t" . $username . "\tpass:\t" . $password;
