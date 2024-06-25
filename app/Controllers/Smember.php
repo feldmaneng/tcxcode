@@ -1216,6 +1216,14 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 									$password = $this->generatePassword();
 									$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
 									if ($wp_ID) {
+												
+									$data = [
+										'WordpressID' => $wp_ID,
+								
+									];
+
+									$builder->where('ContactID', $row['ContactID']);
+									$builder->update($data);
 										// Best to stuff it in the row table? Seems okay.
 										//doesn't work $row['WordPressID'] = $wp_ID;
 										$status .= "\tAdding user as WP ID\t" . $wp_ID ."\tusername:\t" . $username . "\tpass:\t" . $password;
