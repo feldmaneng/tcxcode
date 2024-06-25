@@ -598,7 +598,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$builder = $db->table('contacts');
 		$builder->where('ContactID',$ID);
 		$builder->update($data);
-		return
+		
 	}
 
 	// Parse the s2member user record until we find the person in the BiTS Database
