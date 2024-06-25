@@ -594,7 +594,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 			'WordPressID' => $wp_ID
     
 			];
-		$db = \Config\Database::conntect();
+		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
 		$builder->where('ContactID',$ID);
 		$builder->update($data);
