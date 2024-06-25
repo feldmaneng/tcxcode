@@ -387,12 +387,12 @@ for($i=1; $i<=$people; $i++){
 		//$pdf->Rect(45, 123, 80, 30, 'F',array(), array(250,174,2));
 		}
 		
-		$pdf->SetFont('helvetica', '', 10);
+		$pdf->SetFont('helvetica', '', 8);
 		
 		
 		//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
 	
-		$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,144, true);
+		$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,142, true);
 		//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 			
 		 $q++;
