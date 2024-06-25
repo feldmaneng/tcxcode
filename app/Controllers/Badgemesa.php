@@ -293,14 +293,30 @@ for($i=1; $i<=$people; $i++){
 			$Dinnertext="";
 			}
 			}
-	
+		if($EventYear == "emea2024"){
 			if($Tutorial==1){
+			$Tutorial="Social";
+			}
+			else{
+			$Tutorial="";
+			}
+			}	
+		if($EventYear == "emea2024"){
+			if($Dinner==1){
+			$Dinnertext="Dinner";
+			}
+			else{
+			$Dinnertext="";
+			}
+			}
+			
+			/* if($Tutorial==1){
 			$Tutorial="TUTORIAL";
 			}
 			else{
 			$Tutorial="";
 			}
-			
+			 */
 		
 		$pdf->SetFont('stsongstdlight', 'B', 75);
 		$pdf->SetFillColor(255, 255, 255);
@@ -373,8 +389,11 @@ for($i=1; $i<=$people; $i++){
 		
 		$pdf->SetFont('helvetica', '', 10);
 		
+		
 		//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
-		$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
+	
+		$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,148, true);
+		//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 			
 		 $q++;
 		 		 
