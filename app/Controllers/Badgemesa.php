@@ -369,7 +369,7 @@ for($i=1; $i<=$people; $i++){
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetTextColor(0,0,0);
 		
-		if($type == 'Summit'){
+		if($type != 'Professional'){
 			if($type != "EXPOtiny"){
 		$pdf->SetFont('helvetica', 'B', 16);
 		$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
