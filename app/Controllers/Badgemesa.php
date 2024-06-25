@@ -117,7 +117,7 @@ class Badgemesa extends BaseController {
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'tinyml2024'
+    'guests.EventYear' => 'emea2024'
 ]);
 		//echo site_url('/badgemesa/TestConXsingle/');
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Email','Company','Type','Tutorial']);
@@ -141,7 +141,7 @@ class Badgemesa extends BaseController {
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
 		$crud ->fieldtype('ToPrint','enum',['Yes','No']);
 		$crud ->fieldtype('Dinner','enum',['1','0']);
-		$crud ->fieldtype('EventYear','enum',['tinyml2024']);
+		$crud ->fieldtype('EventYear','enum',['emea2024']);
 
 		
 		
