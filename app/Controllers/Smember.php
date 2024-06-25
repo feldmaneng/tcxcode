@@ -575,7 +575,7 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 	{
 		//$row = array();
 		
-		$db = \Config\Database::connect();
+	/* 	$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
 		$builder->select('WordPressID');
 		
@@ -589,7 +589,16 @@ if (($handle = fopen("finalrun3.csv", "r")) !== FALSE) {
 		$row['WordPressID'] = $wp_ID;
 		$builder->where('ContactID =', (int)$ID);
 		//$this->db->where('ContactID', $ID);	
-		return $builder->update($row);
+		return $builder->update($row); */
+		$data = [
+			'WordPressID' => $wp_ID
+    
+			];
+		$db = \Config\Database::conntect();
+		$builder = $db->table('contacts');
+		$builder->where('ContactID',$ID);
+		$builder->update($data);
+		return
 	}
 
 	// Parse the s2member user record until we find the person in the BiTS Database
