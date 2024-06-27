@@ -109,7 +109,7 @@ class Smember extends BaseController {
 if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('finalrun3.csv'));
+	$list = array_map('str_getcsv', file('final4.csv'));
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow); 
