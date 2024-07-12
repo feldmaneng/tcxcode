@@ -348,7 +348,7 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 			'modify_if_login_exists' => '0', // do NOT modify existing
 			'notification' => '0' // do NOT send notification
 		);
-		print_r($data);
+		//print_r($data);
 		$result = $this->s2_api("create_user", $data);
 		if ($result && empty($result['error']) && !empty($result['ID'])) {
 			return $result['ID'];
@@ -1370,7 +1370,7 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		
 		//xdebug_break();
 		
-		$chinaYear = "c2021";
+		$chinaYear = "k2023";
 		$this->diag_log("starting reset_mesa_users");
 		echo "<p>Starting resetting Mesa users from Level 4 to Level 0 " . "</p>";
 		echo "<p>If they were at China in the last year - i.e ". $chinaYear. " is set in ccaps , they will be set to Level 1</p>";
