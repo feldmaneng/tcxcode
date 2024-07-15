@@ -566,7 +566,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
 		$builder->where('ContactID', $ID);
-		$row = $builder->getResultArray();
+		$query_people = $builder->get();
+		$row = $query_people->getResultArray();
 		
 		
 		
