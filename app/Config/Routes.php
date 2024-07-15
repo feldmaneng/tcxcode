@@ -163,8 +163,11 @@ $routes->post('/smember/write_mailchimp_with_Chinese', 'Smember::write_mailchimp
 $routes->get('/smember/set_korea_users', 'Smember::set_korea_users');  
 $routes->post('/smember/set_korea_users', 'Smember::set_korea_users');  
 
+$routes->get('/smember/crosscheck_users_all', 'Smember::crosscheck_users_all');  
+$routes->post('/smember/crosscheck_users_all', 'Smember::crosscheck_users_all');  
 
-
+$routes->get('/smember/recheck_crosscheck_all', 'Smember::recheck_crosscheck_all');  
+$routes->post('/smember/recheck_crosscheck_all', 'Smember::recheck_crosscheck_all');  
 
 //$routes->get('/smember', [Smember::class, 'index']);
 
