@@ -465,7 +465,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		//echo "Encoding: " . mb_detect_encoding($email) . "<br>"; //, 'UTF8');
 		
 		if (strlen($email) > 0 ) {
-			$db = \Config\Database::conect();
+			
+			$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->select('*');
 			$builder->where('LinkedInEmail',$email);
@@ -511,7 +512,7 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		
 		if ((strlen($family) > 0 ) && (strlen($given) > 0)) {
 		
-			$db = \Config\Database::conect();
+			$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->select('*');
 			$builder->where('LinkedInEmail',$email);
