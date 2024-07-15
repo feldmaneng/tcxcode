@@ -542,7 +542,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 				$row = $query_people->getResultArray();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
 				//return $row->ContactID;
-				return print_r($row);
+				//return print_r($row);
+				return $row[0]['ContactID'];
 			} 
 			
 				/* else {				
@@ -568,7 +569,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		$row = $builder->get();
 		
 		
-		return $row->WordPressID;
+		//return $row->WordPressID;
+		return print_r($row);
 	}
 
 	private function WriteWordPressID($ID, $wp_ID)
