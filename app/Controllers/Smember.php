@@ -515,11 +515,9 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 			$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->select('*');
-			$builder->where('LinkedInEmail',$email);
 			
 			
-			$this->db->select('*');
-			$this->db->from('contacts');
+			
 		
 			if (! $use_nickname) {
 				$builder->where('GivenName',$given);	
