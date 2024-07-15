@@ -540,8 +540,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 					//die();
 				}
 				$row = $query_people->getResultArray();
-				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
-				return $row['ContactID'];
+				echo "	  ContactID: " . $row['ContactID'] . "<br>";
+				//return $row['ContactID'];
 			} 
 			
 				/* else {				
