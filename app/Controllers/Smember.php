@@ -541,7 +541,8 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 				}
 				$row = $query_people->getResultArray();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
-				return $row->ContactID;
+				//return $row->ContactID;
+				return print_r($row);
 			} 
 			
 				/* else {				
