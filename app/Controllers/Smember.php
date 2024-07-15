@@ -566,11 +566,12 @@ if (($handle = fopen("final4.csv", "r")) !== FALSE) {
 		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
 		$builder->where('ContactID', $ID);
-		$row = $builder->get();
+		$row = $builder->getResultArray();
+		
 		
 		
 		//return $row->WordPressID;
-		return print_r($row);
+		return $row[0]['WordPressID'];
 	}
 
 	private function WriteWordPressID($ID, $wp_ID)
