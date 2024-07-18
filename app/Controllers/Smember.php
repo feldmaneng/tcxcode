@@ -19,7 +19,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
 // Highest s2member ID
-define("MAXUSER", "4499");
+define("MAXUSER", "10000");
 
 //require '/../bitscode/Kint/Kint.class.php';
 //include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."bitscode/Kint/Kint.class.php");
