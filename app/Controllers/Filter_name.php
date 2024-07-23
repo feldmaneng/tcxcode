@@ -25,7 +25,7 @@ class Filter_name extends BaseController {
 	}
 		function filter(){
 			//the file should not have column names
-			$file = filter.csv;
+			$file = "filter.csv";
 			if(($handle = fopen($file,"r")) !==FALSE)	{
 				
 				$list = array_map('str_getcsv', file($file));
