@@ -39,8 +39,10 @@ class Filter_name extends BaseController {
 						
 						$len = strlen($list[$c][2]);
 						$array = str_split($list[$c][2]);
+						
 						for($x=0; $x <= $len; $x++){
 							$unicode = mb_ord($array[$x],"UTF-8");
+							echo $unicode;
 								if($unicode >= 65){
 									$capitalcount++;
 								}
