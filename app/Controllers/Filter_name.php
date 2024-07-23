@@ -15,7 +15,13 @@ ini_set('display_errors', 'On');
 error_reporting(E_All | E_strict);
 
 class Filter_name extends BaseController {
-	
+	public function index()
+	{
+	echo "<h1>Filter function for name checking<a href=" . site_url('/Filter_name/filter') ."> click here</a>";	
+		
+		
+		
+	}
 		function filter(){
 			//the file should not have column names
 			$file = filter.csv;
@@ -39,15 +45,15 @@ class Filter_name extends BaseController {
 								}
 							
 						}
-						
+						echo $list[$c][0].";".$list[$c][1].";".$list[$c][2].";".$capitalcount."<br>";						
 						
 					}
 						
 						
+			}
 	
 	
-	
-	
+		}
 	
 
 
