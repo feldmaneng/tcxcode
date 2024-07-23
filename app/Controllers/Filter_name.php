@@ -12,7 +12,8 @@ if ( !$session->tcx_logged_in ) {
 }
 
 ini_set('display_errors', 'On');
-error_reporting(E_All | E_strict);
+
+error_reporting(E_ALL | E_STRICT);
 
 class Filter_name extends BaseController {
 	public function index()
