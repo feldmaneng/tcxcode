@@ -169,7 +169,13 @@ $routes->post('/smember/crosscheck_users_all', 'Smember::crosscheck_users_all');
 $routes->get('/smember/recheck_crosscheck_all', 'Smember::recheck_crosscheck_all');  
 $routes->post('/smember/recheck_crosscheck_all', 'Smember::recheck_crosscheck_all');  
 
-//$routes->get('/smember', [Smember::class, 'index']);
+
+$routes->get('/Filter_name', 'Filter_name::index');
+$routes->post('/Filter_name', 'Filter_name::index');
+
+$routes->get('/Filter_name/filter', 'Filter_name::filter');
+$routes->post('/Filter_name/filter', 'Filter_name::filter');
+
 
 /* $routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
