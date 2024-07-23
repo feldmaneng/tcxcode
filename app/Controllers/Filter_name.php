@@ -34,9 +34,9 @@ class Filter_name extends BaseController {
 				$emailrow = array_column($list,1);
 				$namerow =array_column($list,2);
 				$numrows = count($idrow);
-				$capitalcount = 0; 
+				 
 					for($c=0; $c < $numrows; $c++) {
-						
+					$capitalcount = 0;	
 						$len = strlen($list[$c][2]);
 						$array = str_split($list[$c][2]);
 						
