@@ -44,7 +44,7 @@ class Filter_name extends BaseController {
 						echo $array[$x]."<br>";
 							$unicode = mb_ord($array[$x],"UTF-8");
 							echo $unicode."<br>";
-								if($unicode >= 65){
+								if($unicode >= 65 && $unicode<=91){
 									$capitalcount++;
 								}
 							
