@@ -41,6 +41,7 @@ class Filter_name extends BaseController {
 						$array = str_split($list[$c][2]);
 						
 						for($x=0; $x <= $len; $x++){
+						echo $array[$x];
 							$unicode = mb_ord($array[$x],"UTF-8");
 							echo $unicode;
 								if($unicode >= 65){
