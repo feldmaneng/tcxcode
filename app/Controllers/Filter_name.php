@@ -41,9 +41,9 @@ class Filter_name extends BaseController {
 						$array = str_split($list[$c][2]);
 						
 						for($x=0; $x < $len; $x++){
-						echo $array[$x]."<br>";
+						//echo $array[$x]."<br>";
 							$unicode = mb_ord($array[$x],"UTF-8");
-							echo $unicode."<br>";
+							//echo $unicode."<br>";
 								if($unicode >= 65 && $unicode<=91){
 									$capitalcount++;
 								}
