@@ -480,7 +480,7 @@ if (($handle = fopen("7_24delete.csv", "r")) !== FALSE) {
 				if ( $query_people->getNumRows() > 1 ) {
 					echo "Warning: LinkedInEmail query on ". $email . " yielded " .$query_people->getNumRows() . "rows. (Multiple people.) <br>";
 					foreach ($query_people->getResult() as $row) {
-						echo "	ContactID ". $row['ContactID'] . "<br>\n\n\n\n";
+						echo "	ContactID ". $row->'ContactID' . "<br>\n\n\n\n";
 					}
 					//die();
 				}
