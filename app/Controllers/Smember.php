@@ -807,7 +807,7 @@ if (($handle = fopen("7_24delete.csv", "r")) !== FALSE) {
 					//echo "<p>Not Found - WP ID = " . $wp_ID . "</p>";
 				} else {
 					if (!empty($s2_user['data']['user_login'])) {
-						echo $wp_ID . "; \t". $s2_user['data']['user_login'] . "; \tNot Found<br>";
+						echo $wp_ID . "; \t". $s2_user['data']['user_login'] . "; \tNot Found;<br>";
 					}
 					echo $wp_ID . "; \t". 'API error reads: '.$s2_user['error'] . "<br>";
 				}
