@@ -479,7 +479,7 @@ if (($handle = fopen("7_24delete.csv", "r")) !== FALSE) {
 				// An email ID shouldn't be on more than one person, so we shouldn't have more than one row
 				if ( $query_people->getNumRows() > 1 ) {
 					echo "Warning: LinkedInEmail query on ". $email . " yielded " .$query_people->getNumRows() . "rows. (Multiple people.) <br>";
-					foreach ($query_people->getResult as $row) {
+					foreach ($query_people->getResult() as $row) {
 						echo "	ContactID ". $row[ContactID] . "<br>\n\n\n\n";
 					}
 					//die();
