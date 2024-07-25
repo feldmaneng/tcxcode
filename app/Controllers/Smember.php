@@ -486,7 +486,7 @@ if (($handle = fopen("7_24delete.csv", "r")) !== FALSE) {
 				}
 				$row = $query_people->getResultArray();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
-				return $row['ContactID'];
+				return $row[0]['ContactID'];
 			} else {				
 				// didn't find the a person with that email address
 				if ($p_ReportNotFound) {
