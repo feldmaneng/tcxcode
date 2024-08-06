@@ -44,9 +44,9 @@ helper('text');
 		echo "<h1>TestConX EXPO - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_suzhou') . ">Suzhou</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_shenzhen') . ">Shenzhen</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_shanghai') . ">Shanghai</a></LI>";
+		//echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_suzhou') . ">Suzhou</a></LI>";
+		//echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_shenzhen') . ">Shenzhen</a></LI>";
+		//echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_shanghai') . ">Shanghai</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_china') . ">China</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_mesa') . ">Mesa</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/expo/list_expo_entries_korea') . ">Korea</a></LI>";
@@ -109,7 +109,7 @@ helper('text');
     	$this->grocery_crud->where('Year', $year);
     	$this->grocery_crud->or_where('Year', $year2); */
 		
-   $crud->where(['expodirectory.Event' => 'Mesa','expodirectory.Year' => $year]);
+   $crud->where(['expodirectory.Event = ?' => 'Mesa','expodirectory.Year >= ?' $year]);
 					
 /* 	$crud->where(['expodirectory.Event' => 'Mesa',
 					'expodirectory.Year' => $year]); */
