@@ -50,7 +50,7 @@ helper('html');
 
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
-				'Year' => "2025",
+				'Year' => "2024",
 				'Event' => "Mesa",
 				'Entry' => $model->getEntry($secretKey),
 				'PriorEntryImage' => "example.png", //Default image, updated below
