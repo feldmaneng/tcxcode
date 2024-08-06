@@ -114,8 +114,8 @@ helper('text');
 					'expodirectory.Year' => $year]); */
    //$crud->where(['expodirectory.Event' => 'Mesa']);
 	
-	$crud->columns (['Year','Event','Status','CompanyName','DirectoryName']);
-	$crud->fields (['Year','Event','Status','CompanyName','DirectoryName','CompanyID','Line1','Line2','Line3','Line4','Line5','Line6','Description','Updated']);
+	//$crud->columns (['Year','Event','Status','CompanyName','DirectoryName']);
+	//$crud->fields (['Year','Event','Status','CompanyName','DirectoryName','CompanyID','Line1','Line2','Line3','Line4','Line5','Line6','Description','Updated']);
 
 	
 	
