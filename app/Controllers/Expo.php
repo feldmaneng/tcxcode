@@ -107,7 +107,7 @@ helper('text');
     	$this->grocery_crud->where('Year', $year);
     	$this->grocery_crud->or_where('Year', $year2); */
    	$crud->where(['expodirectory.Event' => 'Mesa',
-					'expodirectory.Year >= ?' => $year]);
+					'expodirectory.Year = ?' => $year]);
 					
 /* 	$crud->where(['expodirectory.Event' => 'Mesa',
 					'expodirectory.Year' => $year]); */
