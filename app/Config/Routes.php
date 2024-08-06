@@ -176,8 +176,13 @@ $routes->post('/Filter_name', 'Filter_name::index');
 $routes->get('/Filter_name/filter', 'Filter_name::filter');
 $routes->post('/Filter_name/filter', 'Filter_name::filter');
 
+$routes->get('/testprintform', 'testprintform::index');
+$routes->post('/testprintform', 'testprintform::index');
+$routes->get('testprintform/checkuser', 'testprintform::checkuser');
+$routes->post('testprintform/checkuser', 'testprintform::checkuser');
 
-/* $routes->get('/expo/contact', 'Expo::contact1337');          
+
+$routes->get('/expo/contact', 'Expo::contact1337');          
 $routes->post('/expo/contact', 'Expo::contact1337');
 $routes->get('/Expo/duplicate', 'Expo::duplicate');          
 $routes->post('/Expo/duplicate', 'Expo::duplicate');
@@ -188,7 +193,7 @@ $routes->get('/expo/list_expo_entries_shenzhen', 'Expo::list_expo_entries_shenzh
 $routes->get('/expo/list_expo_entries_shanghai', 'Expo::list_expo_entries_shanghai');
 $routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
 
-$routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china'); */
+$routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china'); 
 
 
 /*
