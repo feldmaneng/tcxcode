@@ -99,6 +99,8 @@ helper('text');
 	$this->grocery_crud->set_subject('Expo');
 	$this->grocery_crud->set_table('expodirectory'); */
 	$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
 	$crud->setTable('expodirectory');
 	$crud->setSubject('EXPO', 'EXPOS');
 	
