@@ -128,9 +128,10 @@ helper('text');
 	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
     return '#/avatar/' . $row->Event;
 });	 */
-$crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
+//NOTE commented out the below action to test pieces seperately
+/* $crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
     return site_url('/Expo/duplicate/');
-});	
+});	 */
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
