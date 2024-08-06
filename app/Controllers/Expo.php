@@ -108,7 +108,7 @@ helper('text');
     	$this->grocery_crud->where('Event', 'Mesa'); 
     	$this->grocery_crud->where('Year', $year);
     	$this->grocery_crud->or_where('Year', $year2); */
-		//NOTE replace 2024 with year variable
+		
    $crud->where(['expodirectory.Event' => 'Mesa','expodirectory.Year' => $year]);
 					
 /* 	$crud->where(['expodirectory.Event' => 'Mesa',
@@ -130,9 +130,9 @@ helper('text');
     return '#/avatar/' . $row->Event;
 });	 */
 //NOTE commented out the below action to test pieces seperately
-/* $crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
+$crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
     return site_url('/Expo/duplicate/');
-});	 */
+});	 
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
