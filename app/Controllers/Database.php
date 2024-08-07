@@ -52,6 +52,8 @@ class Database extends BaseController {
 
 //UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
+		
+		echo "<LI>Manage <a href=" . site_url('/presentations') . ">Presentations Cruds</a></LI>";
 	
 		/*echo "<br><br>";
 		echo "<ul>";
