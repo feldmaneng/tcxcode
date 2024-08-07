@@ -99,7 +99,7 @@ public function mesa()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'Mesa','expodirectory.Year >= ?' $year]);
+   $crud->where(['expodirectory.Event = ?' => 'Mesa','expodirectory.Year >= ?' => $year]);
 					
 
 //NOTE commented out the below action to test pieces seperately
@@ -125,7 +125,7 @@ public function china()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'China','expodirectory.Year >= ?' $year]);
+   $crud->where(['expodirectory.Event = ?' => 'China','expodirectory.Year >= ?'=> $year]);
 					
 
 //NOTE commented out the below action to test pieces seperately
@@ -151,7 +151,7 @@ public function korea()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'Korea','expodirectory.Year >= ?' $year]);
+   $crud->where(['expodirectory.Event = ?' => 'Korea','expodirectory.Year >= ?'=> $year]);
 					
 
 //NOTE commented out the below action to test pieces seperately
