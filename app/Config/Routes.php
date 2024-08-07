@@ -195,6 +195,17 @@ $routes->get('/expo/list_expo_entries_korea', 'Expo::list_expo_entries_korea');
 
 $routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china'); 
 
+$routes->get('/presentations', 'Presentations::index');
+$routes->post('/presentations', 'Presentations::index');
+
+$routes->get('/presentations/mesa', 'Presentations::mesa');
+$routes->post('/presentations/mesa', 'Presentations::mesa');
+
+$routes->get('/presentations/china', 'Presentations::china');
+$routes->post('/presentations/china', 'Presentations::china');
+
+$routes->get('/presentations/korea', 'Presentations::korea');
+$routes->post('/presentations/korea', 'Presentations::korea');
 
 /*
 $routes->get('/upload', 'Upload2::form_show');          
