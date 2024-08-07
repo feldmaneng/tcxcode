@@ -99,13 +99,10 @@ public function mesa()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'Mesa','expodirectory.Year >= ?' => $year]);
+   $crud->where(['presentations.Event = ?' => 'Mesa','presentations.Year >= ?' => $year]);
 					
 
-//NOTE commented out the below action to test pieces seperately
-$crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
-    return site_url('/Expo/duplicate/');
-});	 
+
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
@@ -125,13 +122,10 @@ public function china()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'China','expodirectory.Year >= ?'=> $year]);
+   $crud->where(['presentations.Event = ?' => 'China','presentations.Year >= ?'=> $year]);
 					
 
-//NOTE commented out the below action to test pieces seperately
-$crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
-    return site_url('/Expo/duplicate/');
-});	 
+ 
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
@@ -151,13 +145,10 @@ public function korea()
 	
 
 		
-   $crud->where(['expodirectory.Event = ?' => 'Korea','expodirectory.Year >= ?'=> $year]);
+   $crud->where(['presentations.Event = ?' => 'Korea','presentations.Year >= ?'=> $year]);
 					
 
-//NOTE commented out the below action to test pieces seperately
-$crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
-    return site_url('/Expo/duplicate/');
-});	 
+
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
