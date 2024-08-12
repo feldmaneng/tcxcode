@@ -173,7 +173,7 @@ public function authors()
 		{
 	
 	
-	$crud = $this->_getGroceryCrudEnterprise('');
+	$crud = $this->_getGroceryCrudEnterprise();
 	$crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 	$crud->setTable('authors');
