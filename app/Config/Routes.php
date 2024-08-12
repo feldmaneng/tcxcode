@@ -207,25 +207,8 @@ $routes->post('/presentations/china', 'Presentations::china');
 $routes->get('/presentations/korea', 'Presentations::korea');
 $routes->post('/presentations/korea', 'Presentations::korea');
 
-/*
-$routes->get('/upload', 'Upload2::form_show');          
-$routes->post('/upload/upload', 'Upload2::upload'); 
-
-$routes->get('/Certificate', 'Certificate::index');          
-$routes->post('/Certificate', 'Certificate::index'); 
-$routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
-$routes->post('/Certificate/Certificates', 'Certificate::Certificates'); 
-
-$routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
-$routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral'); 
-
-
-$routes->get('/expo/contact', 'Expo::contact1337');          
-$routes->post('/expo/contact', 'Expo::contact1337');
-$routes->get('/Expo/duplicate', 'Expo::duplicate');          
-$routes->post('/Expo/duplicate', 'Expo::duplicate');
-
-*/
+$routes->get('/presentations/authors', 'Presentations::authors');
+$routes->post('/presentations/authors', 'Presentations::authors');
 
 /*
  * --------------------------------------------------------------------

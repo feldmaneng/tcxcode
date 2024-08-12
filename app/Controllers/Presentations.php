@@ -46,6 +46,7 @@ helper('text');
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/mesa') . ">Mesa</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/china') . ">China</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/korea') . ">Korea</a></LI>";
+		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/authors') . ">Korea</a></LI>";
 		echo "</OL>";
 	}
 	
@@ -149,6 +150,26 @@ public function korea()
 					
 
 
+		$output = $crud->render();
+
+	return $this->_example_output($output);         
+}
+public function authors()
+		{
+	
+	
+	$crud = $this->_getGroceryCrudEnterprise('');
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
+	$crud->setTable('authors');
+	$crud->setSubject('author', 'authors');
+	
+
+		
+   //$crud->where(['presentations.Event = ?' => 'China','presentations.Year >= ?'=> $year]);
+					
+
+ 
 		$output = $crud->render();
 
 	return $this->_example_output($output);         
