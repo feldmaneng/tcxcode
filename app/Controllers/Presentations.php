@@ -46,7 +46,7 @@ helper('text');
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/mesa') . ">Mesa</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/china') . ">China</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/korea') . ">Korea</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/authors') . ">Korea</a></LI>";
+		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/authors') . ">Authors</a></LI>";
 		echo "</OL>";
 	}
 	
@@ -59,6 +59,20 @@ helper('text');
         return $groceryCrud;
     }    
 	
+	/* private function _getDbData($dbgroup = 'default') {
+       // $db = (new ConfigDatabase())->default;
+		$db = (new ConfigDatabase())->$dbgroup;
+        return [
+            'adapter' => [
+                'driver' => 'Pdo_Mysql',
+                'host'     => $db['hostname'],
+                'database' => $db['database'],
+                'username' => $db['username'],
+                'password' => $db['password'],
+                'charset' => 'utf8'
+            ]
+        ];
+    } */
 	private function _getDbData($dbgroup = 'default') {
        // $db = (new ConfigDatabase())->default;
 		$db = (new ConfigDatabase())->$dbgroup;
@@ -73,6 +87,7 @@ helper('text');
             ]
         ];
     }
+	
 	
 	private function _example_output($output = null) {
         if (isset($output->isJSONResponse) && $output->isJSONResponse) {
