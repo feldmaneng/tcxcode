@@ -117,6 +117,9 @@ public function mesa()
 		
    $crud->where(['presentations.Event = ?' => 'Mesa','presentations.Year >= ?' => $year]);
 					
+					$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
+	
+					
 $crud->setUniqueId('mesa_2024');
 
 		$output = $crud->render();
@@ -139,7 +142,9 @@ public function china()
 
 		
    $crud->where(['presentations.Event = ?' => 'China','presentations.Year >= ?'=> $year]);
-					
+$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
+			
+		
 $crud->setUniqueId('china_2024');
  
 		$output = $crud->render();
