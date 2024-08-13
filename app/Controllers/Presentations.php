@@ -164,7 +164,7 @@ public function korea()
    $crud->where(['presentations.Event = ?' => 'Korea','presentations.Year >= ?'=> $year]);
 					
 		$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
-		$crud->fields (['PresentationID','Year','Event','Session','PresentationNumber','Title','TitleChinese','TitleKorea','Wrangler','Topic','Award','URL','BaseFileName','PDFLockCode','VideoID','AbstractNumber','EarlyBird','AuthorDiscountCode','WranglerID','AbstractEnglish','AbstractChinese','AbstractKorean','BioEnglish','BioChinese','BioKorean']);
+		//$crud->fields (['PresentationID','Year','Event','Session','PresentationNumber','Title','TitleChinese','TitleKorea','Wrangler','Topic','Award','URL','BaseFileName','PDFLockCode','VideoID','AbstractNumber','EarlyBird','AuthorDiscountCode','WranglerID','AbstractEnglish','AbstractChinese','AbstractKorean','BioEnglish','BioChinese','BioKorean']);
 
 	
 
