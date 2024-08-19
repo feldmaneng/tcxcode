@@ -210,6 +210,9 @@ $routes->post('/presentations/korea', 'Presentations::korea');
 $routes->get('/presentations/authors', 'Presentations::authors');
 $routes->post('/presentations/authors', 'Presentations::authors');
 
+$routes->get('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
+$routes->post('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
