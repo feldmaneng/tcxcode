@@ -19,7 +19,7 @@ define("EventYear", "China2019");// For selecting records only for this year's e
 
 $session = session(); 
 
-class Asiaguest extends BaseController {
+class Asiaguestchinese extends BaseController {
 
  
 function __construct()
