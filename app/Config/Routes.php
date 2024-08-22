@@ -213,6 +213,11 @@ $routes->post('/presentations/authors', 'Presentations::authors');
 $routes->get('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 $routes->post('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 
+$routes->get('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
+$routes->post('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
+
+
+contact585442
 /*
  * --------------------------------------------------------------------
  * Additional Routing
