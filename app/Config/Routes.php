@@ -217,7 +217,7 @@ $routes->get('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442
 $routes->post('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
 
 
-contact585442
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
