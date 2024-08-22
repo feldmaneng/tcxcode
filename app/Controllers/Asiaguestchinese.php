@@ -68,9 +68,9 @@ public function company123()
 			$stateParameters = $this->setSecretKey($stateParameters);
 			return $stateParameters;
 		});
-	$crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
+	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
     return '#/avatar/' . $row->'StaffID';
-});	
+});	 */
 	$output = $crud->render();
 
 	return $this->_example_output($output);        
