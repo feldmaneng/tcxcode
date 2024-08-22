@@ -68,7 +68,9 @@ public function company123()
 			$stateParameters = $this->setSecretKey($stateParameters);
 			return $stateParameters;
 		});
-		
+	$crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
+    return '#/avatar/' . $row->'StaffID';
+});	
 	$output = $crud->render();
 
 	return $this->_example_output($output);        
@@ -182,22 +184,28 @@ echo  $id;
 
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
+	$db = db_connect('registration');
+	$builder = $db->table('guests');	
 	$db = \Config\Database::connect();
 	$db->setDatabase('bits_registration');
-	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
-	$crud->from('guests');
+	//$db->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
+
 	
 	//$this->db->where('EventYear', $type); //'professional');
-	$crud->where('ContactID', $id);
-	$crud->where('ToPrint', 'Yes');
+	$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			$builder->where('ContactID',$id);
+			$builder->where('ToPrint','Yes');
+			
+			$query = $builder->get();
 	
-	$crud->defaultOrdering(['FamilyName' => 'ASC', 'GivenName' => 'ASC', 'ChineseName' => 'ASC']);
 
-	$query = $crud->get();
+
 	// one line of $results = $query->row_array();
 
-	$people = $query->num_rows();
-	$results = $query->result_array();
+	$people = $query->getNumRows();
+	$results = $query->getResultArray();
 	
 	$height = '152.4'; // size in mm
 	$width =  '101.6'; 
