@@ -463,6 +463,7 @@ public function stats397927raw()
 //ask ira leave alone and circleback
 public function guest_list()
 {
+	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
 	$session = session(); 
 	
 	
