@@ -216,6 +216,9 @@ $routes->post('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 $routes->get('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
 $routes->post('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
 
+$routes->get('/Asiaguestchinese/guest_list/?id=(:any)', 'Asiaguestchinese::guest_list');
+$routes->post('/Asiaguestchinese/guest_list/?id=(:any)', 'Asiaguestchinese::guest_list');
+
 
 
 /*
