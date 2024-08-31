@@ -530,7 +530,7 @@ $builder->where('SecretKey', $secretKey);
 	$db4 = db_connect('registration');
 	$builder4 = $db->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
-	$builder4->orWhere('EventYear', EventYear);
+	$builder4->where('EventYear', EventYear);
 	$query4 = $builder->get();
 	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
