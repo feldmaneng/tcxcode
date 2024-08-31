@@ -528,6 +528,7 @@ $builder->where('SecretKey', $secretKey);
 	}
 	$_SESSION["StaffName"] = $staffName;
 	$db4 = db_connect('registration');
+	$builder4 = $db->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->orWhere('EventYear', EventYear);
 	$query4 = $builder->get();
