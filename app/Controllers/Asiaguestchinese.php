@@ -489,10 +489,7 @@ $db = \Config\Database::connect();
 $db = db_connect('registration');
 $builder = $db->table('chinacompany');
 $builder->where('SecretKey', $secretKey);
-$query = $builder->get();
-	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
-	//$query =$db->query($sql, [$secretKey]);
-$row = $query->getRow();
+
 	
 	
 	if ($builder->countAllResults(false) != 1) {
@@ -501,9 +498,13 @@ $row = $query->getRow();
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
 		echo "</pre>";
 		echo $builder->countAllResults(false);
+		echo $secretkey;
 		die();
 	}
-	
+	$query = $builder->get();
+	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$query =$db->query($sql, [$secretKey]);
+	$row = $query->getRow();
 	//ask ira
 	$companyID = $row->CompanyID;
 	$_SESSION["CompanyID"] = $companyID; 
