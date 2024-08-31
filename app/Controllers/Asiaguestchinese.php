@@ -528,8 +528,9 @@ $query = $builder->get();
 	$builder->where('InvitedByCompanyID' , $companyID);
 	$builder->orWhere('EventYear', EventYear);
 	$query = $builder->get();
-	if ($builder->countAllResults(false) >= $guestLimit) {
+	if ($query->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
+		echo "count test";
 	} 
 	
 
