@@ -724,8 +724,8 @@ $session->set($newdata);
 	
 	
 	$output = $crud->render();
-	return $this->_example_output($output);
-	//return $this->_one_company_output($output);        
+	//return $this->_example_output($output);
+	return $this->_one_company_output($output);        
 }
                                   
 public function companyVerify($company, $otherField) {
