@@ -520,7 +520,7 @@ $builder->where('SecretKey', $secretKey);
 	$db3 = db_connect('registration');
 	$builder3 = $db->table('guests');
 	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
-	$query3 =$db3->query($sql, [$staffID]);
+	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
 	
 	
