@@ -535,6 +535,7 @@ $builder->where('SecretKey', $secretKey);
 	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		echo "count test";
+		echo $builder4->countAllResults(false);
 	} 
 	
 
