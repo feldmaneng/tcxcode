@@ -651,7 +651,7 @@ $query = $builder->get();
 
 
 
-	/*  END OF VALITRON
+	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
 	$crud->setRule('Email','checkEmail');
@@ -689,7 +689,7 @@ $query = $builder->get();
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden');  */
+	$crud->fieldType('ToPrint','hidden'); 
 	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
