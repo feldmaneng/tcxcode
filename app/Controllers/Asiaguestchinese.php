@@ -492,7 +492,7 @@ $builder->where('SecretKey', $secretKey);
 $query = $builder->get();
 	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
 	//$query =$db->query($sql, [$secretKey]);
-	$row = $query->getRow();
+$row = $query->getRow();
 	
 	
 	if ($builder->countAllResults(false) != 1) {
@@ -515,20 +515,21 @@ $query = $builder->get();
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	// ask ira
-	$builder = $db->table('guests');
-	$sql = 'SELECT * FROM guests Where ContactID = ?;';
-	$query =$db->query($sql, [$staffID]);
-	$row = $query->getRow();
+	$db3 = db_connect('registration');
+	$builder3 = $db->table('guests');
+	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$query3 =$db3->query($sql, [$staffID]);
+	$row = $query3->getRow();
 	
 	
 		$staffName = $row->GivenName . " " . $row->FamilyName;
 	}
 	$_SESSION["StaffName"] = $staffName;
-	
-	$builder->where('InvitedByCompanyID' , $companyID);
-	$builder->orWhere('EventYear', EventYear);
-	$query = $builder->get();
-	if ($builder->countAllResults(false) >= $guestLimit) {
+	$db4 = db_connect('registration');
+	$builder4->where('InvitedByCompanyID' , $companyID);
+	$builder4->orWhere('EventYear', EventYear);
+	$query4 = $builder->get();
+	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		echo "count test";
 	} 
