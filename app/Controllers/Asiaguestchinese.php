@@ -713,7 +713,7 @@ $builder->where('SecretKey', $secretKey);
    );  */
 	
 	//$crud->setLanguage("english-chinese");
-	
+	$output = $crud->render();
 	$newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
@@ -727,7 +727,7 @@ $builder->where('SecretKey', $secretKey);
 $session->set($newdata);		
 	
 	
-	$output = $crud->render();
+	
 	//return $this->_example_output($output);
 	return $this->_one_company_output($output);        
 }
