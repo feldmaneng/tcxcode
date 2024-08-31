@@ -474,15 +474,24 @@ public function guest_list()
 	} else {
 		$secretKey = $_SESSION["SecretKey"];
 	}
+$crud = $this->_getGroceryCrudEnterprise('registration');
 
+
+/* example 
+$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			$builder->where('ContactID',$id);
+			$builder->where('ToPrint','Yes');
+			
+			$query = $builder->get(); */
+			
 $db = db_connect('registration');
 $builder = $db->table('chinacompany');
-
-	$crud = $this->_getGroceryCrudEnterprise('registration');
-	
-	$builder->where('SecretKey', $secretKey);
-	$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
-	$query =$db->query($sql, [$secretKey]);
+$builder->where('SecretKey', $secretKey);
+$query = $builder->get();
+	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	
 	
@@ -641,7 +650,7 @@ $builder = $db->table('chinacompany');
 
 
 
-	
+	/*  END OF VALITRON
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
 	$crud->setRule('Email','checkEmail');
@@ -679,7 +688,7 @@ $builder = $db->table('chinacompany');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden'); 
+	$crud->fieldType('ToPrint','hidden');  */
 	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
@@ -699,7 +708,7 @@ $builder = $db->table('chinacompany');
    );  */
 	
 	//$crud->setLanguage("english-chinese");
-	$output = $crud->render();
+	
 	$newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
@@ -713,9 +722,9 @@ $builder = $db->table('chinacompany');
 $session->set($newdata);		
 	
 	
-	
-	//return $this->_example_output($output);
-	return $this->_one_company_output($output);        
+	$output = $crud->render();
+	return $this->_example_output($output);
+	//return $this->_one_company_output($output);        
 }
                                   
 public function companyVerify($company, $otherField) {
