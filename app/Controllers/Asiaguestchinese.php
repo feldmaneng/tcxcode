@@ -500,6 +500,7 @@ $row = $query->getRow();
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
 		echo "</pre>";
+		echo $builder->countAllResults(false);
 		die();
 	}
 	
