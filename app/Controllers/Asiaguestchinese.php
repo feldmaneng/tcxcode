@@ -461,6 +461,21 @@ public function stats397927raw()
 	$this->stats397927(TRUE);
 }
 //ask ira leave alone and circleback
+public function guest_listtest()
+{
+	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
+	$session = session(); 
+	
+	
+	/* Check if a secret key is passed */
+	if (isset($_GET["id"]))  {
+		$secretKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET["id"]); /* Try to santize any inputs */
+		$_SESSION["SecretKey"] = $secretKey;
+	} else {
+		$secretKey = $_SESSION["SecretKey"];
+	}
+	echo $secretKey;
+}
 public function guest_list()
 {
 	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
@@ -498,7 +513,7 @@ $builder->where('SecretKey', $secretKey);
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
 		echo "</pre>";
 		echo $builder->countAllResults(false);
-		echo $secretkey;
+		echo $secretKey;
 		die();
 	}
 	$query = $builder->get();
