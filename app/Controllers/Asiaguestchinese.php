@@ -506,9 +506,9 @@ public function guest_listtest()
 	echo "companyID = ".$companyID."\n <br>";
 	echo "Session CompanyID = ".$_SESSION["CompanyID"]."\n <br>";
 	echo "Session Company = ".$_SESSION["Company"]."\n <br>";
-	echo "guestLimit = ".$guestLimit."\n";
+	echo "guestLimit = ".$guestLimit."\n <br>";
 	echo "GuestLimit = ".$_SESSION["GuestLimit"]."\n <br>";
-	echo "staffID = ".$staffID;
+	echo "staffID = ".$staffID."\n <br>";
 	echo "Session Event = ".$_SESSION["Event"]."\n <br>";
 	echo "staffName = ".$staffName."\n <br>";
 	
