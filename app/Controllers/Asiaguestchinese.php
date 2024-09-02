@@ -504,10 +504,12 @@ public function guest_listtest()
 	$staffName = "TBD";
 	
 	echo $companyID."\n";
-	echo Company."\n";
+	echo $_SESSION["CompanyID"]."\n";
+	echo $_SESSION["Company"]."\n";
 	echo $guestLimit."\n";
+	echo $_SESSION["GuestLimit"]."\n";
 	echo $staffID;
-	echo Event."\n";
+	echo $_SESSION["Event"]."\n";
 	echo $staffName."\n";
 	
 	
