@@ -516,9 +516,9 @@ public function guest_listtest()
 	if ($staffID > 0) {
 	// ask ira
 	$db3 = db_connect('registration');
-	$builder3 = $db3->table('guests');
+	//$builder3 = $db3->table('guests');
 	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
-	$query3 =$builder3->query($sql3, [$staffID]);
+	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
 	
 	
