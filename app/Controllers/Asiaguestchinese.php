@@ -474,7 +474,58 @@ public function guest_listtest()
 	} else {
 		$secretKey = $_SESSION["SecretKey"];
 	}
-	echo $secretKey;
+	echo $secretKey."\n";
+	
+	$db = db_connect('registration');
+	$builder = $db->table('chinacompany');
+	$builder->where('SecretKey', $secretKey);
+	
+	if ($builder->countAllResults(false) != 1) {
+		sleep(20); /* slow down a brute force */ 
+		echo "<pre>";
+		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
+		echo "</pre>";
+		echo $builder->countAllResults(false)."\n";
+		echo $secretKey."\n";
+		die();
+	}
+	$query = $builder->get();
+	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$query =$db->query($sql, [$secretKey]);
+	$row = $query->getRow();
+	//ask ira
+	$companyID = $row->CompanyID;
+	$_SESSION["CompanyID"] = $companyID; 
+	$_SESSION["Company"] = $row->Company;
+	$guestLimit = $row->InviteCount;
+	$_SESSION["GuestLimit"] = $guestLimit;
+	$staffID = $row->StaffID;
+	$_SESSION["Event"] = BiTSEvent;
+	$staffName = "TBD";
+	
+	echo $companyID."\n";
+	echo Company."\n";
+	echo $guestLimit."\n";
+	echo $staffID;
+	echo Event."\n";
+	echo $staffName."\n";
+	
+	
+	if ($staffID > 0) {
+	// ask ira
+	$db3 = db_connect('registration');
+	$builder3 = $db3->table('guests');
+	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$query3 =$builder3->query($sql3, [$staffID]);
+	$row = $query3->getRow();
+	
+	
+		$staffName = $row->GivenName . " " . $row->FamilyName;
+		echo $staffName."\n";
+	}
+	
+	
+	
 }
 public function guest_list()
 {
@@ -504,6 +555,8 @@ $db = \Config\Database::connect();
 $db = db_connect('registration');
 $builder = $db->table('chinacompany');
 $builder->where('SecretKey', $secretKey);
+
+
 
 	
 	
