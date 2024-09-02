@@ -523,7 +523,7 @@ public function guest_listtest()
 	
 	
 		$staffName = $row->GivenName . " " . $row->FamilyName;
-		echo $staffName."\n";
+		echo "staffName = ".$staffName."\n <br>";
 	}
 	
 	
