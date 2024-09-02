@@ -474,7 +474,7 @@ public function guest_listtest()
 	} else {
 		$secretKey = $_SESSION["SecretKey"];
 	}
-	echo $secretKey."\n";
+	echo $secretKey."\n <br>";
 	
 	$db = db_connect('registration');
 	$builder = $db->table('chinacompany');
@@ -485,8 +485,8 @@ public function guest_listtest()
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
 		echo "</pre>";
-		echo $builder->countAllResults(false)."\n";
-		echo $secretKey."\n";
+		echo $builder->countAllResults(false)."\n <br>";
+		echo $secretKey."\n <br>";
 		die();
 	}
 	$query = $builder->get();
@@ -503,14 +503,14 @@ public function guest_listtest()
 	$_SESSION["Event"] = BiTSEvent;
 	$staffName = "TBD";
 	
-	echo $companyID."\n";
-	echo $_SESSION["CompanyID"]."\n";
-	echo $_SESSION["Company"]."\n";
+	echo $companyID."\n <br>";
+	echo $_SESSION["CompanyID"]."\n <br>";
+	echo $_SESSION["Company"]."\n <br>";
 	echo $guestLimit."\n";
-	echo $_SESSION["GuestLimit"]."\n";
+	echo $_SESSION["GuestLimit"]."\n <br>";
 	echo $staffID;
-	echo $_SESSION["Event"]."\n";
-	echo $staffName."\n";
+	echo $_SESSION["Event"]."\n <br>";
+	echo $staffName."\n <br>";
 	
 	
 	if ($staffID > 0) {
