@@ -525,7 +525,15 @@ public function guest_listtest()
 		$staffName = $row->GivenName . " " . $row->FamilyName;
 		echo "staffName = ".$staffName."\n <br>";
 	}
+	$_SESSION["StaffName"] = $staffName;
+	echo "Session staffname".$_SESSION["StaffName"]."\n <br>";
 	
+	$db4 = db_connect('registration');
+	$builder4 = $db4->table('guests');
+	$builder4->where('InvitedByCompanyID' , $companyID);
+	$builder4->where('EventYear', EventYear);
+	echo $builder4->countAllResults(false)."\n <br>";
+	$query4 = $builder4->get();
 	
 	
 }
