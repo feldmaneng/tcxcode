@@ -534,7 +534,7 @@ public function guest_listtest()
 	$builder4->where('EventYear', EventYear);
 	//echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	$query4 = $builder4->get();
-	$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud = $this->_getGroceryCrudEnterprise($registration);
 	/* if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
@@ -945,7 +945,7 @@ return view('one_company.php',(array)$output);
         return view('testconx_template.php', (array)$output);
     }
 
-    private function _getDbData($dbgroup = 'registration') {
+    private function _getDbData($dbgroup = 'default') {
        // $db = (new ConfigDatabase())->default;
 		$db = (new ConfigDatabase())->$dbgroup;
         return [
@@ -959,7 +959,7 @@ return view('one_company.php',(array)$output);
             ]
         ];
     }
-    private function _getGroceryCrudEnterprise($dbgroup = 'registration', $bootstrap = true, $jquery = true) {
+    private function _getGroceryCrudEnterprise($dbgroup = 'default', $bootstrap = true, $jquery = true) {
         $db = $this->_getDbData($dbgroup);
 
         $config = (new ConfigGroceryCrud())->getDefaultConfig();
