@@ -659,10 +659,10 @@ $builder->where('SecretKey', $secretKey);
 	//echo $builder4->countAllResults(false);
 	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
-	if ($builder4->countAllResults(false) >= $guestLimit) {
+	/* if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
-	} 
+	}  */
 	
 
 	$crud->setTable('guests');
