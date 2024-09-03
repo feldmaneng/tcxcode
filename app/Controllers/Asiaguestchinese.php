@@ -463,7 +463,8 @@ public function stats397927raw()
 //ask ira leave alone and circleback
 public function guest_listtest2(){
 	$crud = $this->_getGroceryCrudEnterprise('registration');
-	
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
 	
 	
 	
