@@ -461,6 +461,23 @@ public function stats397927raw()
 	$this->stats397927(TRUE);
 }
 //ask ira leave alone and circleback
+public function guest_listtest2(){
+	$crud = $this->_getGroceryCrudEnterprise('registration');
+	
+	
+	
+	
+	$crud->setTable('guests');
+	$crud->where(['InvitedByCompanyID'=>'2',
+					'EventYear'=> 'China2019']); 
+	$crud->setSubject('Guest','Guests');
+	$output = $crud->render();
+	
+	
+	
+	
+	return $this->_example_output($output);
+}
 public function guest_listtest()
 {
 	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
