@@ -534,7 +534,7 @@ public function guest_listtest()
 	$builder4->where('EventYear', EventYear);
 	//echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	$query4 = $builder4->get();
-	$crud = $this->_getGroceryCrudEnterprise();
+	$crud = $this->_getGroceryCrudEnterprise('registration');
 	/* if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
