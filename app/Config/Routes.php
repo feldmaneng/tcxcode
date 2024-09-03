@@ -225,6 +225,8 @@ $routes->post('/Asiaguestchinese/guest_list', 'Asiaguestchinese::guest_list');
 $routes->get('/Asiaguestchinese/guest_listtest', 'Asiaguestchinese::guest_listtest');
 $routes->post('/Asiaguestchinese/guest_listtest', 'Asiaguestchinese::guest_listtest');
 
+$routes->get('/Asiaguestchinese/guest_listtest2', 'Asiaguestchinese::guest_listtest2');
+$routes->post('/Asiaguestchinese/guest_listtest2', 'Asiaguestchinese::guest_listtest2');
 
 
 
