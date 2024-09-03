@@ -623,8 +623,7 @@ $builder->where('SecretKey', $secretKey);
 		echo "<pre>";
 		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
 		echo "</pre>";
-		echo $builder->countAllResults(false);
-		echo $secretKey;
+		
 		die();
 	}
 	$query = $builder->get();
@@ -644,7 +643,7 @@ $builder->where('SecretKey', $secretKey);
 	if ($staffID > 0) {
 	// ask ira
 	$db3 = db_connect('registration');
-	$builder3 = $db->table('guests');
+	$builder3 = $db3->table('guests');
 	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
 	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
@@ -657,7 +656,7 @@ $builder->where('SecretKey', $secretKey);
 	$builder4 = $db4->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->where('EventYear', EventYear);
-	echo $builder4->countAllResults(false);
+	//echo $builder4->countAllResults(false);
 	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
 	if ($builder4->countAllResults(false) >= $guestLimit) {
