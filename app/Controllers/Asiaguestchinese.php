@@ -548,7 +548,7 @@ public function guest_listtest()
 					'EventYear'=> EventYear]); 
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	$output = $crud->render();
-	$newdata = [
+	/* $newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
     "Company" => $row->Company,
@@ -556,14 +556,14 @@ public function guest_listtest()
 	"Event" => BiTSEvent,
 	"StaffName" => $staffName,
 	"Output" => $output,
-];
+]; */
 
-$session->set($newdata);		
+//$session->set($newdata);		
 	
 	
 	
-	//return $this->_example_output($output);
-	return $this->_one_company_output($output);     
+	return $this->_example_output($output);
+	//return $this->_one_company_output($output);     
 }
 public function guest_list()
 {
