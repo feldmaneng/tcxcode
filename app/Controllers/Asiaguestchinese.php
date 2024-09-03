@@ -945,7 +945,7 @@ return view('one_company.php',(array)$output);
         return view('testconx_template.php', (array)$output);
     }
 
-    private function _getDbData($dbgroup = 'default') {
+    private function _getDbData($dbgroup = 'registration') {
        // $db = (new ConfigDatabase())->default;
 		$db = (new ConfigDatabase())->$dbgroup;
         return [
