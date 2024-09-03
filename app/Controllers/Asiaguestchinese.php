@@ -474,7 +474,7 @@ public function guest_listtest()
 	} else {
 		$secretKey = $_SESSION["SecretKey"];
 	}
-	echo "secretkey = ".$secretKey."\n <br>";
+	//echo "secretkey = ".$secretKey."\n <br>";
 	
 	$db = db_connect('registration');
 	$builder = $db->table('chinacompany');
@@ -503,14 +503,14 @@ public function guest_listtest()
 	$_SESSION["Event"] = BiTSEvent;
 	$staffName = "TBD";
 	
-	echo "companyID = ".$companyID."\n <br>";
+	/* echo "companyID = ".$companyID."\n <br>";
 	echo "Session CompanyID = ".$_SESSION["CompanyID"]."\n <br>";
 	echo "Session Company = ".$_SESSION["Company"]."\n <br>";
 	echo "guestLimit = ".$guestLimit."\n <br>";
 	echo "GuestLimit = ".$_SESSION["GuestLimit"]."\n <br>";
 	echo "staffID = ".$staffID."\n <br>";
 	echo "Session Event = ".$_SESSION["Event"]."\n <br>";
-	echo "staffName = ".$staffName."\n <br>";
+	echo "staffName = ".$staffName."\n <br>"; */
 	
 	
 	if ($staffID > 0) {
@@ -523,16 +523,16 @@ public function guest_listtest()
 	
 	
 		$staffName = $row->GivenName . " " . $row->FamilyName;
-		echo "staffName = ".$staffName."\n <br>";
+		//echo "staffName = ".$staffName."\n <br>";
 	}
 	$_SESSION["StaffName"] = $staffName;
-	echo "Session staffname".$_SESSION["StaffName"]."\n <br>";
+	//echo "Session staffname".$_SESSION["StaffName"]."\n <br>";
 	
 	$db4 = db_connect('registration');
 	$builder4 = $db4->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->where('EventYear', EventYear);
-	echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
+	//echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	$query4 = $builder4->get();
 	$crud = $this->_getGroceryCrudEnterprise('registration');
 	/* if ($builder4->countAllResults(false) >= $guestLimit) {
