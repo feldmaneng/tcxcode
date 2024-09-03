@@ -598,7 +598,8 @@ public function guest_list()
 		$secretKey = $_SESSION["SecretKey"];
 	}
 $crud = $this->_getGroceryCrudEnterprise('registration');
-
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
 
 /* example 
 $db = \Config\Database::connect();
@@ -653,7 +654,7 @@ $builder->where('SecretKey', $secretKey);
 	}
 	$_SESSION["StaffName"] = $staffName;
 	$db4 = db_connect('registration');
-	$builder4 = $db->table('guests');
+	$builder4 = $db4->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->where('EventYear', EventYear);
 	echo $builder4->countAllResults(false);
@@ -661,8 +662,7 @@ $builder->where('SecretKey', $secretKey);
 	//echo $builder4->countAllResults(false);
 	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
-		echo "count test";
-		echo $builder4->countAllResults(false);
+		
 	} 
 	
 
