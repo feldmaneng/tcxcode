@@ -553,11 +553,11 @@ public function guest_listtest()
 	//echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	$query4 = $builder4->get();
 	$crud = $this->_getGroceryCrudEnterprise('registration');
-	/* if ($builder4->countAllResults(false) >= $guestLimit) {
+	 if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
 		echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
-	}  */
+	}  
 	$crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 	
@@ -567,7 +567,7 @@ public function guest_listtest()
 					'EventYear'=> EventYear]); 
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	$output = $crud->render();
-	/* $newdata = [
+	 $newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
     "Company" => $row->Company,
@@ -575,14 +575,14 @@ public function guest_listtest()
 	"Event" => BiTSEvent,
 	"StaffName" => $staffName,
 	"Output" => $output,
-]; */
+]; 
 
-//$session->set($newdata);		
+$session->set($newdata);		
 	
 	
 	
-	return $this->_example_output($output);
-	//return $this->_one_company_output($output);     
+	//return $this->_example_output($output);
+	return $this->_one_company_output($output);     
 }
 public function guest_list()
 {
