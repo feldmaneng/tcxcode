@@ -558,7 +558,8 @@ public function guest_listtest()
 		
 		echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	}  */
-	
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
 	
 	
 	$crud->setTable('guests');
