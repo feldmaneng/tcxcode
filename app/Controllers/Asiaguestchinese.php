@@ -959,7 +959,7 @@ return view('one_company.php',(array)$output);
             ]
         ];
     }
-    private function _getGroceryCrudEnterprise($dbgroup = 'default', $bootstrap = true, $jquery = true) {
+    private function _getGroceryCrudEnterprise($dbgroup = 'registration', $bootstrap = true, $jquery = true) {
         $db = $this->_getDbData($dbgroup);
 
         $config = (new ConfigGroceryCrud())->getDefaultConfig();
