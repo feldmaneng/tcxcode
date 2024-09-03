@@ -553,11 +553,11 @@ public function guest_listtest()
 	//echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
 	$query4 = $builder4->get();
 	$crud = $this->_getGroceryCrudEnterprise('registration');
-	 if ($builder4->countAllResults(false) >= $guestLimit) {
+	 /* if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
 		echo "builder count 4".$builder4->countAllResults(false)."\n <br>";
-	}  
+	}   */
 	$crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 	
