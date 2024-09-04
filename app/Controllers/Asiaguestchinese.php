@@ -698,7 +698,9 @@ $builder->where('SecretKey', $secretKey);
 	'Mobile',
 	'ToPrint'
 	]);
-	
+	$crud->readOnlyFields([
+	'InvitedByCompanyID',
+	'EventYear']);
 	
 
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
