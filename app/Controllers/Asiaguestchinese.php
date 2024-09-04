@@ -797,30 +797,37 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
 		
-	$crud->displayAs('Email','Email Address<br>电邮地址');
-	$crud->displayAs('GivenName','Given (First) Name<br>名（英文）');
-	$crud->displayAs('FamilyName','Family (Last) Name<br>姓（英文）');
+	$crud->displayAs('Email','Email Address 电邮地址');
+	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
+	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
 	$crud->displayAs('ChineseName','Chinese/Korean Name）');
-	$crud->displayAs('Company','Company Name<br>公司名称（英文）');
-	$crud->displayAs('CN_Company','Chinese Company Name<br>公司名称（中文）');
-	$crud->displayAs('NameOnBadge','First Name on Badge<br>名牌显示名');
-	$crud->displayAs('Title','Job Title<br>抬头');
-	$crud->displayAs('Address1','Street<br>地址行1');
-	$crud->displayAs('Address2','Street<br>地址行2');
-	$crud->displayAs('City','City<br>城市');
-	$crud->displayAs('State','State/Province<br>州/省');
-	$crud->displayAs('PCode','Postal/Zip Code<br>邮编');
-	$crud->displayAs('Country','Country<br>国家');
-	$crud->displayAs('Phone','Work Phone<br>单位电话');
-	$crud->displayAs('Mobile','Mobile Phone<br>手机');
+	$crud->displayAs('Company','Company Name 公司名称（英文）');
+	$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
+	$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
+	$crud->displayAs('Title','Job Title 抬头');
+	$crud->displayAs('Address1','Street 地址行1');
+	$crud->displayAs('Address2','Street 地址行2');
+	$crud->displayAs('City','City 城市');
+	$crud->displayAs('State','State/Province 州/省');
+	$crud->displayAs('PCode','Postal/Zip Code 邮编');
+	$crud->displayAs('Country','Country 国家');
+	$crud->displayAs('Phone','Work Phone 单位电话');
+	$crud->displayAs('Mobile','Mobile Phone 手机');
 
 	
-	$crud->fieldType('ContactID', 'hidden');
+	/* $crud->fieldType('ContactID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden'); 
+	$crud->fieldType('ToPrint','hidden');  */
+	
+	$crud->fieldType('hidden','ContactID');
+	$crud->fieldType('hidden','InvitedByCompanyID');
+	$crud->fieldType('hidden','EventYear');
+	$crud->fieldType('hidden','BanquetCompanyID');
+	$crud->fieldType('hidden','Invited');
+	$crud->fieldType('hidden','ToPrint'); 
 	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
