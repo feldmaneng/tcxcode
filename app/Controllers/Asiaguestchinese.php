@@ -677,7 +677,7 @@ $builder->where('SecretKey', $secretKey);
 	'ChineseName',
 	'Company',
 	'CN_Company']); 
-	$crud->fields(['ContactID',
+	$crud->fields([
 	'Email',
 	'GivenName',
 	'FamilyName',
