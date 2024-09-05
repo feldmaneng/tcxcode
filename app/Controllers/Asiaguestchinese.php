@@ -847,8 +847,8 @@ $builder->where('SecretKey', $secretKey);
 		 <div style="display:none">
 		 '
    );  */
-	//$crud->setLanguagePath('grocery-crud/languages/');
-	//$crud->setLanguage('spanish');
+	$crud->setLanguagePath('grocery-crud/languages/Spanish.php');
+	//$crud->setLanguage('Spanish');
 	//$crud->setLanguage("english-chinese");
 	$output = $crud->render();
 	$newdata = [
