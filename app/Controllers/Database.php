@@ -55,11 +55,11 @@ class Database extends BaseController {
 		
 		echo "<LI>Manage <a href=" . site_url('/presentations') . ">Presentations Cruds</a></LI>";
 	
-		/*echo "<br><br>";
+		echo "<br><br>";
 		echo "<ul>";
-		echo "<LI>Process <a href=" . site_url('/s2_match_db') . ">WordPress / s2member</a></LI>";
+		//echo "<LI>Process <a href=" . site_url('/s2_match_db') . ">WordPress / s2member</a></LI>";
 		echo "<LI>Tools for <a href=" . site_url('/mailinglist') . ">Mailing lists</a></LI>";		
-*/
+
 		echo "<br><br>";
 		
 		echo "<LI><a href=" . site_url('/expo') . ">EXPO ENTRIES</a></LI>";
