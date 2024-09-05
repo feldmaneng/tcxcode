@@ -656,13 +656,14 @@ $builder->where('SecretKey', $secretKey);
 	$builder4 = $db4->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->where('EventYear', EventYear);
-	echo $builder4->countAllResults(false);
-	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
-	/*  if ($builder4->countAllResults(false) >= $guestLimit) {
+	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
-	}   */
+	}   
+	$query4 = $builder4->get();
+	//echo $builder4->countAllResults(false);
+	  
 	
 
 	$crud->setTable('guests');
