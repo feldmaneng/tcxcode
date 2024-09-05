@@ -659,10 +659,10 @@ $builder->where('SecretKey', $secretKey);
 	//echo $builder4->countAllResults(false);
 	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
-	 if ($builder4->countAllResults(false) >= $guestLimit) {
+	/*  if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
 		
-	}  
+	}   */
 	
 
 	$crud->setTable('guests');
@@ -799,7 +799,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
 		
-	$crud->displayAs('Email','Email Address \n 电邮地址');
+	$crud->displayAs('Email','Email Address 电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
 	$crud->displayAs('ChineseName','Chinese/Korean Name）');
