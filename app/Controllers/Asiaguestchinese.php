@@ -803,7 +803,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Email','Email Address 电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
-	$crud->displayAs('ChineseName','Chinese/Korean Name）');
+	$crud->displayAs('ChineseName','Chinese/Korean Name');
 	$crud->displayAs('Company','Company Name 公司名称（英文）');
 	$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
 	$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
