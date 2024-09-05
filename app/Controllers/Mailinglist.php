@@ -1,11 +1,11 @@
 <?php
 namespace App\Controllers;
-//setup php for working with Unicode data
-mb_internal_encoding('UTF-8');
+//setup php for working with Unicode data, needs to be update for codeigniter 4
+/* mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 mb_http_input('UTF-8');
 mb_language('uni');
-mb_regex_encoding('UTF-8');
+mb_regex_encoding('UTF-8'); */
 //ob_start('mb_output_handler');
 
 //require '/Applications/MAMP/htdocs/Kint/Kint.class.php';
