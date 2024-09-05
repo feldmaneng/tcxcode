@@ -1246,7 +1246,7 @@ class Mailinglist extends BaseController {
 				$db = \Config\Database::connect();
 				$builder = $db->table('contacts');
 				$builder->select('*');
-				$builder->where('ContactID', $contactID);]
+				$builder->where('ContactID', $contactID);
 				
 				$query = $builder->get();
 				$row = $query->getRowArray();
