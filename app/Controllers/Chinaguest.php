@@ -717,6 +717,13 @@ $builder->where('SecretKey', $secretKey);
     return $_SESSION["EventYear"];
 }); */
 
+	$crud->callbackAddForm(function ($data) {
+		$data['EventYear']=$_SESSION["EventYear"];
+		$data['InvitedByCompanyID']=$_SESSION["CompanyID"];
+		return $data;
+	});
+
+
 
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
   $text=trim($value);
@@ -833,8 +840,8 @@ $builder->where('SecretKey', $secretKey);
 
 	
 	$crud->fieldType('ContactID', 'hidden');
-	$crud->fieldType('InvitedByCompanyID','int',999);
-	$crud->fieldType('EventYear','string',EventYear);
+	$crud->fieldType('InvitedByCompanyID','int');
+	$crud->fieldType('EventYear','string');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
