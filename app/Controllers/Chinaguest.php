@@ -700,9 +700,9 @@ $builder->where('SecretKey', $secretKey);
 	'Mobile',
 	'ToPrint'
 	]);
-	$crud->readOnlyFields([
+	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
-	'EventYear']);
+	'EventYear']); */
 	//callbackAddField(string $fieldName, callable $callback)
 	
 	$crud->callbackAddField('InvitedByCompanyID', function () {
