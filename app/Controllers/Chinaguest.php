@@ -705,9 +705,8 @@ $builder->where('SecretKey', $secretKey);
 	//callbackAddField(string $fieldName, callable $callback)
 	
 	$crud->callbackAddField('InvitedByCompanyID', function ($companyID) {
-    
-	$companyID = 2;
-    return $companyID;
+   
+    return $_SESSION["CompanyID"];
 });
 
 /* $crud->callbackAddField('EventYear', function () {
