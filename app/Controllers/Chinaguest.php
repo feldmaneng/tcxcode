@@ -15,7 +15,7 @@ use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
 define ("BiTSEvent", "TestConX China 2024"); // What is displayed
-define("EventYear", "China2024");// For selecting records only for this year's event.
+define("EventYear", "China2024");// For selecting records only for this year's event.Remove later replace with session variable
 
 $session = session(); 
 
@@ -636,8 +636,8 @@ $builder->where('SecretKey', $secretKey);
 	$guestLimit = $row->InviteCount;
 	$_SESSION["GuestLimit"] = $guestLimit;
 	$staffID = $row->StaffID;
-	$_SESSION["Event"] = BiTSEvent;
-	$_SESSION["EventYear"] = EventYear;
+	$_SESSION["Event"] = BiTSEvent;//Switch Event based on Event Year
+	$_SESSION["EventYear"] = $row->EventYear;
 	
 	$staffName = "TBD";
 	if ($staffID > 0) {
@@ -655,7 +655,7 @@ $builder->where('SecretKey', $secretKey);
 	$db4 = db_connect('registration');
 	$builder4 = $db4->table('guests');
 	$builder4->where('InvitedByCompanyID' , $companyID);
-	$builder4->where('EventYear', EventYear);
+	$builder4->where('EventYear', $_SESSION["EventYear"]);
 	//echo $builder4->countAllResults(false);
 	if ($builder4->countAllResults(false) >= $guestLimit) {
 		$crud->unsetAdd();
@@ -668,7 +668,7 @@ $builder->where('SecretKey', $secretKey);
 
 	$crud->setTable('guests');
 	$crud->where(['InvitedByCompanyID'=>$companyID,
-					'EventYear'=> EventYear]); 
+					'EventYear'=> $_SESSION["EventYear"]]); 
 	$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
@@ -777,7 +777,7 @@ $builder->where('SecretKey', $secretKey);
 
 	$builder2 = $db2->table('guests');
 
-	$builder2->where('EventYear', EventYear);
+	$builder2->where('EventYear', $_SESSION["EventYear"]);
 	$builder2->where('Email', $value);
    
    $rowcount = (int)$builder2->countAllResults(false);
@@ -786,7 +786,7 @@ $builder->where('SecretKey', $secretKey);
 	{
 		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
 
-		$query2 =$db2->query($sql,[EventYear,$value]);
+		$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
 		$row2 = $query2->getRow();
 		
 		$foundID =$row2->ContactID;
@@ -940,7 +940,7 @@ $builder2 = $db2->table('guests');
    $builder2->where('Email',$str);
 
   	// Only look for email dupes for this event year. The person may have attended in prior years. 
-	$builder2->where('EventYear', EventYear); 
+	$builder2->where('EventYear', $_SESSION["EventYear"]); 
 	$row_count = $builder2->get('guests')->countAllResults(false);
 
      
