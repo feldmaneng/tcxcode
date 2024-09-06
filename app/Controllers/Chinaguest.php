@@ -820,8 +820,46 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('ChineseName','checkFamilyName');
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
-		
-	$crud->displayAs('Email','Email Address 电邮地址');
+			if( $_SESSION["EventYear"] == 'China2024'){
+		$testconxevent = 'TestConX China 2024';
+		$crud->displayAs('Email','Email Address 电邮地址');
+		$crud->displayAs('GivenName','Given (First) Name 名（英文）');
+		$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
+		$crud->displayAs('ChineseName','Chinese/Korean Name');
+		$crud->displayAs('Company','Company Name 公司名称（英文）');
+		$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
+		$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
+		$crud->displayAs('Title','Job Title 抬头');
+		$crud->displayAs('Address1','Street 地址行1');
+		$crud->displayAs('Address2','Street 地址行2');
+		$crud->displayAs('City','City 城市');
+		$crud->displayAs('State','State/Province 州/省');
+		$crud->displayAs('PCode','Postal/Zip Code 邮编');
+		$crud->displayAs('Country','Country 国家');
+		$crud->displayAs('Phone','Work Phone 单位电话');
+		$crud->displayAs('Mobile','Mobile Phone 手机');
+	}
+	if( $_SESSION["EventYear"] == 'Korea2024'){
+		$testconxevent = 'TestConX Korea 2024';
+		$crud->displayAs('Email','Email Address');
+		$crud->displayAs('GivenName','Given (First) Name');
+		$crud->displayAs('FamilyName','Family (Last) Name');
+		$crud->displayAs('ChineseName','Chinese/Korean Name');
+		$crud->displayAs('Company','Company Name');
+		$crud->displayAs('CN_Company','Chinese Company Name');
+		$crud->displayAs('NameOnBadge','First Name on Badge');
+		$crud->displayAs('Title','Job Title');
+		$crud->displayAs('Address1','Street');
+		$crud->displayAs('Address2','Street');
+		$crud->displayAs('City','City');
+		$crud->displayAs('State','State/Province');
+		$crud->displayAs('PCode','Postal/Zip Code');
+		$crud->displayAs('Country','Country');
+		$crud->displayAs('Phone','Work Phone');
+		$crud->displayAs('Mobile','Mobile Phone');
+
+	}
+	/* $crud->displayAs('Email','Email Address 电邮地址');
 	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
 	$crud->displayAs('ChineseName','Chinese/Korean Name');
@@ -836,7 +874,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('PCode','Postal/Zip Code 邮编');
 	$crud->displayAs('Country','Country 国家');
 	$crud->displayAs('Phone','Work Phone 单位电话');
-	$crud->displayAs('Mobile','Mobile Phone 手机');
+	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
 	
 	$crud->fieldType('ContactID', 'hidden');
