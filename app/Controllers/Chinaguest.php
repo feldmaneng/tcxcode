@@ -882,13 +882,20 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 	//$crud->setLanguagePath('/tcxcode/vendor/grocrey-crud/enterprise/src/GroceryCrud/i18n/');
 	//$crud->setLanguage('Spanish');
 	//$crud->setLanguage("english-chinese");
+	if( $_SESSION["EventYear"] == China2024){
+		$testconxevent = 'TestConX China 2024';
+	}
+	if( $_SESSION["EventYear"] == Korea2024){
+		$testconxevent = 'TestConX Korea 2024';
+	}
+	
 	$output = $crud->render();
 	$newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
     "Company" => $row->Company,
 	"GuestLimit" => $guestLimit,
-	"Event" => BiTSEvent,
+	"Event" => $testconxevent,
 	"StaffName" => $staffName,
 	"Output" => $output,
 ];
