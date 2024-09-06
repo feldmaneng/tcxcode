@@ -833,8 +833,8 @@ $crud->callbackAddField('EventYear', function () {
 
 	
 	$crud->fieldType('ContactID', 'hidden');
-	$crud->fieldType('InvitedByCompanyID','invisible',[$companyID]);
-	$crud->fieldType('EventYear','invisible',[EventYear]);
+	$crud->fieldType('InvitedByCompanyID','text',[$companyID]);
+	$crud->fieldType('EventYear','text',[EventYear]);
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
