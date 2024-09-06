@@ -846,6 +846,11 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
 	
+	$crud->callbackAfterInsert(function ($stateParameters) {
+    $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
+    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Chinaguest/guest_list/?id=' . $stateParameters->SecretKey);
+});
+	
 	/* $crud->fieldType('hidden','ContactID');
 	$crud->fieldType('hidden','InvitedByCompanyID');
 	$crud->fieldType('hidden','EventYear');
