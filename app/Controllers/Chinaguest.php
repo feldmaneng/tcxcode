@@ -683,8 +683,6 @@ $builder->where('SecretKey', $secretKey);
 	'Email',
 	'GivenName',
 	'FamilyName',
-	'InvitedByCompanyID',
-	'EventYear',
 	'ChineseName',
 	'NameOnBadge',
 	'Title',
@@ -700,6 +698,9 @@ $builder->where('SecretKey', $secretKey);
 	'Mobile',
 	'ToPrint'
 	]);
+	
+	/* 'InvitedByCompanyID',
+	'EventYear', */
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
 	'EventYear']); */
