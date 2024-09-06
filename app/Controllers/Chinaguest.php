@@ -669,7 +669,16 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setTable('guests');
 	$crud->where(['InvitedByCompanyID'=>$companyID,
 					'EventYear'=> $_SESSION["EventYear"]]); 
-	$crud->setSubject('Guest 来宾', 'Guests 来宾');
+					
+	if( $_SESSION["EventYear"] == 'China2024'){
+		$testconxevent = 'TestConX China 2024';
+		$crud->setSubject('Guest 来宾', 'Guests 来宾');
+	}
+	if( $_SESSION["EventYear"] == 'Korea2024'){
+		$testconxevent = 'TestConX Korea 2024';
+		$crud->setSubject('Guest', 'Guests');
+	}
+	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
 	 $crud->columns(['Email',
