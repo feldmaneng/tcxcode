@@ -832,19 +832,19 @@ $crud->callbackAddField('EventYear', function () {
 	$crud->displayAs('Mobile','Mobile Phone 手机');
 
 	
-	/* $crud->fieldType('ContactID', 'hidden');
-	$crud->fieldType('InvitedByCompanyID','hidden');
-	$crud->fieldType('EventYear','hidden');
+	$crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('InvitedByCompanyID','hidden',$companyID);
+	$crud->fieldType('EventYear','hidden',EventYear);
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden');  */
+	$crud->fieldType('ToPrint','hidden');
 	
-	$crud->fieldType('hidden','ContactID');
+	/* $crud->fieldType('hidden','ContactID');
 	$crud->fieldType('hidden','InvitedByCompanyID');
 	$crud->fieldType('hidden','EventYear');
 	$crud->fieldType('hidden','BanquetCompanyID');
 	$crud->fieldType('hidden','Invited');
-	$crud->fieldType('hidden','ToPrint'); 
+	$crud->fieldType('hidden','ToPrint');  */
 	// if we've edited it or added it we should set it to print
 	
 	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
