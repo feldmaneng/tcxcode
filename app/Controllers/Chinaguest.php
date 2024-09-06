@@ -834,7 +834,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->fieldType('ContactID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','int',999);
-	$crud->fieldType('EventYear','string',$_SESSION["EventYear"]);
+	$crud->fieldType('EventYear','string',EventYear);
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
