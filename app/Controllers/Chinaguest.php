@@ -14,8 +14,8 @@ use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
-define ("BiTSEvent", "TestConX China 2019"); // What is displayed
-define("EventYear", "China2019");// For selecting records only for this year's event.
+define ("BiTSEvent", "TestConX China 2024"); // What is displayed
+define("EventYear", "China2024");// For selecting records only for this year's event.
 
 $session = session(); 
 
