@@ -705,7 +705,7 @@ $builder->where('SecretKey', $secretKey);
 	'EventYear']); */
 	//callbackAddField(string $fieldName, callable $callback)
 	
-	$crud->callbackAddField('InvitedByCompanyID', function () {
+	/* $crud->callbackAddField('InvitedByCompanyID', function () {
    
     return $_SESSION["CompanyID"];
 });
@@ -714,7 +714,7 @@ $crud->callbackAddField('EventYear', function () {
     
 
     return $_SESSION["EventYear"];
-});
+}); */
 
 
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
