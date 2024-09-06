@@ -850,6 +850,11 @@ $builder->where('SecretKey', $secretKey);
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
     return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Chinaguest/guest_list/?id='.$_SESSION["SecretKey"]);
 });
+
+$crud->callbackAfterDelete(function ($stateParameters) {
+    $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
+    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Chinaguest/guest_list/?id='.$_SESSION["SecretKey"]);
+});
 	
 	/* $crud->fieldType('hidden','ContactID');
 	$crud->fieldType('hidden','InvitedByCompanyID');
