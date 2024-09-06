@@ -36,7 +36,6 @@ echo "<h1>Please use the special link provided to you.</h1>";//Just an example t
 die();
 }
 
- 
 
 
 
@@ -833,8 +832,8 @@ $crud->callbackAddField('EventYear', function () {
 
 	
 	$crud->fieldType('ContactID', 'hidden');
-	$crud->fieldType('InvitedByCompanyID','hidden',$companyID);
-	$crud->fieldType('EventYear','hidden',EventYear);
+	$crud->fieldType('InvitedByCompanyID','invisible',[$companyID]);
+	$crud->fieldType('EventYear','invisible',[EventYear]);
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
