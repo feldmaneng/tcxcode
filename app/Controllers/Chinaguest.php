@@ -638,6 +638,7 @@ $builder->where('SecretKey', $secretKey);
 	$_SESSION["GuestLimit"] = $guestLimit;
 	$staffID = $row->StaffID;
 	$_SESSION["Event"] = BiTSEvent;
+	$_SESSION["EventYear"] = EventYear;
 	
 	$staffName = "TBD";
 	if ($staffID > 0) {
@@ -704,16 +705,16 @@ $builder->where('SecretKey', $secretKey);
 	'EventYear']);
 	//callbackAddField(string $fieldName, callable $callback)
 	
-	$crud->callbackAddField('InvitedByCompanyID', function ($companyID) {
+	$crud->callbackAddField('InvitedByCompanyID', function () {
    
     return $_SESSION["CompanyID"];
 });
 
-/* $crud->callbackAddField('EventYear', function () {
+$crud->callbackAddField('EventYear', function () {
     
 
-    return EventYear;
-}); */
+    return $_SESSION["EventYear"];
+});
 
 
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
