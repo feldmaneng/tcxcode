@@ -702,7 +702,19 @@ $builder->where('SecretKey', $secretKey);
 	$crud->readOnlyFields([
 	'InvitedByCompanyID',
 	'EventYear']);
+	//callbackAddField(string $fieldName, callable $callback)
 	
+	$crud->callbackAddField('InvitedByCompanyID', function () {
+    
+
+    return $companyID;
+});
+$crud->callbackAddField('EventYear', function () {
+    
+
+    return EventYear;
+});
+
 
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
   $text=trim($value);
