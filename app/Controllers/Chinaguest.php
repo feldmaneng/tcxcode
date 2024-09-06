@@ -848,7 +848,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->callbackAfterInsert(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
-    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Chinaguest/guest_list/?id=' . $stateParameters->SecretKey);
+    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Chinaguest/guest_list/?id='.$_SESSION["SecretKey"]);
 });
 	
 	/* $crud->fieldType('hidden','ContactID');
