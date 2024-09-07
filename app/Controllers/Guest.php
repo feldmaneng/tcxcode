@@ -62,11 +62,11 @@ public function companychina34556672()
 	$crud->displayAs('StaffID', 'Exhibitor Staff');
 	
 	
-	$crud->callbackBeforeInsert(function ($stateParameters) {
+	/* $crud->callbackBeforeInsert(function ($stateParameters) {
 			$stateParameters->data['DBUser'] = $this->determine_user();
 			$stateParameters = $this->setSecretKey($stateParameters);
 			return $stateParameters;
-		});
+		}); */
 	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
     return '#/avatar/' . $row->'StaffID';
 });	 */
@@ -97,11 +97,11 @@ public function companykorea2346878438()
 	$crud->displayAs('StaffID', 'Exhibitor Staff');
 	
 	
-	$crud->callbackBeforeInsert(function ($stateParameters) {
+/* 	$crud->callbackBeforeInsert(function ($stateParameters) {
 			$stateParameters->data['DBUser'] = $this->determine_user();
 			$stateParameters = $this->setSecretKey($stateParameters);
 			return $stateParameters;
-		});
+		}); */
 	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
     return '#/avatar/' . $row->'StaffID';
 });	 */
