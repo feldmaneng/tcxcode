@@ -240,6 +240,12 @@ $routes->post('/Chinaguest/guest_list/?id=(:any)', 'Chinaguest::guest_list');
 $routes->get('/Chinaguest/guest_list', 'Chinaguest::guest_list');
 $routes->post('/Chinaguest/guest_list', 'Chinaguest::guest_list');
 
+$routes->get('/Guest/guest_list/?id=(:any)', 'Guest::guest_list');
+$routes->post('/Guest/guest_list/?id=(:any)', 'Guest::guest_list');
+
+$routes->get('/Guest/guest_list', 'Guest::guest_list');
+$routes->post('/Guest/guest_list', 'Guest::guest_list');
+
 $routes->get('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 $routes->post('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 
