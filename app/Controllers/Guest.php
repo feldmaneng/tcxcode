@@ -15,8 +15,8 @@ use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
 define ("BiTSEvent", "TestConX China 2024"); // What is displayed
-define("EventYear", "China2024");// For selecting records only for this year's event.Remove later replace with session variable
-
+define("EventYearChina", "China2024");// For selecting records only for this year's event.Remove later replace with session variable
+define("EventYearKorea", "Korea2024");// For selecting records only for this year's event.Remove later replace with session variable
 $session = session(); 
 
 class Guest extends BaseController {
@@ -39,7 +39,7 @@ die();
 
 
 
-public function company123()
+public function companychina34556672()
 {
 	
 		$crud = $this->_getGroceryCrudEnterprise('registration');
@@ -51,7 +51,42 @@ public function company123()
 	
 	$crud->setTable('chinacompany');
    
-	$crud->where(['chinacompany.EventYear' => EventYear]);
+	$crud->where(['chinacompany.EventYear' => EventYearChina]);
+   		
+	
+	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
+	
+	$crud->fieldType('EventYear', 'hidden',);
+	
+	
+	$crud->displayAs('StaffID', 'Exhibitor Staff');
+	
+	
+	$crud->callbackBeforeInsert(function ($stateParameters) {
+			$stateParameters->data['DBUser'] = $this->determine_user();
+			$stateParameters = $this->setSecretKey($stateParameters);
+			return $stateParameters;
+		});
+	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
+    return '#/avatar/' . $row->'StaffID';
+});	 */
+	$output = $crud->render();
+
+	return $this->_example_output($output);        
+}
+public function companykorea2346878438()
+{
+	
+		$crud = $this->_getGroceryCrudEnterprise('registration');
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+	
+
+	
+	$crud->setTable('chinacompany');
+   
+	$crud->where(['chinacompany.EventYear' => EventYearKorea]);
    		
 	
 	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
@@ -630,6 +665,14 @@ $builder->where('SecretKey', $secretKey);
 	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//ask ira
+	if ($row->EventYear != EventYearChina && $row->EventYear != EventYearKorea) {
+		sleep(20); /* slow down a brute force */ 
+		echo "<pre>";
+		echo "<h1>Error - Please use the special link provided or contact the office for assistance.You may be using the link from a previous year.</h1>";
+		echo "</pre>";
+		
+		die();
+	}
 	$companyID = $row->CompanyID;
 	$_SESSION["CompanyID"] = $companyID; 
 	$_SESSION["Company"] = $row->Company;
