@@ -54,7 +54,7 @@ public function companychina34556672()
 	$crud->where(['chinacompany.EventYear' => EventYearChina]);
    		
 	
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYearChina]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
@@ -89,7 +89,7 @@ public function companykorea2346878438()
 	$crud->where(['chinacompany.EventYear' => EventYearKorea]);
    		
 	
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYearKorea]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
