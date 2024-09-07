@@ -246,6 +246,13 @@ $routes->post('/Guest/guest_list/?id=(:any)', 'Guest::guest_list');
 $routes->get('/Guest/guest_list', 'Guest::guest_list');
 $routes->post('/Guest/guest_list', 'Guest::guest_list');
 
+$routes->get('/Guest/companychina34556672', 'Guest::companychina34556672');
+$routes->post('/Guest/companychina34556672', 'Guest::companychina34556672');
+
+$routes->get('/Guest/companykorea2346878438', 'Guest::companykorea2346878438');
+$routes->post('/Guest/companykorea2346878438', 'Guest::companykorea2346878438');
+
+
 $routes->get('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 $routes->post('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 
