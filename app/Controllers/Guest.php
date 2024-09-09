@@ -481,7 +481,7 @@ public function stats397927( $raw = FALSE )
 		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
 	}
    		
-   	$data['title'] = TestConX China Event . " Guest List Statistics"; 
+   	$data['title'] = "TestConX China Event  Guest List Statistics"; 
    	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
    	
  	$data['table'] = $inviteStats;
