@@ -442,7 +442,7 @@ public function stats397927( $raw = FALSE )
 		
 
 		$inviteStats[$row->CompanyID]['Related'] = $guestQuery3->getNumRows();
-		$totalRelated += $guestQuery3->num_rows();
+		$totalRelated += $guestQuery3->getNumRows();
 		
 
 		if ($inviteStats[$row->CompanyID]['Guests'] > 0) {
