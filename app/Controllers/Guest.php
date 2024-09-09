@@ -376,10 +376,14 @@ public function stats397927( $raw = FALSE )
 {
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
-	$db->setDatabase('bits_registration');
-	$crud->setTable('chinacompany');
-	$crud->defaultOrdering('chinacompany.Company', 'ASC');
-	$query = $crud->getWhere(['EventYear'=> EventYear]);
+	$db = \Config\Database::connect('registration');
+			$builder = $db->table('chinacompany');
+			$builder->select('*');
+			$builder->where('EventYear',EventYearChina);
+			$builder->orderBy('Company', 'ASC');
+			
+			$query = $builder->get();
+	
 	
 	$inviteStats = array();
 	$totalLimit = 0;
@@ -392,17 +396,17 @@ public function stats397927( $raw = FALSE )
 	// which cell in the table they are output in.
 	
 	// Cycle through the companies
-	foreach ($query->result() as $row)
+	foreach ($query->getResult() as $row)
 	{
 		//echo $row->Company . " id = " . $row->CompanyID . "<br>";
 		$inviteStats[$row->CompanyID]['Company'] = $row->Company;
 		$inviteStats[$row->CompanyID]['InviteCount'] = $row->InviteCount;
 		$totalLimit += $row->InviteCount;
-			
-		$guestQuery = $this->db->get_where('guests',
-			array('EventYear'=> EventYear, 
-				  'InvitedByCompanyID' => $row->CompanyID) 
-		);
+			//ask ira
+		/* $guestQuery = $this->db->get_where('guests',
+			array('EventYear'=> EventYearChina, 
+				  'InvitedByCompanyID' => $row->CompanyID)  
+		); */
 		
 		/* foreach ($guestQuery->result() as $guestRow)
 		{
@@ -410,23 +414,35 @@ public function stats397927( $raw = FALSE )
 		}
 		echo "Rows: " . $guestQuery->num_rows() . "<br>";
 		*/
-		
-		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->num_rows();
-		$totalInvited += $guestQuery->num_rows();
+		$db2 = \Config\Database::connect('registration');
+			$builder2 = $db2->table('guests');
+			$builder2->select('*');
+			$builder2->where('EventYear',EventYearChina);
+			$builder2->where('InvitedByCompanyID',EventYearChina);
+			
+			$guestQuery = $builder2->get();
+		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->getNumRows();
+		$totalInvited += $guestQuery->getNumRows();
 		
 		$inviteStats[$row->CompanyID]['Remaining'] = $inviteStats[$row->CompanyID]['InviteCount'] - $inviteStats[$row->CompanyID]['Guests'];
 		
 
 		// Figure out how many guests are related to the inviting Company
 		// i.e. non-customers
-		$guestQuery = $crud->getWhere('guests',
-			array('EventYear'=> EventYear, 
-				  'InvitedByCompanyID' => $row->CompanyID,
-				  'Related' => '1') 
-		);
+		
+		$db3 = \Config\Database::connect('registration');
+			$builder3 = $db3->table('guests');
+			$builder3->select('*');
+			$builder3->where('EventYear',EventYearChina);
+			$builder3->where('InvitedByCompanyID',EventYearChina);
+			$builder3->where('Related','1');
+			$guestQuery3 = $builder3->get();
+			
+			
+		
 
-		$inviteStats[$row->CompanyID]['Related'] = $guestQuery->num_rows();
-		$totalRelated += $guestQuery->num_rows();
+		$inviteStats[$row->CompanyID]['Related'] = $guestQuery3->num_rows();
+		$totalRelated += $guestQuery3->num_rows();
 		
 
 		if ($inviteStats[$row->CompanyID]['Guests'] > 0) {
@@ -436,30 +452,36 @@ public function stats397927( $raw = FALSE )
 		}	
 				
 		// Count no-shows for post-event
-		$guestQuery = $crud->getWhere('guests',
-			array('EventYear'=> EventYear, 
-				  'InvitedByCompanyID' => $row->CompanyID,
-				  'NoShow' => 'Yes') 
-		);
+		$db4 = \Config\Database::connect('registration');
+			$builder4 = $db4->table('guests');
+			$builder4->select('*');
+			$builder4->where('EventYear',EventYearChina);
+			$builder4->where('InvitedByCompanyID',EventYearChina);
+			$builder4->where('NoShow','Yes');
+			$guestQuery4 = $builder4->get();
 		
-		$inviteStats[$row->CompanyID]['NoShows'] = $guestQuery->num_rows();
-		$totalNoShow += $guestQuery->num_rows();
+		
+		$inviteStats[$row->CompanyID]['NoShows'] = $guestQuery4->getNumRows();
+		$totalNoShow += $guestQuery4->getNumRows();
 				
 		// No-shows who are related
-		$guestQuery = $this->db->get_where('guests',
-			array('EventYear'=> EventYear, 
-				  'InvitedByCompanyID' => $row->CompanyID,
-				  'Related' => '1',
-				  'NoShow' => 'Yes') 
-		);
-		$inviteStats[$row->CompanyID]['NoShow_Related'] = $guestQuery->num_rows();
-		$totalNoShowRelated += $guestQuery->num_rows();
+		$db5 = \Config\Database::connect('registration');
+			$builder5 = $db5->table('guests');
+			$builder5->select('*');
+			$builder5->where('EventYear',EventYearChina);
+			$builder5->where('InvitedByCompanyID',EventYearChina);
+			$builder5->where('NoShow','Yes');
+			$builder3->where('Related','1');
+			$guestQuery5 = $builder5->get();
+		
+		$inviteStats[$row->CompanyID]['NoShow_Related'] = $guestQuery5->getNumRows();
+		$totalNoShowRelated += $guestQuery5->getNumRows();
 		
 
 		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
 	}
    		
-   	$data['title'] = BiTSEvent . " Guest List Statistics"; 
+   	$data['title'] = TestConX China Event . " Guest List Statistics"; 
    	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
    	
  	$data['table'] = $inviteStats;
@@ -469,7 +491,7 @@ public function stats397927( $raw = FALSE )
  	// ask ira about function load view look in bitscode view for stats
  	if (! $raw) {
 		
-	   	$this->load->view('stats', $data);
+	   	return view('stats', $data);
    	} else {
    		foreach($data['header'] as $x) { echo $x . ','; }; 
    		echo "<br>\n";
