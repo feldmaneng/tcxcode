@@ -707,14 +707,14 @@ $builder->where('SecretKey', $secretKey);
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	// ask ira
-	$db3 = db_connect('registration');
-	$builder3 = $db3->table('guests');
-	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$db3 = db_connect();
+	$builder3 = $db3->table('contacts');
+	$sql3 = 'SELECT * FROM contacts Where ContactID = ?;';
 	$query3 =$db3->query($sql3, [$staffID]);
-	$row = $query3->getRow();
+	$row3 = $query3->getRow();
 	
 	
-		$staffName = $row->GivenName . " " . $row->FamilyName;
+		$staffName = $row3->GivenName . " " . $row3->FamilyName;
 	}
 	$_SESSION["StaffName"] = $staffName;
 	$db4 = db_connect('registration');
