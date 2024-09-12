@@ -16,7 +16,7 @@
     				
     				echo "<h1>$StatusMessage</h1>";
 					
-					echo "<h2>TestConX Event: $Event $Year</h2>";
+					echo "<h2>TestConX Event: ".$Entry->Event." ".$Entry->Year."</h2>";
 					echo "<h2>Your status is ".$Entry->Status."</h2>";
 					echo "<h2>$PromptMessage</h2>";
 					
