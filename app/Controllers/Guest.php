@@ -920,7 +920,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->displayAs('FamilyName','Family (Last) Name');
 		$crud->displayAs('ChineseName','Chinese/Korean Name');
 		$crud->displayAs('Company','Company Name');
-		$crud->displayAs('CN_Company','Chinese Company Name');
+		$crud->displayAs('CN_Company','Chinese/Korean Company Name');
 		$crud->displayAs('NameOnBadge','First Name on Badge');
 		$crud->displayAs('Title','Job Title');
 		$crud->displayAs('Address1','Street');
@@ -994,6 +994,7 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 	//$crud->setLanguagePath('/tcxcode/vendor/grocrey-crud/enterprise/src/GroceryCrud/i18n/');
 	//$crud->setLanguage('Spanish');
 	//$crud->setLanguage("english-chinese");
+	
 	if( $_SESSION["EventYear"] == 'China2024'){
 		$testconxevent = 'TestConX China 2024';
 	}
@@ -1013,7 +1014,8 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 ];
 
 $session->set($newdata);		
-	
+	$crud->unsetPrint();
+	$crud->unsetExport();
 	
 	
 	//return $this->_example_output($output);
