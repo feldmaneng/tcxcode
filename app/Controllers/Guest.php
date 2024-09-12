@@ -1001,7 +1001,8 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 	if( $_SESSION["EventYear"] == 'Korea2024'){
 		$testconxevent = 'TestConX Korea 2024';
 	}
-	
+	$crud->unsetPrint();
+	$crud->unsetExport();
 	$output = $crud->render();
 	$newdata = [
     "SecretKey"  => $secretKey,
@@ -1014,8 +1015,7 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 ];
 
 $session->set($newdata);		
-	$crud->unsetPrint();
-	$crud->unsetExport();
+	
 	
 	
 	//return $this->_example_output($output);
