@@ -39,19 +39,25 @@ helper('html');
 		$session = session(); 
 		$model = model(DirectoryEntry::class);
 		
+	
 		// Don't call without an empty key
 		if ( !empty($_GET["key"]) ) {
 			
 			$secretKey = $_GET["key"];
 			$session->set('secretKey', $_GET["key"]);
 			
+			$db = db_connect('registration');
+			$builder = $db->table('chinacompany');
+			$builder->where('SecretKey', $secretKey);
+			$query = $builder->get();
+			$row = $query->getRow();
 			//$keyreturn = session('secretKey');
 			//$session->set('success', "");
 
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
-				'Year' => "2024",
-				'Event' => "Mesa",
+				//'Year' => "2024",
+				//'Event' => "Mesa",
 				'Entry' => $model->getEntry($secretKey),
 				'PriorEntryImage' => "example.png", //Default image, updated below
 				'StatusMessage' => session('statusMessage'),
