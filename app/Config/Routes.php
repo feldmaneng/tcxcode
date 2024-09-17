@@ -132,6 +132,9 @@ $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
 $routes->get('/uploadtest', 'Uploadtest::index');          
 $routes->post('/Uploadtest/upload', 'Uploadtest::upload'); 
 
+$routes->get('/print', 'PrintBadge::index');
+$routes->post('/PrintBadge/print', 'PrintBadge::print');
+
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
