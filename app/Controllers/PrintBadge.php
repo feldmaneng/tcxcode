@@ -56,6 +56,8 @@ class PrintBadge extends BaseController
     }
    
       function print(){
+			$crud->setCsrfTokenName(csrf_token());
+			$crud->setCsrfTokenValue(csrf_hash());
 			$model = model(DirectoryEntry::class);
 			$session = session();
 
