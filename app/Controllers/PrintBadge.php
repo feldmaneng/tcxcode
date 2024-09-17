@@ -3,6 +3,16 @@
 namespace App\Controllers;
 
 use CodeIgniter\Files\File;
+use Config\Database as ConfigDatabase;
+use Config\GroceryCrud as ConfigGroceryCrud;
+use GroceryCrud\Core\GroceryCrud;
+
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+}
 
 class PrintBadge extends BaseController
 {
