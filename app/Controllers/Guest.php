@@ -418,7 +418,7 @@ public function stats397927( $raw = FALSE )
 			$builder2 = $db2->table('guests');
 			$builder2->select('*');
 			$builder2->where('EventYear',EventYearChina);
-			$builder2->where('InvitedByCompanyID',EventYearChina);
+			$builder2->where('InvitedByCompanyID',$row->CompanyID);
 			
 		$guestQuery = $builder2->get();
 		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->getNumRows();
