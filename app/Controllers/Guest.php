@@ -499,7 +499,7 @@ public function stats397927( $raw = FALSE )
 		
 	   	return view('stats', $data);
    	} else {
-   		foreach($data['header'] as $x) { echo $x . ','; }; 
+   		foreach($data['header'] as $x) { echo $x . ','; } 
    		echo "<br>\n";
    		foreach($data['table'] as $x ) {
 			foreach($x as $y => $y_value) {
