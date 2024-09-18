@@ -258,6 +258,10 @@ $routes->post('/Guest/companykorea2346878438', 'Guest::companykorea2346878438');
 $routes->get('/Guest/stats', 'Guest::stats397927');
 $routes->post('/Guest/stats', 'Guest::stats397927');
 
+$routes->get('/Guest/statsraw', 'Guest::stats397927raw');
+$routes->post('/Guest/statsraw', 'Guest::stats397927raw');
+
+
 $routes->get('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 $routes->post('/Koreaguest/guest_list', 'Koreaguest::guest_list');
 
