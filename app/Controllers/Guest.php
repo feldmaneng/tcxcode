@@ -374,7 +374,7 @@ function edit_master_contact_URL($primary_key, $row)
 
 public function stats397927( $raw = FALSE )
 {
-	
+	$session = session(); 
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db = \Config\Database::connect('registration');
 			$builder = $db->table('chinacompany');
