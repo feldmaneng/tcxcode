@@ -61,7 +61,8 @@ a:hover
     
  		<h1>TestConX</h1>
  		
-		<h2><? echo $data['title'] ?></h2>
+		<h2><? $session = session(); 
+		echo $data['title']; ?></h2>
 		
 		<div class="divTable">
 			<div class="divTableHeading">
