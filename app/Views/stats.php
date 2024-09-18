@@ -53,6 +53,13 @@ a:hover
 </style>
 </head>
 <body>
+<?php 
+$session = session(); 
+echo $data['title'];
+
+
+
+?>
 <!-- Beginning header -->
 
 <!-- End of header-->
