@@ -485,15 +485,20 @@ public function stats397927( $raw = FALSE )
 	//echo $totalRelated."Related";
    	$data['title'] = "TestConX China Event  Guest List Statistics"; 
    	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
-   	
+   	if($totalRelated == 0){
+		$relatedNoShow = "-";
+	}
+	else{
+		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
+	}
  	$data['table'] = $inviteStats;
  	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
  	$data['totals'][2] = array ("&nbsp;", "&nbsp;", round($totalInvited/$totalLimit*100,1)."% of Limit", "&nbsp;", "&nbsp;", round($totalRelated/$totalInvited*100,0)."%", 
- 		round($totalNoShow/$totalInvited*100,0)."%", round($totalNoShowRelated/($totalRelated+1)*100,0)."%","&nbsp;");//added +1 to total related remove later
+ 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%","&nbsp;");
  	// ask ira about function load view look in bitscode view for stats
-	foreach($data['header'] as $x){ 
+	/* foreach($data['header'] as $x){ 
 	echo $x . ','; 
-	}
+	} */
 	
  	if (! $raw) {
 		
