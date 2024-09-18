@@ -434,7 +434,7 @@ public function stats397927( $raw = FALSE )
 			$builder3 = $db3->table('guests');
 			$builder3->select('*');
 			$builder3->where('EventYear',EventYearChina);
-			$builder3->where('InvitedByCompanyID',EventYearChina);
+			$builder3->where('InvitedByCompanyID',$row->CompanyID);
 			$builder3->where('Related','1');
 			$guestQuery3 = $builder3->get();
 			
