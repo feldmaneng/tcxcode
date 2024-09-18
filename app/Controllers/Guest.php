@@ -420,7 +420,7 @@ public function stats397927( $raw = FALSE )
 			$builder2->where('EventYear',EventYearChina);
 			$builder2->where('InvitedByCompanyID',EventYearChina);
 			
-			$guestQuery = $builder2->get();
+		$guestQuery = $builder2->get();
 		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->getNumRows();
 		$totalInvited += $guestQuery->getNumRows();
 		
@@ -480,7 +480,10 @@ public function stats397927( $raw = FALSE )
 
 		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
 	}
-   		
+   	echo $totalLimit."<br>";
+	echo $totalInvited."<br>";
+	echo $totalInvited."<br>";
+	echo $totalRelated."<br>";
    	$data['title'] = "TestConX China Event  Guest List Statistics"; 
    	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
    	
