@@ -480,9 +480,9 @@ public function stats397927( $raw = FALSE )
 
 		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
 	}
-   	echo $totalLimit."limit";
-	echo $totalInvited."invited";
-	echo $totalRelated."Related";
+   	//echo $totalLimit."limit";
+	//echo $totalInvited."invited";
+	//echo $totalRelated."Related";
    	$data['title'] = "TestConX China Event  Guest List Statistics"; 
    	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
    	
