@@ -489,7 +489,7 @@ public function stats397927( $raw = FALSE )
  	$data['table'] = $inviteStats;
  	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
  	$data['totals'][2] = array ("&nbsp;", "&nbsp;", round($totalInvited/$totalLimit*100,1)."% of Limit", "&nbsp;", "&nbsp;", round($totalRelated/$totalInvited*100,0)."%", 
- 		round($totalNoShow/$totalInvited*100,0)."%", round($totalNoShowRelated/$totalRelated*100,0)."%","&nbsp;");
+ 		round($totalNoShow/$totalInvited*100,0)."%", round($totalNoShowRelated/($totalRelated+1)*100,0)."%","&nbsp;");//added +1 to total related remove later
  	// ask ira about function load view look in bitscode view for stats
  	if (! $raw) {
 		
