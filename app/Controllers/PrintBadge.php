@@ -16,7 +16,13 @@ if ( !$session->tcx_logged_in ) {
 
 class PrintBadge extends BaseController
 {
-    protected $helpers = ['form'];
+	public function __construct()
+        {
+                
+                helper('form');
+				helper('text');
+				helper('url');
+        }
 
     public function index()
     {
@@ -54,10 +60,28 @@ class PrintBadge extends BaseController
 
         return view('testconx_template.php', (array)$output);
     }
+	function qrstamp($a,$b,$c,$d)
+ {
+	
+//include('phpqrcode/qrlib.php'); 
+//file_put_contents("test5.png",file_get_contents("test6.png"));
+	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $d; 
+ 
+    $name = $a; 
+	$email= $b;
+	$orgName = $c; 
+	$codeContents  = 'BEGIN:VCARD'."\n"; 
+    $codeContents .= 'FN:'.$name."\n";
+	$codeContents .= 'EMAIL:'.$email."\n"; 
+	$codeContents .= 'ORG:'.$orgName."\n"; 
+    $codeContents .= 'END:VCARD'; 
+	
+	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
+	return \QRcode::png($codeContents, $tempDir.'08.png', QR_ECLEVEL_L, 200,0);
+	}
    
       function print(){
-			$crud->setCsrfTokenName(csrf_token());
-			$crud->setCsrfTokenValue(csrf_hash());
+		
 			$model = model(DirectoryEntry::class);
 			$session = session();
 
@@ -228,17 +252,17 @@ class PrintBadge extends BaseController
 				$pdf->SetFillColor(255,255,255);
 				$pdf->SetTextColor(0,0,0);
 				
-				if($type != 'Professional'){
+				/* if($type != 'Professional'){
 					if($type != "EXPOtiny"){
 				$pdf->SetFont('helvetica', 'B', 16);
 				$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
 					if(strlen($Message)>8){
 					$pdf->SetFont('helvetica', 'B', 22);
-				}
+					}
 				
 				$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
-				}
-				}
+					}
+				} */
 				
 				if($type=="EXPOtiny"){
 				$pdf->SetFont('helvetica', '', 40);
