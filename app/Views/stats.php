@@ -62,8 +62,22 @@ a:hover
     
  		<h1>TestConX</h1>
  		
+		
+		
+<?php $table = new \CodeIgniter\View\Table();
+
+$data = [
+    ['Name', 'Color', 'Size'],
+    ['Fred', 'Blue', 'Small'],
+    ['Mary', 'Red', 'Large'],
+    ['John', 'Green', 'Medium'],
+];
+
+echo $table->generate($data);?>
 		<h2><? $session = session(); 
-		echo $data['title']; ?></h2>
+		echo $title; ?>
+		
+		</h2>
 		
 		<div class="divTable">
 			<div class="divTableHeading">
