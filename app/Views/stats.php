@@ -75,14 +75,14 @@ $data = [
 
 echo $table->generate($data);?>
 		<h2><? $session = session(); 
-		echo $title; ?>
+		echo esc($title); ?>
 		
 		</h2>
 		
 		<div class="divTable">
 			<div class="divTableHeading">
 				<div class="divTableRow">
-					<? foreach($header as $x) {
+					<? foreach(esc($header) as $x) {
 						echo '<div class="divTableHead">' . $x . '</div>';
 					} ?>
 				</div>
