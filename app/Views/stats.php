@@ -67,16 +67,16 @@ a:hover
 			<div class="divTableHeading">
 				<div class="divTableRow">
 					<? foreach($header as $x) {
-						echo '<div class="divTableHead">' . $x . '</div>';
+						echo '<div>' . $x . '</div>';
 					} ?>
 				</div>
 			</div>
 			
 			<div class="divTableBody">
 				<? foreach($table as $x ) {
-					echo '<div class="divTableRow">';
+					echo '<div>';
 					foreach($x as $y => $y_value) {
-						echo '   <div class="divTableCell">'. $y_value . '</div>';
+						echo '   <div>'. $y_value . '</div>';
 					}
 					echo '</div>';				
 					
@@ -86,9 +86,9 @@ a:hover
  			
  			<div class="divTableFoot">
  				<? foreach($totals as $t) { 
-					echo '<div class="divTableRow">';
+					echo '<div>';
 					foreach($t as $x) {
-							echo '<div class="divTableTotal">' . $x . '</div>';
+							echo '<div>' . $x . '</div>';
 					}
 					echo '</div>';
 				} ?>
