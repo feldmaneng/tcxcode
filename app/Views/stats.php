@@ -75,7 +75,8 @@ $data = [
 
 echo $table->generate($data);?>
 		<h2><? $session = session(); 
-		echo esc($title); ?>
+		echo esc($title);
+		echo "testconx";?>
 		
 		</h2>
 		
