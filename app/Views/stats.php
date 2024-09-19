@@ -101,36 +101,6 @@ a:hover
 				</div>
 			<?php endforeach ?>
 					
-					
-		<div class="divTable">
-			<div class="divTableHeading">
-				<div class="divTableRow">
-					<? foreach $header as $x) {
-						echo '<div class="divTableHead">' . $x . '</div>';
-					} ?>
-				</div>
-			</div>
-			
-			<div class="divTableBody">
-				<? foreach($table as $x ) {
-					echo '<div class="divTableRow">';
-					foreach($x as $y => $y_value) {
-						echo '   <div class="divTableCell">'. $y_value . '</div>';
-					}
-					echo '</div>';				
-					
-				 // " . $x_value . "<br>";
-				} ?>
- 			</div>
- 			
- 			<div class="divTableFoot">
- 				<? foreach($totals as $t) { 
-					echo '<div class="divTableRow">';
-					foreach($t as $x) {
-							echo '<div class="divTableTotal">' . $x . '</div>';
-					}
-					echo '</div>';
-				} ?>
 			</div>
  		</div>
 
