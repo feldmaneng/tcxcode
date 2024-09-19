@@ -72,13 +72,30 @@ a:hover
 		
  
 		?>
-		
-	<?php foreach ($header as $item): ?>
+		<div class="divTable">
+			<div class="divTableHeading">
+				<div class="divTableRow">
+					<?php foreach ($header as $x): ?>
 
-        <div class="divTableHead"><?= esc($item) ?></div>
+						<div class="divTableHead"><?= esc($x) ?></div>
 
-    <?php endforeach ?>
-		
+					<?php endforeach ?>
+				</div>
+			</div>
+		<div class="divTableBody">	
+					<?php foreach ($table as $x): ?>
+						<div class="divTableRow">
+						<?php foreach ($x as $y = $y_value): ?>
+						<div class="divTableCell"><?= $y_value ?></div>
+						<?php endforeach ?>
+						</div>
+					<?php endforeach ?>
+					</div>
+					
+					
+					
+					
+					
 		<div class="divTable">
 			<div class="divTableHeading">
 				<div class="divTableRow">
