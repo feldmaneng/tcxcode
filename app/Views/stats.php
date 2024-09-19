@@ -67,9 +67,15 @@ a:hover
 <?php 
 
 
-		 $session = session(); 
+		$session = session(); 
 		echo esc($title);
-		echo "testconx";?>
+		
+ <?php foreach ($header as $item): ?>
+
+        <li><?= esc($item) ?></li>
+
+    <?php endforeach ?>
+		?>
 		
 	
 		
