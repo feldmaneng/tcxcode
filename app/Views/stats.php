@@ -75,7 +75,7 @@ a:hover
 		
 	<?php foreach ($header as $item): ?>
 
-        <li><?= esc($item) ?></li>
+        <div class="divTableHead"><?= esc($item) ?></div>
 
     <?php endforeach ?>
 		
