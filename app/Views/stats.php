@@ -64,21 +64,14 @@ a:hover
  		
 		
 		
-<?php $table = new \CodeIgniter\View\Table();
+<?php 
 
-$data = [
-    ['Name', 'Color', 'Size'],
-    ['Fred', 'Blue', 'Small'],
-    ['Mary', 'Red', 'Large'],
-    ['John', 'Green', 'Medium'],
-];
 
-echo $table->generate($data);?>
-		<h2><? $session = session(); 
+		 $session = session(); 
 		echo esc($title);
 		echo "testconx";?>
 		
-		</h2>
+	
 		
 		<div class="divTable">
 			<div class="divTableHeading">
