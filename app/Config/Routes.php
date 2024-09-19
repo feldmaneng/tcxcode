@@ -271,8 +271,8 @@ $routes->post('/Asiaguestchinese/guest_listtest', 'Asiaguestchinese::guest_listt
 $routes->get('/Asiaguestchinese/guest_listtest2', 'Asiaguestchinese::guest_listtest2');
 $routes->post('/Asiaguestchinese/guest_listtest2', 'Asiaguestchinese::guest_listtest2');
 
-
-
+$routes->get('/ViewTest', 'ViewTest::index');  
+$routes->post('/ViewTest', 'ViewTest::index');  
 /*
  * --------------------------------------------------------------------
  * Additional Routing
