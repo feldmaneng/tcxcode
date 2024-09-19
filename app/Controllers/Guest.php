@@ -522,6 +522,157 @@ public function stats397927( $raw = FALSE )
    	
 	//$this->_example_output($output);        
 }
+
+public function statsk397927( $raw = FALSE )
+{
+	$session = session(); 
+	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
+	$db = \Config\Database::connect('registration');
+			$builder = $db->table('chinacompany');
+			$builder->select('*');
+			$builder->where('EventYear',EventYearKorea);
+			$builder->orderBy('Company', 'ASC');
+			
+			$query = $builder->get();
+	
+	
+	$inviteStats = array();
+	$totalLimit = 0;
+	$totalInvited = 0;
+	$totalRelated = 0;
+	$totalNoShow = 0;
+	$totalNoShowRelated = 0;
+	
+	// Remember that the array keeps it order. So the order the variables are initialized control
+	// which cell in the table they are output in.
+	
+	// Cycle through the companies
+	foreach ($query->getResult() as $row)
+	{
+		//echo $row->Company . " id = " . $row->CompanyID . "<br>";
+		$inviteStats[$row->CompanyID]['Company'] = $row->Company;
+		$inviteStats[$row->CompanyID]['InviteCount'] = $row->InviteCount;
+		$totalLimit += $row->InviteCount;
+			//ask ira
+		/* $guestQuery = $this->db->get_where('guests',
+			array('EventYear'=> EventYearKorea, 
+				  'InvitedByCompanyID' => $row->CompanyID)  
+		); */
+		
+		/* foreach ($guestQuery->result() as $guestRow)
+		{
+			echo $guestRow->Email . "<br>";
+		}
+		echo "Rows: " . $guestQuery->num_rows() . "<br>";
+		*/
+		$db2 = \Config\Database::connect('registration');
+			$builder2 = $db2->table('guests');
+			$builder2->select('*');
+			$builder2->where('EventYear',EventYearKorea);
+			$builder2->where('InvitedByCompanyID',$row->CompanyID);
+			
+		$guestQuery = $builder2->get();
+		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->getNumRows();
+		$totalInvited += $guestQuery->getNumRows();
+		
+		$inviteStats[$row->CompanyID]['Remaining'] = $inviteStats[$row->CompanyID]['InviteCount'] - $inviteStats[$row->CompanyID]['Guests'];
+		
+
+		// Figure out how many guests are related to the inviting Company
+		// i.e. non-customers
+		
+		$db3 = \Config\Database::connect('registration');
+			$builder3 = $db3->table('guests');
+			$builder3->select('*');
+			$builder3->where('EventYear',EventYearKorea);
+			$builder3->where('InvitedByCompanyID',$row->CompanyID);
+			$builder3->where('Related','1');
+			$guestQuery3 = $builder3->get();
+			
+			
+		
+
+		$inviteStats[$row->CompanyID]['Related'] = $guestQuery3->getNumRows();
+		$totalRelated += $guestQuery3->getNumRows();
+		
+
+		if ($inviteStats[$row->CompanyID]['Guests'] > 0) {
+			$inviteStats[$row->CompanyID]['PercentRelated'] = round($inviteStats[$row->CompanyID]['Related'] / $inviteStats[$row->CompanyID]['Guests']*100,0) . "%";
+		} else {
+			$inviteStats[$row->CompanyID]['PercentRelated'] = "&nbsp;";
+		}	
+				
+		// Count no-shows for post-event
+		$db4 = \Config\Database::connect('registration');
+			$builder4 = $db4->table('guests');
+			$builder4->select('*');
+			$builder4->where('EventYear',EventYearKorea);
+			$builder4->where('InvitedByCompanyID',EventYearKorea);
+			$builder4->where('NoShow','Yes');
+			$guestQuery4 = $builder4->get();
+		
+		
+		$inviteStats[$row->CompanyID]['NoShows'] = $guestQuery4->getNumRows();
+		$totalNoShow += $guestQuery4->getNumRows();
+				
+		// No-shows who are related
+		$db5 = \Config\Database::connect('registration');
+			$builder5 = $db5->table('guests');
+			$builder5->select('*');
+			$builder5->where('EventYear',EventYearKorea);
+			$builder5->where('InvitedByCompanyID',EventYearKorea);
+			$builder5->where('NoShow','Yes');
+			$builder3->where('Related','1');
+			$guestQuery5 = $builder5->get();
+		
+		$inviteStats[$row->CompanyID]['NoShow_Related'] = $guestQuery5->getNumRows();
+		$totalNoShowRelated += $guestQuery5->getNumRows();
+		
+
+		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
+	}
+   	//echo $totalLimit."limit";
+	//echo $totalInvited."invited";
+	//echo $totalRelated."Related";
+   	$data['title'] = "TestConX China Event  Guest List Statistics"; 
+   	$data['header'] = array ("Company", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
+   	if($totalRelated == 0){
+		$relatedNoShow = "-";
+	}
+	else{
+		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
+	}
+ 	$data['table'] = $inviteStats;
+ 	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
+ 	$data['totals'][2] = array ("&nbsp;", "&nbsp;", round($totalInvited/$totalLimit*100,1)."% of Limit", "&nbsp;", "&nbsp;", round($totalRelated/$totalInvited*100,0)."%", 
+ 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%","&nbsp;");
+ 	// ask ira about function load view look in bitscode view for stats
+	/* foreach($data['header'] as $x){ 
+	echo $x . ','; 
+	} */
+	
+ 	if (! $raw) {
+		
+	   	return view('stats', $data);
+   	} else {
+   		foreach($data['header'] as $x) { echo $x . ','; }; 
+   		echo "<br>\n";
+   		foreach($data['table'] as $x ) {
+			foreach($x as $y => $y_value) {
+				echo $y_value . ',';
+			}
+			echo "<br>\n";
+		}
+   		foreach($data['totals'] as $t) { 
+   			foreach($t as $x) {
+	   			echo $x . ','; 
+	   		}
+	   		echo "<br>\n";
+	   	}
+   	}
+   	
+	//$this->_example_output($output);        
+}
  
 public function stats397927raw()
 {
