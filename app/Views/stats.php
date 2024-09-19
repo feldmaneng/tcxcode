@@ -70,14 +70,14 @@ a:hover
 		$session = session(); 
 		echo esc($title);
 		
- <?php foreach ($header as $item): ?>
+ 
+		?>
+		
+	<?php foreach ($header as $item): ?>
 
         <li><?= esc($item) ?></li>
 
     <?php endforeach ?>
-		?>
-		
-	
 		
 		<div class="divTable">
 			<div class="divTableHeading">
