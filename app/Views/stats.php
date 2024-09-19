@@ -82,7 +82,7 @@ a:hover
 		<div class="divTable">
 			<div class="divTableHeading">
 				<div class="divTableRow">
-					<? foreach(esc($header) as $x) {
+					<? foreach $header as $x) {
 						echo '<div class="divTableHead">' . $x . '</div>';
 					} ?>
 				</div>
