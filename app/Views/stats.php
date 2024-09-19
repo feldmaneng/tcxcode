@@ -85,7 +85,7 @@ a:hover
 		<div class="divTableBody">	
 					<?php foreach ($table as $x): ?>
 						<div class="divTableRow">
-						<?php foreach ($x as $y = $y_value): ?>
+						<?php foreach ($x as $y => $y_value): ?>
 						<div class="divTableCell"><?= $y_value ?></div>
 						<?php endforeach ?>
 						</div>
