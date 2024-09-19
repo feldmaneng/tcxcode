@@ -92,8 +92,14 @@ a:hover
 					<?php endforeach ?>
 					</div>
 					
-					
-					
+		<div class="divTableFoot">
+			<?php foreach ($totals as $t): ?>
+				<div class="divTableRow">
+				<?php foreach ($t as $x): ?>	
+					<div class="divTableTotal"><?= esc($x) ?></div>
+				<?php endforeach ?>
+				</div>
+			<?php endforeach ?>
 					
 					
 		<div class="divTable">
