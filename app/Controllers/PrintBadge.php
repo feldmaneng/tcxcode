@@ -127,9 +127,6 @@ class PrintBadge extends BaseController
 				// Define what special labels go on the badges
 				$label ="0";
 				
-				
-			
-			
 				$NameOnBadge=$results[$n]["NameOnBadge"];
 				
 				$GivenName=$results[$n]["GivenName"];
@@ -148,6 +145,8 @@ class PrintBadge extends BaseController
 				$Message=$results[$n]["Message"];
 				$Dinner=$results[$n]["Dinner"];
 				$type = $results[$n]["Type"];
+				$Email = $results[$n]["Email"];
+				
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
@@ -278,14 +277,17 @@ class PrintBadge extends BaseController
 				
 				// new style
 				$style = array(
-					'border' => 2,
-					'padding' => 'auto',
-					'fgcolor' => array(0,0,255),
-					'bgcolor' => array(255,255,64)
+					'border' => false,
+					'padding' => 0,
+					'fgcolor' => array(255,255,255),
+					'bgcolor' => array(0,0,0)
 				);
-
+				$code="Name: ".$GivenName." ".$FamilyName."\n"
+				."Email: ".$Email."\n"
+				."Company: ".$Company;
 				// QRCODE,H : QR-CODE Best error correction
-				$pdf->write2DBarcode('testmessage', 'QRCODE,H', 7, 115, 50, 50, $style, 'N');
+				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
+		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
 				
 					
 				 $q++;
