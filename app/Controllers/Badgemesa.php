@@ -395,10 +395,10 @@ for($i=1; $i<=$people; $i++){
 		//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 		
 		$style = array(
-					'border' => false,
-					'padding' => 0,
-					'fgcolor' => array(255,255,255),
-					'bgcolor' => array(0,0,0)
+					'border' => 2,
+					'padding' => 'auto',
+					'fgcolor' => array(0,0,0),
+					'bgcolor' => array(255,255,255)
 				);
 				$code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
@@ -855,8 +855,8 @@ if($convention == "emea"){
 			}
 		
 		$style = array(
-					'border' => false,
-					'padding' => 0,
+					'border' => 2,
+					'padding' => 'auto',
 					'fgcolor' => array(0,0,0),
 					'bgcolor' => array(255,255,255)
 				);
@@ -1292,8 +1292,8 @@ if($convention == "emea"){
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 			}
 		$style = array(
-					'border' => false,
-					'padding' => 0,
+					'border' => 2,
+					'padding' => 'auto',
 					'fgcolor' => array(0,0,0),
 					'bgcolor' => array(255,255,255)
 				);
