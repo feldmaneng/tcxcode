@@ -279,7 +279,12 @@ class PrintBadge extends BaseController
 				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 					
 				 $q++;
-						 
+					
+
+				//testqrcode in tcpdf
+				// QRCODE,H : QR-CODE Best error correction
+				$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 20, 210, 50, 50, $style, 'N');
+				$pdf->Text(20, 205, 'QRCODE H');
 			 
 			 
 			 
