@@ -245,9 +245,7 @@ for($i=1; $i<=$people; $i++){
 		$label ="0";
 		
 		
-		if (!empty($results[$n]["GivenName"])){
-		$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
-		}	
+		
 	
 		$NameOnBadge=$results[$n]["NameOnBadge"];
 		
@@ -267,6 +265,7 @@ for($i=1; $i<=$people; $i++){
 		$Message=$results[$n]["Message"];
 		$Dinner=$results[$n]["Dinner"];
 		$type = $results[$n]["Type"];
+		$Email = $results[$n]["Email"];
 		
 		$pdf->AddPage('P',$pageLayout);
 		$Dinnertext="";
@@ -394,6 +393,19 @@ for($i=1; $i<=$people; $i++){
 	
 		$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,142, true);
 		//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
+		
+		$style = array(
+					'border' => false,
+					'padding' => 0,
+					'fgcolor' => array(255,255,255),
+					'bgcolor' => array(0,0,0)
+				);
+				$code="Name: ".$GivenName." ".$FamilyName."\n"
+				."Email: ".$Email."\n"
+				."Company: ".$Company;
+				// QRCODE,H : QR-CODE Best error correction
+				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
+		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
 			
 		 $q++;
 		 		 
@@ -541,9 +553,7 @@ for($i=1; $i<=$people; $i++){
 		$label ="0";
 		
 		
-		if (!empty($results[$n]["GivenName"])){
-		$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
-	}
+		
 	
 		$NameOnBadge=$results[$n]["NameOnBadge"];
 		
@@ -562,6 +572,7 @@ for($i=1; $i<=$people; $i++){
 		$Control=$results[$n]["Control"];
 		$Message=$results[$n]["Message"];
 		$Dinner=$results[$n]["Dinner"];
+		$Email = $results[$n]["Email"];
 		
 		$pdf->AddPage('P',$pageLayout);
 		
@@ -686,12 +697,7 @@ if($convention == "testconx"){
 		$pdf->SetFont('helvetica', 'B', 17);
 		}
 		$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 5,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 5,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -758,12 +764,7 @@ if($convention == "tinyml"){
 		}
 		}
 		
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -831,12 +832,7 @@ if($convention == "emea"){
 		$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
 		}
 		
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
 	
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
@@ -857,6 +853,19 @@ if($convention == "emea"){
 		else{
 		$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,148, true);
 			}
+		
+		$style = array(
+					'border' => false,
+					'padding' => 0,
+					'fgcolor' => array(255,255,255),
+					'bgcolor' => array(0,0,0)
+				);
+				$code="Name: ".$GivenName." ".$FamilyName."\n"
+				."Email: ".$Email."\n"
+				."Company: ".$Company;
+				// QRCODE,H : QR-CODE Best error correction
+				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
+		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
 		
 		 $q++;
 } 		 		 
@@ -964,9 +973,7 @@ for($i=1; $i<=$people; $i++){
 		$label ="0";
 		
 		
-		if (!empty($results[$n]["GivenName"])){
-		$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
-	}
+		
 	
 		$NameOnBadge=$results[$n]["NameOnBadge"];
 		
@@ -985,6 +992,7 @@ for($i=1; $i<=$people; $i++){
 		$Control=$results[$n]["Control"];
 		$Message=$results[$n]["Message"];
 		$Dinner=$results[$n]["Dinner"];
+		$Email=$results[$n]["Email"];
 		
 		$pdf->AddPage('P',$pageLayout);
 		
@@ -1110,12 +1118,8 @@ if($convention == "testconx"){
 		$pdf->SetFont('helvetica', 'B', 17);
 		}
 		$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
+		
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -1181,12 +1185,7 @@ if($convention == "tinyml"){
 		}
 		
 		
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 6,117, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 6,117, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -1267,12 +1266,7 @@ if($convention == "emea"){
 		}
 		
 		
-		if($type=="EXPO"){
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
-		else{
-		$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,121, 33, 33, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
-		}
+		
 		$pdf->SetFillColor(224,146,47);
 		$pdf->SetTextColor(255,255,255);
 		$pdf->SetFont('helvetica', 'B', 15);
@@ -1297,7 +1291,18 @@ if($convention == "emea"){
 		else{
 		$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,148, true);
 			}
-		
+		$style = array(
+					'border' => false,
+					'padding' => 0,
+					'fgcolor' => array(255,255,255),
+					'bgcolor' => array(0,0,0)
+				);
+				$code="Name: ".$GivenName." ".$FamilyName."\n"
+				."Email: ".$Email."\n"
+				."Company: ".$Company;
+				// QRCODE,H : QR-CODE Best error correction
+				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
+		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
 		 $q++;
 } 
 
