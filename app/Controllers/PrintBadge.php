@@ -277,6 +277,18 @@ class PrintBadge extends BaseController
 			
 				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,142, true);
 				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
+				
+				// new style
+				$style = array(
+					'border' => 2,
+					'padding' => 'auto',
+					'fgcolor' => array(0,0,255),
+					'bgcolor' => array(255,255,64)
+				);
+
+				// QRCODE,H : QR-CODE Best error correction
+				$pdf->write2DBarcode('testmessage', 'QRCODE,H', 7, 115, 50, 50, $style, 'N');
+				
 					
 				 $q++;
 						 
