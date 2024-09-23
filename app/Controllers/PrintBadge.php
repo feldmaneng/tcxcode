@@ -284,14 +284,14 @@ class PrintBadge extends BaseController
 
 				//testqrcode in tcpdf
 				// QRCODE,H : QR-CODE Best error correction
-				/* $style = array(
+				$style = array(
 					'border' => 2,
 					'padding' => 'auto',
 					'fgcolor' => array(0,0,255),
 					'bgcolor' => array(255,255,64)
 						);
 				$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 20, 210, 50, 50, $style, 'N');
-				$pdf->Text(20, 205, 'QRCODE H'); */
+				$pdf->Text(20, 205, 'QRCODE H');
 			 
 			 
 			 
