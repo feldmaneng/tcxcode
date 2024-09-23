@@ -129,8 +129,9 @@ class PrintBadge extends BaseController
 				
 				
 				if (!empty($results[$n]["GivenName"])){
-				$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
-				}	
+				//testing tcpdf qr
+/* 				$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
+				}	 */
 			
 				$NameOnBadge=$results[$n]["NameOnBadge"];
 				
@@ -240,8 +241,8 @@ class PrintBadge extends BaseController
 				$pdf->SetFont('helvetica', 'B', 17);
 				}
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
-				
-				$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
+				//testing tcpdf qr
+				//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
 				
 				$pdf->SetFillColor(224,146,47);
 				$pdf->SetTextColor(255,255,255);
