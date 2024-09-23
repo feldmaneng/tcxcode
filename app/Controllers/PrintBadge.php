@@ -129,7 +129,8 @@ class PrintBadge extends BaseController
 				
 				
 				if (!empty($results[$n]["GivenName"])){
-				
+				$this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
+				}	
 			
 				$NameOnBadge=$results[$n]["NameOnBadge"];
 				
@@ -240,6 +241,7 @@ class PrintBadge extends BaseController
 				}
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
+				$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/tmpqr/'.$n.'08.png', 7,115, 30, 30, 'PNG', '', '',false, 1000, '', false, false, 1, false, false, false);
 				
 				$pdf->SetFillColor(224,146,47);
 				$pdf->SetTextColor(255,255,255);
@@ -277,24 +279,13 @@ class PrintBadge extends BaseController
 				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 					
 				 $q++;
-					
-
-				//testqrcode in tcpdf
-				// QRCODE,H : QR-CODE Best error correction
-				$style = array(
-					'border' => 2,
-					'padding' => 'auto',
-					'fgcolor' => array(0,0,255),
-					'bgcolor' => array(255,255,64)
-						);
-				$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 20, 210, 50, 50, $style, 'N');
-				$pdf->Text(80, 205, 'QRCODE H - COLORED');
+						 
 			 
 			 
 			 
 			 }
 		ob_clean();
-		//$pdf->Output('/BadgeTest.pdf', 'FI');
+		//$pdf->Output('/writable/uploads/BadgeTest.pdf', 'FI');
 		$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
 		exit();		
