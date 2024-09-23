@@ -857,8 +857,8 @@ if($convention == "emea"){
 		$style = array(
 					'border' => false,
 					'padding' => 0,
-					'fgcolor' => array(255,255,255),
-					'bgcolor' => array(0,0,0)
+					'fgcolor' => array(0,0,0),
+					'bgcolor' => array(255,255,255)
 				);
 				$code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
@@ -1294,8 +1294,8 @@ if($convention == "emea"){
 		$style = array(
 					'border' => false,
 					'padding' => 0,
-					'fgcolor' => array(255,255,255),
-					'bgcolor' => array(0,0,0)
+					'fgcolor' => array(0,0,0),
+					'bgcolor' => array(255,255,255)
 				);
 				$code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
