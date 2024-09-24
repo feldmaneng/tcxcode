@@ -277,10 +277,10 @@ class PrintBadge extends BaseController
 				
 				// new style
 				$style = array(
-					'border' => false,
-					'padding' => 0,
-					'fgcolor' => array(255,255,255),
-					'bgcolor' => array(0,0,0)
+					'border' => 2,
+					'padding' => 'auto',
+					'fgcolor' => array(0,0,0),
+					'bgcolor' => array(255,255,255)
 				);
 				$code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
@@ -297,8 +297,8 @@ class PrintBadge extends BaseController
 			 
 			 }
 		ob_clean();
-		//$pdf->Output('/writable/uploads/BadgeTest.pdf', 'FI');
-		$pdf->Output('BadgeTest.pdf', 'I');
+		$pdf->Output($_SERVER["DOCUMENT_ROOT"]'/tmpqr/BadgeTest.pdf', 'FI');
+		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
 		exit();		
 			
