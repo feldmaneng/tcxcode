@@ -297,7 +297,7 @@ class PrintBadge extends BaseController
 			 
 			 }
 		ob_clean();
-		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'/tmpqr/BadgeTest.pdf', 'FI');
+		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
 		exit();		
