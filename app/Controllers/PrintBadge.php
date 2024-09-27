@@ -81,6 +81,8 @@ class PrintBadge extends BaseController
 	}
    
       function print(){
+    ini_set('error_log', '/home/testconx/log_public/php_errors.log');
+	ini_set('error_reporting', 'E_ALL');
 		
 			$model = model(DirectoryEntry::class);
 			$session = session();
@@ -299,6 +301,8 @@ class PrintBadge extends BaseController
 			 
 			 }
 		ob_clean();
+		error_log("PrintBadge: DocRoot: ".$_SERVER["DOCUMENT_ROOT"]."\n",0); 
+		
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
