@@ -1,6 +1,5 @@
 <?php
-	ini_set('error_log', '/home/testconx/log_public/php_errors.log');
-	ini_set('error_reporting', 'E_ALL');
+
 	
 // Installation notes:
 //   Upload.php controller requires PHP fileinfo extension enabled.
@@ -38,6 +37,9 @@ helper('html');
 	
 
     public function form_show() {
+    ini_set('error_log', '/home/testconx/log_public/php_errors.log');
+	ini_set('error_reporting', 'E_ALL');
+	
 		$session = session(); 
 		$model = model(DirectoryEntry::class);
 		
