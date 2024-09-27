@@ -52,7 +52,7 @@ class Upload extends BaseController {
 				$newName = $idName."-".$originalName;
 
 				
-				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
+				   if (! $path = $file->store('/home/testconx/public_html/EXPOdirectory/logo_upload/',$newName ) ){
 					  echo $path;
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
