@@ -53,7 +53,7 @@ class Upload extends BaseController {
 				$originalName = $file->getClientName();
 				$idName= session('entryID');
 				$newName = $idName."-".$originalName;
-
+			error_log("File size: ". $file->getSize() ."\n",0);
 				
 				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
 					  echo $path;
@@ -68,7 +68,7 @@ class Upload extends BaseController {
 				} else {
 					error_log("File passed validity check.\n",0);
 				} 
-					
+				error_log("File size: ". $file->getSize() ."\n",0);
 
 				
 					$data = ['upload_file_path' => $path];
