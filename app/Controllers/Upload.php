@@ -25,6 +25,9 @@ class Upload extends BaseController {
 
         public function do_upload()
         {
+    ini_set('error_log', '/home/testconx/log_public/php_errors.log');
+	ini_set('error_reporting', 'E_ALL');
+	
         	$model = model(DirectoryEntry::class);
 			$session = session();
 
@@ -58,6 +61,8 @@ class Upload extends BaseController {
 					  return view('upload_error',$error);
 					}
 
+				error_log("Stored uploaded file to ".$path."\n",0);
+				
 					$data = ['upload_file_path' => $path];
 					
 				/// Missing file rename code here
