@@ -286,7 +286,7 @@ class PrintBadge extends BaseController
 				."Email: ".$Email."\n"
 				."Company: ".$Company; */
 				
-				$code="123456";
+				$code="3880";
 				// QRCODE,H : QR-CODE Best error correction
 				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
 		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 50, 50, $style, 'N');
