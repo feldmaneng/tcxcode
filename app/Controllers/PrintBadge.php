@@ -288,7 +288,7 @@ class PrintBadge extends BaseController
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		return redirect()->to('/directory?key='.session('secretKey'));
+		return redirect()->to('https://www.testconx.org/forms.php/print');
 		//return view('PrintView', ['errors' => []]);		
 			
 	  }
