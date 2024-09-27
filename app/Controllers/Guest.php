@@ -448,7 +448,7 @@ public function stats397927( $raw = FALSE )
 		if ($inviteStats[$row->CompanyID]['Guests'] > 0) {
 			$inviteStats[$row->CompanyID]['PercentRelated'] = round($inviteStats[$row->CompanyID]['Related'] / $inviteStats[$row->CompanyID]['Guests']*100,0) . "%";
 		} else {
-			$inviteStats[$row->CompanyID]['PercentRelated'] = "&nbsp;";
+			$inviteStats[$row->CompanyID]['PercentRelated'] = " ";
 		}	
 				
 		// Count no-shows for post-event
@@ -478,7 +478,7 @@ public function stats397927( $raw = FALSE )
 		$totalNoShowRelated += $guestQuery5->getNumRows();
 		
 
-		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
+		$inviteStats[$row->CompanyID]['Notes'] = ' ';
 	}
    	//echo $totalLimit."limit";
 	//echo $totalInvited."invited";
@@ -492,9 +492,9 @@ public function stats397927( $raw = FALSE )
 		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
 	}
  	$data['table'] = $inviteStats;
- 	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
- 	$data['totals'][2] = array ("&nbsp;", "&nbsp;", round($totalInvited/$totalLimit*100,1)."% of Limit", "&nbsp;", "&nbsp;", round($totalRelated/$totalInvited*100,0)."%", 
- 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%","&nbsp;");
+ 	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ");
+ 	$data['totals'][2] = array (" ", " ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ", " ", round($totalRelated/$totalInvited*100,0)."%", 
+ 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%"," ");
  	// ask ira about function load view look in bitscode view for stats
 	/* foreach($data['header'] as $x){ 
 	echo $x . ','; 
@@ -599,7 +599,7 @@ public function statsk397927( $raw = FALSE )
 		if ($inviteStats[$row->CompanyID]['Guests'] > 0) {
 			$inviteStats[$row->CompanyID]['PercentRelated'] = round($inviteStats[$row->CompanyID]['Related'] / $inviteStats[$row->CompanyID]['Guests']*100,0) . "%";
 		} else {
-			$inviteStats[$row->CompanyID]['PercentRelated'] = "&nbsp;";
+			$inviteStats[$row->CompanyID]['PercentRelated'] = " ";
 		}	
 				
 		// Count no-shows for post-event
@@ -629,7 +629,7 @@ public function statsk397927( $raw = FALSE )
 		$totalNoShowRelated += $guestQuery5->getNumRows();
 		
 
-		$inviteStats[$row->CompanyID]['Notes'] = '&nbsp;';
+		$inviteStats[$row->CompanyID]['Notes'] = ' ';
 	}
    	//echo $totalLimit."limit";
 	//echo $totalInvited."invited";
@@ -643,9 +643,9 @@ public function statsk397927( $raw = FALSE )
 		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
 	}
  	$data['table'] = $inviteStats;
- 	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
+ 	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ");
  	$data['totals'][2] = array (" ", " ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ", " ", round($totalRelated/$totalInvited*100,0)."%", 
- 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%","&nbsp;");
+ 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%"," ");
  	// ask ira about function load view look in bitscode view for stats
 	/* foreach($data['header'] as $x){ 
 	echo $x . ','; 
