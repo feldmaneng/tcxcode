@@ -60,25 +60,7 @@ class PrintBadge extends BaseController
 
         return view('testconx_template.php', (array)$output);
     }
-	function qrstamp($a,$b,$c,$d)
- {
 	
-//include('phpqrcode/qrlib.php'); 
-//file_put_contents("test5.png",file_get_contents("test6.png"));
-	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $d; 
- 
-    $name = $a; 
-	$email= $b;
-	$orgName = $c; 
-	$codeContents  = 'BEGIN:VCARD'."\n"; 
-    $codeContents .= 'FN:'.$name."\n";
-	$codeContents .= 'EMAIL:'.$email."\n"; 
-	$codeContents .= 'ORG:'.$orgName."\n"; 
-    $codeContents .= 'END:VCARD'; 
-	
-	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
-	return \QRcode::png($codeContents, $tempDir.'08.png', QR_ECLEVEL_L, 200,0);
-	}
    
       function print(){
 		
@@ -302,6 +284,7 @@ class PrintBadge extends BaseController
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'F');
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
+		return view('PrintView', ['errors' => []])
 		exit();		
 			
 	  }
