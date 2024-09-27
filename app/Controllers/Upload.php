@@ -55,13 +55,21 @@ class Upload extends BaseController {
 				$newName = $idName."-".$originalName;
 
 				
-				   if (! $path = $file->store('/home/testconx/public_html/EXPOdirectory/logo_upload/',$newName ) ){
+				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
 					  echo $path;
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
 					}
 
 				error_log("Stored uploaded file to ".$path."\n",0);
+				// Check that the file was actually uploaded
+				if (! $file->isValid()) {
+  					error_log($file->getErrorString() . '(' . $file->getError() . ")\n",0);
+				} else {
+					error_log("File passed validity check.\n",0);
+				} 
+					
+
 				
 					$data = ['upload_file_path' => $path];
 					
