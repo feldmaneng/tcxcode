@@ -286,7 +286,7 @@ class PrintBadge extends BaseController
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
-		return view('PrintView', ['errors' => []])
+		return view('PrintView', ['errors' => []]);
 		exit();		
 			
 	  }
