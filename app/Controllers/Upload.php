@@ -41,6 +41,11 @@ class Upload extends BaseController {
 						'error' => $this->validator->getErrors(),
 						]);
 			}
+			
+			// Check that the file was actually uploaded
+			if (! $file->isValid()) {
+  				  throw new \RuntimeException($file->getErrorString() . '(' . $file->getError() . ')');
+			}
 					
 				$originalName = $file->getClientName();
 				$idName= session('entryID');
