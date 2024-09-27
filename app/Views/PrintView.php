@@ -6,7 +6,15 @@
 <body>
 
 <h1>Input your Badge ID</h1>
+<object
+type="application/pdf"
+data="/tmpqr/BadgeTest.pdf"
+width="600"
+height="700"
+>
+</object>
 <?php
+
 echo form_open('PrintBadge/print');
 echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit');

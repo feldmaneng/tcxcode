@@ -282,12 +282,14 @@ class PrintBadge extends BaseController
 					'fgcolor' => array(0,0,0),
 					'bgcolor' => array(255,255,255)
 				);
-				$code="Name: ".$GivenName." ".$FamilyName."\n"
+				/* $code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
-				."Company: ".$Company;
+				."Company: ".$Company; */
+				
+				$code="123456";
 				// QRCODE,H : QR-CODE Best error correction
 				//$pdf->write2DBarcode('Name:'.$GivenName.' '.$FamilyName.'<br>'.'Email:'.$Email.'<br>'.'Company: '.$Company, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
-		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 30, 30, $style, 'N');
+		$pdf->write2DBarcode($code, 'QRCODE,H', 7, 115, 50, 50, $style, 'N');
 				
 					
 				 $q++;
@@ -297,7 +299,7 @@ class PrintBadge extends BaseController
 			 
 			 }
 		ob_clean();
-		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI')
+		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		//echo($pdf);
 		exit();		
