@@ -57,16 +57,18 @@ class Upload extends BaseController {
 			error_log("Temp name: ". $file->getTempName() ."\n",0);
 				
 				// changed from store() to move()
-				   if (! $path = $file->move('/EXPOdirectory/logo_upload/',$newName ) ){
+				  if (! $path = $file->store('/EXPO_logo_upload/',$newName ) ){
 					  echo $path;
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
-					}
+					} 
+				/*	
 				if ($file->hasMoved()) {
 					error_log("File Has moved \n",0); 
 				} else {
 					error_log("File Has not moved: ". $file->hasMoved()."\n",0);
-				}
+				} */
+				
 				error_log("Stored uploaded file to ".$path."\n",0);
 				// Check that the file was actually uploaded
 				if (! $file->isValid()) {
