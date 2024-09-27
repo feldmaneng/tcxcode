@@ -644,7 +644,7 @@ public function statsk397927( $raw = FALSE )
 	}
  	$data['table'] = $inviteStats;
  	$data['totals'][1] = array ("Totals", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, "&nbsp;", $totalNoShow, $totalNoShowRelated, "&nbsp;");
- 	$data['totals'][2] = array ("&nbsp;", "&nbsp;", round($totalInvited/$totalLimit*100,1)."% of Limit", "&nbsp;", "&nbsp;", round($totalRelated/$totalInvited*100,0)."%", 
+ 	$data['totals'][2] = array (" ", " ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ", " ", round($totalRelated/$totalInvited*100,0)."%", 
  		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%","&nbsp;");
  	// ask ira about function load view look in bitscode view for stats
 	/* foreach($data['header'] as $x){ 
