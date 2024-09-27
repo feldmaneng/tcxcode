@@ -25,6 +25,9 @@ class Upload extends BaseController {
 
         public function do_upload()
         {
+    ini_set('error_log', '/home/testconx/log_public/php_errors.log');
+	ini_set('error_reporting', 'E_ALL');
+	
         	$model = model(DirectoryEntry::class);
 			$session = session();
 
@@ -41,18 +44,41 @@ class Upload extends BaseController {
 						'error' => $this->validator->getErrors(),
 						]);
 			}
+			
+			// Check that the file was actually uploaded
+			if (! $file->isValid()) {
+  				  throw new \RuntimeException($file->getErrorString() . '(' . $file->getError() . ')');
+			}
 					
 				$originalName = $file->getClientName();
 				$idName= session('entryID');
 				$newName = $idName."-".$originalName;
-
+			error_log("File size: ". $file->getSize() ."\n",0);
+			error_log("Temp name: ". $file->getTempName() ."\n",0);
 				
-				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
+				// changed from store() to move()
+				  if (! $path = $file->store('/EXPO_logo_upload/',$newName ) ){
 					  echo $path;
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
-					}
+					} 
+				/*	
+				if ($file->hasMoved()) {
+					error_log("File Has moved \n",0); 
+				} else {
+					error_log("File Has not moved: ". $file->hasMoved()."\n",0);
+				} */
+				
+				error_log("Stored uploaded file to ".$path."\n",0);
+				// Check that the file was actually uploaded
+				if (! $file->isValid()) {
+  					error_log($file->getErrorString() . '(' . $file->getError() . ")\n",0);
+				} else {
+					error_log("File passed validity check.\n",0);
+				} 
+				error_log("File size: ". $file->getSize() ."\n",0);
 
+				
 					$data = ['upload_file_path' => $path];
 					
 				/// Missing file rename code here

@@ -1,5 +1,6 @@
 <?php
 
+	
 // Installation notes:
 //   Upload.php controller requires PHP fileinfo extension enabled.
 //   Did so by turning on via cPanel for Rochen running PHP 7.0
@@ -36,6 +37,9 @@ helper('html');
 	
 
     public function form_show() {
+    ini_set('error_log', '/home/testconx/log_public/php_errors.log');
+	ini_set('error_reporting', 'E_ALL');
+	
 		$session = session(); 
 		$model = model(DirectoryEntry::class);
 		
@@ -45,6 +49,8 @@ helper('html');
 			
 			$secretKey = $_GET["key"];
 			$session->set('secretKey', $_GET["key"]);
+			
+			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
 			
 			$db = db_connect('registration');
 			$builder = $db->table('chinacompany');
