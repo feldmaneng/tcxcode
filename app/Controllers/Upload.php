@@ -54,13 +54,15 @@ class Upload extends BaseController {
 				$idName= session('entryID');
 				$newName = $idName."-".$originalName;
 			error_log("File size: ". $file->getSize() ."\n",0);
+			error_log("Temp name: ". $file->getTempName() ."\n",0);
 				
-				   if (! $path = $file->store('/EXPOdirectory/logo_upload/',$newName ) ){
+				// changed from store() to move()
+				   if (! $path = $file->move('/EXPOdirectory/logo_upload/',$newName ) ){
 					  echo $path;
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
 					}
-
+				error_log("Has moved: ". $file->hasMoved()."\n",0);
 				error_log("Stored uploaded file to ".$path."\n",0);
 				// Check that the file was actually uploaded
 				if (! $file->isValid()) {
