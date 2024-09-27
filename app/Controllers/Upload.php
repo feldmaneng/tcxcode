@@ -62,7 +62,11 @@ class Upload extends BaseController {
 					  $error =$validation->getErrors();
 					  return view('upload_error',$error);
 					}
-				error_log("Has moved: ". $file->hasMoved()."\n",0);
+				if ($file->hasMoved()) {
+					error_log("File Has moved \n",0); 
+				} else {
+					error_log("File Has not moved: ". $file->hasMoved()."\n",0);
+				}
 				error_log("Stored uploaded file to ".$path."\n",0);
 				// Check that the file was actually uploaded
 				if (! $file->isValid()) {
