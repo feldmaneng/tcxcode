@@ -86,7 +86,7 @@ public function Guestcrud()
 	$crud->where(['guests.EventYear' => [EventYearKorea,EventYearChina]]);
    		
 		
-	$crud->fieldType('EventYear', 'hidden',);
+	
 	
 
 	$output = $crud->render();
