@@ -25,14 +25,14 @@ echo form_submit('mysubmit', 'Submit');
 <html>
 <object
 type="application/pdf"
-data="/tmpqr/BadgeTest.pdf"
+data="/tmpqr/BadgeTest.pdf#toolbar=0"
 width="600"
 height="700"
 >
 </object> 
 <object
 type="application/pdf"
-data="/tmpqr/BadgeTest.pdf"
+data="/tmpqr/BadgeTest.pdf#toolbar=0"
 width="300"
 height="350"
 >
