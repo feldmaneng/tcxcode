@@ -59,7 +59,8 @@ class Database extends BaseController {
 		echo "<LI>Manage <a href=" . site_url('/Guest/companykorea2346878438') . ">Korea Company Cruds</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/Guest/Chinastats') . ">China Company Stats</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/Guest/Koreastats') . ">Korea Company Stats</a></LI>";
-		echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrud') . ">Guest Crud</a></LI>";
+		echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudkorea') . ">Guest Crud  Korea</a></LI>";
+		echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudchina') . ">Guest Crud China</a></LI>";
 		
 	
 		echo "<br><br>";
