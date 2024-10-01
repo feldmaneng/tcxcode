@@ -20,6 +20,9 @@ echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit');
 ?>
 <a href="#" onclick="window.print(); return false;">Click me to Print</a>
+<?php>
+
+<html>
 <object
 type="application/pdf"
 data="/tmpqr/BadgeTest.pdf"
@@ -27,6 +30,15 @@ width="600"
 height="700"
 >
 </object> 
+<object
+type="application/pdf"
+data="/tmpqr/BadgeTest.pdf"
+width="300"
+height="350"
+>
+</object> 
+</html>
+?>
 <script>
 window.print();
 

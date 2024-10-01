@@ -74,6 +74,26 @@ public function companychina34556672()
 
 	return $this->_example_output($output);        
 }
+public function Guestcrud()
+{
+		$crud = $this->_getGroceryCrudEnterprise('registration');
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+			
+	$crud->setTable('guests');
+   
+	$crud->where(['guests.EventYear' => [EventYearKorea,EventYearChina]]);
+   		
+		
+	$crud->fieldType('EventYear', 'hidden',);
+	
+
+	$output = $crud->render();
+
+	return $this->_example_output($output);        
+		
+}
 public function companykorea2346878438()
 {
 	
