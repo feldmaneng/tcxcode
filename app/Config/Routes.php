@@ -261,8 +261,11 @@ $routes->post('/Guest/Chinastats', 'Guest::stats397927');
 $routes->get('/Guest/Koreastats', 'Guest::statsk397927');
 $routes->post('/Guest/Koreastats', 'Guest::statsk397927');
 
-$routes->get('/Guest/Guestcrud', 'Guest::Guestcrud');
-$routes->post('/Guest/Guestcrud', 'Guest::Guestcrud');
+$routes->get('/Guest/Guestcrudchina', 'Guest::Guestcrudchina');
+$routes->post('/Guest/Guestcrudchina', 'Guest::Guestcrudchina');
+
+$routes->get('/Guest/Guestcrudkorea', 'Guest::Guestcrudkorea');
+$routes->post('/Guest/Guestcrudkorea', 'Guest::Guestcrudkorea');
 
 $routes->get('/Guest/statsraw', 'Guest::stats397927raw');
 $routes->post('/Guest/statsraw', 'Guest::stats397927raw');

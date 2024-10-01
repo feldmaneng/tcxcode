@@ -74,7 +74,7 @@ public function companychina34556672()
 
 	return $this->_example_output($output);        
 }
-public function Guestcrud()
+public function Guestcrudkorea()
 {
 		$crud = $this->_getGroceryCrudEnterprise('registration');
 
@@ -83,7 +83,28 @@ public function Guestcrud()
 			
 	$crud->setTable('guests');
    
-	$crud->where(['guests.EventYear' => [EventYearKorea,EventYearChina]]);
+	$crud->where(['guests.EventYear' => EventYearKorea]);
+   		
+		
+	
+	
+
+	$output = $crud->render();
+
+	return $this->_example_output($output);        
+		
+}
+
+public function Guestcrudchina()
+{
+		$crud = $this->_getGroceryCrudEnterprise('registration');
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+			
+	$crud->setTable('guests');
+   
+	$crud->where(['guests.EventYear' => EventYearChina]);
    		
 		
 	
