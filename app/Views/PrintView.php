@@ -9,6 +9,13 @@ header("Pragma: no-cache");
 <head>
 <title>Badge Printing</title>
 </head>
+<style>
+.topright{
+	position:absolute;
+	top:8px;
+	right:16px;
+}
+</style>
 <body>
 
 <h1>Input your Badge ID</h1>
@@ -20,25 +27,18 @@ echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit');
 ?>
 <a href="#" onclick="window.print(); return false;">Click me to Print</a>
-<?php>
 
-<html>
-<object
+
+
+<object class="topright" 
 type="application/pdf"
 data="/tmpqr/BadgeTest.pdf#toolbar=0"
-width="600"
-height="700"
+width="350"
+height="500"
 >
 </object> 
-<object
-type="application/pdf"
-data="/tmpqr/BadgeTest.pdf#toolbar=0"
-width="300"
-height="350"
->
-</object> 
-</html>
-?>
+
+
 <script>
 window.print();
 
