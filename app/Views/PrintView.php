@@ -64,7 +64,13 @@ input[type=text] {
   background-color: white;
   color: black;
 }
-
+.grid-container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: auto auto auto;
+  background-color: black;
+  padding: 0px;
+}
 
 .grid-container > div {
   background-color: black;
