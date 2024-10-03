@@ -32,10 +32,7 @@ body{
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
-  position:relative;
-  top:100px;
-  right:130px;
- 
+
  
   
 }
@@ -67,15 +64,79 @@ input[type=text] {
   background-color: white;
   color: black;
 }
- *{
-	background-color:gray;
-} 
+.grid-container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 0px;
+}
 
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
+.item2 {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+.item3 {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 4;
+}
+.item4 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+ *{
+	background-color:black;
+} 
+#hide {
+  width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: lightblue;
+  margin-top: 20px;
+}
 </style>
 <body>
 
-<h1>Input your Badge ID</h1>
 
+<div class="grid-container">
+  <div class="item1">1</div>
+  <div class="item2"><h4>Scan your badge <br>or enter your email</h4></div>
+  <div class="item3" id="hide">
+  <object  
+type="application/pdf"
+data="/tmpqr/BadgeTest.pdf#toolbar=0"
+width="350"
+height="500"
+>
+</object> </div>  
+  <div class="item4">
+  <?php
+/* *{
+	background-color:gray;
+} */
+//<a href="#" onclick="window.print(); return false;">Click me to Print</a>
+echo form_open('PrintBadge/print','class="field"');
+//echo form_open('PrintBadge/print');
+echo form_input('BadgeID', '1233');
+echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
+?>
+</div>
+  <div class="item5">5</div>
+  <div class="item6">6</div>  
+  
+</div>
 <?php
 /* *{
 	background-color:gray;
@@ -90,16 +151,20 @@ echo form_submit('mysubmit', 'Submit','class="button"');
 
 
 
-<object class="topright" 
-type="application/pdf"
-data="/tmpqr/BadgeTest.pdf#toolbar=0"
-width="350"
-height="500"
->
-</object> 
+
 
 
 <script>
+
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
 window.print();
 
 console.log('Test22');
