@@ -292,7 +292,7 @@ class PrintBadge extends BaseController
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		return redirect()->to('https://www.testconx.org/forms.php/printpreview');
+		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 			
 	  }

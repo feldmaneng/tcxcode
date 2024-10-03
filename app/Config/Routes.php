@@ -135,6 +135,11 @@ $routes->post('/Uploadtest/upload', 'Uploadtest::upload');
 $routes->get('/print', 'PrintBadge::index');
 $routes->post('/PrintBadge/print', 'PrintBadge::print');
 
+$routes->get('/print', 'PrintBadge::index');
+$routes->post('/PrintBadge/print', 'PrintBadge::print');
+$routes->get('/PrintBadge/printpreview', 'PrintBadge::printpreview');
+$routes->post('/PrintBadge/printpreview', 'PrintBadge::printpreview');
+
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
