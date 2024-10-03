@@ -137,16 +137,7 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
   <div class="item6">6</div>  
   
 </div>
-<?php
-/* *{
-	background-color:gray;
-} */
-//<a href="#" onclick="window.print(); return false;">Click me to Print</a>
-echo form_open('PrintBadge/print','class="field"');
-//echo form_open('PrintBadge/print');
-echo form_input('BadgeID', '1233');
-echo form_submit('mysubmit', 'Submit','class="button"');
-?>
+
 
 
 
