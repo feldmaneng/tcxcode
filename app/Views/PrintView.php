@@ -78,6 +78,12 @@ input[type=text] {
   padding: 20px 0;
   font-size: 30px;
 }
+.item1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
 .item2 {
   grid-column-start: 2;
   grid-column-end: 3;
@@ -111,8 +117,8 @@ input[type=text] {
 
 
 <div class="grid-container">
-  <div class="item1">1</div>
-  <div class="item2"><h4>Scan your badge <br>or enter your email</h4></div>
+  <div class="item1"><img src="/EXPOdirectory/logos/Bece.png"/></div>
+  <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" id="hide">
   <object  
 type="application/pdf"
