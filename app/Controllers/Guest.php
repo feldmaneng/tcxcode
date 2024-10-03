@@ -86,7 +86,7 @@ public function Guestcrudkorea()
 	$crud->where(['guests.EventYear' => EventYearKorea]);
    		
 		
-	$crud->columns (['CompanyID','Email','GivenName','FamilyName']);
+	$crud->columns (['ContactID','Email','GivenName','FamilyName']);
 	
 
 	$output = $crud->render();
@@ -107,7 +107,7 @@ public function Guestcrudchina()
 	$crud->where(['guests.EventYear' => EventYearChina]);
    		
 		
-	$crud->columns (['CompanyID','Email','GivenName','FamilyName']);
+	$crud->columns (['ContactID','Email','GivenName','FamilyName']);
 	
 	
 
