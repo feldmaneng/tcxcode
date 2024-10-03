@@ -64,16 +64,10 @@ input[type=text] {
   background-color: white;
   color: black;
 }
-.grid-container {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: auto auto auto;
-  background-color: #2196F3;
-  padding: 0px;
-}
+
 
 .grid-container > div {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: black;
   text-align: center;
   padding: 20px 0;
   font-size: 30px;
