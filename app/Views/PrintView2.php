@@ -120,15 +120,21 @@ input[type=text] {
   <div class="item1"><img src="/EXPOdirectory/logos/Bece.png"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" id="hide">
-  <object  
+  <iframe 
+        src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
+            frameborder="0" style="border:0;" 
+                width="350" height="500">
+    </iframe>
+  </div>  
+  <div class="item4">
+  <?php
+  /*  <object  
 type="application/pdf"
 data="/tmpqr/BadgeTest.pdf#toolbar=0"
 width="350"
 height="500"
 >
-</object> </div>  
-  <div class="item4">
-  <?php
+</object> */
 /* *{
 	background-color:gray;
 } */
@@ -139,7 +145,9 @@ echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
 ?>
 </div>
-  <div class="item5">5</div>
+  <div class="item5">
+  <button type="button" onclick="Clear()" >Clear</button>
+  </div>
   <div class="item6">6</div>  
   
 </div>
@@ -152,7 +160,9 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
 
 
 <script>
-
+function Clear(){
+	location.replace("https://www.testconx.org/forms.php/print";
+}
 function myFunction() {
   var x = document.getElementById("myDIV");
   if (x.style.display === "none") {
@@ -161,6 +171,11 @@ function myFunction() {
     x.style.display = "none";
   }
 }
+
+let print = () => {
+        let objFra = document.getElementById('myFrame');
+        objFra.contentWindow.focus();
+        objFra.contentWindow.print();
 
 window.print();
 
