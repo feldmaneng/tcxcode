@@ -121,7 +121,7 @@ input[type=text] {
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" id="hide">
   <iframe 
-        src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
+        src="/tmpqr/BadgeTest.pdf" id="myFrame" 
             frameborder="0" style="border:0;" 
                 width="350" height="500">
     </iframe>
@@ -148,7 +148,7 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
   <div class="item5">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
-  <div class="item6"> <input type="button" class="button"  onclick="print()" value="Print PDF" /></div>  
+  <div class="item6"> <input type="button" id="bt" class="button"  onclick="print()" value="Print PDF" /></div>  
   
 </div>
 
@@ -176,7 +176,7 @@ let print = () => {
         let objFra = document.getElementById('myFrame');
         objFra.contentWindow.focus();
         objFra.contentWindow.print();
-
+}
 window.print();
 
 console.log('Test22');
