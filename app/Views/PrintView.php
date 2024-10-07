@@ -145,21 +145,6 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
 
 
 
-<script>
-
-function myFunction() {
-  var x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
-
-window.print();
-
-console.log('Test22');
-</script>
 
 </body>
 </html>
