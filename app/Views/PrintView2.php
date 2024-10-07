@@ -123,7 +123,7 @@ input[type=text] {
   <iframe 
         src="/tmpqr/BadgeTest.pdf" id="myFrame" 
             frameborder="0" style="border:0;" 
-                width="350" height="500">
+                width="400" height="600">
     </iframe>
   </div>  
   <div class="item4">
@@ -161,25 +161,11 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
 
 <script>
 function Clear(){
-	location.replace("https://www.testconx.org/forms.php/print";
+	location.replace("https://www.testconx.org/forms.php/print");
 }
-function myFunction() {
-  var x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
+function Printpdf(){
+	location.replace("https://www.testconx.org/tmpqr/BadgeTest.pdf");
 }
-
-let print = () => {
-        let objFra = document.getElementById('myFrame');
-        objFra.contentWindow.focus();
-        objFra.contentWindow.print();
-}
-window.print();
-
-console.log('Test22');
 </script>
 
 </body>
