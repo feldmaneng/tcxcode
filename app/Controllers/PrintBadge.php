@@ -286,7 +286,7 @@ class PrintBadge extends BaseController
 			 }
 		ob_clean();
 		// force print dialog
-		$js .= 'print(true);';
+		$js = 'print(true);';
 
 		// set javascript
 		$pdf->IncludeJS($js);
