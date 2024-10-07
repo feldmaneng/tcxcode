@@ -8,6 +8,13 @@ header("Pragma: no-cache");
 <html>
 <head>
 <title>Badge Printing</title>
+<script>
+ function printTrigger(myFrame) {
+            var getMyFrame = document.getElementById(myFrame);
+            getMyFrame.focus();
+            getMyFrame.contentWindow.print();
+        }
+</script>
 </head>
 <style>
 .topright{
