@@ -156,7 +156,7 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
   <div class="item6"> <input type="button" id="bt" class="button"  onclick="Printpdf()" value="Print Badge" /></div>  
-  <button id="print_external">Print external page!</button>
+  <div class="item7"><button id="print_external">Print external page!</button></div>
 </div>
 
 
