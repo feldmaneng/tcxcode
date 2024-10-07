@@ -286,14 +286,14 @@ class PrintBadge extends BaseController
 			 }
 		ob_clean();
 		// force print dialog
-		$pdf->IncludeJS("print();");
+		//$pdf->IncludeJS("print();");
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
-		echo($pdf);
+		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		//return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
+		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 			
 	  }

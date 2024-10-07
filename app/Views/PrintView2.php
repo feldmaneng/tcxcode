@@ -156,7 +156,7 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
   <div class="item6"> <input type="button" id="bt" class="button"  onclick="Printpdf()" value="Print Badge" /></div>  
-  
+  <button id="print_external">Print external page!</button>
 </div>
 
 
@@ -167,6 +167,22 @@ echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
 
 
 <script>
+function setPrint() {
+  const closePrint = () => {
+    document.body.removeChild(this);
+  };
+  this.contentWindow.onbeforeunload = closePrint;
+  this.contentWindow.onafterprint = closePrint;
+  this.contentWindow.print();
+}
+
+document.getElementById("print_external").addEventListener("click", () => {
+  const hideFrame = document.createElement("iframe");
+  hideFrame.onload = setPrint;
+  hideFrame.style.display = "none"; // hide iframe
+  hideFrame.src = "https://www.testconx.org/tmpqr/BadgeTest.pdf";
+  document.body.appendChild(hideFrame);
+});
 function Clear(){
 	location.replace("https://www.testconx.org/forms.php/print");
 }
