@@ -295,6 +295,7 @@ class PrintBadge extends BaseController
 	function Print() {
   
     print();
+	window.location.href = "https://www.testconx.org/forms.php/print";
 }
 
 EOD;
