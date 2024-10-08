@@ -174,9 +174,11 @@ function setPrint() {
   this.contentWindow.onbeforeunload = closePrint;
   this.contentWindow.onafterprint = closePrint;
   this.contentWindow.print();
+  console.log("print");
 }
 
 document.getElementById("print_external").addEventListener("click", () => {
+  console.log("document");
   const hideFrame = document.createElement("iframe");
   hideFrame.onload = setPrint;
   hideFrame.style.display = "none"; // hide iframe
