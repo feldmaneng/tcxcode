@@ -149,7 +149,7 @@ height="500"
 echo form_open('PrintBadge/print','class="field"');
 //echo form_open('PrintBadge/print');
 echo form_input('BadgeID', '1233');
-echo form_submit('mysubmit', 'Submit','class="button" onclick="myFunction()"');
+echo form_submit('mysubmit', 'Submit','class="button"');
 ?>
 </div>
   <div class="item5">
