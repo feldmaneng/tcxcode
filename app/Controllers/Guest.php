@@ -86,7 +86,7 @@ public function Guestcrudkorea()
 	$crud->where(['guests.EventYear' => EventYearKorea]);
    		
 		
-	$crud->columns (['ContactID','Email','GivenName','FamilyName']);
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
 	$crud->setUniqueId('korea_2024_guest');
 
 	$output = $crud->render();
@@ -107,7 +107,7 @@ public function Guestcrudchina()
 	$crud->where(['guests.EventYear' => EventYearChina]);
    		
 		
-	$crud->columns (['ContactID','Email','GivenName','FamilyName']);
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
 	$crud->setUniqueId('china_2024_guest');
 	
 
