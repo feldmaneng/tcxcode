@@ -14,24 +14,7 @@ header("Pragma: no-cache");
             getMyFrame.focus();
             getMyFrame.contentWindow.print();
         }
-function setPrint() {
-  const closePrint = () => {
-    document.body.removeChild(this);
-  };
-  this.contentWindow.onbeforeunload = closePrint;
-  this.contentWindow.onafterprint = closePrint;
-  this.contentWindow.print();
-  console.log("print");
-}
 
-document.getElementById("print_external").addEventListener("click", () => {
-  console.log("document");
-  const hideFrame = document.createElement("iframe");
-  hideFrame.onload = setPrint;
-  hideFrame.style.display = "none"; // hide iframe
-  hideFrame.src = "https://www.testconx.org/tmpqr/BadgeTest.pdf";
-  document.body.appendChild(hideFrame);
-});
 </script>
 </head>
 <style>
@@ -185,7 +168,24 @@ echo form_submit('mysubmit', 'Submit','class="button"');
 
 
 <script>
+function setPrint() {
+  const closePrint = () => {
+    document.body.removeChild(this);
+  };
+  this.contentWindow.onbeforeunload = closePrint;
+  this.contentWindow.onafterprint = closePrint;
+  this.contentWindow.print();
+  console.log("print");
+}
 
+document.getElementById("print_external").addEventListener("click", () => {
+  console.log("document");
+  const hideFrame = document.createElement("iframe");
+  hideFrame.onload = setPrint;
+  hideFrame.style.display = "none"; // hide iframe
+  hideFrame.src = "https://www.testconx.org/tmpqr/BadgeTest.pdf";
+  document.body.appendChild(hideFrame);
+});
 function Clear(){
 	console.log("print2");
 	location.replace("https://www.testconx.org/forms.php/print");
