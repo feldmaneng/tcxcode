@@ -186,6 +186,7 @@ document.getElementById("print_external").addEventListener("click", () => {
   document.body.appendChild(hideFrame);
 });
 function Clear(){
+	console.log("print2");
 	location.replace("https://www.testconx.org/forms.php/print");
 }
 function Printpdf(){
