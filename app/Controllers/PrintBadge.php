@@ -287,7 +287,8 @@ class PrintBadge extends BaseController
 		ob_clean();
 		// force print dialog
 		$pdf->IncludeJS("print();
-		window.location.replace('https://www.testconx.org/forms.php/PrintBadge/printpreview');");
+		window.location.href('https://www.testconx.org/forms.php/PrintBadge/printpreview');
+		console.log('printtest');");
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'I');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
