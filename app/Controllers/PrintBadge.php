@@ -286,9 +286,18 @@ class PrintBadge extends BaseController
 			 }
 		ob_clean();
 		// force print dialog
-		$pdf->IncludeJS("print();
 		
-		console.log('printtest');");
+		$js = <<<EOD
+
+	console.log("Printtest");
+    print();
+
+EOD;
+
+// Add Javascript code
+$pdf->IncludeJS($js);
+		
+		
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'I');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
