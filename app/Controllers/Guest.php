@@ -87,7 +87,7 @@ public function Guestcrudkorea()
    		
 		
 	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
-	$crud->setUniqueId('korea_2024_guest');
+	$crud->setUniqueId('korea_2024_guest2');
 
 	$output = $crud->render();
 
@@ -108,7 +108,7 @@ public function Guestcrudchina()
    		
 		
 	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
-	$crud->setUniqueId('china_2024_guest');
+	$crud->setUniqueId('china_2024_guest2');
 	
 
 	$output = $crud->render();
