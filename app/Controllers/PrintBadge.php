@@ -289,7 +289,7 @@ class PrintBadge extends BaseController
 		
 		$js = <<<EOD
 
-	console.log("Printtest");
+	
     print();
 
 EOD;
@@ -298,7 +298,7 @@ EOD;
 $pdf->IncludeJS($js);
 		
 		
-		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'I');
+		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		echo($pdf);
