@@ -291,7 +291,7 @@ class PrintBadge extends BaseController
 		// force print dialog
 		
 		$js = <<<EOD
-
+	print();
 	function Print() {
   
     print();
@@ -307,7 +307,7 @@ $pdf->IncludeJS($js);
 		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'F');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
-		echo($pdf);
+		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
