@@ -304,7 +304,7 @@ EOD;
 $pdf->IncludeJS($js);
 		
 		
-		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'FI');
+		$pdf->Output($_SERVER["DOCUMENT_ROOT"].'tmpqr/BadgeTest.pdf', 'F');
 
 		//$pdf->Output('BadgeTest.pdf', 'I');
 		echo($pdf);
