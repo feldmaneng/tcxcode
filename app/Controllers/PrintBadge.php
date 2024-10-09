@@ -76,7 +76,11 @@ class PrintBadge extends BaseController
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
-			$builder->where('ContactID',$id);
+			$wherearray1 = ['ContactID =' => $id, 'EventYear' => 'Korea2024'];
+			$wherearray2 = ['Email =' => $id, 'EventYear' => 'Korea2024'];
+			$builder->where($wherearray1);
+			$builder->orwhere($wherearray2);
+			//$builder->where('ContactID',$id);
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
@@ -285,8 +289,8 @@ class PrintBadge extends BaseController
 			 
 			 }
 		ob_clean();
-		$pdf->SetFillColor(255,255,255);
-		$pdf->SetTextColor(0,0,0);
+		//$pdf->SetFillColor(255,255,255);
+		//$pdf->SetTextColor(0,0,0);
 		$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 		// force print dialog
