@@ -138,7 +138,7 @@ input[type=text] {
     </iframe>
   </div>  
  
-</div>
+
   <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
