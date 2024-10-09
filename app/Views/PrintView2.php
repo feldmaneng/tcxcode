@@ -142,13 +142,13 @@ input[type=text] {
   <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
-  <div class="item5">5</div>
-  <div class="item6">6</div> 
-  <div class="item7">7</div>
-  <div class="item8">8</div> 
-  <div class="item9">9</div> 
-  <div class="item10">10</div>
-  <div class="item11">11</div> 
+  <div class="item5"></div>
+  <div class="item6"></div> 
+  <div class="item7"></div>
+  <div class="item8"></div> 
+  <div class="item9"></div> 
+  <div class="item10"></div>
+  <div class="item11"></div> 
   
 </div>
 
