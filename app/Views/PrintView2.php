@@ -131,7 +131,7 @@ input[type=text] {
   <iframe 
         src="/tmpqr/BadgeTest.pdf" id="myFrame" 
             frameborder="0" style="border:0;" 
-                width="400" height="600">
+                width="500" height="800">
     </iframe>
   </div>  
   <div class="item4">
@@ -156,8 +156,8 @@ echo form_submit('mysubmit', 'Submit','class="button"');
   <div class="item5">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
-  <div class="item6"> <input type="button" id="bt" class="button"  onclick="Printpdf()" value="Print Badge" /></div>  
-  <div class="item7"><button class="button" id="print_external">Print external page!</button></div>
+ 
+  
 </div>
 
 
