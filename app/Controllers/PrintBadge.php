@@ -77,7 +77,7 @@ class PrintBadge extends BaseController
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 			
-			$where = "(Email = $id AND EventYear = 'Korea2024')";
+			$where = "(Email = {$id} AND EventYear = 'Korea2024')";
 			$builder->where($where);
 			//$builder->where('ContactID',$id);
 			$query = $builder->get();
@@ -88,7 +88,7 @@ class PrintBadge extends BaseController
 			$width = '101.6';
 	
 	// $height = '158.75';
-// 	$width = '107.95';
+	// 	$width = '107.95';
 	
 		$pageLayout = array($width, $height);
 
