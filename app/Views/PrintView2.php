@@ -127,7 +127,7 @@ input[type=text] {
 <div class="grid-container">
   <div class="item1"><img src="/EXPOdirectory/logos/Bece.png"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
-  <div class="item4" >
+  <div class="item3" id="hide">
   <iframe 
         src="/tmpqr/BadgeTest.pdf" id="myFrame" 
             frameborder="0" style="border:0;" 
@@ -136,7 +136,7 @@ input[type=text] {
   </div>  
  
 </div>
-  <div class="item3">
+  <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
  
