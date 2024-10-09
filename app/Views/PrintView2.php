@@ -104,7 +104,7 @@ input[type=text] {
   grid-column-start: 3;
   grid-column-end: 4;
   grid-row-start: 1;
-  grid-row-end: 4;
+  grid-row-end: 5;
 }
 .item4 {
   grid-column-start: 1;
@@ -142,8 +142,13 @@ input[type=text] {
   <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
- <div class="item5"></div>
-  <div class="item6"></div> 
+  <div class="item5">5</div>
+  <div class="item6">6</div> 
+  <div class="item7">7</div>
+  <div class="item8">8</div> 
+  <div class="item9">9</div> 
+  <div class="item10">10</div>
+  <div class="item11">11</div> 
   
 </div>
 
