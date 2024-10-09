@@ -127,33 +127,16 @@ input[type=text] {
 <div class="grid-container">
   <div class="item1"><img src="/EXPOdirectory/logos/Bece.png"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
-  <div class="item3" id="hide">
+  <div class="item3" >
   <iframe 
         src="/tmpqr/BadgeTest.pdf" id="myFrame" 
             frameborder="0" style="border:0;" 
-                width="500" height="800">
+                width="400" height="600">
     </iframe>
   </div>  
-  <div class="item4">
-  <?php
-  /*  <object  
-type="application/pdf"
-data="/tmpqr/BadgeTest.pdf#toolbar=0"
-width="350"
-height="500"
->
-</object> */
-/* *{
-	background-color:gray;
-} */
-//<a href="#" onclick="window.print(); return false;">Click me to Print</a>
-echo form_open('PrintBadge/print','class="field"');
-//echo form_open('PrintBadge/print');
-echo form_input('BadgeID', '1233');
-echo form_submit('mysubmit', 'Submit','class="button"');
-?>
+ 
 </div>
-  <div class="item5">
+  <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
  
@@ -168,31 +151,11 @@ echo form_submit('mysubmit', 'Submit','class="button"');
 
 
 <script>
-function setPrint() {
-  const closePrint = () => {
-    document.body.removeChild(this);
-  };
-  this.contentWindow.onbeforeunload = closePrint;
-  this.contentWindow.onafterprint = closePrint;
-  this.contentWindow.print();
-  console.log("print");
-}
-
-document.getElementById("print_external").addEventListener("click", () => {
-  console.log("document");
-  const hideFrame = document.createElement("iframe");
-  hideFrame.onload = setPrint;
-  hideFrame.style.display = "none"; // hide iframe
-  hideFrame.src = "https://www.testconx.org/tmpqr/BadgeTest.pdf";
-  document.body.appendChild(hideFrame);
-});
 function Clear(){
-	console.log("print2");
+	
 	location.replace("https://www.testconx.org/forms.php/print");
 }
-function Printpdf(){
-	location.replace("https://www.testconx.org/tmpqr/BadgeTest.pdf");
-}
+
 </script>
 
 </body>
