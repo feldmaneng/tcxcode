@@ -85,6 +85,8 @@ input[type=text] {
   text-align: center;
   padding: 20px 0;
   font-size: 30px;
+  border: 5px;
+  border-color:white;
 }
 .item1 {
   grid-column-start: 1;
