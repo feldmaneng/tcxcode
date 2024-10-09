@@ -78,6 +78,8 @@ input[type=text] {
   grid-template-columns: auto auto auto;
   background-color: black;
   padding: 0px;
+  border: 5px;
+  border-color:white;
 }
 
 .grid-container > div {
@@ -111,6 +113,8 @@ input[type=text] {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
+  border: 5px;
+  border-color:white;
 }
  *{
 	background-color:black;
