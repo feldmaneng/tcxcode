@@ -286,7 +286,7 @@ class PrintBadge extends BaseController
 			 }
 		ob_clean();
 		
-		$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
+		$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>10, 'borderStyle'=>'dashed', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 		// force print dialog
 		
