@@ -77,7 +77,7 @@ class PrintBadge extends BaseController
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 			
-			$where = "(ContactID = $id AND EventYear = 'Korea2024') OR (Email = $id AND EventYear = 'Korea2024')";
+			$where = "(Email = $id AND EventYear = 'Korea2024')";
 			$builder->where($where);
 			//$builder->where('ContactID',$id);
 			$query = $builder->get();
