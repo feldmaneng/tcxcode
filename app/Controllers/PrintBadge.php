@@ -76,9 +76,10 @@ class PrintBadge extends BaseController
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
-			$name  = $builder->db->escape('kimmh66@semics.com');
-			$where = "(Email = {$id} AND EventYear = 'Korea2024')";
-			$builder->where($where);
+			
+			$builder->where('Email', $id);
+			$builder->where('EventYear', 'Korea2024');
+			
 			//$builder->where('ContactID',$id);
 			$query = $builder->get();
 			$people = $query->getNumRows();
