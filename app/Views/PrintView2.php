@@ -78,8 +78,7 @@ input[type=text] {
   grid-template-columns: auto auto auto;
   background-color: black;
   padding: 0px;
-  border: 5px;
-  border-color:white;
+  
 }
 
 .grid-container > div {
@@ -87,8 +86,7 @@ input[type=text] {
   text-align: center;
   padding: 20px 0;
   font-size: 30px;
-  border: 5px;
-  border-color:white;
+  
 }
 .item1 {
   grid-column-start: 1;
@@ -113,8 +111,7 @@ input[type=text] {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
-  border: 5px;
-  border-color:white;
+  
 }
  *{
 	background-color:black;
@@ -145,7 +142,8 @@ input[type=text] {
   <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
- 
+ <div class="item5"></div>
+  <div class="item6"></div> 
   
 </div>
 
