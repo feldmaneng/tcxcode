@@ -133,8 +133,8 @@ echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit','class="button"');
 ?>
 </div>
-  <div class="item5">5</div>
-  <div class="item6">6</div>  
+  <div class="item5"></div>
+  <div class="item6"></div>  
   
 </div>
 
