@@ -132,7 +132,7 @@ input[type=text] {
   <div class="item2"><h4>Preview your badge here. <br>Assitance? See the registration desk.</h4></div>
   <div class="item3" id="hide">
   <iframe 
-        src="/tmpqr/BadgeTest.pdf" id="myFrame" 
+        src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
             frameborder="0" style="border:0;" 
                 width="300" height="500">
     </iframe>
