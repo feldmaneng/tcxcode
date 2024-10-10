@@ -433,7 +433,7 @@ public function stats397927( $raw = FALSE )
 	$totalRelated = 0;
 	$totalNoShow = 0;
 	$totalNoShowRelated = 0;
-	
+	$totalprinted = 0;
 	// Remember that the array keeps it order. So the order the variables are initialized control
 	// which cell in the table they are output in.
 	
