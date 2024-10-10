@@ -140,6 +140,17 @@ $routes->post('/PrintBadge/print', 'PrintBadge::print');
 $routes->get('/PrintBadge/printpreview', 'PrintBadge::printpreview');
 $routes->post('/PrintBadge/printpreview', 'PrintBadge::printpreview');
 
+$routes->get('/PrintBadge/korea', 'PrintBadge::korea');
+$routes->post('/PrintBadge/korea', 'PrintBadge::korea');
+$routes->get('/PrintBadge/china', 'PrintBadge::china');
+$routes->post('/PrintBadge/china', 'PrintBadge::china');
+
+$routes->get('/PrintBadge/printchina', 'PrintBadge::printchina');
+$routes->post('/PrintBadge/printchina', 'PrintBadge::printchina');
+
+$routes->get('/PrintBadge/printkorea', 'PrintBadge::printkorea');
+$routes->post('/PrintBadge/printkorea', 'PrintBadge::printkorea');
+
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
