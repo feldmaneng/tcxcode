@@ -86,8 +86,8 @@ public function Guestcrudkorea()
 	$crud->where(['guests.EventYear' => EventYearKorea]);
    		
 		
-	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
-	$crud->setUniqueId('korea_2024_guest2');
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','PrintTime']);
+	$crud->setUniqueId('korea_2024_guest3');
 
 	$output = $crud->render();
 
@@ -107,8 +107,8 @@ public function Guestcrudchina()
 	$crud->where(['guests.EventYear' => EventYearChina]);
    		
 		
-	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName']);
-	$crud->setUniqueId('china_2024_guest2');
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','PrintTime']);
+	$crud->setUniqueId('china_2024_guest3');
 	
 
 	$output = $crud->render();
@@ -444,6 +444,7 @@ public function stats397927( $raw = FALSE )
 		$inviteStats[$row->CompanyID]['Company'] = $row->Company;
 		$inviteStats[$row->CompanyID]['Company ID'] = $row->CompanyID;
 		$inviteStats[$row->CompanyID]['InviteCount'] = $row->InviteCount;
+		
 		$totalLimit += $row->InviteCount;
 			//ask ira
 		/* $guestQuery = $this->db->get_where('guests',
@@ -464,12 +465,23 @@ public function stats397927( $raw = FALSE )
 			$builder2->where('InvitedByCompanyID',$row->CompanyID);
 			
 		$guestQuery = $builder2->get();
+		
+		
 		$inviteStats[$row->CompanyID]['Guests'] = $guestQuery->getNumRows();
+		
+		
 		$totalInvited += $guestQuery->getNumRows();
 		
 		$inviteStats[$row->CompanyID]['Remaining'] = $inviteStats[$row->CompanyID]['InviteCount'] - $inviteStats[$row->CompanyID]['Guests'];
 		
-
+		foreach($guestquery->getResult() as $guestrow)
+		{
+			if($guestrow->PrintTime !== NULL)
+			{
+				$inviteStats[$row->CompanyID]['Printed']+= 1;
+			}
+		}
+			$totalprinted += $inviteStats[$row->CompanyID]['Printed'];
 		// Figure out how many guests are related to the inviting Company
 		// i.e. non-customers
 		
@@ -527,7 +539,7 @@ public function stats397927( $raw = FALSE )
 	//echo $totalInvited."invited";
 	//echo $totalRelated."Related";
    	$data['title'] = "TestConX China Event  Guest List Statistics"; 
-   	$data['header'] = array ("Company","Company ID", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
+   	$data['header'] = array ("Company","Company ID", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes","PrintedCount");
    	if($totalRelated == 0){
 		$relatedNoShow = "-";
 	}
@@ -535,9 +547,9 @@ public function stats397927( $raw = FALSE )
 		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
 	}
  	$data['table'] = $inviteStats;
- 	$data['totals'][1] = array ("Totals"," ", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ");
+ 	$data['totals'][1] = array ("Totals"," ", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ",$totalprinted);
  	$data['totals'][2] = array (" "," "," ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ", " ", round($totalRelated/$totalInvited*100,0)."%", 
- 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%"," ");
+ 		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%"," ",round($totalprinted/$totalInvited*100,0)."%");
  	// ask ira about function load view look in bitscode view for stats
 	/* foreach($data['header'] as $x){ 
 	echo $x . ','; 
