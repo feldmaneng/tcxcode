@@ -85,11 +85,11 @@ class PrintBadge extends BaseController
     }
 	function printchina()
 	{
-		$this->printgeneral("2024China");
+		$this->printgeneral("China2024");
 	}
 	function printkorea()
 	{
-		$this->printgeneral("2024Korea");
+		$this->printgeneral("Korea2024");
 	}
 	
 	function printmesa()
@@ -97,7 +97,7 @@ class PrintBadge extends BaseController
 		$this->printgeneral("2025Mesa");
 	}
    
-      function printgeneral($eventYear = "2024Korea"){
+      function printgeneral($eventYear = "Korea2024"){
 		
 			$model = model(DirectoryEntry::class);
 			$session = session();
