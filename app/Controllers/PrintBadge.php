@@ -83,16 +83,16 @@ class PrintBadge extends BaseController
 
         return view('testconx_template.php', (array)$output);
     }
-	function printchina
+	function printchina()
 	{
 		$this->printgeneral("2024China");
 	}
-	function printkorea
+	function printkorea()
 	{
 		$this->printgeneral("2024Korea");
 	}
 	
-	function printmesa
+	function printmesa()
 	{
 		$this->printgeneral("2025Mesa");
 	}
