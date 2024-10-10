@@ -120,7 +120,7 @@ class PrintBadge extends BaseController
 			
 	// $height = '158.75';
 	// 	$width = '107.95';
-	echo $people;
+	
 	$time = date("d-m-y h:i:s");
 			if($results[0]["PrintTime"] == NULL){
 			$data = [
@@ -359,11 +359,11 @@ $pdf->IncludeJS($js);
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		if($eventYear == "2024Korea"){
+		if($eventYear == "Korea2024"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 		}
-		if($eventYear == "2024China"){
+		if($eventYear == "China2024"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreviewchina');
 		//return view('PrintView', ['errors' => []]);		
 		}
