@@ -120,7 +120,7 @@ class PrintBadge extends BaseController
 			
 	// $height = '158.75';
 	// 	$width = '107.95';
-	
+	echo $people;
 	$time = date("d-m-y h:i:s");
 			if($results[0]["PrintTime"] == NULL){
 			$data = [
