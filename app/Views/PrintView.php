@@ -60,7 +60,7 @@ input[type=text]:focus {
   border: 3px solid #555;
 }
 input[type=text] {
-	width: 10%;
+	width: 20%;
   background-color: white;
   color: black;
 }
@@ -117,7 +117,7 @@ input[type=text] {
 
 
 <div class="grid-container">
-  <div class="item1"><img src="/EXPOdirectory/logos/Bece.png"/></div>
+  <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" ></div>  
   <div class="item4">
