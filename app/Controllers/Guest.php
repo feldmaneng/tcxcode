@@ -473,7 +473,7 @@ public function stats397927( $raw = FALSE )
 		$totalInvited += $guestQuery->getNumRows();
 		
 		$inviteStats[$row->CompanyID]['Remaining'] = $inviteStats[$row->CompanyID]['InviteCount'] - $inviteStats[$row->CompanyID]['Guests'];
-		
+		$inviteStats[$row->CompanyID]['Printed'] = 0;
 		foreach($guestQuery->getResult() as $guestrow)
 		{
 			if($guestrow->PrintTime !== NULL)
