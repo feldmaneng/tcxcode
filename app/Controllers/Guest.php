@@ -481,7 +481,10 @@ public function stats397927( $raw = FALSE )
 				$inviteStats[$row->CompanyID]['Printed']+= 1;
 			}
 		}
+			if($inviteStats[$row->CompanyID]['Printed'] != 0)
+			{
 			$totalprinted += $inviteStats[$row->CompanyID]['Printed'];
+			}
 		// Figure out how many guests are related to the inviting Company
 		// i.e. non-customers
 		
