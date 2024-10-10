@@ -26,11 +26,30 @@ class PrintBadge extends BaseController
 
     public function index()
     {
+		echo "<a href=" . site_url('/PrintBadge/korea') . ">Korea</a> ";
+		echo "<a href=" . site_url('/PrintBadge/china') . ">China</a> ";
+
+    }
+	
+	 public function korea()
+    {
         return view('PrintView', ['errors' => []]);
     }
+	
+	public function china()
+    {
+        return view('PrintViewChina', ['errors' => []]);
+    }
+	
+	
 	public function printpreview()
     {
         return view('PrintView2', ['errors' => []]);
+    }
+	
+	public function printpreviewchina()
+    {
+        return view('PrintView2China', ['errors' => []]);
     }
 
  private function _getDbData() {
@@ -340,9 +359,14 @@ $pdf->IncludeJS($js);
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
+		if($eventYear == "2024Korea"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
-			
+		}
+		if($eventYear == "2024China"){
+		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreviewchina');
+		//return view('PrintView', ['errors' => []]);		
+		}
 	  }
 
 }

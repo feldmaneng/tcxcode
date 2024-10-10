@@ -8,6 +8,14 @@ header("Pragma: no-cache");
 <html>
 <head>
 <title>Badge Printing</title>
+<script>
+ function printTrigger(myFrame) {
+            var getMyFrame = document.getElementById(myFrame);
+            getMyFrame.focus();
+            getMyFrame.contentWindow.print();
+        }
+
+</script>
 </head>
 <style>
 .topright{
@@ -70,6 +78,7 @@ input[type=text] {
   grid-template-columns: auto auto auto;
   background-color: black;
   padding: 0px;
+  
 }
 
 .grid-container > div {
@@ -77,6 +86,7 @@ input[type=text] {
   text-align: center;
   padding: 20px 0;
   font-size: 30px;
+  
 }
 .item1 {
   background-color: white;
@@ -95,13 +105,14 @@ input[type=text] {
   grid-column-start: 3;
   grid-column-end: 4;
   grid-row-start: 1;
-  grid-row-end: 4;
+  grid-row-end: 5;
 }
 .item4 {
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
+  
 }
  *{
 	background-color:black;
@@ -119,22 +130,26 @@ input[type=text] {
 
 <div class="grid-container">
   <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
-  <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
-  <div class="item3" ></div>  
+  <div class="item2"><h4>Preview your badge here. <br>Assitance? See the registration desk.</h4></div>
+  <div class="item3" id="hide">
+  <iframe 
+        src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
+            frameborder="0" style="border:0;" 
+                width="300" height="500">
+    </iframe>
+  </div>  
+ 
+
   <div class="item4">
-  <?php
-/* *{
-	background-color:gray;
-} */
-//<a href="#" onclick="window.print(); return false;">Click me to Print</a>
-echo form_open('PrintBadge/printkorea','class="field"');
-//echo form_open('PrintBadge/print');
-echo form_input('BadgeID', '1233');
-echo form_submit('mysubmit', 'Submit','class="button"');
-?>
-</div>
+  <button type="button" class="button" onclick="Clear()" >Clear</button>
+  </div>
   <div class="item5"></div>
-  <div class="item6"></div>  
+  <div class="item6"></div> 
+  <div class="item7"></div>
+  <div class="item8"></div> 
+  <div class="item9"></div> 
+  <div class="item10"></div>
+  <div class="item11"></div> 
   
 </div>
 
@@ -145,6 +160,13 @@ echo form_submit('mysubmit', 'Submit','class="button"');
 
 
 
+<script>
+function Clear(){
+	
+	location.replace("https://www.testconx.org/forms.php/printchina");
+}
+
+</script>
 
 </body>
 </html>

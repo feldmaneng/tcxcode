@@ -89,6 +89,7 @@ input[type=text] {
   
 }
 .item1 {
+  background-color: white;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
@@ -128,7 +129,7 @@ input[type=text] {
 
 
 <div class="grid-container">
-  <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500.PNG"/></div>
+  <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>Preview your badge here. <br>Assitance? See the registration desk.</h4></div>
   <div class="item3" id="hide">
   <iframe 
@@ -162,7 +163,7 @@ input[type=text] {
 <script>
 function Clear(){
 	
-	location.replace("https://www.testconx.org/forms.php/print");
+	location.replace("https://www.testconx.org/forms.php/printkorea");
 }
 
 </script>
