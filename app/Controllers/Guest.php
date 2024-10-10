@@ -600,6 +600,7 @@ public function statsk397927( $raw = FALSE )
 	$totalRelated = 0;
 	$totalNoShow = 0;
 	$totalNoShowRelated = 0;
+	$totalprinted = 0;
 	
 	// Remember that the array keeps it order. So the order the variables are initialized control
 	// which cell in the table they are output in.
@@ -636,6 +637,18 @@ public function statsk397927( $raw = FALSE )
 		
 		$inviteStats[$row->CompanyID]['Remaining'] = $inviteStats[$row->CompanyID]['InviteCount'] - $inviteStats[$row->CompanyID]['Guests'];
 		
+		$inviteStats[$row->CompanyID]['Printed'] = 0;
+		foreach($guestQuery->getResult() as $guestrow)
+		{
+			if($guestrow->PrintTime !== NULL)
+			{
+				$inviteStats[$row->CompanyID]['Printed']+= 1;
+			}
+		}
+			if($inviteStats[$row->CompanyID]['Printed'] != 0)
+			{
+			$totalprinted += $inviteStats[$row->CompanyID]['Printed'];
+			}
 
 		// Figure out how many guests are related to the inviting Company
 		// i.e. non-customers
@@ -702,8 +715,8 @@ public function statsk397927( $raw = FALSE )
 		$relatedNoShow = round($totalNoShowRelated/$totalRelated*100,0);
 	}
  	$data['table'] = $inviteStats;
- 	$data['totals'][1] = array ("Totals"," ", $totalLimit, $totalInvited, $totalLimit-$totalInvited, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ");
- 	$data['totals'][2] = array (" "," ", " ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ", " ", round($totalRelated/$totalInvited*100,0)."%", 
+ 	$data['totals'][1] = array ("Totals"," ", $totalLimit, $totalInvited, $totalLimit-$totalInvited,$totalprinted, $totalRelated, " ", $totalNoShow, $totalNoShowRelated, " ");
+ 	$data['totals'][2] = array (" "," "," ", round($totalInvited/$totalLimit*100,1)."% of Limit", " ",round($totalprinted/$totalInvited*100,0)."%", " ", round($totalRelated/$totalInvited*100,0)."%", 
  		round($totalNoShow/$totalInvited*100,0)."%", $relatedNoShow."%"," ");
  	// ask ira about function load view look in bitscode view for stats
 	/* foreach($data['header'] as $x){ 

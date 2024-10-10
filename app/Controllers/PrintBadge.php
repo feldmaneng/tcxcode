@@ -64,9 +64,21 @@ class PrintBadge extends BaseController
 
         return view('testconx_template.php', (array)$output);
     }
+	function printchina
+	{
+		$this->printgeneral("2024China");
+	}
+	function printkorea
+	{
+		$this->printgeneral("2024Korea");
+	}
 	
+	function printmesa
+	{
+		$this->printgeneral("2025Mesa");
+	}
    
-      function print(){
+      function printgeneral($eventYear = "2024Korea"){
 		
 			$model = model(DirectoryEntry::class);
 			$session = session();
@@ -78,7 +90,7 @@ class PrintBadge extends BaseController
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			$builder->where('Email', $id);
-			$builder->where('EventYear', 'Korea2024');
+			$builder->where('EventYear', $eventYear);
 			$builder->orwhere('ContactID',$id);
 			$query = $builder->get();
 			$people = $query->getNumRows();
@@ -332,6 +344,7 @@ $pdf->IncludeJS($js);
 		//return view('PrintView', ['errors' => []]);		
 			
 	  }
+
 }
 
 
