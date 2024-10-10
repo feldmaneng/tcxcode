@@ -75,7 +75,7 @@ class PrintBadge extends BaseController
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			$builder->where('Email', $id);
 			$builder->where('EventYear', 'Korea2024');
@@ -86,9 +86,23 @@ class PrintBadge extends BaseController
 			
 			$height = '152.4';
 			$width = '101.6';
-	
+			
 	// $height = '158.75';
 	// 	$width = '107.95';
+	
+	$time = date("d-m-y h:i:s");
+			if($results[0]["PrintTime"]== NULL){
+			$data = [
+			'PrintTime' => $time,
+			];
+
+$builder->where('ContactID', $results[0]["ContactID"]);
+$builder->update($data);
+			}
+			else{
+				echo "This badge has previously been printed please see the front desk";
+				return;
+			}
 	
 		$pageLayout = array($width, $height);
 
