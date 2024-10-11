@@ -10,11 +10,7 @@ header("Pragma: no-cache");
 <title>Badge Printing</title>
 </head>
 <style>
-div.item1 {
-  border-style: outset;
-  border-width: 5px;
-  border-color: white;
-}
+
 
 .topright{
 	position:absolute;
@@ -126,8 +122,8 @@ input[type=text] {
 <div class="grid-container">
   <div class="item1"><img width  = "500px" style=" 
   border-style: outset;
-  border-width: 5px;
-  border-color: white;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
+  border-width: 3px;
+  border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" ></div>  
   <div class="item4">
