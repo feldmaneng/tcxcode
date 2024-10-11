@@ -97,13 +97,13 @@ class PrintBadge extends BaseController
 		$this->printgeneral("Mesa2025");
 	}
    
-      function printgeneral($eventYear = "Korea2024"){
+      function printgeneral(){
 		
 			$model = model(DirectoryEntry::class);
 			$session = session();
 
 			$id = $_POST["BadgeID"];
-			$eventYear = $_POST["eventYear"];
+			$eventYear = $_POST["eventYearID"];
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
