@@ -129,10 +129,10 @@ class PrintBadge extends BaseController
 			}
 			else{
 				if($eventYear == "China2024"){
-				return view('PrintViewChinaError', ['errors' => []]);
+				return view('PrintViewChinaDuplicate', ['errors' => []]);
 				}
 				if($eventYear == "Korea2024"){
-				return view('PrintViewKoreaError', ['errors' => []]);
+				return view('PrintViewKoreaDuplicate', ['errors' => []]);
 				}
 				
 				return;
