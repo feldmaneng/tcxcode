@@ -707,7 +707,7 @@ public function statsk397927( $raw = FALSE )
 	//echo $totalInvited."invited";
 	//echo $totalRelated."Related";
    	$data['title'] = "TestConX Korea Event  Guest List Statistics"; 
-   	$data['header'] = array ("Company","Company ID", "Invite Limit", "Invited Guests", "Remaining", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
+   	$data['header'] = array ("Company","Company ID", "Invite Limit", "Invited Guests", "Remaining","PrintedCount", "Related Guests", "Related", "No Show", "No Show Related", "Notes");
    	if($totalRelated == 0){
 		$relatedNoShow = "-";
 	}
