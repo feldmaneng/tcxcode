@@ -140,6 +140,9 @@ $routes->post('/PrintBadge/print', 'PrintBadge::print');
 $routes->get('/PrintBadge/printpreview', 'PrintBadge::printpreview');
 $routes->post('/PrintBadge/printpreview', 'PrintBadge::printpreview');
 
+$routes->get('/PrintBadge/printpreviewchina', 'PrintBadge::printpreviewchina');
+$routes->post('/PrintBadge/printpreviewchina', 'PrintBadge::printpreviewchina');
+
 $routes->get('/PrintBadge/korea', 'PrintBadge::korea');
 $routes->post('/PrintBadge/korea', 'PrintBadge::korea');
 $routes->get('/PrintBadge/china', 'PrintBadge::china');
