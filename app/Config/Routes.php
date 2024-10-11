@@ -151,6 +151,9 @@ $routes->post('/PrintBadge/printchina', 'PrintBadge::printchina');
 $routes->get('/PrintBadge/printkorea', 'PrintBadge::printkorea');
 $routes->post('/PrintBadge/printkorea', 'PrintBadge::printkorea');
 
+$routes->get('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
+$routes->post('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
+
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
