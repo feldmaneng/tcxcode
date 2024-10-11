@@ -18,6 +18,12 @@ header("Pragma: no-cache");
 </script>
 </head>
 <style>
+div.item5 {
+  position: absolute;
+  width: 50%;
+  bottom: 5px;
+  
+}
 .topright{
 	position:absolute;
 	top:8px;
@@ -146,7 +152,7 @@ input[type=text] {
   <iframe 
         src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
             frameborder="0" style="border:0;" 
-                width="300" height="500">
+                width="275" height="400">
     </iframe>
   </div>  
  
