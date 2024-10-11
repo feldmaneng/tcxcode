@@ -83,19 +83,7 @@ class PrintBadge extends BaseController
 
         return view('testconx_template.php', (array)$output);
     }
-	function printchina()
-	{
-		$this->printgeneral("China2024");
-	}
-	function printkorea()
-	{
-		$this->printgeneral("Korea2024");
-	}
 	
-	function printmesa()
-	{
-		$this->printgeneral("Mesa2025");
-	}
    
       function printgeneral(){
 		
@@ -118,7 +106,15 @@ class PrintBadge extends BaseController
 			
 			$height = '152.4';
 			$width = '101.6';
-			
+			if ($people != 1){
+				if($eventYear == "China2024"){
+				return view('PrintViewChinaError', ['errors' => []]);
+				}
+				if($eventYear == "Korea2024"){
+				return view('PrintViewKoreaError', ['errors' => []]);
+				}
+			}
+				
 	// $height = '158.75';
 	// 	$width = '107.95';
 	
