@@ -163,7 +163,7 @@ input[type=text] {
 <script>
 function Clear(){
 	
-	location.replace("https://www.testconx.org/forms.php/china");
+	location.replace("https://www.testconx.org/forms.php/PrintBadge/china");
 }
 
 </script>
