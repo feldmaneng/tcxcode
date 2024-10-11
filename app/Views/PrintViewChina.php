@@ -127,7 +127,8 @@ input[type=text] {
 	background-color:gray;
 } */
 //<a href="#" onclick="window.print(); return false;">Click me to Print</a>
-echo form_open('PrintBadge/printchina','class="field"');
+echo form_open('PrintBadge/printgeneral','class="field"');
+echo form_hidden('eventYearID', 'China2024');
 //echo form_open('PrintBadge/print');
 echo form_input('BadgeID', '1233');
 echo form_submit('mysubmit', 'Submit','class="button"');
