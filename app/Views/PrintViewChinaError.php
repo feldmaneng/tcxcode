@@ -129,7 +129,11 @@ input[type=text] {
 
 
 <div class="grid-container">
-  <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
+  <div class="item1"><img width = "500px" style=" 
+  background-color:black;
+  border-style: outset;
+  border-width: 3px;
+  border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>An error has occured with your badge. <br>Please see the registration desk.</h4></div>
   <div class="item3" id="hide"></div>  
  
