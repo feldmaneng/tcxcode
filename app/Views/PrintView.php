@@ -121,6 +121,7 @@ input[type=text] {
 
 <div class="grid-container">
   <div class="item1"><img width  = "500px" style=" 
+  background-color:rgb(60, 60, 60);
   border-style: outset;
   border-width: 3px;
   border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
