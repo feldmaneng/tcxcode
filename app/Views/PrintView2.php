@@ -148,7 +148,7 @@ input[type=text] {
   border-width: 3px;
   border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>Preview your badge here. <br>Need Assistance? Please ask the registration desk.</h4></div>
-  <div class="item3" id="hide">
+  <div class="item3" id="hide"><h4>Print below</h4>
   <iframe 
         src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
             frameborder="0" style="border:0;" 
@@ -160,7 +160,7 @@ input[type=text] {
   <div class="item4">
   <button type="button" class="button" onclick="Clear()" >Clear</button>
   </div>
-  <div class="item5"><h4>Print below</h4></div>
+  <div class="item5"></div>
   <div class="item6"></div> 
   <div class="item7"></div>
   <div class="item8"></div> 
