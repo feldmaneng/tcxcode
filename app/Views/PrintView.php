@@ -118,7 +118,7 @@ input[type=text] {
 
 
 <div class="grid-container">
-  <div class="item1"><img width style="background-color:White;" = "500px" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
+  <div class="item1"><img width  = "500px" style="background-color:White;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" ></div>  
   <div class="item4">
