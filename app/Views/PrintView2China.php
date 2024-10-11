@@ -130,7 +130,7 @@ input[type=text] {
 
 <div class="grid-container">
   <div class="item1"><img width = "500px" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
-  <div class="item2"><h4>Preview your badge here. <br>Assitance? See the registration desk.</h4></div>
+  <div class="item2"><h4>Preview your badge here. <br>Need Assistance? Please ask the registration desk.</h4></div>
   <div class="item3" id="hide">
   <iframe 
         src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
