@@ -124,11 +124,17 @@ class PrintBadge extends BaseController
 			'PrintTime' => $time,
 			];
 
-$builder->where('ContactID', $results[0]["ContactID"]);
-$builder->update($data);
+					$builder->where('ContactID', $results[0]["ContactID"]);
+					$builder->update($data);
 			}
 			else{
-				echo "This badge has previously been printed please see the front desk";
+				if($eventYear == "China2024"){
+				return view('PrintViewChinaError', ['errors' => []]);
+				}
+				if($eventYear == "Korea2024"){
+				return view('PrintViewKoreaError', ['errors' => []]);
+				}
+				
 				return;
 			}
 	
