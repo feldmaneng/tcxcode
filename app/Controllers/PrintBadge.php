@@ -100,6 +100,7 @@ class PrintBadge extends BaseController
 			$builder->where('Email', $id);
 			$builder->where('EventYear', $eventYear);
 			$builder->orwhere('ContactID',$id);
+			$builder->where('EventYear', $eventYear);
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
