@@ -110,8 +110,8 @@ input[type=text] {
 .item3 {
   grid-column-start: 3;
   grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 3;
 }
 .item4 {
   grid-column-start: 1;
@@ -120,13 +120,7 @@ input[type=text] {
   grid-row-end: 3;
   
 }
-.item5 {
-  grid-column-start: 3;
-  grid-column-end: 5;
-  grid-row-start: 1;
-  grid-row-end: 2;
-  
-}
+
  *{
 	background-color:black;
 } 
