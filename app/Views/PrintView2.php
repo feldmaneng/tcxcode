@@ -18,17 +18,8 @@ header("Pragma: no-cache");
 </script>
 </head>
 <style>
-div.item5 {
-  position: absolute;
-  width: 50%;
-  bottom: 5px;
-  
-}
-.topright{
-	position:absolute;
-	top:8px;
-	right:16px;
-}
+
+
 body{
 	color:orange;
 	
