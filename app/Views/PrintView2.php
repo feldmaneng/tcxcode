@@ -114,10 +114,10 @@ input[type=text] {
   grid-row-end: 3;
 }
 .item4 {
-  grid-column-start: 1;
+  grid-column-start: 2;
   grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 5;
   
 }
 
