@@ -86,7 +86,7 @@ input[type=text] {
   
 }
 .item1 {
-  background-color: white;
+  
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
