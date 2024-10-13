@@ -142,12 +142,7 @@ input[type=text] {
   border-width: 3px;
   border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
   <div class="item2"><h4>Preview your badge here. <br>Need Assistance? Please ask the registration desk.</h4></div>
-  <div class="item3" id="hide"><h4 style="  
-  position: absolute;
-  width: 50%;
-  bottom: 10px;
-  border: 3px solid #8AC007;
-  >Print below</h4>
+  <div class="item3" id="hide"><h4>Print below</h4>
   <iframe 
         src="/tmpqr/BadgeTest.pdf#toolbar=0" id="myFrame" 
             frameborder="0" style="border:0;" 
