@@ -18,11 +18,6 @@ header("Pragma: no-cache");
 </script>
 </head>
 <style>
-.topright{
-	position:absolute;
-	top:8px;
-	right:16px;
-}
 body{
 	color:orange;
 	
@@ -89,31 +84,32 @@ input[type=text] {
   
 }
 .item1 {
-  background-color: white;
+  
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 2;
 }
 .item2 {
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column-start: 3;
+  grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
 }
 .item3 {
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row-start: 1;
-  grid-row-end: 5;
+  grid-row-end: 3;
 }
 .item4 {
-  grid-column-start: 1;
+  grid-column-start: 2;
   grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 5;
   
 }
+
  *{
 	background-color:black;
 } 
