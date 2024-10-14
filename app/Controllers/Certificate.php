@@ -49,7 +49,7 @@ $db = db_connect();
 $builder = $db->table('presentations');
 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
 $builder -> where('Year', 2024);
-$builder -> where('Event', 'Mesa');
+$builder -> where('Event', 'Korea');
 $builder -> where('Session !=', 'Cancel');
 $builder -> where('Session !=', 'Cancel-Poster');;
 $builder -> where('Session !=', '3AB');;
@@ -185,14 +185,14 @@ $SESSION=$results[$n]["Session"];
 	}
 	$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, 39.7, $y+5*$z, true);
 	$pdf->SetFont('times', '', 18);
-	$pdf->MultiCell(200, 25,"presented at TestConX 2024 workshop \n March 3-6, 2024 - Mesa Arizona", 0, 'C', 0, 0, 39.7, $y+7*$z+5, true);
+	$pdf->MultiCell(200, 25,"presented at TestConX Korea 2024 workshop \n October 29, 2024 - Suwon, South Korea", 0, 'C', 0, 0, 39.7, $y+7*$z+5, true);
 	$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)); 
     $pdf->Line( 25.58+10+4.4, 170,25.58+63+4.4, 170, $style = array() );
     $pdf->Line( 25.58+83+4.4, 170,25.58+136+4.4, 170, $style = array() );
     $pdf->Line( 25.58+156+4.4, 170,25.58+209+4.4, 170, $style = array() );
     $pdf->SetFont('times', '', 12);
-    $pdf->MultiCell(60, 25,"Morten Jensen \nTechnical Program Co-Chair", 0, 'L', 0, 0, 25.58+12.7+4.4, 172, true);
-    $pdf->MultiCell(60, 25,"Ramana Tadepalli \nTechnical Program Co-Chair", 0, 'L', 0, 0, 25.58+85.7+4.4, 172, true);
+    $pdf->MultiCell(60, 25," Justin Yun 윤주완 \nProgram Chair", 0, 'L', 0, 0, 25.58+12.7+4.4, 172, true);
+    $pdf->MultiCell(60, 25,"AJ Park 박형준 \nKorea General Chair", 0, 'L', 0, 0, 25.58+85.7+4.4, 172, true);
     $pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, 25.58+158.7+4.4, 172, true);
    
  //$pdf->AddPage();
