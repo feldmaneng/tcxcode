@@ -124,7 +124,7 @@ $pdf->SetFont('helvetica', '', 10);
 
 
 //for($i=1 ; $i <= $people ; $i++)
-for($i=1 ; $i <= $people; $i++)
+for($i=1 ; $i < $people; $i++)
 {
 //this determines how many rows the sheet has
 
@@ -294,7 +294,7 @@ $pdf->SetFont('helvetica', '', 10);
 
 
 //for($i=1 ; $i <= $people ; $i++)
-for($i=1 ; $i <= $people; $i++)
+for($i=1 ; $i < $people; $i++)
 {
 //this determines how many rows the sheet has
 
@@ -464,7 +464,7 @@ $pdf->SetFont('helvetica', '', 10);
 
 
 //for($i=1 ; $i <= $people ; $i++)
-for($i=1 ; $i <= $people; $i++)
+for($i=1 ; $i < $people; $i++)
 {
 //this determines how many rows the sheet has
 
