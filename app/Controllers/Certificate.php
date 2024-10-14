@@ -106,7 +106,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('helvetica', '', 10);
 
 // add a page
-$pdf->AddPage('L');
+//$pdf->AddPage('L');
 
 
 
@@ -276,7 +276,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('helvetica', '', 10);
 
 // add a page
-$pdf->AddPage('L');
+//$pdf->AddPage('L');
 
 
 
@@ -446,7 +446,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('helvetica', '', 10);
 
 // add a page
-$pdf->AddPage('L');
+//$pdf->AddPage('L');
 
 
 
