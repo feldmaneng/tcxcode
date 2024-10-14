@@ -127,7 +127,7 @@ $pdf->SetFont('helvetica', '', 10);
 for($i=1 ; $i <= $people; $i++)
 {
 //this determines how many rows the sheet has
-$pdf->AddPage('L')
+$pdf->AddPage('L');
     
 $n=$i-1;
 
@@ -197,7 +197,7 @@ $SESSION=$results[$n]["Session"];
     $pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, 25.58+158.7+4.4, 170, true);
    
  //$pdf->AddPage();
- $pdf->AddPage('L');
+ //$pdf->AddPage('L');
 
     
 
@@ -298,7 +298,7 @@ for($i=1 ; $i <= $people; $i++)
 {
 //this determines how many rows the sheet has
 
-  $pdf->AddPage('L')  
+  $pdf->AddPage('L');
 $n=$i-1;
 
 
@@ -468,7 +468,7 @@ for($i=1 ; $i <= $people; $i++)
 {
 //this determines how many rows the sheet has
 
-    $pdf->AddPage('L')
+    $pdf->AddPage('L');
 $n=$i-1;
 
 
