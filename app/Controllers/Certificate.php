@@ -191,8 +191,8 @@ $SESSION=$results[$n]["Session"];
     $pdf->Line( 25.58+83+4.4, 170,25.58+136+4.4, 170, $style = array() );
     $pdf->Line( 25.58+156+4.4, 170,25.58+209+4.4, 170, $style = array() );
     $pdf->SetFont('times', '', 12);
-    $pdf->MultiCell(60, 25," Justin Yun 윤주완 \nProgram Chair", 0, 'L', 0, 0, 25.58+12.7+4.4, 172, true);
-    $pdf->MultiCell(60, 25,"AJ Park 박형준 \nKorea General Chair", 0, 'L', 0, 0, 25.58+85.7+4.4, 172, true);
+    $pdf->MultiCell(60, 25," Justin Yun \nProgram Chair", 0, 'L', 0, 0, 25.58+12.7+4.4, 172, true);
+    $pdf->MultiCell(60, 25,"AJ Park \nKorea General Chair", 0, 'L', 0, 0, 25.58+85.7+4.4, 172, true);
     $pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, 25.58+158.7+4.4, 172, true);
    
  //$pdf->AddPage();
