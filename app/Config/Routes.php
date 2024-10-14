@@ -123,8 +123,16 @@ $routes->post('/mypdf2', 'Mypdf2');
 $routes->get('/certificates', 'Certificate::index');          
 $routes->post('/certificates', 'Certificate::index');
 
-$routes->get('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');          
-$routes->post('/Certificate/CertificatesGeneral', 'Certificate::CertificatesGeneral');
+
+
+$routes->get('/Certificate/CertificatesGeneralKorea', 'Certificate::CertificatesGeneralKorea');          
+$routes->post('/Certificate/CertificatesGeneralKorea', 'Certificate::CertificatesGeneralKorea');
+
+$routes->get('/Certificate/CertificatesGeneralChina', 'Certificate::CertificatesGeneralChina');          
+$routes->post('/Certificate/CertificatesGeneralChina', 'Certificate::CertificatesGeneralChina');
+
+$routes->get('/Certificate/CertificatesGeneralMesa', 'Certificate::CertificatesGeneralMesa');          
+$routes->post('/Certificate/CertificatesGeneralMesa', 'Certificate::CertificatesGeneralMesa');
 
 $routes->get('/Certificate/Certificates', 'Certificate::Certificates');          
 $routes->post('/Certificate/Certificates', 'Certificate::Certificates');
