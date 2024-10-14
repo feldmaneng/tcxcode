@@ -43,7 +43,7 @@ helper('html');
 		
 	}
 	
-	function CertificatesGeneralMesa()
+	function CertificatesGeneralKorea()
  { 
 
 $db = db_connect();
