@@ -150,7 +150,7 @@ $SESSION=$results[$n]["Session"];
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
 	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	$x=102-2;
-	$y=55;
+	$y=57;
 	$z=10;
 	$x2=49.7-2;
 	$x3=30.58-2;
@@ -324,7 +324,7 @@ $SESSION=$results[$n]["Session"];
 	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 	$x=102-2;
-	$y=55;
+	$y=57;
 	$z=10;
 	$x2=49.7-2;
 	$x3=30.58-2;
