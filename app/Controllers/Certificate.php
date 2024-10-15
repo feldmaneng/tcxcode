@@ -166,7 +166,7 @@ $SESSION=$results[$n]["Session"];
     {
     $pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
     }
-    else if($SESSION == 'Keynote')
+    else if($SESSION == 'Keynote'||$SESSION == 'Keynote 1'||$SESSION == 'Keynote 2')
     {
     $pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
     } else if($SESSION == 'Tutorial1' || $SESSION == 'Tutorial2')
@@ -323,29 +323,32 @@ $SESSION=$results[$n]["Session"];
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
 	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
+	$x=102-2;
 	$y=55;
 	$z=10;
+	$x2=49.7-2;
+	$x3=30.58-2;
    $pdf->SetFont('times', '', 24);  
-  $pdf->MultiCell(100, 25,"Certificate of Appreciation", 0, 'C', 0, 0, 89.7, $y, true);
+  $pdf->MultiCell(100, 25,"Certificate of Appreciation", 0, 'C', 0, 0, $x, $y, true);
   $pdf->SetFont('times', '', 18);
-    $pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, 89.7, $y+1.5*$z, true);
+    $pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, $x, $y+1.5*$z, true);
      $pdf->SetFont('times', '', 24);
      
-   $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 89.7, $y+2.5*$z, true);
+   $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
     $pdf->SetFont('times', '', 18);
     if($SESSION == 'Poster' || $SESSION == 'Best Poster')
     {
-    $pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
+    $pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
     }
     else if($SESSION == 'Keynote')
     {
-    $pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
+    $pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
     } else if($SESSION == 'Tutorial1' || $SESSION == 'Tutorial2')
     {
-    $pdf->MultiCell(100, 25,"for the Tutorial", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
+    $pdf->MultiCell(100, 25,"for the Tutorial", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
     } else
    {
-   $pdf->MultiCell(100, 25,"for the presentation", 0, 'C', 0, 0, 89.7,$y+3.9*$z, true);
+   $pdf->MultiCell(100, 25,"for the presentation", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
    }
     $pdf->SetFont('times', '', 24);
     $length = strlen($TITLE);
@@ -357,17 +360,17 @@ $SESSION=$results[$n]["Session"];
 	{
 	$pdf->SetFont('times', '', 18);
 	}
-	$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, 39.7, $y+5*$z, true);
+	$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, $x2, $y+5*$z, true);
 	$pdf->SetFont('times', '', 18);
-	$pdf->MultiCell(200, 25,"presented at TestConX Korea 2024 Workshop \n October 29, 2024 - Suwon, South Korea", 0, 'C', 0, 0, 39.7, $y+7*$z+5, true);
+	$pdf->MultiCell(200, 25,"presented at TestConX China 2024 Workshop \n October 31, 2024 - Shanghai, China", 0, 'C', 0, 0, $x2, $y+7*$z+5, true);
 	$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)); 
-    $pdf->Line( 25.58+10+4.4, 170,25.58+63+4.4, 170, $style = array() );
-    $pdf->Line( 25.58+83+4.4, 170,25.58+136+4.4, 170, $style = array() );
-    $pdf->Line( 25.58+156+4.4, 170,25.58+209+4.4, 170, $style = array() );
+    $pdf->Line( $x3+10+4.4, 170,25.58+63+4.4, 170, $style = array() );
+    $pdf->Line( $x3+83+4.4, 170,25.58+136+4.4, 170, $style = array() );
+    $pdf->Line( $x3+156+4.4, 170,25.58+209+4.4, 170, $style = array() );
     $pdf->SetFont('times', '', 12);
-    $pdf->MultiCell(60, 23," Jiachun \"Frank\" Zhou \nChina Program Chair", 0, 'L', 0, 0, 25.58+12.7+4.4, 170, true);
-    $pdf->MultiCell(60, 23,"Qian \"Steven\" Zheng \nChina General Chair", 0, 'L', 0, 0, 25.58+85.7+4.4, 170, true);
-    $pdf->MultiCell(60, 23,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, 25.58+158.7+4.4, 170, true);
+    $pdf->MultiCell(60, 23," Jiachun \"Frank\" Zhou \nChina Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 170, true);
+    $pdf->MultiCell(60, 23,"Qian \"Steven\" Zheng \nChina General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 170, true);
+    $pdf->MultiCell(60, 23,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 170, true);
    
  //$pdf->AddPage();
  //$pdf->AddPage('L');
