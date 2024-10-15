@@ -129,7 +129,7 @@ input[type=text] {
   background-color:black;
   border-style: outset;
   border-width: 3px;
-  border-color: black;" src="/images_new/TestConX-LOGO-Black_1500.png"/></div>
+  border-color: black;" src="/images_new/TestConX-LOGO-White-25Anniv-FLAT.png"/></div>
   <div class="item2"><h4>Preview your badge here. <br>Need Assistance? Please ask the registration desk.</h4></div>
   <div class="item3" id="hide"><h4>Print below</h4>
   <iframe 
