@@ -178,7 +178,7 @@ function TestConXsingle($graphics = TRUE)
 					$Tutorial="";
 					}
 					 */
-				$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
+				//$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 				$pdf->SetFont('stsongstdlight', 'B', 75);
 				$pdf->SetFillColor(255, 255, 255);
@@ -231,17 +231,7 @@ function TestConXsingle($graphics = TRUE)
 				$pdf->SetFillColor(255,255,255);
 				$pdf->SetTextColor(0,0,0);
 				
-				/* if($type != 'Professional'){
-					if($type != "EXPOtiny"){
-				$pdf->SetFont('helvetica', 'B', 16);
-				$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
-					if(strlen($Message)>8){
-					$pdf->SetFont('helvetica', 'B', 22);
-					}
 				
-				$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
-					}
-				} */
 				
 				if($type=="EXPOtiny"){
 				$pdf->SetFont('helvetica', '', 40);
