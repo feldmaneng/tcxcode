@@ -105,8 +105,7 @@ class PrintBadge extends BaseController
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
 			
-			$height = '152.4';
-			$width = '101.6';
+			
 			if ($people != 1){
 				if($eventYear == "China2024"){
 				return view('PrintViewChinaError', ['errors' => []]);
@@ -138,7 +137,8 @@ class PrintBadge extends BaseController
 				
 				return;
 			}
-	
+			$height = '152.4';
+			$width = '101.6';
 		$pageLayout = array($width, $height);
 
 
