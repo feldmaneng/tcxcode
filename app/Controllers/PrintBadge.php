@@ -321,13 +321,20 @@ class PrintBadge extends BaseController
 					'fgcolor' => array(0,0,0),
 					'bgcolor' => array(255,255,255)
 				);
+				
+				$codeContents  = 'BEGIN:VCARD'."\n"; 
+				$codeContents .= 'FN:'.$GivenName." ".$FamilyName."\n";
+				$codeContents .= 'EMAIL:'.$Email."\n"; 
+				$codeContents .= 'ORG:'.$Company."\n"; 
+				$codeContents .= 'END:VCARD'; 
+				
 				 $code="Name: ".$GivenName." ".$FamilyName."\n"
 				."Email: ".$Email."\n"
 				."Company: ".$Company; 
 				
 				//$code="3880";
 				// QRCODE,H : QR-CODE Best error correction
-				$pdf->write2DBarcode($code, 'QRCODE,L', 7, 115, 30, 30, $style, 'N');
+				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 115, 30, 30, $style, 'N');
 				
 					
 				 $q++;
