@@ -101,6 +101,8 @@ $routes->post('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');
 $routes->get('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');          
 $routes->post('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 
+$routes->get('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');       
+$routes->post('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');
 
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
