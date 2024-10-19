@@ -133,7 +133,7 @@ input[type=text] {
   background-color:black;
   border-style: outset;
   border-width: 3px;
-  border-color: black;" src="/images_new/TestConX-LOGO-White-25Anniv-FLAT.png"/></div>
+  border-color: black;" src="/images_new/TestConX-LOGO-White_1500.png"/></div>
   <div class="item2"><h4>An error has occured with your badge. <br>Please see the registration desk.</h4></div>
   <div class="item3" id="hide"></div>  
  
