@@ -125,7 +125,7 @@ input[type=text] {
   background-color:black;
   border-style: outset;
   border-width: 3px;
-  border-color: black;" src="/images_new/TestConX-LOGO-White-25Anniv-FLAT.png"/></div>
+  border-color: black;" src="/images_new/TestConX-LOGO-White_1500.png"/></div>
   <div class="item2" ><h4>Scan your QR code <br>or enter your email</h4></div>
   <div class="item3" ></div>  
   <div class="item4">
