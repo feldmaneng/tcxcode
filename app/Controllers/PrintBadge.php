@@ -322,7 +322,14 @@ class PrintBadge extends BaseController
 					'bgcolor' => array(255,255,255)
 				);
 				
-				$codeContents  = 'BEGIN:VCARD'."\n"; 
+				
+				$codeContents  = 'BEGIN:VCARD'."\n";
+				$codeContents .= 'VERSION:3.0'."\n";
+				$codeContents .= 'N:'.$FamilyName.";".$GivenName.";;;\n";
+				if (!empty($results[$n]["NameOnBadge"])){
+					$codeContents .= 'NICKNAME:'.$NameOnBadge."\n";
+				}
+				 				
 				$codeContents .= 'FN:'.$GivenName." ".$FamilyName."\n";
 				$codeContents .= 'EMAIL:'.$Email."\n"; 
 				$codeContents .= 'ORG:'.$Company."\n"; 
