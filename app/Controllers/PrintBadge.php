@@ -94,7 +94,7 @@ class PrintBadge extends BaseController
 			$eventYear = $_POST["eventYearID"];
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,ChineseName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			$builder->where('Email', $id);
