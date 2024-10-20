@@ -261,6 +261,7 @@ class PrintBadge extends BaseController
 				
 			
 				$pdf->SetFont('helvetica', 'B', 55);
+				$pdf->SetFont('stsongstdlight', 'B', 55);
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 				
 				//$pdf->SetFont('stsongstdlight', 'B', 25);
