@@ -131,7 +131,7 @@ input[type=text] {
 <div class="grid-container">
   <div class="item1"><img width = "500px" style=" 
   background-color:black;
-  border-style: outset;
+  
   border-width: 3px;
   border-color: black;" src="/images_new/TestConX-LOGO-White_1500.png"/></div>
   <div class="item2"><h4>This badge has been printed previously. <br>Please see the registration desk.</h4></div>
