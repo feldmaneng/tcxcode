@@ -164,8 +164,22 @@ class PrintBadge extends BaseController
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
+			if (!empty($results[$n]["ChineseName"])){
 				
-				$NameOnBadge=$results[$n]["NameOnBadge"];
+					$NameOnBadge=$results[$n]["ChineseName"];
+			}	
+			else if (!empty($results[$n]["NameOnBadge"])){
+				
+					$NameOnBadge=$results[$n]["NameOnBadge"];
+					
+			}
+			else {
+				
+				$NameOnBadge=$results[$n]["GivenName"];
+				
+			}
+			
+				
 				
 				$GivenName=$results[$n]["GivenName"];
 				echo "<h1>".$GivenName."</h1>";
@@ -184,7 +198,7 @@ class PrintBadge extends BaseController
 				$Dinner=$results[$n]["Dinner"];
 				$type = $results[$n]["Type"];
 				$Email = $results[$n]["Email"];
-				
+				$ChineseName = $results[$n]["ChineseName"];
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
@@ -242,28 +256,18 @@ class PrintBadge extends BaseController
 				$pdf->SetTextColor(0,0,0);
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
-			if (!empty($results[$n]["NameOnBadge"])){
+				
+				
+				
+			
 				$pdf->SetFont('helvetica', 'B', 55);
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 				
-				$pdf->SetFont('stsongstdlight', 'B', 25);
+				//$pdf->SetFont('stsongstdlight', 'B', 25);
 
 					
-			}
-			else if (!empty($results[$n]["GivenName"])){
-				$pdf->SetFont('helvetica', 'B', 55);
-				$pdf->Cell(0, 0, $GivenName, 0, 1, 'C', 0, '', 1);
+			
 				
-				$pdf->SetFont('stsongstdlight', 'B', 25);
-				
-				
-			}
-			else {
-				$pdf->SetFont('stsongstdlight', 'B', 55);
-				
-				
-			}
-				$pdf->SetFont('stsongstdlight', 'B', 25);
 			
 				//$pdf->Cell(0, 0,$CN_Company, 0, 1, 'C', 0, '', 1);
 				$pdf->SetFont('helvetica', 'B', 25);
