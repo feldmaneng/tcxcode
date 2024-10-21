@@ -44,7 +44,16 @@ class Database extends BaseController {
  
 	public function index()
 	{
-			
+			if($session->tcx_userdata['username']=="Badges")
+			{
+		echo "<OL>";		
+		echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudkorea') . ">Guest Crud  Korea</a></LI>";
+		echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudchina') . ">Guest Crud China</a></LI>";
+		echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
+		echo "</OL>";
+			}
+		else{
+				
 		echo "<h1>TestConX Database - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
@@ -74,6 +83,7 @@ class Database extends BaseController {
 		echo "<LI><a href=" . site_url('/badge') . ">Badges</a></LI>";
 		echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
 		echo "</OL>";
+		}
 	}
 
     function contacts()
