@@ -330,8 +330,8 @@ public function Guestcrudkorea()
 	$crud->where(['guests.EventYear' => EventYearKorea]);
    		
 		
-	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameonBadge','ChineseName','PrintTime']);
-	$crud->setUniqueId('korea_2024_guest4');
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime']);
+	$crud->setUniqueId('korea_2024_guest6');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
@@ -354,8 +354,8 @@ public function Guestcrudchina()
 	$crud->where(['guests.EventYear' => EventYearChina]);
    		
 		
-	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameonBadge','ChineseName','PrintTime']);
-	$crud->setUniqueId('china_2024_guest4');
+	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime']);
+	$crud->setUniqueId('china_2024_guest6');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
