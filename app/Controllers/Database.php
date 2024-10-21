@@ -44,6 +44,7 @@ class Database extends BaseController {
  
 	public function index()
 	{
+		$session = session();
 			if($session->tcx_userdata['username']=="Badges")
 			{
 		echo "<OL>";		
