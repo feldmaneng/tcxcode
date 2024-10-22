@@ -258,10 +258,23 @@ class PrintBadge extends BaseController
 				$pdf->Ln(40);
 				
 				
+				//here is where we need the fonts
 				
-			
+				// convert TTF font to TCPDF format and store it on the fonts folder
+			$fontname = TCPDF_FONTS::addTTFfont(site_url('/ThirdParty/NotoSerifKR-VariableFont_wght.ttf'), 'TrueTypeUnicode', '', 96);
+
+			// use the font
+			if($EventYear == "korea2024"){
+			$pdf->SetFont($fontname, 'B', 55,);
+			}
+			else if($EventYear == "china2024"){
+				$pdf->SetFont($stsongstdlight, 'B', 55,);
+			}
+			else{
 				$pdf->SetFont('helvetica', 'B', 55);
-				$pdf->SetFont('stsongstdlight', 'B', 55);
+			}
+				//$pdf->SetFont('helvetica', 'B', 55);
+				//$pdf->SetFont('stsongstdlight', 'B', 55);
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 				
 				//$pdf->SetFont('stsongstdlight', 'B', 25);
