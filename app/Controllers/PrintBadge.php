@@ -261,7 +261,7 @@ class PrintBadge extends BaseController
 				//here is where we need the fonts
 				
 				// convert TTF font to TCPDF format and store it on the fonts folder
-			$fontname = TCPDF_FONTS::addTTFfont(site_url('/ThirdParty/NotoSerifKR-VariableFont_wght.ttf'), 'TrueTypeUnicode', '', 96);
+			$fontname = TCPDF_FONTS::addTTFfont(site_url('tcxcode/ThirdParty/NotoSerifKR-VariableFont_wght.ttf'), 'TrueTypeUnicode', '', 96);
 
 			// use the font
 			if($EventYear == "korea2024"){
