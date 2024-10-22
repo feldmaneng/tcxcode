@@ -86,7 +86,7 @@ class PrintBadge extends BaseController
 	
    
       function printgeneral(){
-		require_once('tcpdf_include.php');
+		
 			$model = model(DirectoryEntry::class);
 			$session = session();
 
