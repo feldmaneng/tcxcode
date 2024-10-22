@@ -86,7 +86,7 @@ class PrintBadge extends BaseController
 	
    
       function printgeneral(){
-		
+		require_once('tcpdf_include.php');
 			$model = model(DirectoryEntry::class);
 			$session = session();
 
@@ -261,11 +261,11 @@ class PrintBadge extends BaseController
 				//here is where we need the fonts
 				
 				// convert TTF font to TCPDF format and store it on the fonts folder
-			//$fontname = TCPDF_FONTS::addTTFfont(site_url('tcxcode/ThirdParty/NotoSerifKR-VariableFont_wght.ttf'), 'TrueTypeUnicode', '', 96);
+			$fontname = TCPDF_FONTS::addTTFfont(site_url('tcxcode/ThirdParty/NotoSerifKR-VariableFont_wght.ttf'), 'TrueTypeUnicode', '', 96);
 
 			// use the font
 			if($EventYear == "korea2024"){
-			$pdf->SetFont('NotoSerifKR-VariableFont_wght', 'B', 55,);
+			$pdf->SetFont($fontname, 'B', 55,);
 			}
 			else if($EventYear == "china2024"){
 				$pdf->SetFont('stsongstdlight', 'B', 55,);
