@@ -137,6 +137,7 @@ class PrintBadge extends BaseController
 				
 				return;
 			}
+			// IRA POSITION
 			$height = '152.4';
 			$width = '101.6';
 		$pageLayout = array($width, $height);
@@ -326,6 +327,8 @@ class PrintBadge extends BaseController
 				
 				if($type=="EXPOtiny"){
 				$pdf->SetFont('helvetica', '', 40);
+				
+				//$pdf->MultiCell(x size,y size,"EXPO", 0, 'L', 0, 0, x position,y position, true);
 				$pdf->MultiCell(45, 20,"EXPO", 0, 'L', 0, 0, 45,120, true);
 				//$pdf->Rect(45, 123, 80, 30, 'F',array(), array(250,174,2));
 				}
@@ -334,7 +337,8 @@ class PrintBadge extends BaseController
 				
 				
 				//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
-			
+				//Control Text IRA POSITION
+				//$pdf->MultiCell(x size,y size,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, x position,y position, true);
 				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -2.5,142, true);
 				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 				
@@ -365,6 +369,8 @@ class PrintBadge extends BaseController
 				
 				//$code="3880";
 				// QRCODE,H : QR-CODE Best error correction
+				//QR CODE IRA POSITION
+				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
 				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 115, 30, 30, $style, 'N');
 				
 					
