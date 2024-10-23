@@ -107,8 +107,22 @@ function TestConXsingle($graphics = TRUE)
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
+			if (!empty($results[$n]["ChineseName"])){
 				
-				$NameOnBadge=$results[$n]["NameOnBadge"];
+					$NameOnBadge=$results[$n]["ChineseName"];
+			}	
+			else if (!empty($results[$n]["NameOnBadge"])){
+				
+					$NameOnBadge=$results[$n]["NameOnBadge"];
+						
+			}
+			else {
+				
+				$NameOnBadge=$results[$n]["GivenName"];
+				
+			}
+				
+				
 				
 				$GivenName=$results[$n]["GivenName"];
 				echo "<h1>".$GivenName."</h1>";
@@ -185,28 +199,24 @@ function TestConXsingle($graphics = TRUE)
 				$pdf->SetTextColor(0,0,0);
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
-			if (!empty($results[$n]["NameOnBadge"])){
+					if($EventYear == "Korea2024"){
+			$pdf->SetFont('cid0kr', '', 55,);
+			}
+			else if($EventYear == "China2024"){
+				$pdf->SetFont('cid0cs', '', 55,);
+			}
+			else{
 				$pdf->SetFont('helvetica', 'B', 55);
+			}
+				//$pdf->SetFont('helvetica', 'B', 55);
+				//$pdf->SetFont('stsongstdlight', '', 55);
+				//$pdf->SetFont('cid0jp', '', 40);
+				//你好
+				//$txt = 'こんにちは世界';
+				//$txt = '你好';
+				//$pdf->Write(0, $txt, '', 0, 'L', true, 0, false, false, 0);
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
-				
-				$pdf->SetFont('stsongstdlight', 'B', 25);
-
-					
-			}
-			else if (!empty($results[$n]["GivenName"])){
-				$pdf->SetFont('helvetica', 'B', 55);
-				$pdf->Cell(0, 0, $GivenName, 0, 1, 'C', 0, '', 1);
-				
-				$pdf->SetFont('stsongstdlight', 'B', 25);
-				
-				
-			}
-			else {
-				$pdf->SetFont('stsongstdlight', 'B', 55);
-				
-				
-			}
-				$pdf->SetFont('stsongstdlight', 'B', 25);
+			
 			
 				//$pdf->Cell(0, 0,$CN_Company, 0, 1, 'C', 0, '', 1);
 				$pdf->SetFont('helvetica', 'B', 25);
