@@ -182,8 +182,8 @@ private function _example_output($output = null) {
 	$codeContents .= 'VERSION:3.0'."\n";
     $codeContents .= 'NOTE:'.$a."\n";
 	$codeContents .= 'END:VCARD'; */
-
-    $codeContents = $a;
+	
+    $codeContents = strval($a);
 	$fileName = $a.'.png';
     
 	
@@ -192,12 +192,12 @@ private function _example_output($output = null) {
 	//return \QRcode::png($codeContents);
 }
 //4080
-function BadgeNumber($start= 3729,$end = 3730)
+function BadgeNumber($start= 3727,$end = 4500)
  {
 	 for($i=$start;$i<=$end;$i++)
 	 {
 		 $this->qrstamp2($i);
-		 echo "Badge ".$i." printed \n";
+		 echo "Badge ".$i." printed <br>";
 	 }
 	 
 	 
