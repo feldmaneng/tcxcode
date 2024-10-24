@@ -171,20 +171,7 @@ private function _example_output($output = null) {
 
         return view('testconx_template.php', (array)$output);
     }
- 
-function BadgeNumber($start= 3727,$end = 4080)
- {
-	 for($i=$start;$i<=$end;$i++)
-	 {
-		 qrstamp2($i);
-		 
-	 }
-	 
-	 
-	 
-}
-
-function qrstamp2($a)
+ function qrstamp2($a)
  {
 	
 //include('phpqrcode/qrlib.php'); 
@@ -200,6 +187,19 @@ function qrstamp2($a)
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
 	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
 }
+function BadgeNumber($start= 3727,$end = 4080)
+ {
+	 for($i=$start;$i<=$end;$i++)
+	 {
+		 qrstamp2($i);
+		 
+	 }
+	 
+	 
+	 
+}
+
+
 
 
 function TestConXsingle($graphics = TRUE)
