@@ -188,7 +188,7 @@ private function _example_output($output = null) {
 
 	
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
-	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
+	return \QRcode::png($codeContents, $tempDir.'2.png', QR_ECLEVEL_L, 200,0);
 }
 //4080
 function BadgeNumber($start= 3727,$end = 3728)
