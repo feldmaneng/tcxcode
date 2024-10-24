@@ -187,11 +187,12 @@ private function _example_output($output = null) {
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
 	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
 }
+
 function BadgeNumber($start= 3727,$end = 4080)
  {
 	 for($i=$start;$i<=$end;$i++)
 	 {
-		 qrstamp2($i);
+		 $this->qrstamp2($i);
 		 
 	 }
 	 
