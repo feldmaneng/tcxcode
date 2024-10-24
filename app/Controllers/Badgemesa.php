@@ -178,10 +178,7 @@ private function _example_output($output = null) {
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/"; 
 	$filename = 'testconx'.$a.'.png';
    
-	/* $codeContents  = 'BEGIN:VCARD'."\n"; 
-	$codeContents .= 'VERSION:3.0'."\n";
-    $codeContents .= 'NOTE:'.$a."\n";
-	$codeContents .= 'END:VCARD'; */
+	
 
     $codeContents = $a;
 
@@ -456,6 +453,13 @@ function qrstamp($a,$b,$c,$d)
 	
 //include('phpqrcode/qrlib.php'); 
 //file_put_contents("test5.png",file_get_contents("test6.png"));
+
+/* $codeContents  = 'BEGIN:VCARD'."\n"; 
+	$codeContents .= 'VERSION:3.0'."\n";
+    $codeContents .= 'NOTE:'.$a."\n";
+	$codeContents .= 'END:VCARD'; */
+	
+	
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $d; 
  
     $name = $a; 
