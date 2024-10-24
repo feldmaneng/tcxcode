@@ -176,7 +176,7 @@ private function _example_output($output = null) {
 	
 
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/"; 
-	$filename = $a.'.png';
+	$filename = 'testconx'.$a.'.png';
    
 	/* $codeContents  = 'BEGIN:VCARD'."\n"; 
 	$codeContents .= 'VERSION:3.0'."\n";
