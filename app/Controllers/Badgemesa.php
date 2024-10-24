@@ -178,11 +178,14 @@ private function _example_output($output = null) {
 //file_put_contents("test5.png",file_get_contents("test6.png"));
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/" . $a; 
  
-   
+   /* 
 	$codeContents  = 'BEGIN:VCARD'."\n"; 
 	$codeContents .= 'VERSION:3.0'."\n";
     $codeContents .= 'NOTE:'.$a."\n";
-	$codeContents .= 'END:VCARD'; 
+	$codeContents .= 'END:VCARD';  */
+
+    $codeContents = $a;
+
 	
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
 	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
