@@ -192,7 +192,7 @@ function BadgeNumber($start= 3729,$end = 3730)
 	 for($i=$start;$i<=$end;$i++)
 	 {
 		 $this->qrstamp2($i);
-		 
+		 echo "Badge ".$i." printed";
 	 }
 	 
 	 
