@@ -107,6 +107,9 @@ $routes->post('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
+$routes->get('/badgemesa/Badgenumber', 'Badgemesa::Badgenumber');          
+$routes->post('/badgemesa/Badgenumber', 'Badgemesa::Badgenumber');
+
 $routes->get('/badgetest', 'Badgemesatest::index');          
 $routes->post('/badgetest', 'Badgemesatest::index');
 

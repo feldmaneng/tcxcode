@@ -53,12 +53,13 @@ class Badgemesa extends BaseController {
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankExhibitor') . ' target="_blank" ">Blank Symposium</a></LI>';
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgestinymlBlankEXPO') . ' target="_blank" ">Blank EXPOtinyml ONLY</a></LI>';
 		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
+		
 		echo"</OL>";
 		
 		echo "<h1>Tinyml EMEA Badges - tinyML Office use only</h1>";
 		echo "<h4>tinyml EMEA Confidential</h4>";
 		echo "<OL>";
-		
+		echo "<LI>Print <a href=" . site_url('/badgemesa/Badgenumber') . ">BadgeNumber</a></LI>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEAAttendee') . ">Attendee</a></LI>";
 		
 		echo "<LI>Print <a href=" . site_url('/badgemesa/BadgesEMEABlankAttendee') . ' target="_blank" ">Blank Attendee</a></LI>';
@@ -171,6 +172,35 @@ private function _example_output($output = null) {
         return view('testconx_template.php', (array)$output);
     }
  
+function BadgeNumber($start= 3727,$end = 4080)
+ {
+	 for($i=$start,$i<=$end,$i++)
+	 {
+		 qrstamp2($i);
+		 
+	 }
+	 
+	 
+	 
+}
+
+function qrstamp2($a)
+ {
+	
+//include('phpqrcode/qrlib.php'); 
+//file_put_contents("test5.png",file_get_contents("test6.png"));
+	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $a; 
+ 
+   
+	$codeContents  = 'BEGIN:VCARD'."\n"; 
+	$codeContents .= 'VERSION:3.0'."\n";
+    $codeContents .= 'NOTE:'.$a."\n";
+	$codeContents .= 'END:VCARD'; 
+	
+	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
+	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
+}
+
 
 function TestConXsingle($graphics = TRUE)
  {
