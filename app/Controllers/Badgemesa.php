@@ -176,25 +176,20 @@ private function _example_output($output = null) {
 	
 
 	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/"; 
-	$filename = 'testconx'.$a.'.png';
+	//$filename = 'testconx'.$a.'.png';
    
 	/* $codeContents  = 'BEGIN:VCARD'."\n"; 
 	$codeContents .= 'VERSION:3.0'."\n";
     $codeContents .= 'NOTE:'.$a."\n";
 	$codeContents .= 'END:VCARD'; */
 
-    //$codeContents = $a;
-	ob_start("callback");
-    
-    // here DB request or some processing
     $codeContents = $a;
+	$fileName = '005_file_'.md5($codeContents).'.png';
     
-    // end of processing here
-    $debugLog = ob_get_contents();
-    ob_end_clean();
 	
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
-	return \QRcode::png($codeContents, $tempDir.$filename);
+	//return \QRcode::png($codeContents, $tempDir.$filename);
+	return \QRcode::png($codeContents);
 }
 //4080
 function BadgeNumber($start= 3729,$end = 3730)
