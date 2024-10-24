@@ -183,11 +183,11 @@ private function _example_output($output = null) {
     $codeContents .= 'NOTE:'.$a."\n";
 	$codeContents .= 'END:VCARD'; */
 
-    $codeContents = 'NOTE:'.$a;
-	$fileName = '005_file_'.md5($codeContents).'.png';
+    $codeContents = $a;
+	$fileName = $a.'.png';
     
 	
-	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
+	
 	return \QRcode::png($codeContents, $tempDir.$fileName);
 	//return \QRcode::png($codeContents);
 }
@@ -197,7 +197,7 @@ function BadgeNumber($start= 3729,$end = 3730)
 	 for($i=$start;$i<=$end;$i++)
 	 {
 		 $this->qrstamp2($i);
-		 echo "Badge ".$i." printed";
+		 echo "Badge ".$i." printed \n";
 	 }
 	 
 	 
