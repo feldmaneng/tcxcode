@@ -176,7 +176,7 @@ private function _example_output($output = null) {
 	
 //include('phpqrcode/qrlib.php'); 
 //file_put_contents("test5.png",file_get_contents("test6.png"));
-	$tempDir = $_SERVER["DOCUMENT_ROOT"]."tmpqr/" . $a; 
+	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/" . $a; 
  
    
 	$codeContents  = 'BEGIN:VCARD'."\n"; 
