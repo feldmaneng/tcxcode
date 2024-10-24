@@ -174,7 +174,7 @@ private function _example_output($output = null) {
  
 function BadgeNumber($start= 3727,$end = 4080)
  {
-	 for($i=$start,$i<=$end,$i++)
+	 for($i=$start;$i<=$end;$i++)
 	 {
 		 qrstamp2($i);
 		 
