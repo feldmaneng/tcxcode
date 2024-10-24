@@ -174,12 +174,11 @@ private function _example_output($output = null) {
  function qrstamp2($a)
  {
 	
-//include('phpqrcode/qrlib.php'); 
-//file_put_contents("test5.png",file_get_contents("test6.png"));
-	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/".$a.'.png'; 
- 
+
+	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/"; 
+	$filename = $a.'.png';
    
-	 $codeContents  = 'BEGIN:VCARD'."\n"; 
+	$codeContents  = 'BEGIN:VCARD'."\n"; 
 	$codeContents .= 'VERSION:3.0'."\n";
     $codeContents .= 'NOTE:'.$a."\n";
 	$codeContents .= 'END:VCARD';
@@ -188,7 +187,7 @@ private function _example_output($output = null) {
 
 	
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
-	return new \QRcode::png($codeContents, $tempDir);
+	return \QRcode::png($codeContents, $tempDir.$filename);
 }
 //4080
 function BadgeNumber($start= 3727,$end = 3728)
