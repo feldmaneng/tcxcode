@@ -183,7 +183,7 @@ private function _example_output($output = null) {
     $codeContents .= 'NOTE:'.$a."\n";
 	$codeContents .= 'END:VCARD'; */
 
-    $codeContents = $a;
+    $codeContents = 'NOTE:'.$a;
 	$fileName = '005_file_'.md5($codeContents).'.png';
     
 	
