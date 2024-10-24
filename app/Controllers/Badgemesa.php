@@ -176,7 +176,7 @@ private function _example_output($output = null) {
 	
 //include('phpqrcode/qrlib.php'); 
 //file_put_contents("test5.png",file_get_contents("test6.png"));
-	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/" . $a; 
+	$tempDir = $_SERVER["DOCUMENT_ROOT"]."/tmpqr/".$a; 
  
    
 	$codeContents  = 'BEGIN:VCARD'."\n"; 
@@ -190,8 +190,8 @@ private function _example_output($output = null) {
 	//return QRcode::svg($codeContents,false, $tempDir.'08.svg', QR_ECLEVEL_L, false,false); 
 	return \QRcode::png($codeContents, $tempDir.'.png', QR_ECLEVEL_L, 200,0);
 }
-
-function BadgeNumber($start= 3727,$end = 4080)
+//4080
+function BadgeNumber($start= 3727,$end = 3728)
  {
 	 for($i=$start;$i<=$end;$i++)
 	 {
