@@ -342,7 +342,7 @@ public function Guestcrudkorea()
 		
 	
 	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime']);
-	$crud->fields(['EventYear','Email','GivenName','FamilyName','ChineseName','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Mobile','ToPrint','PrintTime']);
+	$crud->fields(['EventYear','Email','GivenName','FamilyName','ChineseName','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime']);
 	$crud->setUniqueId('korea_2024_guest8');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
@@ -368,7 +368,7 @@ public function Guestcrudchina()
 		
 	
 	$crud->columns (['ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime']);
-	$crud->fields(['EventYear','Email','GivenName','FamilyName','ChineseName','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Mobile','ToPrint','PrintTime']);
+	$crud->fields(['EventYear','Email','GivenName','FamilyName','ChineseName','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime']);
 	$crud->setUniqueId('china_2024_guest8');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
