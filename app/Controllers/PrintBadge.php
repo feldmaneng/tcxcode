@@ -329,7 +329,7 @@ class PrintBadge extends BaseController
 				//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
 				//Control Text IRA POSITION
 				//$pdf->MultiCell(x size,y size,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, x position,y position, true);
-				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 5,142, true);
+				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,142, true);
 				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
 				
 				// new style
