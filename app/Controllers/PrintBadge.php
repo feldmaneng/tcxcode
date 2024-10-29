@@ -296,9 +296,9 @@ class PrintBadge extends BaseController
 				$pdf->SetFont('helvetica', 'B', 22);
 				}
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
-				$pdf->SetFont('helvetica', 'B', 25);
+				$pdf->SetFont('stsongstdlight', 'B', 25);
 				if(strlen($Company)>12){
-				$pdf->SetFont('helvetica', 'B', 17);
+				$pdf->SetFont('stsongstdlight', 'B', 17);
 				}
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
@@ -313,17 +313,7 @@ class PrintBadge extends BaseController
 				$pdf->SetFillColor(255,255,255);
 				$pdf->SetTextColor(0,0,0);
 				
-				/* if($type != 'Professional'){
-					if($type != "EXPOtiny"){
-				$pdf->SetFont('helvetica', 'B', 16);
-				$pdf->Cell(0, 0,'Ask me about:', 0, 1, 'C', 0, '', 1);
-					if(strlen($Message)>8){
-					$pdf->SetFont('helvetica', 'B', 22);
-					}
 				
-				$pdf->Cell(0, 0,$Message, 0, 1, 'C', 0, '', 1);
-					}
-				} */
 				
 				if($type=="EXPOtiny"){
 				$pdf->SetFont('helvetica', '', 40);
