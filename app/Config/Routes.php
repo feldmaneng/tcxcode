@@ -110,6 +110,11 @@ $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 $routes->get('/badgemesa/Badgenumber', 'Badgemesa::Badgenumber');          
 $routes->post('/badgemesa/Badgenumber', 'Badgemesa::Badgenumber');
 
+
+$routes->get('/badgemesa/Related', 'Badgemesa::Related');          
+$routes->post('/badgemesa/Related', 'Badgemesa::Related');
+
+
 $routes->get('/badgetest', 'Badgemesatest::index');          
 $routes->post('/badgetest', 'Badgemesatest::index');
 
