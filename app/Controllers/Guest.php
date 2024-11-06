@@ -341,9 +341,9 @@ public function Guestcrudkorea()
    		
 		
 	
-	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime','NoShow',]);
-	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow',]);
-	$crud->setUniqueId('korea_2024_guest10');
+	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->setUniqueId('korea_2024_guest11');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
@@ -367,9 +367,9 @@ public function Guestcrudchina()
    		
 		
 	
-	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','PrintTime','NoShow',]);
-	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow',]);
-	$crud->setUniqueId('china_2024_guest10');
+	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','ChineseName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->setUniqueId('china_2024_guest11');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
