@@ -322,6 +322,9 @@ $routes->post('/Asiaguestchinese/guest_listtest2', 'Asiaguestchinese::guest_list
 
 $routes->get('/ViewTest', 'ViewTest::index');  
 $routes->post('/ViewTest', 'ViewTest::index');  
+
+$routes->get('/Check', 'ContactCheck::check');  
+$routes->post('/Check', 'ContactCheck::index'); 
 /*
  * --------------------------------------------------------------------
  * Additional Routing
