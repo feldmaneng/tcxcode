@@ -324,7 +324,8 @@ $routes->get('/ViewTest', 'ViewTest::index');
 $routes->post('/ViewTest', 'ViewTest::index');  
 
 $routes->get('/Check', 'ContactCheck::check');  
-$routes->post('/Check', 'ContactCheck::index'); 
+$routes->post('/Check', 'ContactCheck::check');
+$routes->post('ContactCheck/do_upload', 'ContactCheck::do_upload');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

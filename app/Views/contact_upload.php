@@ -1,16 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
 <title>Upload Form</title>
 </head>
 <body>
+<?= validation_list_errors() ?>
 
-<form action=" <?=base_url('ContactCheck/do_upload')?>" enctype="multipart/form-data" method="post">
+	<h3>Contact ID Checking</h3>
 	
-	<label class="form-label" id="uploadFile">Select Files</label>
-	<input type="file" name="uploadedFiles[]" multiple="multiple"/>
-	<input type="submit" class="btn btn-primary" value="Upload" name="submit"/>
 
-</form>
+	<?= form_open_multipart('ContactCheck/do_upload') ?>
+		<input type="file" name="userfile" size="20">
+		<br><br>
+		<input type="submit" value="upload">
+
+	</form>
 
 </body>
 </html>
+
