@@ -24,33 +24,7 @@ class ContactCheck extends BaseController
 				helper('url');
         }
 
-    public function index()
-    {
-		echo "<a href=" . site_url('/PrintBadge/korea') . ">Korea</a> ";
-		echo "<a href=" . site_url('/PrintBadge/china') . ">China</a> ";
-
-    }
-	
-	 public function korea()
-    {
-        return view('PrintView', ['errors' => []]);
-    }
-	
-	public function china()
-    {
-        return view('PrintViewChina', ['errors' => []]);
-    }
-	
-	
-	public function printpreview()
-    {
-        return view('PrintView2', ['errors' => []]);
-    }
-	
-	public function printpreviewchina()
-    {
-        return view('PrintView2China', ['errors' => []]);
-    }
+    
 
  private function _getDbData() {
         $db = (new ConfigDatabase())->default;
@@ -85,34 +59,67 @@ class ContactCheck extends BaseController
     }
 	
    
-      function check(){
+      public function check(){
 		
-		return view('contact_upload', ['errors' => []]);	
+		return view('contact_upload',['error' => ' ']);	
 	  }
 	  
 	  public function do_upload(){
-		  $countFiles = count($_FILES['uploadedFiles']['name']);
-			$target_file =basename($_FILES["fileToUpload"]["name"]);
-			$csv = array_map('str_getcsv', file($target_file));
+			$file = $this->request->getFile('userfile');
+		  
+			$csv = array_map('str_getcsv', file($file));
+			$idrow = array_column($csv,0);
+			$length = count($idrow);
 			
-			$key = array_search('Email', array_column($csv, 0));
+			// $csv[0][0] is the value in the top right most corner $csv[1][0] is the value directly below the right most corner
+			//echo $csv[0][0];
+			//echo $csv[1][0];
 			
 			
-			$keyfirst = $key + 1;
-			$keyfirst++;
-			$x = 0;
-			$emailc = array_search('Email',$csv[$keyfirst]);
-			//increment keyfirst to move to the first times one row down
-			while($csv[$keyfirst+$x][1] != NULL ){
-
-				$x++;
 				
+			//$length = $x;
+			$table = new \CodeIgniter\View\Table();
+			$table->setHeading(['Email','ContactID','Email','GivenName','FamilyName']);
+			for($i=1;$i<$length;$i++){
+			
+				$db      = \Config\Database::connect();
+				$builder = $db->table('contacts');
+				$builder->select('ContactID,Email,GivenName,FamilyName');
+				$builder->where('Email', $csv[$i][0]);
+				
+				
+
+				$query = $builder->get();
+				$people = $query->getNumRows();
+				
+				$results = $query->getResultArray();
+				if( $people == 1){
+				$Email = $results[0]["Email"];
+				$ContactID =  $results[0]["ContactID"];
+				$GivenName = $results[0]["GivenName"];
+				$FamilyName = $results[0]["FamilyName"];
 				}
-			$keylast = $keyfirst + $x;
+				else{
+				$Email = "Not Found";
+				$ContactID =  "Not Found";
+				$GivenName = "Not Found";
+				$FamilyName = "Not Found";
+				}
+				$table->addRow([$csv[$i][0], $ContactID, $Email, $GivenName, $FamilyName]);
 			
-			echo $csv[$emailc][0];
-			echo $csv[$emailc][1];
+				
+			}
 			
+			
+
+
+
+
+
+			echo $table->generate();
+
+
+
 			
 			
 			
