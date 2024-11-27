@@ -79,7 +79,7 @@ class ContactCheck extends BaseController
 				
 			//$length = $x;
 			$table = new \CodeIgniter\View\Table();
-			$table->setHeading(['Email','ContactID','Email','GivenName','FamilyName']);
+			$table->setHeading(['Email','ContactID','Email','GivenName','FamilyName','Match','MatchContactID','MatchGivenNameName','MatchFamilyName']);
 			for($i=1;$i<$length;$i++){
 			
 				$db      = \Config\Database::connect();
@@ -105,7 +105,34 @@ class ContactCheck extends BaseController
 				$GivenName = "Not Found";
 				$FamilyName = "Not Found";
 				}
-				$table->addRow([$csv[$i][0], $ContactID, $Email, $GivenName, $FamilyName]);
+				
+				
+				$db      = \Config\Database::connect();
+				$builder = $db->table('contacts');
+				$builder->select('ContactID,Email,GivenName,FamilyName');
+				$builder->where('GivenName', $csv[$i][1]);
+				$builder->where('FamilyName', $csv[$i][2]);
+				
+				
+
+				$query = $builder->get();
+				$people = $query->getNumRows();
+				
+				$results = $query->getResultArray();
+				if( $people == 1){
+				$Match = "Match Found";
+				$MatchContactID =  $results[0]["ContactID"];
+				$MatchGivenName = $results[0]["GivenName"];
+				$MatchFamilyName = $results[0]["FamilyName"];
+				}
+				else{
+				$Match = "Not Found";
+				$MatchContactID =  "Not Found";
+				$MatchGivenName = "Not Found";
+				$MatchFamilyName = "Not Found";
+				}
+				
+				$table->addRow([$csv[$i][0], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
 			
 				
 			}
