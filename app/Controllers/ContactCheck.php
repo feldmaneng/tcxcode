@@ -144,7 +144,7 @@ class ContactCheck extends BaseController
 					}
 					if ($people > 2)
 					{
-						$x=0
+						$x=0;
 						for($i=1;$i<=$people;$i++)
 						{
 							
