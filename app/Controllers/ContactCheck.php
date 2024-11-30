@@ -76,7 +76,12 @@ class ContactCheck extends BaseController
 			//echo $csv[1][0];
 			
 			
-				
+			//Restating all inputs in the first columns, 
+			// Query email address - if match compare name
+			//       if names match, list contact ID - if they don't match, indicate different names found (and what they are)
+			//   if no email match, query names - if only 1 result - list contact ID & email address found
+			//   if multple results - flag that multiple matches found
+			
 			//$length = $x;
 			$table = new \CodeIgniter\View\Table();
 			$table->setHeading(['Email','ContactID','Email','GivenName','FamilyName','Match','MatchContactID','MatchGivenNameName','MatchFamilyName']);
@@ -124,13 +129,34 @@ class ContactCheck extends BaseController
 				$MatchContactID =  $results[0]["ContactID"];
 				$MatchGivenName = $results[0]["GivenName"];
 				$MatchFamilyName = $results[0]["FamilyName"];
+					if($MatchContactID == $ContactID)
+					{
+						$MatchContactID = 'Same';
+						$MatchGivenName = 'Same';
+						$MatchFamilyName = 'Same';
+					}
 				}
-				else{
-				$Match = "Not Found";
-				$MatchContactID =  "Not Found";
-				$MatchGivenName = "Not Found";
-				$MatchFamilyName = "Not Found";
-				}
+					else{
+					$Match = "Not Found";
+					$MatchContactID =  "Not Found";
+					$MatchGivenName = "Not Found";
+					$MatchFamilyName = "Not Found";
+					}
+					if ($people > 2)
+					{
+						$x=0
+						for($i=1;$i<=$people;$i++)
+						{
+							
+							$Match = $i;
+							$MatchContactID += $results[$x]["ContactID"];
+							$MatchGivenName += $results[$x]["GivenName"];
+							$MatchFamilyName += $results[$x]["FamilyName"];
+							$x++;
+						}
+					}
+				
+					
 				
 				$table->addRow([$csv[$i][0], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
 			
