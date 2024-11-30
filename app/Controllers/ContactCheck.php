@@ -84,7 +84,7 @@ class ContactCheck extends BaseController
 			
 			//$length = $x;
 			$table = new \CodeIgniter\View\Table();
-			$table->setHeading(['Email','ContactID','Email','GivenName','FamilyName','Match','MatchContactID','MatchGivenNameName','MatchFamilyName']);
+			$table->setHeading(['Email from Csv','GivenName from Csv','FamilyName from Csv','ContactID','Email','GivenName','FamilyName','Match','MatchContactID','MatchGivenNameName','MatchFamilyName']);
 			for($i=1;$i<$length;$i++){
 			
 				$db      = \Config\Database::connect();
@@ -158,7 +158,7 @@ class ContactCheck extends BaseController
 				
 					
 				
-				$table->addRow([$csv[$i][0], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
+				$table->addRow([$csv[$i][0],[$csv[$i][1],[$csv[$i][2], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
 			
 				
 			}
