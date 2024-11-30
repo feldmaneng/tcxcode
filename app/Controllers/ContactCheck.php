@@ -158,7 +158,7 @@ class ContactCheck extends BaseController
 				
 					
 				
-				$table->addRow([$csv[$i][0],[$csv[$i][1],[$csv[$i][2], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
+				$table->addRow([$csv[$i][0],[$csv[$i][1],$csv[$i][2], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
 			
 				
 			}
