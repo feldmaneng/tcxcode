@@ -132,16 +132,23 @@ class ContactCheck extends BaseController
 					if($MatchContactID == $ContactID)
 					{
 						$MatchContactID = 'Same';
-						$MatchGivenName = 'Same';
-						$MatchFamilyName = 'Same';
 					}
+					if($MatchGivenName == $GivenName)
+					{
+						$MatchGivenName = 'Same';						 
+					}
+					if($MatchFamilyName == $FamilyName)
+					{
+						$MatchFamilyName = 'Same';						 
+					}
+					
 				}
 					else{
 					$Match = "Not Found";
 					$MatchContactID =  "Not Found";
 					$MatchGivenName = "Not Found";
 					$MatchFamilyName = "Not Found";
-					}
+					} 
 					if ($people > 2)
 					{
 						$x=0;
