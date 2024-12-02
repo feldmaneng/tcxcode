@@ -163,7 +163,7 @@ class Authorpopulate extends BaseController
 				$PresentationID =  1000;
 				}
 					for($n=1;$n<=$csv[$i][$numberofauthors];$n++){
-						[$ContactID,$GivenName,$FamilyName]	= databasecheck($csv[$i][$email[$n]],$csv[$i][$given[$n]],$csv[$i][$family[$n]]);
+						[$ContactID,$GivenName,$FamilyName]	= $this->databasecheck($csv[$i][$email[$n]],$csv[$i][$given[$n]],$csv[$i][$family[$n]]);
 						$Com = $csv[$i][$company[$n]];
 						
 						if($n==1){
