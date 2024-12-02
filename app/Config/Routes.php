@@ -326,6 +326,10 @@ $routes->post('/ViewTest', 'ViewTest::index');
 $routes->get('/Check', 'ContactCheck::check');  
 $routes->post('/Check', 'ContactCheck::check');
 $routes->post('ContactCheck/do_upload', 'ContactCheck::do_upload');
+
+$routes->get('/AuthorCheck', 'Authorpopulate::check');  
+$routes->post('/AuthorCheck', 'Authorpopulate::check');
+$routes->post('Authorpopulate/do_upload', 'Authorpopulate::do_upload');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
