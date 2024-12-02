@@ -119,12 +119,12 @@ class Authorpopulate extends BaseController
 			$family3 = array_search('FN3',$csv[0]);
 			$family4 = array_search('FN4',$csv[0]);
 			$family5 = array_search('FN5',$csv[0]);
-			$company1 = array_search('Company',$csv[0]);
+			$company1 = array_search('Company Name',$csv[0]);
 			$company2 = array_search('Company2',$csv[0]);
 			$company3 = array_search('Company3',$csv[0]);
 			$company4 = array_search('Company4',$csv[0]);
 			$company5 = array_search('Company5',$csv[0]);
-			$email1 = array_search('Email',$csv[0]);
+			$email1 = array_search('Email1',$csv[0]);
 			$email2 = array_search('Email2',$csv[0]);
 			$email3 = array_search('Email3',$csv[0]);
 			$email4 = array_search('Email4',$csv[0]);
