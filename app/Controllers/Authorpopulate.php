@@ -83,7 +83,7 @@ class Authorpopulate extends BaseController
 				}
 				else{
 				//$Email = "Not Found";
-				$ContactID =  "Not Found";
+				$ContactID =  "NULL";
 				$GivenName = $given;
 				$FamilyName = $family;
 				}
