@@ -182,7 +182,7 @@ class Authorpopulate extends BaseController
 							'ContactID'        => $ContactID,
 							'GivenName'        => $GivenName,
 							'FamilyName'        => $FamilyName,
-							'Company'        => $Company,
+							'Company'        => $csv[$i][$company[$n]],
 							'PresentationID' => $PresentationID,
 						];
 
