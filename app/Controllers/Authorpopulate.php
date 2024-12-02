@@ -175,7 +175,7 @@ class Authorpopulate extends BaseController
 						
 						use CodeIgniter\Database\RawSql;
 						$db      = \Config\Database::connect();
-						$builder = $db->table('authors');
+						$builder = $db->table('authors_copy');
 						$data = [
 							'AuthorNumber'          => $n,
 							'Presenter'       => $Presenter,
