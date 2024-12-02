@@ -83,7 +83,8 @@ class Authorpopulate extends BaseController
 				}
 				else{
 				//$Email = "Not Found";
-				$ContactID =  15839;
+				//this is a dummy number for a To be announced person or someone missing their ContactID
+				$ContactID =  20548;
 				$GivenName = $given;
 				$FamilyName = $family;
 				}
@@ -101,11 +102,7 @@ class Authorpopulate extends BaseController
 			//echo $csv[1][0];
 			
 			
-			//Restating all inputs in the first columns, 
-			// Query email address - if match compare name
-			//       if names match, list contact ID - if they don't match, indicate different names found (and what they are)
-			//   if no email match, query names - if only 1 result - list contact ID & email address found
-			//   if multple results - flag that multiple matches found
+			
 			
 			$title = array_search('Title', $csv[0]);
 			$numberofauthors = array_search('Number of Authors', $csv[0]);
@@ -173,7 +170,7 @@ class Authorpopulate extends BaseController
 							$Presenter = 0;
 						}
 						
-						//use CodeIgniter\Database\RawSql;
+						
 						$db      = \Config\Database::connect();
 						$builder = $db->table('authors_copy');
 						$data = [
