@@ -194,14 +194,14 @@ class Authorpopulate extends BaseController
 				
 				
 					
-				Echo "Update Successful - do not hit refresh";
+				
 				//$table->addRow([$csv[$i][0],$csv[$i][1],$csv[$i][2], $ContactID, $Email, $GivenName, $FamilyName, $Match, $MatchContactID, $MatchGivenName, $MatchFamilyName]);
 			
 				
 			}
 			
 			
-
+Echo "Update Successful - do not hit refresh";
 
 
 
