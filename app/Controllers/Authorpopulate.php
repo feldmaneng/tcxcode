@@ -136,7 +136,7 @@ class Authorpopulate extends BaseController
 			//$table = new \CodeIgniter\View\Table();
 			//update for author? or remove
 			//$table->setHeading(['Email from Csv','GivenName from Csv','FamilyName from Csv','ContactID','Email','GivenName','FamilyName','Match','MatchContactID','MatchGivenNameName','MatchFamilyName']);
-			for($i=1;$i<$length;$i++){
+			for($i=1;$i<=$length;$i++){
 				
 			
 				 $db      = \Config\Database::connect();
