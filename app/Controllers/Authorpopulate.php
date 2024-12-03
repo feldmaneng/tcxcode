@@ -172,7 +172,7 @@ class Authorpopulate extends BaseController
 						
 						
 						$db      = \Config\Database::connect();
-						$builder = $db->table('authors_copy');
+						$builder = $db->table('authors');
 						$data = [
 							'AuthorNumber'          => $n,
 							'Presenter'       => $Presenter,
