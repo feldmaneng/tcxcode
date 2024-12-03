@@ -100,10 +100,10 @@ class Authorpopulate extends BaseController
 			// $csv[0][0] is the value in the top right most corner $csv[1][0] is the value directly below the right most corner
 			//echo $csv[0][0];
 			//echo $csv[1][0];
+			//change title to looking for abstract number for lookup
 			
 			
-			
-			
+			$abstract = array_search('Abstract Number', $csv[0]);
 			$title = array_search('Title', $csv[0]);
 			$numberofauthors = array_search('Number of Authors', $csv[0]);
 			$given1 = array_search('Given',$csv[0]);
@@ -141,8 +141,8 @@ class Authorpopulate extends BaseController
 			
 				 $db      = \Config\Database::connect();
 				$builder = $db->table('presentations');
-				$builder->select('PresentationID,Title');
-				$builder->where('Title', $csv[$i][$title]);
+				$builder->select('PresentationID,Title,AbstractNumber');
+				$builder->where('AbstractNumber', $csv[$i][$abstract]);
 				
 				
 
