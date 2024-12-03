@@ -59,7 +59,7 @@ class Database extends BaseController {
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/database/contacts') . ">Contacts</a></LI>";
-
+		echo "<LI>Populate author table with a CSV from author summary<a href=" . site_url('/AuthorCheck') . ">Click Here</a></LI>";
 //UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/expo/contact') . ">EXPO CONTACTS</a></LI>";
@@ -84,6 +84,7 @@ class Database extends BaseController {
 		echo "<LI><a href=" . site_url('/badge') . ">Badges</a></LI>";
 		echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
 		echo "</OL>";
+		
 		}
 	}
 
