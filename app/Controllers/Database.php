@@ -60,6 +60,7 @@ class Database extends BaseController {
 		echo "<OL>";
 		echo "<LI>Manage <a href=" . site_url('/database/contacts') . ">Contacts</a></LI>";
 		echo "<LI>Populate author table with a CSV from author summary<a href=" . site_url('/AuthorCheck') . ">Click Here</a></LI>";
+		echo "<LI>Populate expodirectory with people from the previous year<a href=" . site_url('/EXPOpopulate') . ">Click Here</a></LI>";
 //UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/expo/contact') . ">EXPO CONTACTS</a></LI>";
