@@ -70,7 +70,7 @@ class EXPOpopulate extends BaseController
 		$event = $_POST["event"];
 		$db = \Config\Database::connect('registration');
 		$builder = $db->table('expodirectorytest');
-		$builder->select(*);
+		
 		$builder->where('Year', $yearprevious);
 		$builder->where('Event',$event);
 		
