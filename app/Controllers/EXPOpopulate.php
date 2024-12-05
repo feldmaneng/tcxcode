@@ -85,12 +85,15 @@ class EXPOpopulate extends BaseController
 		for($i=0;$i<$company;$i++){
 		$randombytes = random_bytes(4);
 		$hexkey = bin2hex($randombytes);
-		//$results[$i]['EntryID']="NULL";
-		unset($results[$i]['EntryID']);
+		$results[$i]['EntryID']="NULL";
+		//unset($results[$i]['EntryID']);
 		$results[$i]['Year']= $year;
 		$results[$i]['SecretKey'] = "25".$hexkey;	
 		}
 		
+		foreach ($results as $x => $y) {
+		  echo "$x : $y <br>";
+		}
 		$builder->insert($results);
 		
 		
