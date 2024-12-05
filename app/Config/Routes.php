@@ -330,6 +330,10 @@ $routes->post('ContactCheck/do_upload', 'ContactCheck::do_upload');
 $routes->get('/AuthorCheck', 'Authorpopulate::check');  
 $routes->post('/AuthorCheck', 'Authorpopulate::check');
 $routes->post('Authorpopulate/do_upload', 'Authorpopulate::do_upload');
+
+$routes->get('/EXPOpopulate', 'EXPOpopulate::check');  
+$routes->post('/EXPOpopulate', 'EXPOpopulate::check');
+$routes->post('EXPOpopulate/populate', 'EXPOpopulate::populate');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
