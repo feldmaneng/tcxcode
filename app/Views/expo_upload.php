@@ -13,7 +13,7 @@
 
 	
 	
-		<?= form_open('Authorpopulate/do_upload') ?>
+		<?= form_open('EXPOpopulate/populate') ?>
 		<label for="year"> Current Event Year:</label>
 		<input type="number" id="year" name="year" min ="2000" max ="3000">
 		<label for="event"> Event(Mesa,Korea,China):</label>
