@@ -90,9 +90,8 @@ class EXPOpopulate extends BaseController
 		$results[$i]['Year']= $year;
 		$results[$i]['SecretKey'] = "25".$hexkey;	
 		}
-		
-		foreach ($results as $x => $y) {
-		  echo "$x : $y <br>";
+		foreach ($results as $x) {
+		  echo "$x <br>";
 		}
 		$builder->insert($results);
 		
