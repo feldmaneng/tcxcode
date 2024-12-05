@@ -90,7 +90,7 @@ class EXPOpopulate extends BaseController
 		$results['SecretKey'][$i] = "25".$hexkey;	
 		}
 		
-		//$builder->insert($results);
+		$builder->insert($results);
 		
 		
 	  }
