@@ -27,7 +27,7 @@ class EXPOpopulate extends BaseController
     
 
 	private function _getDbData() {
-			$db = (new ConfigDatabase())->default;
+			$db = (new ConfigDatabase())->registration;
 			return [
 				'adapter' => [
 					'driver' => 'Pdo_Mysql',
