@@ -64,11 +64,8 @@ class EXPOpopulate extends BaseController
 		return view('expo_upload',['error' => ' ']);	
 		}
 	 
-	 public function populate(){
-		$crud = $this->_getGroceryCrudEnterprise();
-
-        $crud->setCsrfTokenName(csrf_token());
-        $crud->setCsrfTokenValue(csrf_hash());
+	public function populate(){
+		
 		$year = $_POST["year"];
 		$yearprevious = $year - 1;
 		$event = $_POST["event"];
