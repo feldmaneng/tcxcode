@@ -97,6 +97,7 @@ class EXPOpopulate extends BaseController
 		
 	  }
 	public function getsecretkey(){
+		$table = new \CodeIgniter\View\Table();
 		$year = 2025;
 		$event = "Mesa";
 		$db = \Config\Database::connect('registration');
