@@ -102,7 +102,7 @@ class EXPOpopulate extends BaseController
 		$event = "Mesa";
 		$db = \Config\Database::connect('registration');
 		$builder = $db->table('expodirectory');
-		$builder->select('SecretKey','CompanyName');
+		//$builder->select('SecretKey','CompanyName');
 		$builder->where('Year', $year);
 		$builder->where('Event',$event);
 		$query = $builder->get();
