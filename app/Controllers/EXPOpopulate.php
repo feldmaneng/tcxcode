@@ -63,7 +63,7 @@ class EXPOpopulate extends BaseController
 		
 		return view('expo_upload',['error' => ' ']);	
 		}
-	 
+	 //fills in the expo table and makes secret keys for companies from previous year
 	public function populate(){
 		
 		$year = $_POST["year"];
@@ -96,7 +96,18 @@ class EXPOpopulate extends BaseController
 		
 		
 	  }
-
+	public function getsecretkey(){
+		$year = 2025;
+		$event = "Mesa";
+		$db = \Config\Database::connect('registration');
+		$builder = $db->table('expodirectory');
+		$builder->select('SecretKey','CompanyName');
+		$builder->where('Year', $year);
+		$builder->where('Event',$event);
+		$query = $builder->get();
+		echo $table->generate($query);
+		
+	
 }
 
 
