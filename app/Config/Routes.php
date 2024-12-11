@@ -334,6 +334,9 @@ $routes->post('Authorpopulate/do_upload', 'Authorpopulate::do_upload');
 $routes->get('/EXPOpopulate', 'EXPOpopulate::check');  
 $routes->post('/EXPOpopulate', 'EXPOpopulate::check');
 $routes->post('EXPOpopulate/populate', 'EXPOpopulate::populate');
+
+$routes->get('/EXPOpopulate/getsecretkey', 'EXPOpopulate::getsecretkey');  
+$routes->post('/EXPOpopulate/getsecretkey', 'EXPOpopulate::getsecretkey');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
