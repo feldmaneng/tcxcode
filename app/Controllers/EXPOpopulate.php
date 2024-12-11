@@ -103,6 +103,7 @@ class EXPOpopulate extends BaseController
 		$db = \Config\Database::connect('registration');
 		$builder = $db->table('expodirectory');
 		//$builder->select('SecretKey','CompanyName');
+		$builder->select('CompanyName');
 		$builder->where('Year', $year);
 		$builder->where('Event',$event);
 		$query = $builder->get();
