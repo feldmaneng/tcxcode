@@ -107,7 +107,7 @@ class EXPOpopulate extends BaseController
 		$query = $builder->get();
 		echo $table->generate($query);
 		
-	
+	}
 }
 
 
