@@ -785,7 +785,7 @@ class Mailinglist extends BaseController {
 	{
 		
 		
-			$db = \Config\Database::connect('RegistrationDataBase');
+			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('*');
 		
