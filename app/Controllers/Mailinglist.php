@@ -21,7 +21,7 @@ mb_regex_encoding('UTF-8'); */
 
 // Global constants
 
-define("EventYear", "Korea20246"); // For selecting records only for this year's event.
+define("EventYear", "Korea2024"); // For selecting records only for this year's event.
 define("Event", "Korea");
 define("Year", "2024");
 
