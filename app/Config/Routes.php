@@ -48,6 +48,9 @@ $routes->post('/database/companies', 'Database::companies');
 $routes->get('/mailinglist', 'Mailinglist::index');          
 $routes->post('/mailinglist', 'Mailinglist::index');
 
+$routes->get('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');          
+$routes->post('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');
+
 $routes->get('/mailinglist/write_mailchimp_with_Chinese', 'Mailinglist::write_mailchimp_with_Chinese');          
 $routes->post('/mailinglist/write_mailchimp_with_Chinese', 'Mailinglist::write_mailchimp_with_Chinese');
 
