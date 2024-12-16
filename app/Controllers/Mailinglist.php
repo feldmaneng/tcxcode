@@ -798,7 +798,7 @@ class Mailinglist extends BaseController {
 		
 		$builder->where($where_criteria);
 
-		$builder->from('guests');
+		//$builder->from('guests');
 		$query = $builder->get();
 		
 		foreach ($query->getResultArray() as $field) {
