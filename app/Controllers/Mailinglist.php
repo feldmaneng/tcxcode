@@ -364,7 +364,7 @@ class Mailinglist extends BaseController {
 				 
 				echo "<p>".$verbose."</p>";
 			}
-			echo "<p>".$verbose."</p>";
+			
 			
 			
 			return;
@@ -791,7 +791,7 @@ class Mailinglist extends BaseController {
 		
 		$where_criteria = array (
 			'EventYear' => EventYear,
-			'Type !=' => "Professional",
+			//'Type !=' => "Professional",
 			//'MasterContactID is NOT NULL' => NULL,
 			'Email is NOT NULL' => NULL
 		);					
