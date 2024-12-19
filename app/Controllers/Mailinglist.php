@@ -364,7 +364,7 @@ class Mailinglist extends BaseController {
 				 
 				echo "<p>".$verbose."</p>";
 			}
-			
+			echo "<p>".$verbose."</p>";
 			
 			
 			return;
