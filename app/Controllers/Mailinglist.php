@@ -80,6 +80,7 @@ class Mailinglist extends BaseController {
 		echo "<br>";
 		echo "<li><a href=" . site_url('mailinglist/check_add_to_attendance') . ">Check addinging names to attendance database</a></li>";
 		echo "<li><a href=" . site_url('mailinglist/add_to_attendance') . ">Add names to attendance database</a></li>";
+		echo "<li><a href=" . site_url('mailinglist/testcontacts') . ">TestContacts</a></li>";
 
 		//echo "<li><a href=" . site_url('mailinglist/China_MailChimp') . ">Generate MailChimp from China Guest List</a></li>";
 		//echo "<li><a href=" . site_url('mailinglist/read_JotForm_tab_input') . ">Import from China JotForm</a></li>";
@@ -98,7 +99,9 @@ class Mailinglist extends BaseController {
 	 }
   
 
-		
+	function testcontacts () {
+	$test = $this->Contacts->test();
+	}		
 
 	// Find the Person Record with a given LinkedInEmail
 	// Returns ConactID if one person is found
