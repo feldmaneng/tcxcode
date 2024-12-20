@@ -804,7 +804,7 @@ class Mailinglist extends BaseController {
 		foreach ($query->getResultArray() as $field) {
 			$verbose= "Processing " . $field['Email'] . "\t";
 			
-			$contactID = $this->contacts->LookupPersonByEmail($field['Email'], FALSE);
+			$contactID = $this->Contacts->LookupPersonByEmail($field['Email'], FALSE);
 			if (( $field['MasterContactID'] > 0) && ($contactID !== $field['MasterContactID']) ){
 				if ($contactID <= 0) {
 					$verbose .= "*** Not found by email - MasterContactID " . $field['MasterContactID'] . " ";	
