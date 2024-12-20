@@ -32,7 +32,7 @@ define("Year", "2024");
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
-use App\Libraries\ContactsClass;
+use App\Libraries\Contacts;
 // Make sure you are logged in to access these functions.
 $session = session();
 if ( !$session->tcx_logged_in ) {
