@@ -1,5 +1,6 @@
 <?php
 namespace App\Controllers;
+
 //setup php for working with Unicode data, needs to be update for codeigniter 4
 /* mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
@@ -31,7 +32,7 @@ define("Year", "2024");
 use Config\Database as ConfigDatabase;
 use Config\GroceryCrud as ConfigGroceryCrud;
 use GroceryCrud\Core\GroceryCrud;
-
+use App\Libraries\ContactsClass;
 // Make sure you are logged in to access these functions.
 $session = session();
 if ( !$session->tcx_logged_in ) {
@@ -100,7 +101,9 @@ class Mailinglist extends BaseController {
   
 
 	function testcontacts () {
-	$test = $this->Contacts->test();
+	$mine = new ContactsClass();
+	$test = $mine->test();
+	echo $test;
 	}		
 
 	// Find the Person Record with a given LinkedInEmail
