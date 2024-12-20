@@ -35,7 +35,7 @@ class Contacts {
 			// Not sure why the query wasn't clearing. First query was okay and subsequent ones had a wrong where ContactID = clause
 			// https://stackoverflow.com/questions/6246023/how-to-reset-codeigniter-active-record-for-consecutive-queries
 			// https://www.codeigniter.com/userguide3/database/query_builder.html#resetting-query-builder 
-			$db = \Config\Database::conect();
+			$db = \Config\Database::connect();
 			$CI = $db->table('contacts');
 			$CI->resetQuery(); 
 			
