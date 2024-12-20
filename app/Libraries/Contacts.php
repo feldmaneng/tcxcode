@@ -1,10 +1,10 @@
 <?php 
 //correct namespace?
-namespace App\Controllers;
+namespace App\Libraries;
 
 use Config\Database as ConfigDatabase;
 
-class Contacts {
+class ContactsClass {
 
 
 	function __construct()
