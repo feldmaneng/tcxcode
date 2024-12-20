@@ -51,6 +51,12 @@ $routes->post('/mailinglist', 'Mailinglist::index');
 $routes->get('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');          
 $routes->post('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');
 
+
+$routes->get('mailinglist/testcontacts', 'Mailinglist::testcontacts');          
+$routes->post('mailinglist/testcontacts', 'Mailinglist::testcontacts');
+
+
+
 $routes->get('/mailinglist/write_mailchimp_with_Chinese', 'Mailinglist::write_mailchimp_with_Chinese');          
 $routes->post('/mailinglist/write_mailchimp_with_Chinese', 'Mailinglist::write_mailchimp_with_Chinese');
 

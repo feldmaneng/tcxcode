@@ -21,6 +21,12 @@ class Contacts {
 	// Returns ConactID if one person is found
 	// Returns FALSE if not found or empty email
 	// *
+	public function test(){
+		$test = "Success";
+	return $test;
+	
+	
+	}
 	public function LookupPersonByEmail($email, $p_ReportNotFound = true) 
 	{
 		//ask ira $CI =& get_instance();
