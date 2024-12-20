@@ -101,7 +101,7 @@ class Mailinglist extends BaseController {
   
 
 	function testcontacts () {
-	$mine = new ContactsClass();
+	$mine = new Contacts();
 	$test = $mine->test();
 	echo $test;
 	}		

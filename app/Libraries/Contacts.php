@@ -4,7 +4,7 @@ namespace App\Libraries;
 
 use Config\Database as ConfigDatabase;
 
-class ContactsClass {
+class Contacts {
 
 
 	function __construct()
