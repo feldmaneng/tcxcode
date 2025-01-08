@@ -24,7 +24,7 @@ if ( !$session->tcx_logged_in ) {
 // Some variables for each year
 
 $session = session(); 
-$year=2024;
+$year=2025;
 class Presentations extends BaseController {
 
  
@@ -103,7 +103,7 @@ helper('text');
 
 public function mesa()
 		{
-	$year=2024;
+	$year=2025;
     
     $year2=$year+1;
 	
@@ -120,7 +120,7 @@ public function mesa()
 					$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
 	
 					
-$crud->setUniqueId('mesa_2024');
+$crud->setUniqueId('mesa_2025');
 
 		$output = $crud->render();
 
@@ -129,7 +129,7 @@ $crud->setUniqueId('mesa_2024');
 
 public function china()
 		{
-	$year=2024;
+	$year=2025;
     
     $year2=$year+1;
 	
@@ -145,7 +145,7 @@ public function china()
 $crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
 			
 		
-$crud->setUniqueId('china_2024');
+$crud->setUniqueId('china_2025');
  
 		$output = $crud->render();
 
@@ -154,7 +154,7 @@ $crud->setUniqueId('china_2024');
 
 public function korea()
 		{
-	$year=2024;
+	$year=2025;
     
     $year2=$year+1;
 	
@@ -170,7 +170,7 @@ public function korea()
 					
 	$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title']);
 		//$crud->fields (['PresentationID','Year','Event','Session','PresentationNumber','Title','TitleChinese','TitleKorea','Wrangler','Topic','Award','URL','BaseFileName','PDFLockCode','VideoID','AbstractNumber','EarlyBird','AuthorDiscountCode','WranglerID','AbstractEnglish','AbstractChinese','AbstractKorean','BioEnglish','BioChinese','BioKorean']);
-	$crud->setUniqueId('korea_2024');
+	$crud->setUniqueId('korea_2025');
 	
 
 		$output = $crud->render();
@@ -187,7 +187,7 @@ public function authors()
 	$crud->setTable('authors');
 	$crud->setSubject('author', 'authors');
 	
-$crud->setUniqueId('authors_2024');
+$crud->setUniqueId('authors_2025');
 		
    //$crud->where(['presentations.Event = ?' => 'China','presentations.Year >= ?'=> $year]);
 					
