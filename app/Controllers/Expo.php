@@ -104,33 +104,12 @@ helper('text');
 	$crud->setTable('expodirectory');
 	$crud->setSubject('EXPO', 'EXPOS');
 	
-/* 
-    	$this->grocery_crud->where('Event', 'Mesa'); 
-    	$this->grocery_crud->where('Year', $year);
-    	$this->grocery_crud->or_where('Year', $year2); */
-		
-  // $crud->where(['expodirectory.Event = ?' => 'Mesa','expodirectory.Year >= ?' => $year]);
-   $crud->where(['expodirectory.Year >= ?' => $year]);
-					
-/* 	$crud->where(['expodirectory.Event' => 'Mesa',
-					'expodirectory.Year' => $year]); */
-   //$crud->where(['expodirectory.Event' => 'Mesa']);
-	
-	//$crud->columns (['Year','Event','Status','CompanyName','DirectoryName']);
-	//$crud->fields (['Year','Event','Status','CompanyName','DirectoryName','CompanyID','Line1','Line2','Line3','Line4','Line5','Line6','Description','Updated']);
 
-	
-	
-	
-	
-	//
-	//$this->grocery_crud->add_action('Print China2020', '', site_url('/china/singleprintchina/'),'ui-icon-image'); 
-	//$crud->setActionButton('Duplicate ('.$year2.')', 'ui-icon-image', site_url('/expo/duplicate/'));
-	//$this->grocery_crud->set_language("english-chinese");
-	/* $crud->setActionButton('Avatar', 'fa fa-user', function ($row) {
-    return '#/avatar/' . $row->Event;
-});	 */
-//NOTE commented out the below action to test pieces seperately
+    	
+  //this is the where statement that you must enable to do the years above
+   //$crud->where(['expodirectory.Year >= ?' => $year]);
+					
+
 $crud->setActionButton('Duplicate ('.$year2.')', 'fa fa-user', function ($row) {
     return site_url('/Expo/duplicate/');
 });	 
