@@ -262,6 +262,9 @@ $routes->get('/expo/list_expo_entries_china', 'Expo::list_expo_entries_china');
 $routes->get('/presentations', 'Presentations::index');
 $routes->post('/presentations', 'Presentations::index');
 
+$routes->get('/presentations/general', 'Presentations::general');
+$routes->post('/presentations/general', 'Presentations::general');
+
 $routes->get('/presentations/mesa', 'Presentations::mesa');
 $routes->post('/presentations/mesa', 'Presentations::mesa');
 
