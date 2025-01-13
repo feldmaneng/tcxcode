@@ -43,6 +43,7 @@ helper('text');
 		echo "<h1>TestConX Presentations - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
+		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/general') . ">General</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/mesa') . ">Mesa</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/china') . ">China</a></LI>";
 		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/korea') . ">Korea</a></LI>";
@@ -121,6 +122,30 @@ public function mesa()
 	
 					
 $crud->setUniqueId('mesa_2025');
+
+		$output = $crud->render();
+
+	return $this->_example_output($output);         
+}
+
+public function general()
+		{
+	
+	
+	$crud = $this->_getGroceryCrudEnterprise();
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
+	$crud->setTable('presentations');
+	$crud->setSubject('Presentation', 'Presentations');
+	
+
+		
+ 
+					
+	$crud->columns (['PresentationID','Year','Event','Session','PresentationNumber','Title','VideoID']);
+	
+					
+	$crud->setUniqueId('general_2025');
 
 		$output = $crud->render();
 
