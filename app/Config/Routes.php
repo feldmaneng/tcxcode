@@ -51,6 +51,9 @@ $routes->post('/mailinglist', 'Mailinglist::index');
 $routes->get('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');          
 $routes->post('mailinglist/preview_Guest_to_Main', 'Mailinglist::preview_Guest_to_Main');
 
+$routes->get('mailinglist/check_add_to_attendance', 'Mailinglist::check_add_to_attendance');          
+$routes->post('mailinglist/check_add_to_attendance', 'Mailinglist::check_add_to_attendance');
+
 
 $routes->get('mailinglist/testcontacts', 'Mailinglist::testcontacts');          
 $routes->post('mailinglist/testcontacts', 'Mailinglist::testcontacts');
