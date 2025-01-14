@@ -789,6 +789,8 @@ class Mailinglist extends BaseController {
 	// main BiTS database
 	
 	{
+		$mine = new Contacts();
+		
 		
 		
 			$db = \Config\Database::connect('registration');
@@ -810,7 +812,7 @@ class Mailinglist extends BaseController {
 		foreach ($query->getResultArray() as $field) {
 			$verbose= "Processing " . $field['Email'] . "\t";
 			
-			$contactID = $this->Contacts->LookupPersonByEmail($field['Email'], FALSE);
+			$contactID = $mine->LookupPersonByEmail($field['Email'], FALSE);
 			if (( $field['MasterContactID'] > 0) && ($contactID !== $field['MasterContactID']) ){
 				if ($contactID <= 0) {
 					$verbose .= "*** Not found by email - MasterContactID " . $field['MasterContactID'] . " ";	
