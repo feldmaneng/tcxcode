@@ -266,7 +266,7 @@ $NewSecret=substr(str_shuffle($Permittedcharacters),0,10);
 	}
 		
 	
-	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2024, $PriorYear = 2023) 
+	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = $year, $PriorYear = 2023) 
 	// Reads the BiTS EXPO registration database and dumps the entries
 	{
 		//$Year = 2022;
