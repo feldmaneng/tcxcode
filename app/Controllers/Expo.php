@@ -25,7 +25,7 @@ if ( !$session->tcx_logged_in ) {
 // Some variables for each year
 
 $session = session(); 
-$year=2024;
+$year=2025;
 class Expo extends BaseController {
 
  
