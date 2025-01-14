@@ -266,7 +266,7 @@ $NewSecret=substr(str_shuffle($Permittedcharacters),0,10);
 	}
 		
 	
-	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2024, $PriorYear = 2023) 
+	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2025, $PriorYear = 2024) 
 	// Reads the BiTS EXPO registration database and dumps the entries
 	{
 		//$Year = 2022;
@@ -355,7 +355,7 @@ $NewSecret=substr(str_shuffle($Permittedcharacters),0,10);
 	
 	function list_expo_entries_mesa()
 	{
-		$this->list_expo_entries("Mesa", "Mesa",  $year, ($year-1) );
+		$this->list_expo_entries("Mesa", "Mesa" );
 	}
 	function list_expo_entries_korea()
 	{
