@@ -43,9 +43,9 @@ class Contacts {
 			// https://www.codeigniter.com/userguide3/database/query_builder.html#resetting-query-builder 
 			$db = \Config\Database::connect();
 			$CI = $db->table('contacts');
-			$CI->resetQuery(); 
+			//$CI->resetQuery(); 
 			
-			$CI->select('*');
+			//$CI->select('*');
 			
 		
 			$CI->where('Email',$email);
@@ -63,9 +63,10 @@ class Contacts {
 					}
 					//die();
 				}
-				$row = $query_people->getResultArray();
+				$row = $query_people->getRow();
 				//echo "	  ContactID: " . $row['ContactID'] . "<br>";
-				return $row['ContactID'];
+				
+				return $row->ContactID;
 			} else {				
 				// didn't find the a person with that email address
 				if ($p_ReportNotFound) {
