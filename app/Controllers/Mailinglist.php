@@ -843,7 +843,7 @@ class Mailinglist extends BaseController {
 						//$query = $this->db->get();
 						//$row = $SQLdata; //$query->row_array();
 			
-						$contactID = $this->contacts->LookupPersonByEmail($field['Email']);
+						$contactID = $mine->LookupPersonByEmail($field['Email']);
 					}
 				}
 			} else {
@@ -1519,7 +1519,7 @@ class Mailinglist extends BaseController {
 				$contactID = $row->MasterContactID;
 			} else {
 				// Use email to look them up
-				$contactID = $this->contacts->LookupPersonByEmail($row->Email, FALSE);
+				$contactID = $mine->LookupPersonByEmail($row->Email, FALSE);
 			}
 			
 			if ( !$contactID ) {
