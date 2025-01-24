@@ -1442,7 +1442,7 @@ class Mailinglist extends BaseController {
 		$PriorEvent = "Shanghai";
 		
 		$db = \Config\Database::connect('registration');
-		$builder->from('expodirectory');
+		$builder = $db->from('expodirectory');
 		$where_criteria = array (
 			'Year' => $Year,
 			'Event' => $Event
@@ -1499,7 +1499,7 @@ class Mailinglist extends BaseController {
 		$start_time = microtime(TRUE);
 		//$this->diag_log("mailinglist: starting function add_to_attendance_database");
 		$db = \Config\Database::connect('registration');
-		$builder->from('guests');
+		$builder = $db->from('guests');
 		$builder->where('EventYear', EventYear);
 		
 		$query = $builder->get();
