@@ -1494,7 +1494,7 @@ class Mailinglist extends BaseController {
 	
 	// In preview mode until $write is set TRUE
 	private function add_to_attendance_database ($write = FALSE) {
-	
+	$mine = new Contacts();
 
 		$start_time = microtime(TRUE);
 		//$this->diag_log("mailinglist: starting function add_to_attendance_database");
