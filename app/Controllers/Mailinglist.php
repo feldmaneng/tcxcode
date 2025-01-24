@@ -159,7 +159,7 @@ class Mailinglist extends BaseController {
 			$builder->where('CompanyID',$companyID);
 			
 			/* $ChinaDB->select('*');
-			$ChinaDB->from('chinacompany');
+			$ChinaDB->table('chinacompany');
 		
 			$ChinaDB->where('CompanyID',$companyID); */
 			
@@ -759,7 +759,7 @@ class Mailinglist extends BaseController {
 		
 		$builder->where($where_criteria);
 
-		$builder->from('guests');
+		$builder->table('guests');
 		$query = $builder->get();
 		
 		foreach ($query->getResultArray as $field) {
@@ -806,7 +806,7 @@ class Mailinglist extends BaseController {
 		
 		$builder->where($where_criteria);
 
-		//$builder->from('guests');
+		//$builder->table('guests');
 		$query = $builder->get();
 		
 		foreach ($query->getResultArray() as $field) {
@@ -966,7 +966,7 @@ class Mailinglist extends BaseController {
 	{	
 	//askira
 		$db = \Config\Database::connect('ChinaDataBase');
-		$builder = $db->from('guests');
+		$builder = $db->table('guests');
 		$query = $builder->get();
 		
 		/* $where_criteria = array (
@@ -1001,7 +1001,7 @@ class Mailinglist extends BaseController {
 	// Reads the BiTS China database and generates a CSV for the name badges
 	{
 		$db = \Config\Database::connect('ChinaDataBase');
-		$builder = $db->from('guests');
+		$builder = $db->table('guests');
 		$query = $builder->get();
 		
 		
@@ -1409,7 +1409,7 @@ class Mailinglist extends BaseController {
 	{
 		$db = \Config\Database::connect('registration');
 		
-		$builder = $db -> from('expodirectory');
+		$builder = $db -> table('expodirectory');
 		
 		
 		$where_criteria = array (
@@ -1442,7 +1442,7 @@ class Mailinglist extends BaseController {
 		$PriorEvent = "Shanghai";
 		
 		$db = \Config\Database::connect('registration');
-		$builder = $db->from('expodirectory');
+		$builder = $db->table('expodirectory');
 		$where_criteria = array (
 			'Year' => $Year,
 			'Event' => $Event
@@ -1499,7 +1499,7 @@ class Mailinglist extends BaseController {
 		$start_time = microtime(TRUE);
 		//$this->diag_log("mailinglist: starting function add_to_attendance_database");
 		$db = \Config\Database::connect('registration');
-		$builder = $db->from('guests');
+		$builder = $db->table('guests');
 		$builder->where('EventYear', EventYear);
 		
 		$query = $builder->get();
@@ -1589,7 +1589,7 @@ class Mailinglist extends BaseController {
 			
 				if ($write) {
 					$db = \Config\Database::connect();
-					$builder = $db->from('attendance');
+					$builder = $db->table('attendance');
 					$builder->insert($SQLdata);
 					$status .= "\tAdded new attendance record\t";
 				} else {
