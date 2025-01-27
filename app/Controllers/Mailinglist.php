@@ -172,7 +172,7 @@ class Mailinglist extends BaseController {
 	function write_archive ($primary_key) {
 		//There may be a data structure with the original record somewhere, but haven't found it.
 		//So simply retrieve it prior to writing the updated record
-			$db = \Config\Database::conect();
+			$db = \Config\Database::connect();
 			$builder = $db->table('contacts');
 			$builder->where('ContactID', $primary_key);
 			$old_query = $builder->get();
