@@ -197,11 +197,53 @@ $routes->post('/PrintBadge/printkorea', 'PrintBadge::printkorea');
 $routes->get('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
 $routes->post('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
 
+
+/smember/crosscheck_users1
+/smember/crosscheck_users500
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
 $routes->get('/Smember', 'Smember::index');  
 $routes->post('/Smember', 'Smember::index');  
+
+$routes->get('/smember/crosscheck_users1', 'Smember::/smember/crosscheck_users1');  
+$routes->post('/smember/crosscheck_users1', 'Smember::/smember/crosscheck_users1');  
+
+$routes->get('/smember/crosscheck_users500', 'Smember::/smember/crosscheck_users500');  
+$routes->post('/smember/crosscheck_users500', 'Smember::/smember/crosscheck_users500');  
+
+$routes->get('/smember/crosscheck_users1000', 'Smember::/smember/crosscheck_users1000');  
+$routes->post('/smember/crosscheck_users1000', 'Smember::/smember/crosscheck_users1000');  
+
+$routes->get('/smember/crosscheck_users1500', 'Smember::/smember/crosscheck_users1500');  
+$routes->post('/smember/crosscheck_users1500', 'Smember::/smember/crosscheck_users1500');
+
+$routes->get('/smember/crosscheck_users2000', 'Smember::/smember/crosscheck_users2000');  
+$routes->post('/smember/crosscheck_users2000', 'Smember::/smember/crosscheck_users2000');  
+
+$routes->get('/smember/crosscheck_users2500', 'Smember::/smember/crosscheck_users2500');  
+$routes->post('/smember/crosscheck_users2500', 'Smember::/smember/crosscheck_users2500');
+
+$routes->get('/smember/crosscheck_users3000', 'Smember::/smember/crosscheck_users3000');  
+$routes->post('/smember/crosscheck_users3000', 'Smember::/smember/crosscheck_users3000');
+
+$routes->get('/smember/crosscheck_users3500', 'Smember::/smember/crosscheck_users3500');  
+$routes->post('/smember/crosscheck_users3500', 'Smember::/smember/crosscheck_users3500');
+
+$routes->get('/smember/crosscheck_users4000', 'Smember::/smember/crosscheck_users4000');  
+$routes->post('/smember/crosscheck_users4000', 'Smember::/smember/crosscheck_users4000'); 
+
+$routes->get('/smember/crosscheck_users4500', 'Smember::/smember/crosscheck_users4500');  
+$routes->post('/smember/crosscheck_users4500', 'Smember::/smember/crosscheck_users4500');
+
+$routes->get('/smember/crosscheck_users5000', 'Smember::/smember/crosscheck_users5000');  
+$routes->post('/smember/crosscheck_users5000', 'Smember::/smember/crosscheck_users5000');   
+
+$routes->get('/smember/crosscheck_users5500', 'Smember::/smember/crosscheck_users5500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::/smember/crosscheck_users5500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::/smember/crosscheck_users6000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::/smember/crosscheck_users6000');
 
 $routes->get('/smember/show_user', 'Smember::show_user');  
 $routes->post('/smember/show_user', 'Smember::show_user');  
