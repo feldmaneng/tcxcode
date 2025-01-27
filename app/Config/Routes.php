@@ -198,8 +198,7 @@ $routes->get('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
 $routes->post('/PrintBadge/printgeneral', 'PrintBadge::printgeneral');
 
 
-/smember/crosscheck_users1
-/smember/crosscheck_users500
+
 /* $routes->get('/Smember2', 'S2_match_db::index');  
 $routes->post('/Smember2', 'S2_match_db::index');   */      
 
