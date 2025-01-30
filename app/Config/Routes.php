@@ -244,6 +244,38 @@ $routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users5500');
 $routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users6000');  
 $routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users6000');
 
+$routes->get('/smember/crosscheck_users5500', 'Smember::crosscheck_users5500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users5500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users6000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users6000');
+
+$routes->get('/smember/crosscheck_users5500', 'Smember::crosscheck_users6500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users6500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users7000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users7000');
+
+$routes->get('/smember/crosscheck_users5500', 'Smember::crosscheck_users7500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users7500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users8000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users8000');
+
+$routes->get('/smember/crosscheck_users5500', 'Smember::crosscheck_users8500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users8500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users9000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users9000');
+
+$routes->get('/smember/crosscheck_users5500', 'Smember::crosscheck_users9500');  
+$routes->post('/smember/crosscheck_users5500', 'Smember::crosscheck_users9500');
+
+$routes->get('/smember/crosscheck_users6000', 'Smember::crosscheck_users10000');  
+$routes->post('/smember/crosscheck_users6000', 'Smember::crosscheck_users10000');
+
+
+
 $routes->get('/smember/show_user', 'Smember::show_user');  
 $routes->post('/smember/show_user', 'Smember::show_user');  
 

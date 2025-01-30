@@ -62,6 +62,18 @@ class Smember extends BaseController {
 		echo "<a href=" . site_url('/smember/crosscheck_users3000') . ">3000-3499</a> ";
 		echo "<a href=" . site_url('/smember/crosscheck_users3500') . ">3500-3999</a> ";
 		echo "<a href=" . site_url('/smember/crosscheck_users4000') . ">4000-4500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users4500') . ">4500-5000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users5000') . ">5000-5500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users5500') . ">5500-6000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users6000') . ">XXXX-6500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users6500') . ">XXXX-7000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users7000') . ">XXXX-7500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users7500') . ">XXXX-8000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users8000') . ">XXXX-8500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users8500') . ">XXXX-9000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users9000') . ">XXXX-9500</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users9500') . ">XXXX-10000</a> ";
+		echo "<a href=" . site_url('/smember/crosscheck_users10000') . ">10000-Max</a> ";
 		echo "<a href=" . site_url('/smember/crosscheck_users_all') . ">all</a> ";
 		echo "</LI>";
 		echo "<LI>Redo/recheck cross check WordPress/s2 members to BiTS DB - forces full recheck even s2members with BiTS ID<br>";
@@ -868,11 +880,62 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	{
 		$this->crosscheck(3500,3999,FALSE);
 	}
-	
-	function crosscheck_users4000()
+		function crosscheck_users4000()
 	{
-		$this->crosscheck(4000,MAXUSER,FALSE);
+		$this->crosscheck(4000,4499,FALSE);
 	}
+		function crosscheck_users4500()
+	{
+		$this->crosscheck(4500,4999,FALSE);
+	}
+		function crosscheck_users5000()
+	{
+		$this->crosscheck(5000,5499,FALSE);
+	}
+		function crosscheck_users5500()
+	{
+		$this->crosscheck(5500,5999,FALSE);
+	}
+		function crosscheck_users6000()
+	{
+		$this->crosscheck(6000,6499,FALSE);
+	}
+		function crosscheck_users6500()
+	{
+		$this->crosscheck(6500,6999,FALSE);
+	}
+		function crosscheck_users7000()
+	{
+		$this->crosscheck(7000,7499,FALSE);
+	}
+		function crosscheck_users7500()
+	{
+		$this->crosscheck(7500,7999,FALSE);
+	}
+		function crosscheck_users8000()
+	{
+		$this->crosscheck(8000,8499,FALSE);
+	}
+		function crosscheck_users8500()
+	{
+		$this->crosscheck(8500,8999,FALSE);
+	}
+	
+	function crosscheck_users9000()
+	{
+		$this->crosscheck(9000,9499,FALSE);
+	}
+	
+	function crosscheck_users9500()
+	{
+		$this->crosscheck(9500,9999,FALSE);
+	}
+	
+	function crosscheck_users10000()
+	{
+		$this->crosscheck(10000,MAXUSER,FALSE);
+	}
+	
 	
 	// function crosscheck_users2000()
 // 	{
