@@ -105,11 +105,12 @@ class Smember extends BaseController {
 		
 		
 		$emailerror=0;
+		$deleteusers = "1_30delete.csv";
 //$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("7_24delete.csv", "r")) !== FALSE) {
+if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 		
-	$list = array_map('str_getcsv', file('7_24delete.csv'));
+	$list = array_map('str_getcsv', file($deleteusers));
 	
 	$idrow = array_column($list,0);
 	$numrows = count($idrow); 
