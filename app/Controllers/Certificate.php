@@ -565,6 +565,7 @@ exit;
  function Certificates()
  { 
 $year = 2025;
+$date = "March 2-5 2025";
 
 $db = db_connect();
 $builder = $db->table('presentations');
