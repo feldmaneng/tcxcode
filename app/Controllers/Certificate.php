@@ -662,7 +662,7 @@ $SESSION=$results[$n]["Session"];
     // The Y position is also adjusted slightly.
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
    //$pdf->Image('C:\wamp64\www\TestConX\tcxcode\app\Controllers\TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', '',true,100, '', false, false, 0, false, false, false);
-	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 1, 1, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 	$y=55;
 	$z=10;
