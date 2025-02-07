@@ -391,11 +391,12 @@ exit;
 }	
 	function CertificatesGeneralMesa()
  { 
-
+$year = 2025;
+$date = "March 2-5 2025";
 $db = db_connect();
 $builder = $db->table('presentations');
 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
-$builder -> where('Year', 2025);
+$builder -> where('Year', $year);
 $builder -> where('Event', 'Mesa');
 $builder -> where('Session !=', 'Cancel');
 $builder -> where('Session !=', 'Cancel-Poster');;
@@ -493,8 +494,8 @@ $SESSION=$results[$n]["Session"];
     // The width is set to the the same as the cell containing the name.
     // The Y position is also adjusted slightly.
   // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/return2.png', $x, $y, 94, 16, 'PNG', '', '',false,0, '', false, false, 0, false, false, false);
-  // $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
-	$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 284, 204, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+   $pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConX2020Certificates.png', 0, 0, 279.5, 215.4, 'PNG', '', 'M',true,300, 'C', false, false, 0, false, false, false);
+	//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 284, 204, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 	$y=55;
 	$z=10;
@@ -532,7 +533,7 @@ $SESSION=$results[$n]["Session"];
 	}
 	$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, 39.7, $y+5*$z, true);
 	$pdf->SetFont('times', '', 18);
-	$pdf->MultiCell(200, 25,"presented at TestConX China 2024 Workshop \n October 29, 2024 - Suwon, South Korea", 0, 'C', 0, 0, 39.7, $y+7*$z+5, true);
+	$pdf->MultiCell(200, 25,"presented at TestConX 2025 Workshop \n " . $date ." - Mesa, Arizona", 0, 'C', 0, 0, 39.7, $y+7*$z+5, true);
 	$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)); 
     $pdf->Line( 25.58+10+4.4, 170,25.58+63+4.4, 170, $style = array() );
     $pdf->Line( 25.58+83+4.4, 170,25.58+136+4.4, 170, $style = array() );
@@ -563,12 +564,12 @@ exit;
   
  function Certificates()
  { 
-
+$year = 2025;
 
 $db = db_connect();
 $builder = $db->table('presentations');
 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
-$builder -> where('Year', 2025);
+$builder -> where('Year', $year);
 $builder -> where('Event', 'Mesa');
 $builder -> where('Session !=', 'Cancel');
 $builder -> where('Session !=', 'Cancel-Poster');;
@@ -695,7 +696,7 @@ $SESSION=$results[$n]["Session"];
 	}
 	$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, 37.5, $y+5*$z, true);
 	$pdf->SetFont('times', '', 18);
-	$pdf->MultiCell(200, 25,"presented at TestConX 2020 Virtual Event \n May 2020", 0, 'C', 0, 0, 37.5, $y+7*$z+5, true); 
+	$pdf->MultiCell(200, 25,"presented at TestConX" .$year. "Virtual Event \n May ". $year, 0, 'C', 0, 0, 37.5, $y+7*$z+5, true); 
    
    
    
