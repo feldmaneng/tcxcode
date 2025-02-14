@@ -435,6 +435,18 @@ $routes->post('EXPOpopulate/populate', 'EXPOpopulate::populate');
 
 $routes->get('/EXPOpopulate/getsecretkey', 'EXPOpopulate::getsecretkey');  
 $routes->post('/EXPOpopulate/getsecretkey', 'EXPOpopulate::getsecretkey');
+
+$routes->get('/Generalform', 'Generalform::index');  
+$routes->post('/Generalform', 'Generalform::index'); 
+
+$routes->get('/Generalform/certs', 'Generalform::certs');  
+$routes->post('/Generalform/certs', 'Generalform::certs');
+
+$routes->get('/GeneralCert', 'GeneralCert::index');  
+$routes->post('/GeneralCert', 'GeneralCert::index'); 
+
+$routes->get('/GeneralCert/certificates', 'GeneralCert::certificates');  
+$routes->post('/GeneralCert/certificates', 'GeneralCert::certificates');  
 /*
  * --------------------------------------------------------------------
  * Additional Routing
