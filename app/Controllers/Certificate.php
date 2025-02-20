@@ -682,10 +682,19 @@ $SESSION=$results[$n]["Session"];
     {
     $pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, 87.5,$y+3.9*$z, true);
     }
+	
     else if($SESSION == 'Keynote')
     {
     $pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, 87.5,$y+3.9*$z, true);
-    } else
+    }else if($SESSION == 'Tutorial' || $SESSION == 'Tutorial2')
+    {
+    $pdf->MultiCell(100, 25,"for the Tutorial", 0, 'C', 0, 0, 87.5,$y+3.9*$z, true);
+    } 
+		else if($SESSION == 'Panel' || $SESSION == 'Panel1')
+    {
+    $pdf->MultiCell(100, 25,"for the Panel Discussion", 0, 'C', 0, 0, 87.5,$y+3.9*$z, true);
+    }
+	else
    {
    $pdf->MultiCell(100, 25,"for the presentation", 0, 'C', 0, 0, 87.5,$y+3.9*$z, true);
    }
