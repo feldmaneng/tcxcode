@@ -170,5 +170,5 @@ class Jotformpost extends BaseController {
 
 	} 
 
-
+}
 ?>
