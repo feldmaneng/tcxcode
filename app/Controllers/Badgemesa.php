@@ -1790,10 +1790,13 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$pdf->SetFont('helvetica', 'B', 22);
 				}
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
-				$pdf->SetFont('stsongstdlight', 'B', 25);
+				$pdf->SetFont('helvetica', 'B', 25);
 				if(strlen($Company)>12){
-				$pdf->SetFont('stsongstdlight', 'B', 17);
+				$pdf->SetFont('helvetica', 'B', 17);
 				}
+				/*if(strlen($Company)>12){
+				$pdf->SetFont('stsongstdlight', 'B', 17);
+				}*/
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
 				
