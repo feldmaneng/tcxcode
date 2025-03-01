@@ -27,10 +27,12 @@ class Filters extends BaseConfig
      * List of filter aliases that are always
      * applied before and after every request.
      */
+     //IMF Ref: https://www.codeigniter.com/user_guide/libraries/security.html#cross-site-request-forgery-csrf
     public array $globals = [
         'before' => [
             // 'honeypot',
-            'csrf',
+           // 'csrf',
+            'csrf' => ['except' => ['Jotformpost/']],
             // 'invalidchars',
         ],
         'after' => [
