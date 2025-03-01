@@ -50,7 +50,8 @@ class Jotformpost extends BaseController {
 	
 	function postguest()
 	{
-	
+		$eventYear = "Mesa2025"; //$_POST["eventYearID"];
+		
 		//die ("Reaching function");
 		
 		/***
@@ -58,7 +59,7 @@ class Jotformpost extends BaseController {
 		***/
 		echo '<pre>', print_r($_POST, 1) , '</pre>';
 		
-		die ("debug");
+		//die ("debug");
 		
 		/***
 		Test the data if it's a valid submission by checking the submission ID.
@@ -76,11 +77,31 @@ class Jotformpost extends BaseController {
 		NOTE: Add the POST data to save in your database.
 		To view the submission as POST data, see https://www.jotform.com/help/51-how-to-post-submission-data-to-thank-you-page/
 		***/
-		$name = $mysqli->real_escape_string(implode(" ", $_POST['name']));
+		/*$name = $mysqli->real_escape_string(implode(" ", $_POST['name']));
 		$email = $mysqli->real_escape_string($_POST['email']);
 		$message = $mysqli->real_escape_string($_POST['message']);
-
-
+		*/
+		/*
+		$given = $_POST['attendeesfull']['first'];
+		$family = $_POST['attendeesfull']['last'];
+		$company = $_POST['company'];
+		$email = $_POST['attendeesemail'];
+		*/
+		
+		$data = [
+			'GivenName' => $_POST['attendeesfull']['first'],
+			'FamilyName' => $_POST['attendeesfull']['last'],
+			'Company' => $_POST['company'],
+			'Email' => $_POST['attendeesemail'],
+			'SubmissionId' => $_POST['submission_id'],
+			'EventYear' => $eventYear
+		];
+		
+		echo '<pre>', print_r($data, 1) , '</pre>';
+		
+		die ("debug");
+		
+		
 		// Connect to database and Guests table
 		
 		$db = \Config\Database::connect('registration');
@@ -117,7 +138,7 @@ class Jotformpost extends BaseController {
 		- https://www.freecodecamp.org/news/sql-insert-and-insert-into-statements-with-example-syntax/#how-to-use-insert-into-in-sql
 		***/
 		
-		$eventYear = "Mesa2025"; //$_POST["eventYearID"];
+
 		
 		// Logic to figure out if EXPO Only, Exhibitor, or Professional Reg type
 		
@@ -135,6 +156,7 @@ class Jotformpost extends BaseController {
 		}
 		else {
 			/* INSERT query */
+			
 			$result = $mysqli->query("INSERT IGNORE INTO $db_table (
 				submission_id, 
 				name, 
