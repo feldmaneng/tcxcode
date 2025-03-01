@@ -58,7 +58,7 @@ class Jotformpost extends BaseController {
 		***/
 		echo '<pre>', print_r($_POST, 1) , '</pre>';
 		
-		
+		die ("debug");
 		
 		/***
 		Test the data if it's a valid submission by checking the submission ID.
