@@ -447,6 +447,10 @@ $routes->post('/GeneralCert', 'GeneralCert::index');
 
 $routes->get('/GeneralCert/certificates', 'GeneralCert::certificates');  
 $routes->post('/GeneralCert/certificates', 'GeneralCert::certificates');  
+
+$routes->get('/Jotformpost', 'Jotformpost::postguest');  
+$routes->post('/Jotformpost', 'Jotformpost::postguest');  
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
