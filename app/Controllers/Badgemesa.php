@@ -1741,7 +1741,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$Dinner=$results[$n]["Dinner"];
 				$type = $results[$n]["Type"];
 				$Email = $results[$n]["Email"];
-				$ChineseName = $results[$n]["ChineseName"];
+				//$ChineseName = $results[$n]["ChineseName"];
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
