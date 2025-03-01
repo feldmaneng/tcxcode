@@ -1700,14 +1700,14 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				
 		for($i=1; $i<=$people; $i++){ 
 				$n = $i-1;
-			/*$time = date("d-m-y h:i:s");
+			$time = date("d-m-y h:i:s");
 			
 			$data = [
 			'PrintTime' => $time,
 			];
 
 			$builder->where('ContactID', $results[$n]["ContactID"]);
-			$builder->update($data);*/
+			$builder->update($data);
 			
 				// Define what special labels go on the badges
 				$label ="0";
