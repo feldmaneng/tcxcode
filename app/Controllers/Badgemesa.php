@@ -1756,7 +1756,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 					$Tutorial="";
 					}
 					 
-				$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
+				//$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 				$pdf->SetFont('stsongstdlight', 'B', 75);
 				$pdf->SetFillColor(255, 255, 255);
