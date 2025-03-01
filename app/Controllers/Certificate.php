@@ -590,6 +590,7 @@ $builder -> where('Session !=', '3AB');;
 $builder -> where('Session !=', '2AB');;
 $builder -> where('Session !=', 'dropped');
 $builder-> where('Session !=', 'Best Poster');
+$builder-> where('Session !=', 'Posterx');
 $builder -> orderBy('Session','ASC');
 $builder -> orderBy('PresentationNumber','ASC');
 $builder -> orderBy('Title','ASC');
@@ -683,6 +684,11 @@ $SESSION=$results[$n]["Session"];
   $pdf->SetFont('times', '', 18);
     $pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, 87.5, $y+1.5*$z, true);
      $pdf->SetFont('times', '', 24);
+    $length = strlen($FIRSTNAME)+strlen($LASTNAME);
+    if($length > 12)
+	{
+	$pdf->SetFont('times', '', 20);
+	}
      
    $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
     $pdf->SetFont('times', '', 18);
