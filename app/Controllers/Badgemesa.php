@@ -1815,7 +1815,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 				
 				$pdf->SetFont('helvetica', '', 8);
-				
+				$Control = substr($Control, -4);
 				
 				//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
 				//Control Text IRA POSITION
