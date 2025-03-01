@@ -50,6 +50,9 @@ class Jotformpost extends BaseController {
 	
 	function postguest()
 	{
+	
+		die ("Reaching function");
+		
 		/***
 		Display the data keys and values for debugging purposes.
 		***/
