@@ -1675,8 +1675,8 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 			
 			// IRA POSITION
-			$height = '80';
-			$width = '100';
+			$height = '145';
+			$width = '101.6';
 			$pageLayout = array($width, $height);
 
 
@@ -1815,7 +1815,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$Control = substr($Control, -4);
 				
 			
-				//$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,140, true);
+				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,135, true);
 				
 				
 				// new style
@@ -1847,7 +1847,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				// QRCODE,H : QR-CODE Best error correction
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
-				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
+				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 105, 30, 30, $style, 'N');
 				
 					
 				 $q++;
