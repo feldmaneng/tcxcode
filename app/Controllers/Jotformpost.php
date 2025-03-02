@@ -115,7 +115,7 @@ class Jotformpost extends BaseController {
 			'Fees' => implode('; ',$_POST['fees']),
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou'],
-			'Type' =: $type
+			'Type' => $type
 		];
 		
 		
@@ -203,7 +203,7 @@ class Jotformpost extends BaseController {
 
 		if ($type === "EXPO") {
 			return view('registration_complete_expo');
-		} e;se {
+		} else {
 			return view('registration_complete');
 		}
 	// return $this->_example_output($output);  
