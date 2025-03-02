@@ -33,6 +33,7 @@ class Jotformpost extends BaseController {
 	}
 	 
 // Is this CRUD item?
+/*
     private function _getDbData() {
         $db = (new ConfigDatabase())->registration;
         return [
@@ -46,7 +47,7 @@ class Jotformpost extends BaseController {
             ]
         ];
     }
- 
+ */
 	
 	function postguest()
 	{
@@ -88,9 +89,9 @@ class Jotformpost extends BaseController {
 				$type = "Professional"; 
 			}
 
-			$tutorial = 'No';
+			$tutorial = '0';
 			if (str_contains($fees,'Tutorial'))  {
-				$tutorial = 'Yes'; 
+				$tutorial = '1'; 
 			}		
 		}
 			
