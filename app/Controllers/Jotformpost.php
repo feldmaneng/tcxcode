@@ -91,13 +91,32 @@ class Jotformpost extends BaseController {
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
+			'NameOnBadge' => $_POST['nameon16'],
 			'Company' => $_POST['company'],
 			'Email' => $_POST['attendeesemail'],
+			'Title' => $_POST['jobtitle'],
+			'Address1' =>$_POST['add_line1'],
+			'Address2' => $_POST['add_line2'],
+			'City' => $_POST['city'],
+			'State' => $_POST['state'],
+			'Country' => $_POST['country'],
+			'PCode' => $_POST['postal'],
+			'Phone' => $_POST['workphone27'],
+			'Mobile'=> $_POST['mobile28'],
+			
 			'SubmissionId' => $_POST['submission_id'],
-			'EventYear' => $eventYear
+			'EventYear' => $eventYear,
+			'ToPrint' => 'Yes',
+			'Fees' => $_POST['fees'],
+			'Control' => $_POST['control'],
+			'SepcialNeeds' => $_POST['doyou']
 		];
 		
-		echo '<pre>', print_r($data, 1) , '</pre>';
+		$data['Type'] = "EXPO";
+		
+		
+		echo '<pre>', print_r($data
+		, 1) , '</pre>';
 		
 		die ("debug");
 		
