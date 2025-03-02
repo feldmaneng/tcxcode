@@ -117,6 +117,8 @@ class Jotformpost extends BaseController {
 		
 		
 		$data['Type'] = "EXPO";
+		//Tutorial
+		
 		}
 		
 		
@@ -188,14 +190,16 @@ class Jotformpost extends BaseController {
 		}
 		
 		if ($success !== TRUE) {
-			echo "Database Update Failed";
+			die ("Database Update Failed");
+			
 			
 		} else {
 			// success
 			
 		}
 
-
+		return view('registration_complete');
+		
 	// return $this->_example_output($output);  
 
 		
