@@ -1675,7 +1675,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 			
 			// IRA POSITION
-			$height = '145';
+			$height = '150';
 			$width = '101.6';
 			$pageLayout = array($width, $height);
 
@@ -1791,6 +1791,9 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				if(strlen($Company)>12){
 				$pdf->SetFont('helvetica', 'B', 17);
 				}
+				if(strlen($Company)>30){
+				$pdf->SetFont('helvetica', 'B', 12);
+				}
 				/*if(strlen($Company)>12){
 				$pdf->SetFont('stsongstdlight', 'B', 17);
 				}*/
@@ -1815,7 +1818,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$Control = substr($Control, -4);
 				
 			
-				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,135, true);
+				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,140, true);
 				
 				
 				// new style
@@ -1847,7 +1850,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				// QRCODE,H : QR-CODE Best error correction
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
-				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 105, 30, 30, $style, 'N');
+				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
 				
 					
 				 $q++;
