@@ -1675,8 +1675,8 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 			
 			// IRA POSITION
-			$height = '145';
-			$width = '101.6';
+			$height = '80';
+			$width = '100';
 			$pageLayout = array($width, $height);
 
 
@@ -1759,6 +1759,8 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				//$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 			
+				$pdf->Ln(40);
+				
 				
 				//here is where we need the fonts
 				
@@ -1812,11 +1814,9 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$pdf->SetFont('helvetica', '', 8);
 				$Control = substr($Control, -4);
 				
-				//$pdf->MultiCell(90,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,140, true);
-				//Control Text IRA POSITION
-				//$pdf->MultiCell(x size,y size,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, x position,y position, true);
-				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,140, true);
-				//$pdf->MultiCell(90,10,$Tutorial." ".$Control." ".$i, 0, 'R', 0, 0, -8.5,144, true);
+			
+				//$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,140, true);
+				
 				
 				// new style
 				$style = array(
@@ -1847,7 +1847,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				// QRCODE,H : QR-CODE Best error correction
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
-				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
+				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
 				
 					
 				 $q++;
