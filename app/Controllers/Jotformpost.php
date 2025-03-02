@@ -90,15 +90,38 @@ class Jotformpost extends BaseController {
 		
 		// Need to always fill Email address
 		
-		if ($_POST['formID'] == "250591362320146") {
+		if (($_POST['formID'] == "250591362320146") ||
+			($_POST['formID'] == "250236372630147") ) {
 			$type = "EXPO";
+		} else {
+			if (str_contains($_POST['fees'],'Professional'))  {
+				$type = "Professional"; 
+			}
+			if (str_contains($_POST['fees'],'Exhibitor'))  {
+				$type = "Exhibitor"; 
+			}			
 			
+			$tutorial = 'No';
+			if (str_contains($_POST['fees'],'Tutorial'))  {
+				$tutorial = 'Yes'; 
+			}		
+		}
+			
+		// 250600864598161 Prof or Exhibitor
+		// 243396386676171
+		
+		// Required field
+		$email = 'invalid_email';
+		if (strlen($_POST['attendeesemail']) > 0) {
+			$email = $_POST['attendeesemail'];
+		}
+		
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
 			'NameOnBadge' => $_POST['nameon16'],
 			'Company' => $_POST['company'],
-			'Email' => $_POST['attendeesemail'],
+			'Email' => $email,
 			'Title' => $_POST['jobtitle'],
 			'Address1' => $_POST['address13']['addr_line1'],
 			'Address2' => $_POST['address13']['addr_line2'],
@@ -118,10 +141,7 @@ class Jotformpost extends BaseController {
 			'Type' => $type
 		];
 		
-		
-		//$data['Type'] = "EXPO";
-		//Tutorial
-		
+
 		}
 		
 		
