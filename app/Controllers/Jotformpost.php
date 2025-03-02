@@ -68,7 +68,7 @@ class Jotformpost extends BaseController {
 		}
 				
 		// Security check to make sure only certain forms are allowed
-		if (!$str_contains('250591362320146, 250236372630147, 250600864598161, 243396386676171', $_POST['formID']) {
+		if (!$str_contains('250591362320146, 250236372630147, 250600864598161, 243396386676171', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
