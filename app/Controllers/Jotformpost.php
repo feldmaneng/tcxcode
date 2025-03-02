@@ -88,6 +88,7 @@ class Jotformpost extends BaseController {
 		$email = $_POST['attendeesemail'];
 		*/
 		
+		if ($_POST['formID'] == "250591362320146") {
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
@@ -95,7 +96,7 @@ class Jotformpost extends BaseController {
 			'Company' => $_POST['company'],
 			'Email' => $_POST['attendeesemail'],
 			'Title' => $_POST['jobtitle'],
-			'Address1' =>$_POST['address13']['addr_line1'],
+			'Address1' => $_POST['address13']['addr_line1'],
 			'Address2' => $_POST['address13']['addr_line2'],
 			'City' => $_POST['address13']['city'],
 			'State' => $_POST['address13']['state'],
@@ -113,12 +114,12 @@ class Jotformpost extends BaseController {
 		];
 		
 		$data['Type'] = "EXPO";
+		}
 		
 		
-		echo '<pre>', print_r($data
-		, 1) , '</pre>';
+		echo '<pre>', print_r($data, 1) , '</pre>';
 		
-		die ("debug");
+		//die ("debug");
 		
 		
 		// Connect to database and Guests table
@@ -165,6 +166,7 @@ class Jotformpost extends BaseController {
 			// May not want to enable updating...
 			
 			/* UPDATE query */
+			/*
 			$result = $mysqli->query("UPDATE $db_table 
 				SET name = '$name',
 					email = '$email', 
@@ -172,35 +174,23 @@ class Jotformpost extends BaseController {
 				
 				WHERE submission_id = '$sid'
 			");
+			*/
+			die ("Updating not supported at this time.");
+			
 		}
 		else {
 			/* INSERT query */
+			$success = $builder->insert($data);
 			
-			$result = $mysqli->query("INSERT IGNORE INTO $db_table (
-				submission_id, 
-				name, 
-				email, 
-				message
-			) VALUES (
-				'$sid', 
-				'$name', 
-				'$email',
-				'$message')
-			");
 		}
 		
-		
-		
-		/***
-		Display the outcome.
-		***/
-		if ($result === true) {
-			echo "Success!";
+		if ($success !== TRUE) {
+			echo "Database Update Failed";
+			
+		} else {
+			// success
+			
 		}
-		else {
-			echo "SQL error:" . $mysqli->error;
-		}
-		
 
 
 	return $this->_example_output($output);  
