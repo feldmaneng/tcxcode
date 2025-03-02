@@ -110,7 +110,7 @@ class Jotformpost extends BaseController {
 			'SubmissionId' => $sid,
 			'EventYear' => $eventYear,
 			'ToPrint' => 'Yes',
-			//'Fees' => $_POST['fees'],
+			'Fees' => implode('; ',$_POST['fees']),
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou']
 		];
