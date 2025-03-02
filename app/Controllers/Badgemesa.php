@@ -1675,7 +1675,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 			
 			// IRA POSITION
-			$height = '150';
+			$height = '145';
 			$width = '101.6';
 			$pageLayout = array($width, $height);
 
@@ -1683,7 +1683,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 
 		$pdf = new \TCPDF('P', 'MM',$pageLayout, true, 'UTF-8', false);
 		$pdf->SetTitle('Badge Single');
-		$pdf->SetMargins(10,10,10,10);
+		$pdf->SetMargins(0,0,0,0);
 		$pdf->SetHeaderMargin(0);
 		$pdf->SetTopMargin(0);
 		$pdf->setFooterMargin(0);
@@ -1758,12 +1758,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 					 
 				//$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
-				$pdf->SetFont('stsongstdlight', 'B', 75);
-				$pdf->SetFillColor(255, 255, 255);
-				$pdf->SetTextColor(0,0,0);
-				$pdf->SetFont('helvetica', 'B', 75);
-				$pdf->Ln(40);
-				
+			
 				
 				//here is where we need the fonts
 				
