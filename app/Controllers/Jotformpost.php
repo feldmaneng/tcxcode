@@ -142,8 +142,6 @@ class Jotformpost extends BaseController {
 		];
 		
 
-		}
-		
 		
 		echo '<pre>', print_r($data, 1) , '</pre>';
 		
