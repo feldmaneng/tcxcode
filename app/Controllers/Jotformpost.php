@@ -71,38 +71,23 @@ class Jotformpost extends BaseController {
 
 		/***
 		## Data to Save
-		
-		Prepare the data to prevent possible SQL injection vulnerabilities to the database.
-		
-		NOTE: Add the POST data to save in your database.
-		To view the submission as POST data, see https://www.jotform.com/help/51-how-to-post-submission-data-to-thank-you-page/
-		***/
-		/*$name = $mysqli->real_escape_string(implode(" ", $_POST['name']));
-		$email = $mysqli->real_escape_string($_POST['email']);
-		$message = $mysqli->real_escape_string($_POST['message']);
 		*/
-		/*
-		$given = $_POST['attendeesfull']['first'];
-		$family = $_POST['attendeesfull']['last'];
-		$company = $_POST['company'];
-		$email = $_POST['attendeesemail'];
-		*/
-		
-		// Need to always fill Email address
+
+		$fees = implode('; ',$_POST['fees']);
 		
 		if (($_POST['formID'] == "250591362320146") ||
 			($_POST['formID'] == "250236372630147") ) {
 			$type = "EXPO";
 		} else {
-			if (str_contains($_POST['fees'],'Professional'))  {
+			if (str_contains($fees,'Professional'))  {
 				$type = "Professional"; 
 			}
-			if (str_contains($_POST['fees'],'Exhibitor'))  {
+			if (str_contains($fees,'Exhibitor'))  {
 				$type = "Exhibitor"; 
 			}			
 			
 			$tutorial = 'No';
-			if (str_contains($_POST['fees'],'Tutorial'))  {
+			if (str_contains($fees,'Tutorial'))  {
 				$tutorial = 'Yes'; 
 			}		
 		}
@@ -135,7 +120,7 @@ class Jotformpost extends BaseController {
 			'SubmissionId' => $sid,
 			'EventYear' => $eventYear,
 			'ToPrint' => 'Yes',
-			'Fees' => implode('; ',$_POST['fees']),
+			'Fees' => $fees,
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou'],
 			'Type' => $type
