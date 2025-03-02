@@ -96,9 +96,7 @@ class Jotformpost extends BaseController {
 			'FamilyName' => $_POST['attendeesfull']['last'],
 			'NameOnBadge' => $_POST['nameon16'],
 			'Company' => $_POST['company'],
-			'Email' => $_POST['attendeesemail']];
-			
-			/* ,
+			'Email' => $_POST['attendeesemail'],
 			'Title' => $_POST['jobtitle'],
 			'Address1' => $_POST['address13']['addr_line1'],
 			'Address2' => $_POST['address13']['addr_line2'],
@@ -116,7 +114,7 @@ class Jotformpost extends BaseController {
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou']
 		];
-		*/ 
+		
 		
 		$data['Type'] = "EXPO";
 		}
@@ -198,7 +196,7 @@ class Jotformpost extends BaseController {
 		}
 
 
-	return $this->_example_output($output);  
+	// return $this->_example_output($output);  
 
 		
 	
