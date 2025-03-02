@@ -162,7 +162,7 @@ class Jotformpost extends BaseController {
 		
 		// Logic to figure out if EXPO Only, Exhibitor, or Professional Reg type
 		
-		if ($query->num_rows > 0) {
+		if ($query->getNumRows() > 0) {
 			// May not want to enable updating...
 			
 			/* UPDATE query */
