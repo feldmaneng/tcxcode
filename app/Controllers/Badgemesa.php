@@ -1675,7 +1675,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			
 			
 			// IRA POSITION
-			$height = '152.4';
+			$height = '150';
 			$width = '101.6';
 			$pageLayout = array($width, $height);
 
