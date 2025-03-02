@@ -84,7 +84,7 @@ class Jotformpost extends BaseController {
 			}			
 			
 			if (str_contains($fees,'Professional') ||
-				str_contains($fees, 'Upgrade Exhibitor')  {
+				str_contains($fees, 'Upgrade Exhibitor'))  {
 				$type = "Professional"; 
 			}
 
