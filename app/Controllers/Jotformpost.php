@@ -88,13 +88,17 @@ class Jotformpost extends BaseController {
 		$email = $_POST['attendeesemail'];
 		*/
 		
+		// Need to always fill Email address
+		
 		if ($_POST['formID'] == "250591362320146") {
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
 			'NameOnBadge' => $_POST['nameon16'],
 			'Company' => $_POST['company'],
-			'Email' => $_POST['attendeesemail'],
+			'Email' => $_POST['attendeesemail']];
+			
+			/* ,
 			'Title' => $_POST['jobtitle'],
 			'Address1' => $_POST['address13']['addr_line1'],
 			'Address2' => $_POST['address13']['addr_line2'],
@@ -110,8 +114,9 @@ class Jotformpost extends BaseController {
 			'ToPrint' => 'Yes',
 			'Fees' => $_POST['fees'],
 			'Control' => $_POST['control'],
-			'SepcialNeeds' => $_POST['doyou']
+			'SpecialNeeds' => $_POST['doyou']
 		];
+		*/ 
 		
 		$data['Type'] = "EXPO";
 		}
