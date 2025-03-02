@@ -91,6 +91,8 @@ class Jotformpost extends BaseController {
 		// Need to always fill Email address
 		
 		if ($_POST['formID'] == "250591362320146") {
+			$type = "EXPO";
+			
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
@@ -112,11 +114,12 @@ class Jotformpost extends BaseController {
 			'ToPrint' => 'Yes',
 			'Fees' => implode('; ',$_POST['fees']),
 			'Control' => $_POST['control'],
-			'SpecialNeeds' => $_POST['doyou']
+			'SpecialNeeds' => $_POST['doyou'],
+			'Type' =: $type
 		];
 		
 		
-		$data['Type'] = "EXPO";
+		//$data['Type'] = "EXPO";
 		//Tutorial
 		
 		}
@@ -198,8 +201,11 @@ class Jotformpost extends BaseController {
 			
 		}
 
-		return view('registration_complete');
-		
+		if ($type === "EXPO") {
+			return view('registration_complete_expo');
+		} e;se {
+			return view('registration_complete');
+		}
 	// return $this->_example_output($output);  
 
 		
