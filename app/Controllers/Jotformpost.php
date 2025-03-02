@@ -79,13 +79,15 @@ class Jotformpost extends BaseController {
 			($_POST['formID'] == "250236372630147") ) {
 			$type = "EXPO";
 		} else {
-			if (str_contains($fees,'Professional'))  {
-				$type = "Professional"; 
-			}
 			if (str_contains($fees,'Exhibitor'))  {
 				$type = "Exhibitor"; 
 			}			
 			
+			if (str_contains($fees,'Professional') ||
+				str_contrains($fees, 'Upgrade Exhibitor')  {
+				$type = "Professional"; 
+			}
+
 			$tutorial = 'No';
 			if (str_contains($fees,'Tutorial'))  {
 				$tutorial = 'Yes'; 
@@ -123,7 +125,8 @@ class Jotformpost extends BaseController {
 			'Fees' => $fees,
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou'],
-			'Type' => $type
+			'Type' => $type,
+			'Tutorial' => $tutorial
 		];
 		
 
