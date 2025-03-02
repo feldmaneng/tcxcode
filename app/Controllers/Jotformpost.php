@@ -32,22 +32,6 @@ class Jotformpost extends BaseController {
 	
 	}
 	 
-// Is this CRUD item?
-/*
-    private function _getDbData() {
-        $db = (new ConfigDatabase())->registration;
-        return [
-            'adapter' => [
-                'driver' => 'Pdo_Mysql',
-                'host'     => $db['hostname'],
-                'database' => $db['database'],
-                'username' => $db['username'],
-                'password' => $db['password'],
-                'charset' => 'utf8'
-            ]
-        ];
-    }
- */
 	
 	function postguest()
 	{
@@ -58,7 +42,7 @@ class Jotformpost extends BaseController {
 		/***
 		Display the data keys and values for debugging purposes.
 		***/
-		echo '<pre>', print_r($_POST, 1) , '</pre>';
+		//echo '<pre>', print_r($_POST, 1) , '</pre>';
 		
 		//die ("debug");
 		
@@ -132,7 +116,7 @@ class Jotformpost extends BaseController {
 		
 
 		
-		echo '<pre>', print_r($data, 1) , '</pre>';
+		//echo '<pre>', print_r($data, 1) , '</pre>';
 		
 		//die ("debug");
 		
