@@ -67,7 +67,7 @@ class Jotformpost extends BaseController {
 		if (!isset($_POST['submission_id'])) {
 			die("Invalid submission data!");
 		}
-
+		$sid = $_POST['submission_id'];
 
 		/***
 		## Data to Save
@@ -105,7 +105,7 @@ class Jotformpost extends BaseController {
 			'Phone' => $_POST['workphone27'],
 			'Mobile'=> $_POST['mobile28'],
 			
-			'SubmissionId' => $_POST['submission_id'],
+			'SubmissionId' => $sid,
 			'EventYear' => $eventYear,
 			'ToPrint' => 'Yes',
 			'Fees' => $_POST['fees'],
@@ -132,7 +132,7 @@ class Jotformpost extends BaseController {
 		/***
 		Prepare the test to check if the submission already exists in your database.
 		***/
-		$sid = $mysqli->real_escape_string($_POST['submission_id']);
+		//$sid = $mysqli->real_escape_string($_POST['submission_id']);
 		//$result = $mysqli->query("SELECT * FROM $db_table WHERE submission_id = '$sid'");
 		
 		// Specific fields needed
