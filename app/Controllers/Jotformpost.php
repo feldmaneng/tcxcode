@@ -124,7 +124,7 @@ class Jotformpost extends BaseController {
 		// Connect to database and Guests table
 		
 		$db = \Config\Database::connect('registration');
-		$builder = $db->table('guests_test');
+		$builder = $db->table('guests');
 			
 			
 			
