@@ -59,6 +59,14 @@ class Jotformpost extends BaseController {
 		*/
 
 		$fees = implode('; ',$_POST['fees']);
+
+		// Required fields
+		$tutorial = '0';
+		$email = 'invalid_email';
+		if (strlen($_POST['attendeesemail']) > 0) {
+			$email = $_POST['attendeesemail'];
+		}
+				
 		
 		if (($_POST['formID'] == "250591362320146") ||
 			($_POST['formID'] == "250236372630147") ) {
@@ -73,7 +81,7 @@ class Jotformpost extends BaseController {
 				$type = "Professional"; 
 			}
 
-			$tutorial = '0';
+
 			if (str_contains($fees,'Tutorial'))  {
 				$tutorial = '1'; 
 			}		
@@ -82,12 +90,7 @@ class Jotformpost extends BaseController {
 		// 250600864598161 Prof or Exhibitor
 		// 243396386676171
 		
-		// Required field
-		$email = 'invalid_email';
-		if (strlen($_POST['attendeesemail']) > 0) {
-			$email = $_POST['attendeesemail'];
-		}
-		
+
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
