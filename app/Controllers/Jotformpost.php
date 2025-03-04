@@ -32,21 +32,6 @@ class Jotformpost extends BaseController {
 	
 	}
 	 
-// Is this CRUD item?
-    private function _getDbData() {
-        $db = (new ConfigDatabase())->registration;
-        return [
-            'adapter' => [
-                'driver' => 'Pdo_Mysql',
-                'host'     => $db['hostname'],
-                'database' => $db['database'],
-                'username' => $db['username'],
-                'password' => $db['password'],
-                'charset' => 'utf8'
-            ]
-        ];
-    }
- 
 	
 	function postguest()
 	{
@@ -57,7 +42,7 @@ class Jotformpost extends BaseController {
 		/***
 		Display the data keys and values for debugging purposes.
 		***/
-		echo '<pre>', print_r($_POST, 1) , '</pre>';
+		//echo '<pre>', print_r($_POST, 1) , '</pre>';
 		
 		//die ("debug");
 		
@@ -74,33 +59,42 @@ class Jotformpost extends BaseController {
 		*/
 
 		$fees = implode('; ',$_POST['fees']);
+
+		// Required fields
+		$tutorial = '0';
+		$email = 'invalid_email';
+		if (strlen($_POST['attendeesemail']) > 0) {
+			$email = $_POST['attendeesemail'];
+		}
+				
+		// Security check to make sure only certain forms are allowed
+		if (!str_contains('250591362320146, 250236372630147, 250600864598161, 243396386676171', $_POST['formID'])) {
+			die ("Not authorized");
+		}
 		
 		if (($_POST['formID'] == "250591362320146") ||
 			($_POST['formID'] == "250236372630147") ) {
 			$type = "EXPO";
 		} else {
-			if (str_contains($fees,'Professional'))  {
-				$type = "Professional"; 
-			}
 			if (str_contains($fees,'Exhibitor'))  {
 				$type = "Exhibitor"; 
 			}			
 			
-			$tutorial = 'No';
+			if (str_contains($fees,'Professional') ||
+				str_contains($fees, 'Upgrade Exhibitor'))  {
+				$type = "Professional"; 
+			}
+
+
 			if (str_contains($fees,'Tutorial'))  {
-				$tutorial = 'Yes'; 
+				$tutorial = '1'; 
 			}		
 		}
 			
 		// 250600864598161 Prof or Exhibitor
 		// 243396386676171
 		
-		// Required field
-		$email = 'invalid_email';
-		if (strlen($_POST['attendeesemail']) > 0) {
-			$email = $_POST['attendeesemail'];
-		}
-		
+
 		$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
@@ -123,12 +117,13 @@ class Jotformpost extends BaseController {
 			'Fees' => $fees,
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou'],
-			'Type' => $type
+			'Type' => $type,
+			'Tutorial' => $tutorial
 		];
 		
 
 		
-		echo '<pre>', print_r($data, 1) , '</pre>';
+		//echo '<pre>', print_r($data, 1) , '</pre>';
 		
 		//die ("debug");
 		
@@ -136,7 +131,7 @@ class Jotformpost extends BaseController {
 		// Connect to database and Guests table
 		
 		$db = \Config\Database::connect('registration');
-		$builder = $db->table('guests_test');
+		$builder = $db->table('guests');
 			
 			
 			
