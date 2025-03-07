@@ -274,8 +274,8 @@ echo  $id;
 				
 		for($i=1; $i<=$people; $i++){ 
 				$n = $i-1;
-			$time = date("d-m-y h:i:s");
-			
+			$time = date('Y-m-d H:i:s');
+			//date('Y-m-d H:i:s')
 			$data = [
 			'PrintTime' => $time,
 			];
@@ -979,7 +979,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 	// $height = '158.75';
 	// 	$width = '107.95';
 	
-	$time = date("d-m-y h:i:s");
+	$time = date('Y-m-d H:i:s');
 			if($results[0]["PrintTime"] == NULL){
 			$data = [
 			'PrintTime' => $time,
@@ -1025,7 +1025,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 		for($i=1; $i<=$people; $i++){ 
 				
 				$n = $i-1;
-				$time = date("d-m-y h:i:s");
+				$time = date('Y-m-d H:i:s');
 			if($results[$n]["PrintTime"] == NULL){
 			$data = [
 			'PrintTime' => $time,
@@ -1684,7 +1684,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				
 		for($i=1; $i<=$people; $i++){ 
 				$n = $i-1;
-			$time = date("d-m-y h:i:s");
+			$time = date('Y-m-d H:i:s');
 			
 			$data = [
 			'PrintTime' => $time,
