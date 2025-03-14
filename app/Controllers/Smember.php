@@ -1437,11 +1437,12 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		//die();
 		
 		//xdebug_break();
-		
-		$chinaYear = "k2023";
+		$koreaYear = "k2024";
+		$chinaYear = "c2024";
 		$this->diag_log("starting reset_mesa_users");
 		echo "<p>Starting resetting Mesa users from Level 4 to Level 0 " . "</p>";
 		echo "<p>If they were at China in the last year - i.e ". $chinaYear. " is set in ccaps , they will be set to Level 1</p>";
+		echo "<p>If they were at Korea in the last year - i.e ". $koreaYear. " is set in ccaps , they will be set to Level 1</p>";
 		echo "<p>Starting at " . $start . "</p>";
 		echo "WP ID\tUser Name\tTestConX DB ID\tMessage 1\tMessage 2<br>";
 				
@@ -1456,6 +1457,9 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 				if ($s2_user['level'] == 4) {
 					$new_level = 0;
 					if (in_array($chinaYear, $s2_user['ccaps'])) {
+						$new_level = 1;
+					}
+					if (in_array($koreaYear, $s2_user['ccaps'])) {
 						$new_level = 1;
 					}
 					$status = $this->s2_update_user_level($wp_ID, $new_level);
