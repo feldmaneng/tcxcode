@@ -103,15 +103,15 @@ class Database extends BaseController {
         $crud->setTable('contacts');
         $crud->setSubject('Contact', 'Contacts');
 		
-		$crud->columns (['ContactID','GivenName','FamilyName','ChineseName','Company','Email','Active']);
+		$crud->columns (['ContactID','GivenName','FamilyName','NativeName','Company','Email','Active']);
 
 
 		$crud->uniqueFields(['Email']);
 		
 		// Try restricting fields...
 		$crud->fields (['ContactID','DBuser','Email',
-			'Abbr','GivenName','FamilyName','Nickname',
-			'ChineseName',
+			'Abbr','GivenName','FamilyName','Nickname','NativeLanguage'
+			'NativeName',
 			'Active', 'TechInfo', 'ExhibitInfo',
 			'CorrespondenceType','Email_only', 'Record_type',
 			'Title','Company', 'ParentCompanyID','CN_Company', 'LinkedInEmail',
@@ -151,13 +151,13 @@ class Database extends BaseController {
 		//$crud->fieldType('Tech_mailing','dropdown',['0' => 'No', '1'=>'Yes']);
 		//$crud->fieldType('China_mailing','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('EmailBounce','dropdown',['0' => 'No', '1'=>'Yes']);
-
+		$crud->fieldType('NativeLanguage','enum',['Chinese','Japanese','Korean','Other']);
 		$crud->fieldType('Email_only','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Solicitation','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('TechInfo','enum',['worldwide','North America','China','Asia','Europe','none']);					
 		$crud->fieldType('ExhibitInfo','enum',['worldwide','North America','China','Asia','Europe','none']);			
 
-		$crud->fieldType('Language','enum',['English','Chinese']);
+		$crud->fieldType('Language','enum',['English','Chinese','Korean']);
 		$crud->fieldType('EUCountry','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('LinkedInGroup','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Source', 'invisible'); // no longer using this field - combined with Origin
