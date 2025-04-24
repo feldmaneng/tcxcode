@@ -110,7 +110,7 @@ class Database extends BaseController {
 		
 		// Try restricting fields...
 		$crud->fields (['ContactID','DBuser','Email',
-			'Abbr','GivenName','FamilyName','Nickname','NativeLanguage'
+			'Abbr','GivenName','FamilyName','Nickname','NativeLanguage',
 			'NativeName',
 			'Active', 'TechInfo', 'ExhibitInfo',
 			'CorrespondenceType','Email_only', 'Record_type',
