@@ -216,7 +216,7 @@ class Mailinglist extends BaseController {
 		if ( empty($record[$field]) && !empty($input[$input_field])) {
 			$record[$field] = $input[$input_field];
 			//d($record[$field], $input[$input_field]);
-			$verbose = $field . "\t";
+			$verbose = $field . "\t;";
 		}
 		return $verbose;
 	}
@@ -254,22 +254,22 @@ class Mailinglist extends BaseController {
 				foreach($data['csvData'] as $field) { 
 				//d($field);
 				$records_processed++;
-				$verbose= "Processing\t" . $field['GivenName'] ."\t" . $field['FamilyName'] ."\t" .
-						$field['Email'] . "\t";
+				$verbose= "Processing\t;" . $field['GivenName'] ."\t;" . $field['FamilyName'] ."\t;" .
+						$field['Email'] . "\t;";
 				
 				$contactID = $this->LookupPersonByEmail($field['Email']);
 				if (!empty($field['ContactID'])) {
 					if ($contactID == $field['ContactID']) {
-						$verbose .= "Contact ID match\t";
+						$verbose .= "Contact ID match\t;";
 					} else {
-						$verbose .= "mismatch on Contact ID\t";
+						$verbose .= "mismatch on Contact ID\t;";
 					}
 				} else {
-					$verbose .= "\t";
+					$verbose .= "\t;";
 				}
 				
 				if (! $contactID ) {
-					$verbose .= "New Person\t";
+					$verbose .= "New Person\t;";
 					// Add new record
 					$SQLdata = array (
 						'GivenName' => $field['GivenName'],
@@ -287,7 +287,7 @@ class Mailinglist extends BaseController {
 					$contactID = $this->LookupPersonByEmail($field['Email']);
 					
 				} else {
-					$verbose .= "Found \t";
+					$verbose .= "Found \t;";
 					// We already have the record selected based upon the LookupPersonByEmail
 					if ($p_write) {
 						$this->write_archive($contactID); // Save a copy first
@@ -303,7 +303,7 @@ class Mailinglist extends BaseController {
 					$row = $query->getRowArray();
 					
 				
-					$verbose .= $row['ContactID'] ."\t";
+					$verbose .= $row['ContactID'] ."\t;";
 					
 					// Better form would be to also check if the input field is non-empty before updating too...
 										
@@ -418,16 +418,16 @@ class Mailinglist extends BaseController {
 			$records_processed = 0;
 				foreach($data['csvData'] as $field) { 
 				$records_processed++;
-				$verbose= "Processing\t" . $field['GivenName'] ."\t" . $field['FamilyName'] ."\t" .
-						$field['Email'] . "\t";
+				$verbose= "Processing\t;" . $field['GivenName'] ."\t;" . $field['FamilyName'] ."\t;" .
+						$field['Email'] . "\t;";
 				
 				$contactID = $this->LookupPersonByEmail($field['Email']);
 				
 				if (! $contactID ) {
-					$verbose .= "Not Found - nothing changed\t";
+					$verbose .= "Not Found - nothing changed\t;";
 					
 				} else {
-					$verbose .= "Found - adding attendance\t";
+					$verbose .= "Found - adding attendance\t;";
 
 					// We found the person, check they aren't already in the attendnace record
 					$db = \Config\Database::conect();
@@ -444,7 +444,7 @@ class Mailinglist extends BaseController {
 					$builder->where($where_criteria);
 					$query = $builder->get();
 					if ( $query->getNumRows() > 0 ) {
-						echo "Attendance record already exists for ". $field['Email'] . " no update made<br>";
+						echo "Attendance record already exists for ". $field['Email'] . " no update made<br>;";
 					} else {
 						// Okay, now create their attendance record
 
@@ -523,13 +523,13 @@ class Mailinglist extends BaseController {
 			$records_processed = 0;
 				foreach($data['csvData'] as $field) { 
 				$records_processed++;
-				$verbose= "Processing " . $field['Email'] . "\t";
+				$verbose= "Processing " . $field['Email'] . "\t;";
 				
 				$contactID = $this->LookupPersonByEmail($field['Email']);
 				
 				if ( $contactID == $field['ContactID']) {
 				
-					$verbose .= "Found\t";
+					$verbose .= "Found\t;";
 					// We already have the record selected based upon the LookupPersonByEmail
 					$this->write_archive($contactID); // Save a copy GivenName
 					$db = \Config\Database::connect();
@@ -551,7 +551,7 @@ class Mailinglist extends BaseController {
 					$verbose .= " - record updated ";
 				} else {
 					
-					$verbose .= "Mismatch on ContactID - not updated";
+					$verbose .= "Mismatch on ContactID - not updated;";
 				}
 				 
 				echo "<p>".$verbose."</p>";
@@ -767,16 +767,16 @@ class Mailinglist extends BaseController {
 			
 			$contactID = $this->contacts->LookupPersonByEmail($field['Email'], FALSE);
 			if ( $contactID ) {
-				$verbose .= "Looked up email\t" . $field['Email'];
+				$verbose .= "Looked up email\t;" . $field['Email'];
 			}		
 			
 			if (! $contactID ) {
-				$verbose .= "Looking up by name:\t".$field['GivenName']." ".$field['FamilyName'];
+				$verbose .= "Looking up by name:\t;".$field['GivenName']." ".$field['FamilyName'];
 				$contactID = $this->contacts->LookupPersonByName($field['GivenName'],$field['FamilyName'], FALSE);
 			}
 			
 			if ($contactID > 0 ) {
-				$verbose .= "\tContactID:\t". $contactID;
+				$verbose .= "\tContactID:\t;". $contactID;
 			}
 			echo $verbose ."<br>";
 		}
@@ -810,14 +810,14 @@ class Mailinglist extends BaseController {
 		$query = $builder->get();
 		
 		foreach ($query->getResultArray() as $field) {
-			$verbose= "Processing " . $field['Email'] . "\t";
+			$verbose= "Processing " . $field['Email'] . "\t;";
 			
 			$contactID = $mine->LookupPersonByEmail($field['Email'], FALSE);
 			if (( $field['MasterContactID'] > 0) && ($contactID !== $field['MasterContactID']) ){
 				if ($contactID <= 0) {
-					$verbose .= "*** Not found by email - MasterContactID " . $field['MasterContactID'] . " ";	
+					$verbose .= "*** Not found by email - MasterContactID " . $field['MasterContactID'] . "; ";	
 				} else {
-					$verbose .= "*** MISMATCH between MasterContactID " . $field['MasterContactID'] . " and found by email " . $contactID ." ";
+					$verbose .= "*** MISMATCH between MasterContactID " . $field['MasterContactID'] . " and found by email " . $contactID ."; ";
 				}
 				// Use the MasterID to override
 				$contactID = $field['MasterContactID'];
@@ -828,9 +828,9 @@ class Mailinglist extends BaseController {
 			//$verbose .= " {". $contactID . "} ";
 			if ($contactID < 1  ) {
 				if (empty($field['Email'])) {
-					$verbose .= "**** Skipped since empty email address\t";
+					$verbose .= "**** Skipped since empty email address\t;";
 				} else {
-					$verbose .= "New Person\t";
+					$verbose .= "New Person\t;";
 					// Add new record
 					$SQLdata = array (
 						'GivenName' => $field['GivenName'],
@@ -847,7 +847,7 @@ class Mailinglist extends BaseController {
 					}
 				}
 			} else {
-				$verbose .= "using\t";
+				$verbose .= "using\t;";
 				
 				$existing_person = TRUE;
 				// We already have the record selected based upon the LookupPersonByEmail
@@ -868,7 +868,7 @@ class Mailinglist extends BaseController {
 	if(! empty($row['ContactID'])){
 		$verbose .= $row['ContactID'];}
 		else{
-		$verbose .= ' new ';
+		$verbose .= ' new ;';
 		}
 	
 			
@@ -943,10 +943,10 @@ class Mailinglist extends BaseController {
 			$builder->where('ContactID', $contactID); 
 			if ($update) {
 				$builder->update($row);
-				$verbose .= " - record updated ";
+				$verbose .= " - record updated ;";
 			}
 			
-			echo $verbose . "<br>";
+			echo $verbose . "<br>;";
 		}
 	}
 	
@@ -1063,20 +1063,20 @@ class Mailinglist extends BaseController {
 			$records_processed = 0;
 				foreach($data['csvData'] as $field) { 
 				$records_processed++;
-				$verbose= "Processing\t" . $field['GivenName/Given Name'] ."\t" . $field['FamilyName/Family Name'] ."\t" .
-						$field['Attendee\'s Email'] . "\t";
+				$verbose= "Processing\t;" . $field['GivenName/Given Name'] ."\t;" . $field['FamilyName/Family Name'] ."\t;" .
+						$field['Attendee\'s Email'] . "\t;";
 				
 				$contactID = $this->LookupPersonByEmail($field['Attendee\'s Email']);
 				
 				$existing_person = FALSE;
 				$updated = FALSE;
 				if ( $contactID > 0) {
-					$verbose .= "Found\t";
+					$verbose .= "Found\t;";
 					// We already have the record selected based upon the LookupPersonByEmail
 					//$this->write_archive($contactID); // Save a copy GivenName
 					$existing_person = TRUE;
 				} else {
-					$verbose .= "New Person\t";
+					$verbose .= "New Person\t;";
 					// Add new record
 					$SQLdata = array (
 						'GivenName' => $field['GivenName/Given Name'],
@@ -1217,20 +1217,20 @@ class Mailinglist extends BaseController {
 			$records_processed = 0;
 				foreach($data['csvData'] as $field) { 
 				$records_processed++;
-				$verbose= "Processing\t" . $field['GivenName'] ."\t" . $field['FamilyName'] ."\t" .
-						$field['Email'] . "\t";
+				$verbose= "Processing\t;" . $field['GivenName'] ."\t;" . $field['FamilyName'] ."\t;" .
+						$field['Email'] . "\t;";
 				
 				$contactID = $this->LookupPersonByEmail($field['Email']);
 				
 				$existing_person = FALSE;
 				$updated = FALSE;
 				if ( $contactID > 0) {
-					$verbose .= "Found\t";
+					$verbose .= "Found\t;";
 					// We already have the record selected based upon the LookupPersonByEmail
 
 					$existing_person = TRUE;
 				} else {
-					$verbose .= "New Person\t";
+					$verbose .= "New Person\t;";
 					// Add new record
 					$SQLdata = array (
 						'GivenName' => $field['GivenName'],
@@ -1511,9 +1511,9 @@ class Mailinglist extends BaseController {
 		echo "<h4>Event: " . EventYear . "</h4>";
 		echo "<p>Found  " . $query->getNumRows() . " number of rows</p>";
 		
-		echo "Record\tEmail\tContactID\tPayment<br>";
+		echo "Record\t;Email\t;ContactID\t;Payment<br>;";
 		foreach ($query->getResult() as $row) {
-			$status = $row->ContactID . "\t" . $row->Email . "\t";
+			$status = $row->ContactID . "\t;" . $row->Email . "\t;";
 			
 			if ($row->MasterContactID > 0) {
 				$contactID = $row->MasterContactID;
@@ -1565,7 +1565,7 @@ class Mailinglist extends BaseController {
 					$regID = $row->ContactID;
 				}
 				
-				$status .= $contactID . "\t" . $payment . "\t";
+				$status .= $contactID . "\t;" . $payment . "\t;";
 				
 				$show = '1';
 				if ($row->NoShow == 'Yes') {
@@ -1591,9 +1591,9 @@ class Mailinglist extends BaseController {
 					$db = \Config\Database::connect();
 					$builder = $db->table('attendance');
 					$builder->insert($SQLdata);
-					$status .= "\tAdded new attendance record\t";
+					$status .= "\tAdded new attendance record\t;";
 				} else {
-					$status .= "\tNot in write mode";
+					$status .= "\tNot in write mode;";
 				}	
 						
 			}
