@@ -35,6 +35,10 @@ $routes->setAutoRoute(false);
 //$routes->get('(:segment)', [Pages::class, 'view']);
 
 $routes->get('/', 'Main::index');
+
+$routes->get('uploadevent', 'uploadevent::index');          // Add this line.
+$routes->post('uploadevent/uploadevent', 'uploadevent::uploadevent'); // Add this line.
+
 $routes->get('logout', 'Main::logout');
 
 $routes->post('main', 'Main::login_action');

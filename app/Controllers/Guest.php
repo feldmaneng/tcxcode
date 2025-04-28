@@ -576,11 +576,11 @@ $pdf->AddPage('P',$pageLayout);
 		if (!empty($results[$n]["GivenName"])){
 		 $this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
 	}
-	else if (!empty($results[$n]["ChineseName"])){
-		 $this->qrstamp($results[$n]["ChineseName"],$results[$n]["Email"],$results[$n]["Company"],$n);
+	else if (!empty($results[$n]["NativeName"])){
+		 $this->qrstamp($results[$n]["NativeName"],$results[$n]["Email"],$results[$n]["Company"],$n);
 	}
 		$NameOnBadge=$results[$n]["NameOnBadge"];
-		$ChineseName=$results[$n]["ChineseName"];
+		$ChineseName=$results[$n]["NativeName"];
 		$GivenName=$results[$n]["GivenName"];
 		$CN_Company=$results[$n]["CN_Company"];
 		$FamilyName=$results[$n]["FamilyName"];
@@ -1246,7 +1246,7 @@ $builder->where('SecretKey', $secretKey);
 	 $crud->columns(['Email',
 	'GivenName',
 	'FamilyName',
-	'ChineseName',
+	'NativeName',
 	'Company',
 	'CN_Company']); 
 	$crud->fields([
@@ -1255,7 +1255,7 @@ $builder->where('SecretKey', $secretKey);
 	'EventYear',
 	'GivenName',
 	'FamilyName',
-	'ChineseName',
+	'NativeName',
 	'NameOnBadge',
 	'Title',
 	'Company',
@@ -1394,7 +1394,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('GivenName','required');
 	$crud->setRule('FamilyName','checkFamilyName');
 	$crud->setRule('FamilyName','required');
-	$crud->setRule('ChineseName','checkFamilyName');
+	$crud->setRule('NativeName','checkFamilyName');
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
 			if( $_SESSION["EventYear"] == 'China2024'){
@@ -1402,7 +1402,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->displayAs('Email','Email Address 电邮地址');
 		$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 		$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
-		$crud->displayAs('ChineseName','Chinese/Korean Name');
+		$crud->displayAs('NativeName','Native Name');
 		$crud->displayAs('Company','Company Name 公司名称（英文）');
 		$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
 		$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
@@ -1421,7 +1421,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->displayAs('Email','Email Address');
 		$crud->displayAs('GivenName','Given (First) Name');
 		$crud->displayAs('FamilyName','Family (Last) Name');
-		$crud->displayAs('ChineseName','Chinese/Korean Name');
+		$crud->displayAs('NativeName','Native Name');
 		$crud->displayAs('Company','Company Name');
 		$crud->displayAs('CN_Company','Chinese/Korean Company Name');
 		$crud->displayAs('NameOnBadge','First Name on Badge');
