@@ -236,11 +236,11 @@ $pdf->AddPage('P',$pageLayout);
 		if (!empty($results[$n]["GivenName"])){
 		 $this->qrstamp($results[$n]["GivenName"]." ".$results[$n]["FamilyName"],$results[$n]["Email"],$results[$n]["Company"],$n);
 	}
-	else if (!empty($results[$n]["ChineseName"])){
-		 $this->qrstamp($results[$n]["ChineseName"],$results[$n]["Email"],$results[$n]["Company"],$n);
+	else if (!empty($results[$n]["NativeName"])){
+		 $this->qrstamp($results[$n]["NativeName"],$results[$n]["Email"],$results[$n]["Company"],$n);
 	}
 		$NameOnBadge=$results[$n]["NameOnBadge"];
-		$ChineseName=$results[$n]["ChineseName"];
+		$ChineseName=$results[$n]["NativeName"];
 		$GivenName=$results[$n]["GivenName"];
 		$CN_Company=$results[$n]["CN_Company"];
 		$FamilyName=$results[$n]["FamilyName"];
