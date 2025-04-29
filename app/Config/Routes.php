@@ -367,6 +367,9 @@ $routes->post('/presentations/korea', 'Presentations::korea');
 $routes->get('/presentations/authors', 'Presentations::authors');
 $routes->post('/presentations/authors', 'Presentations::authors');
 
+$routes->get('/presentations/attendance', 'Presentations::attendance');
+$routes->post('/presentations/attendance', 'Presentations::attendance');
+
 $routes->get('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 $routes->post('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 

@@ -87,6 +87,7 @@ class Database extends BaseController {
 		echo "<LI><a href=" . site_url('/expo') . ">EXPO ENTRIES</a></LI>";
 		echo "<LI><a href=" . site_url('/badge') . ">Badges</a></LI>";
 		echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
+		echo "<LI><a href=" . site_url('/uploadevent') . ">Upload Mail Bounces to get events and years</a></LI>";
 		echo "</OL>";
 		
 		}
