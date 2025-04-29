@@ -67,7 +67,7 @@ class uploadevent extends BaseController
 					$query = $builder->get();
 					
 					if ( $query->getNumRows() > 0 ) {
-						$count = $query->getNumRows;
+						$count = $query->getNumRows();
 						
 					$row = $query->getResultArray();
 					$textoutput =  $ID[0];
