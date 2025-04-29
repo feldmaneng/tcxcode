@@ -90,6 +90,6 @@ class uploadevent extends BaseController
 		
         $data = ['errors' => 'The file has already been moved.'];
 
-        return view('upload_event', $data);
+        //return view('upload_event', $data);
     }
 }
