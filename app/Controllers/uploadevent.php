@@ -83,7 +83,7 @@ class uploadevent extends BaseController
 							echo $textoutput;
 					}		
 					else{
-						echo $ID[0]."Not found <br>\n";
+						echo $ID[2].", Not found <br>\n";
 					}
 					
 			}
