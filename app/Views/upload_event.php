@@ -5,9 +5,7 @@
 </head>
 <body>
 
-<?php foreach ($errors as $error): ?>
-    <li><?= esc($error) ?></li>
-<?php endforeach ?>
+
 
 <?= form_open_multipart('uploadevent/uploadevent') ?>
     <input type="file" name="userfile" size="20">
