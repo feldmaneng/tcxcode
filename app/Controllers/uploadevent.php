@@ -74,7 +74,7 @@ class uploadevent extends BaseController
 							
 							for  ($x = 1; $x < $count; $x++){
 								$y = $x-1;
-								$textoutput .= ", ".$row[$y]['Year'].", ".$row[$y]['Event'];
+								$textoutput .= ", ".$row[$y]['Year']." ".$row[$y]['Event'];
 								
 							}
 							$textoutput .="<br>\n";
