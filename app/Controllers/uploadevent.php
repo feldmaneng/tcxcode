@@ -57,9 +57,10 @@ class uploadevent extends BaseController
 			
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
+			echo "ContactID,GivenName,FamilyName,EventYear <br>";
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
-				echo $ID[2];
+				
 			$db = \Config\Database::connect();
 					$builder = $db->table('attendance');
 					$builder->select('*');
@@ -71,8 +72,8 @@ class uploadevent extends BaseController
 						$count = $query->getNumRows();
 						
 					$row = $query->getResultArray();
-					echo "ContactID,GivenName,FamilyName <br>";
-					$textoutput =  $ID[2].",".$ID[6].",".$ID[7];
+					
+					$textoutput =  $ID[2].",".$ID[6].",".$ID[7].",";
 							
 							for  ($x = 1; $x <= $count; $x++){
 								$y = $x-1;
