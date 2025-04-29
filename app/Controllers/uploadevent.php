@@ -15,6 +15,7 @@ class uploadevent extends BaseController
 
     public function uploadevent()
     {
+		$session = session();
         $validationRule = [
             'userfile' => [
                 'label' => 'Text File',
@@ -23,26 +24,36 @@ class uploadevent extends BaseController
                       ],
             ],
         ];
+		
         if (! $this->validateData([], $validationRule)) {
             $data = ['errors' => $this->validator->getErrors()];
 
             return view('upload_event', $data);
         }
-
-        $img = $this->request->getFiles('userfile');
-
-        if (! $img->hasMoved()) {
+				$file = $this->request->getFile('userfile');
+				//echo $file['full_path']."<br>";
+				$originalName = $file->getClientName();
+				$idName= rand(1000,10000);
+				$newName = $idName."-".$originalName;
+				
+       // $img = $this->request->getFile('userfile');
+		if (! $path = $file->store('/',$newName) ){
+					  echo $path;
+					  $error = $validation->getErrors();
+					  return view('upload_error',$error);
+					} 
+       /*  if (! $img->hasMoved()) {
             $filepath = WRITEPATH . 'uploads/' . $img->store();
 
             $data = ['uploaded_fileinfo' => new File($filepath)];
 
             //return view('uploadevent_success', $data);
-        }
+        } */
 		
-			$files = $this->request->getFiles();
-
+			
+		//echo $file['full_path']."<br>";
 		
-			$list = array_map('str_getcsv', $files);
+			$list = array_map('str_getcsv',file(WRITEPATH.'uploads/'.$newName));
 			
 			$idrow = array_column($list,0);
 			$numrows = count($idrow);
