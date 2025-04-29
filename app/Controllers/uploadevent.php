@@ -58,7 +58,8 @@ class uploadevent extends BaseController
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
 			for ($i = 1; $i < $numrows; $i++){
-				$ID = $list[$i];
+				$ID = $list[2][$i];
+				echo $ID;
 			$db = \Config\Database::connect();
 					$builder = $db->table('attendance');
 					$builder->select('*');
