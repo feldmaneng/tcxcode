@@ -73,7 +73,7 @@ class uploadevent extends BaseController
 						
 					$row = $query->getResultArray();
 					
-					$textoutput =  $ID[2].",".$ID[6].",".$ID[7].",";
+					$textoutput =  $ID[2].",".$ID[6].",".$ID[7].", ";
 							
 							for  ($x = 1; $x <= $count; $x++){
 								$y = $x-1;
