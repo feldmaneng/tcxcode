@@ -72,7 +72,7 @@ class uploadevent extends BaseController
 					$row = $query->getResultArray();
 					$textoutput =  $ID[0];
 							
-							for  ($x = 1; $x < $count; $x++){
+							for  ($x = 1; $x <= $count; $x++){
 								$y = $x-1;
 								$textoutput .= ", ".$row[$y]['Year']." ".$row[$y]['Event'];
 								
