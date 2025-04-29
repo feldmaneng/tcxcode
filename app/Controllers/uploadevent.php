@@ -55,9 +55,9 @@ class uploadevent extends BaseController
 		
 			$list = array_map('str_getcsv',file(WRITEPATH.'uploads/'.$newName));
 			
-			$idrow = array_column($list,0);
+			$idrow = array_column($list,2);
 			$numrows = count($idrow);
-			for ($i = 0; $i < $numrows; $i++){
+			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 			$db = \Config\Database::connect();
 					$builder = $db->table('attendance');
@@ -70,18 +70,19 @@ class uploadevent extends BaseController
 						$count = $query->getNumRows();
 						
 					$row = $query->getResultArray();
-					$textoutput =  $ID[0];
+					echo "ContactID,GivenName,FamilyName <br>";
+					$textoutput =  $ID[2].",".$ID[6].",".$ID[7];
 							
 							for  ($x = 1; $x <= $count; $x++){
 								$y = $x-1;
-								$textoutput .= ", ".$row[$y]['Year']." ".$row[$y]['Event'];
+								$textoutput .= $row[$y]['Year']." ".$row[$y]['Event']." ";
 								
 							}
 							$textoutput .="<br>\n";
 							echo $textoutput;
 					}		
 					else{
-						echo $ID[0].", Not found <br>\n";
+						echo $ID[0]."Not found <br>\n";
 					}
 					
 			}
