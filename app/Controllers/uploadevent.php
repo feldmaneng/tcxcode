@@ -42,22 +42,13 @@ class uploadevent extends BaseController
 					  $error = $validation->getErrors();
 					  return view('upload_error',$error);
 					} 
-       /*  if (! $img->hasMoved()) {
-            $filepath = WRITEPATH . 'uploads/' . $img->store();
-
-            $data = ['uploaded_fileinfo' => new File($filepath)];
-
-            //return view('uploadevent_success', $data);
-        } */
-		
-			
-		//echo $file['full_path']."<br>";
+       
 		
 			$list = array_map('str_getcsv',file(WRITEPATH.'uploads/'.$newName));
 			
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
-			echo "Error,ContactID,Email,GivenName,FamilyName,EventYear <br>";
+			echo "Error;ContactID;Email;GivenName;FamilyName;EventYear <br>";
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 				
@@ -73,7 +64,7 @@ class uploadevent extends BaseController
 						
 					$row = $query->getResultArray();
 					
-					$textoutput =  $ID[0].",".$ID[2].",".$ID[3].",".$ID[6].",".$ID[7].", ";
+					$textoutput =  $ID[0].";".$ID[2].";".$ID[3].";".$ID[6].";".$ID[7]."; ";
 							
 							for  ($x = 1; $x <= $count; $x++){
 								$y = $x-1;
@@ -84,7 +75,7 @@ class uploadevent extends BaseController
 							echo $textoutput;
 					}		
 					else{
-						echo $ID[0].",".$ID[2].",".$ID[3].",".$ID[6].",".$ID[7].", Not found <br>\n";
+						echo $ID[0].";".$ID[2].";".$ID[3].";".$ID[6].";".$ID[7]."; Not found <br>\n";
 					}
 					
 			}
