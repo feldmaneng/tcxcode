@@ -64,8 +64,8 @@ class Database extends BaseController {
 		echo "<LI>Get Secret Key<a href=" . site_url('/EXPOpopulate/getsecretkey') . ">Click Here</a></LI>";
 //UPDATE LATER
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
-		echo "<LI>Manage <a href=" . site_url('/expo/contact') . ">EXPO CONTACTS</a></LI>";
-		echo "<LI>Manage <a href=" . site_url('/presentations') . ">Presentations,Author, Attendance Cruds</a></LI>";
+		echo "<LI>Manage <a href=" . site_url('/expo/contact') . ">EXPO Booths CONTACTS</a></LI>";
+		echo "<LI>Manage <a href=" . site_url('/presentations') . ">Presentations, Author, Attendance Cruds</a></LI>";
 		
 		echo "<LI>Manage <a href=" . site_url('/Certificates') . ">Certificate</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/Smember') . ">Smember</a></LI>";
