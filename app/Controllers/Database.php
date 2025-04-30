@@ -104,7 +104,7 @@ class Database extends BaseController {
         $crud->setTable('contacts');
         $crud->setSubject('Contact', 'Contacts');
 		$crud->setUniqueId('april242025');
-		$crud->columns (['ContactID','Mobile','GivenName','FamilyName','NativeName','Company','Email','Active']);
+		$crud->columns (['ContactID','GivenName','FamilyName','NativeName','Nickname','Mobile','Company','Email','Active']);
 
 
 		$crud->uniqueFields(['Email']);
