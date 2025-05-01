@@ -55,6 +55,49 @@ class Database extends BaseController {
 			}
 		else{
 				
+		echo "<h1>TESTCONX MAIN FUNCTIONS</<h1>";
+		echo "<h4>TestConX Confidential</h4>";
+			echo"<ul>";
+			echo"<li>Manage <a href=" . site_url('/presentations') . ">Presentations, Author, Attendance Cruds</a></li>";
+			echo"<li>Manage <a href=" . site_url('/database/contacts') . ">Contacts</a></li>";	
+			echo"<li>Manage <a href=" . site_url('/database/companies') . ">Companies</a></li>";
+			echo"<li>Manage <a href=" . site_url('/expo/contact') . ">EXPO Booths CONTACTS</a></li>";
+			echo"</ul>";
+		echo "<h1>Event Specific Functions</h1>";
+			echo"<ul>";
+			echo"<li>China</li>";
+				echo"<ul>";
+				echo"<li>Manage <a href=" . site_url('/Guest/companychina34556672') . ">China Company Cruds</a></li>";
+				echo"<li>Manage <a href=" . site_url('/Guest/Chinastats') . ">China Company Stats</a></li>";
+				echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudchina') . ">Guest Crud China</a></LI>";
+				echo"</ul>";
+			echo"<li>Korea</li>";
+				echo"<ul>";
+				echo "<LI>Manage <a href=" . site_url('/Guest/companykorea2346878438') . ">Korea Company Cruds</a></LI>";
+				echo "<LI>Manage <a href=" . site_url('/Guest/Koreastats') . ">Korea Company Stats</a></LI>";
+				echo "<LI>Manage <a href=" . site_url('/Guest/Guestcrudkorea') . ">Guest Crud  Korea</a></LI>";
+				echo"</ul>";
+			echo"</ul>";
+		echo"<h1>Various Limited Use Functions</h1>";
+			echo"<ul>";
+			echo "<LI>Populate author table with a CSV from author summary<a href=" . site_url('/AuthorCheck') . ">Click Here</a></LI>";
+			echo "<LI>Populate expodirectory with people from the previous year<a href=" . site_url('/EXPOpopulate') . ">Click Here</a></LI>";
+			echo "<LI>Get Secret Key<a href=" . site_url('/EXPOpopulate/getsecretkey') . ">Click Here</a></LI>";
+			echo "<LI>Manage <a href=" . site_url('/Smember') . ">Smember</a></LI>";
+			echo "<LI>Tools for <a href=" . site_url('/mailinglist') . ">Mailing lists</a></LI>";		
+			echo "<LI><a href=" . site_url('/expo') . ">EXPO ENTRIES</a></LI>";
+			echo "<LI><a href=" . site_url('/badge') . ">Badges</a></LI>";
+			echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
+			echo "<LI><a href=" . site_url('/uploadevent') . ">Upload Mail Bounces to get events and years</a></LI>";
+			echo"</ul>";
+				
+				
+				
+				
+				
+				
+				
+				
 		echo "<h1>TestConX Database - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
