@@ -97,7 +97,7 @@ class Database extends BaseController {
 				
 				
 				
-				
+/* 				
 		echo "<h1>TestConX Database - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
@@ -105,7 +105,7 @@ class Database extends BaseController {
 		echo "<LI>Populate author table with a CSV from author summary<a href=" . site_url('/AuthorCheck') . ">Click Here</a></LI>";
 		echo "<LI>Populate expodirectory with people from the previous year<a href=" . site_url('/EXPOpopulate') . ">Click Here</a></LI>";
 		echo "<LI>Get Secret Key<a href=" . site_url('/EXPOpopulate/getsecretkey') . ">Click Here</a></LI>";
-//UPDATE LATER
+
 		echo "<LI>Manage <a href=" . site_url('/database/companies') . ">Companies</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/expo/contact') . ">EXPO Booths CONTACTS</a></LI>";
 		echo "<LI>Manage <a href=" . site_url('/presentations') . ">Presentations, Author, Attendance Cruds</a></LI>";
@@ -131,7 +131,7 @@ class Database extends BaseController {
 		echo "<LI><a href=" . site_url('/badge') . ">Badges</a></LI>";
 		echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
 		echo "<LI><a href=" . site_url('/uploadevent') . ">Upload Mail Bounces to get events and years</a></LI>";
-		echo "</OL>";
+		echo "</OL>"; */
 		
 		}
 	}
@@ -166,7 +166,7 @@ class Database extends BaseController {
 			'Language','EUCountry',
 			'Source','Origin','Notes','EmailBounce',
 			'Expo_mailing', 'Tech_mailing', 'China_mailing',
-			'EmailPermission', 'PostalPermission', 'AppPermission']		);
+			'EmailPermission', 'PostalPermission', 'AppPermission','WeChatID']		);
 		//For some reason DBuser does not work after Notes in the fields list 
 		// Not using 'Solicitation'
 		
