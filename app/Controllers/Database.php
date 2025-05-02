@@ -166,9 +166,9 @@ class Database extends BaseController {
 			'Language','EUCountry',
 			'Source','Origin','Notes','EmailBounce',
 			'Expo_mailing', 'Tech_mailing', 'China_mailing',
-			'EmailPermission', 'PostalPermission', 'AppPermission','WeChatID']		);
+			'EmailPermission', 'PostalPermission', 'AppPermission']);
 		//For some reason DBuser does not work after Notes in the fields list 
-		// Not using 'Solicitation'
+		// Not using 'Solicitation' ,'WeChatID'
 		
 
 	
