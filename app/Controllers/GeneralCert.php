@@ -20,13 +20,13 @@ class GeneralCert extends BaseController {
 	
 	public function certificates()
 	{
-		echo $this->request->getPost('year');
-		 $year = $_Post["year"];
-		 $event = $_Post["event"];
-		 $date = $_Post["date"];
-		 $chair1 = $_Post["chair1"];
-		 $chair2 = $_Post["chair2"];
-		 $chair3 = $_Post["chair3"];
+		
+		 $year = $this->request->getPost('year');
+		 $event = $this->request->getPost('event');
+		 $date = $this->request->getPost('date');
+		 $chair1 = $this->request->getPost('chair1');
+		 $chair2 = $this->request->getPost('chair2');
+		 $chair3 = $this->request->getPost('chair3');
 		 
 		 $db = db_connect();
 		 $builder = $db->table('presentations');
