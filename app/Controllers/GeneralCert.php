@@ -20,6 +20,7 @@ class GeneralCert extends BaseController {
 	
 	public function certificates()
 	{
+		echo $this->request->getPost('year');
 		 $year = $_Post["year"];
 		 $event = $_Post["event"];
 		 $date = $_Post["date"];
