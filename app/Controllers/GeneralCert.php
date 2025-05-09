@@ -27,12 +27,14 @@ class GeneralCert extends BaseController {
 		 $chair1 = $this->request->getPost('chair1');
 		 $chair2 = $this->request->getPost('chair2');
 		 $chair3 = $this->request->getPost('chair3');
-		 
+		 //echo $year." ".$event;
 		 $db = db_connect();
 		 $builder = $db->table('presentations');
 		 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
-		 $builder -> where('Year', $year);
-		 $builder -> where('Event', $event);
+		 //$builder -> where('Year', $year);
+		 $builder -> where('Year','2025');
+		 $builder ->where('Event','Mesa');
+		 //$builder -> where('Event', $event);
 		 $builder -> where('Session !=', 'Cancel');
 		 $builder -> where('Session !=', 'Cancel-Poster');
 		 $builder -> where('Session !=', '3AB');
