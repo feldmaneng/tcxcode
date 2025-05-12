@@ -30,13 +30,13 @@ $data4 = [
 	];
 	
 	echo form_label('What is the Date and Location of the Event','date');
-	echo form_input($data);
-	echo form_label('What is the Year of the event','year');
 	echo form_input($data2);
+	echo form_label('What is the Year of the event','year');
+	echo form_input($data);
 	echo form_label('Who is first chair','chair1');
 	echo form_input($data3);
 	echo form_label('Who is second chair','chair2');
-	echo form_input($data2);
+	echo form_input($data4);
 	
 	$options = [
     'Mesa'  => 'Mesa',
