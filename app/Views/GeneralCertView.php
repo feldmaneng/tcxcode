@@ -23,7 +23,7 @@ $data3 = [
 	'required' => true,
 	];
 $data4 = [
-	'name' => 'chair1',
+	'name' => 'chair2',
 	'id' => 'chair2',
 	'value' => '',
 	'required' => true,
