@@ -28,6 +28,12 @@ $data4 = [
 	'value' => '',
 	'required' => true,
 	];
+$data5 = [
+	'name' => 'event',
+	'id' => 'event',
+	'value' => '',
+	'required' => true,
+	];
 	
 	echo form_label('What is the Date and Location of the Event','date');
 	echo form_input($data2);
@@ -37,6 +43,8 @@ $data4 = [
 	echo form_input($data3);
 	echo form_label('Who is second chair','chair2');
 	echo form_input($data4);
+	echo form_label('Who is second chair','chair2');
+	echo form_input($data5);
 	
 	$options = [
     'Mesa'  => 'Mesa',
