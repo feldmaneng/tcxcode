@@ -26,7 +26,7 @@ class GeneralCert extends BaseController {
 		 $date = $this->request->getPost('date');
 		 $chair1 = $this->request->getPost('chair1');
 		 $chair2 = $this->request->getPost('chair2');
-		 $chair3 = $this->request->getPost('chair3');
+		 //$chair3 = $this->request->getPost('chair3');
 		 //echo $year." ".$event;
 		 $db = db_connect();
 		 $builder = $db->table('presentations');
