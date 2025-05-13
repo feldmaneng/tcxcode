@@ -33,8 +33,8 @@ class GeneralCert extends BaseController {
 		 $builder -> join('authors', 'presentations.PresentationID = authors.PresentationID');
 		 $builder -> where('Year', $year);
 		 //$builder -> where('Year','2025');
-		//$builder ->where('Event','Mesa');
-		 $builder -> where('Event', $event);
+		$builder ->where('Event','Mesa');
+		//$builder -> where('Event', $event);
 		 $builder -> where('Session !=', 'Cancel');
 		 $builder -> where('Session !=', 'Cancel-Poster');
 		 $builder -> where('Session !=', '3AB');
