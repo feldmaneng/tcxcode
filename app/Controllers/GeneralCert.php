@@ -87,7 +87,7 @@ class GeneralCert extends BaseController {
 		
 		$pdf->SetFont('helvetica', '',10);
 		
-		$pdf->AddPage('L');
+		//$pdf->AddPage('L');
 		
 		for($i=1 ; $i <= $people ; $i++)
 {
@@ -211,7 +211,8 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(60, 23,$chair1." \nChina Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 170, true);
 					$pdf->MultiCell(60, 23,$chair2." \nChina General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 170, true);
 					$pdf->MultiCell(60, 23,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 170, true);
-									
+							
+					$pdf->AddPage('L');							
 					}
 				if($event == 'Korea'){
 					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
@@ -264,6 +265,7 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 170, true);
 					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 170, true);
 					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 170, true);
+					$pdf->AddPage('L');
 				}
 	
 				
