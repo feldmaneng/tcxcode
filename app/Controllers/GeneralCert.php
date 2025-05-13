@@ -90,7 +90,7 @@ class GeneralCert extends BaseController {
 		$pdf->AddPage('L');
 		
 		for($i=1 ; $i <= $people ; $i++)
-{
+			{
 //this determines how many rows the sheet has
 
     
@@ -107,7 +107,8 @@ class GeneralCert extends BaseController {
 				// The Y position is also adjusted slightly.
 				
 				if($event == 'Mesa'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, , , 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 						$y=55;
 						$z=10;
@@ -159,7 +160,7 @@ class GeneralCert extends BaseController {
 					   
 					 //$pdf->AddPage();
 					 //$pdf->AddPage('L');
- }
+					}
 				if($event == 'China'){
 					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
@@ -215,7 +216,8 @@ class GeneralCert extends BaseController {
 					//$pdf->AddPage('L');							
 					}
 				if($event == 'Korea'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, , , 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 					$x=102-2;
 					$y=60;
 					$z=10;
@@ -266,10 +268,10 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 170, true);
 					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 170, true);
 					//$pdf->AddPage('L');
-				}
+					}
 	
 				
-		}	
+			}	
 
 
 
