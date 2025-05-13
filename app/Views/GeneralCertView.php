@@ -43,8 +43,8 @@ $data5 = [
 	echo form_input($data3);
 	echo form_label('Who is second chair','chair2');
 	echo form_input($data4);
-	echo form_label('What is the event?(Mesa,Korea,China)','event');
-	echo form_input($data5);
+	//echo form_label('What is the event?(Mesa,Korea,China)','event');
+	//echo form_input($data5);
 	
 	$options = [
     'Mesa'  => 'Mesa',
