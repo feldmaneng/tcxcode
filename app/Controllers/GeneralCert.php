@@ -26,7 +26,7 @@ class GeneralCert extends BaseController {
 		 $date = $this->request->getPost('date');
 		 $chair1 = $this->request->getPost('chair1');
 		 $chair2 = $this->request->getPost('chair2');
-		 //$chair3 = $this->request->getPost('chair3');
+		
 		 //echo $year." ".$event;
 		 $db = db_connect();
 		 $builder = $db->table('presentations');
@@ -107,7 +107,7 @@ class GeneralCert extends BaseController {
 				// The Y position is also adjusted slightly.
 				
 				if($event == 'Mesa'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 						$y=55;
 						$z=10;
