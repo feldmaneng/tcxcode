@@ -87,7 +87,7 @@ class GeneralCert extends BaseController {
 		
 		$pdf->SetFont('helvetica', '',10);
 		
-		//$pdf->AddPage('L');
+		$pdf->AddPage('L');
 		
 		for($i=1 ; $i <= $people ; $i++)
 {
