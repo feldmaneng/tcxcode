@@ -108,7 +108,7 @@ class GeneralCert extends BaseController {
 				
 				if($event == 'Mesa'){
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, , , 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0,279.4,215.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 						$y=55;
 						$z=10;
@@ -217,7 +217,7 @@ class GeneralCert extends BaseController {
 					}
 				if($event == 'Korea'){
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5, , , 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4.png', 5, 5,297,210, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 					$x=102-2;
 					$y=60;
 					$z=10;
