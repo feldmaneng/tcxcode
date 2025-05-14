@@ -1241,7 +1241,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		
 		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
-		$builder->select('AttendanceID, attendance.ContactID, WordPressID, contacts.Email,attendance.Email, Type, Tutorial, GivenName, FamilyName');
+		$builder->select('AttendanceID, attendance.ContactID, WordPressID, contacts.Email,attendance.Email AS AttendanceEmail, Type, Tutorial, GivenName, FamilyName');
 		$builder->from('attendance');
 		$builder->where('attendance.ContactID = contacts.ContactID');
 		$builder->where('Year = ' . $year);
