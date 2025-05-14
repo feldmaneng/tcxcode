@@ -1292,7 +1292,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 								if (! $this->s2_check_email($row['contacts.Email'])) {
 									// Okay now create the user
 									$password = $this->generatePassword();
-									$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
+									//RE ENABLE
+									//$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
 									if ($wp_ID) {
 												
 									$data = [
@@ -1302,7 +1303,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 									$db2 = \Config\Database::connect();
 									$builder2 = $db2->table('contacts');
 									$builder2->where('ContactID', $row['ContactID']);
-									$builder2->update($data);
+									//RE ENABLE
+									//$builder2->update($data);
 										// Best to stuff it in the row table? Seems okay.
 										//doesn't work $row['WordPressID'] = $wp_ID;
 										$status .= "\tAdding user as WP ID\t" . $wp_ID ."\tusername:\t" . $username . "\tpass:\t" . $password;
@@ -1314,7 +1316,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 										$status .= "\tFailed to create user";
 									}
 								} else {						
-									$status .= "\tEmail " . $row['Email'] . " already in use - add failed";
+									$status .= "\tEmail " . $row['contacts.Email'] . " already in use - add failed";
 								}
 							}
 						} else {
