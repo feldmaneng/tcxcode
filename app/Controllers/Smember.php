@@ -1241,7 +1241,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		
 		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
-		$builder->select('AttendanceID, attendance.ContactID, WordPressID, contacts.Email, Type, Tutorial, GivenName, FamilyName');
+		$builder->select('AttendanceID, attendance.ContactID, WordPressID, contacts.Email,attendance.Email, Type, Tutorial, GivenName, FamilyName');
 		$builder->from('attendance');
 		$builder->where('attendance.ContactID = contacts.ContactID');
 		$builder->where('Year = ' . $year);
@@ -1287,8 +1287,9 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 							if (! $username ) {
 								$status .= "\tUsername generation failed";
 							} else {
+								//changed from $row['Email']
 								// Double check that email address isn't in use already
-								if (! $this->s2_check_email($row['Email'])) {
+								if (! $this->s2_check_email($row['contacts.Email'])) {
 									// Okay now create the user
 									$password = $this->generatePassword();
 									$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
@@ -1389,7 +1390,10 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 				}
 			
 			}
-			
+			//find emails and compare here IRA
+			if (strcasecmp($row['contacts.Email'], $row['attendance.Email']) != 0) {
+				$status.= $row['contacts.Email'].' is different from attendance email '.$row['attendance.Email'];
+				}
 			
 			if (empty($username)) { $username = " "; }
 			if (empty($password)) { $password =" "; }
