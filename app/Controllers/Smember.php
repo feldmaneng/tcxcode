@@ -1290,7 +1290,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 							} else {
 								//changed from $row['Email']
 								// Double check that email address isn't in use already
-								if (! $this->s2_check_email($row['contacts.Email'])) {
+								if (! $this->s2_check_email($row['Email'])) {
 									// Okay now create the user
 									$password = $this->generatePassword();
 									//RE ENABLE
@@ -1394,8 +1394,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			
 			}
 			//find emails and compare here IRA
-			if (strcasecmp($row['contacts.Email'], $row['attendance.Email']) != 0) {
-				$status.= $row['contacts.Email'].' is different from attendance email '.$row['attendance.Email'];
+			if (strcasecmp($row['Email'], $row['AttendanceEmail']) != 0) {
+				$status.= $row['Email'].' is different from attendance email '.$row['AttendanceEmail'];
 				}
 			
 			if (empty($username)) { $username = " "; }
