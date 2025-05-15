@@ -1317,7 +1317,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 										$status .= "\tFailed to create user";
 									}
 								} else {						
-									$status .= "\tEmail " . $row['contacts.Email'] . " already in use - add failed";
+									$status .= "\tEmail " . $row['Email'] . " already in use - add failed";
 								}
 							}
 						} else {
