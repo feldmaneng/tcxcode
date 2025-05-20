@@ -88,7 +88,7 @@ class GeneralCert extends BaseController {
 		$pdf->SetFont('helvetica', '',10);
 		
 		$pdf->AddPage('L');
-		
+		$widthx = 265;
 		for($i=1 ; $i <= $people ; $i++)
 			{
 //this determines how many rows the sheet has
@@ -107,9 +107,9 @@ class GeneralCert extends BaseController {
 				// The Y position is also adjusted slightly.
 				
 				if($event == 'Mesa'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 260, 210, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, $widthx, 210, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0,279.4,215.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
-	
+						$widthx += 0.5;
 						$y=55;
 						$z=10;
 					   $pdf->SetFont('times', '', 24);  
