@@ -107,7 +107,7 @@ class GeneralCert extends BaseController {
 				// The Y position is also adjusted slightly.
 				
 				if($event == 'Mesa'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 214, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0, 279, 212, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images/TestConXletterframe2.png', 0, 0,279.4,215.9, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 						if( $widthx < 279){
 						$widthx += 0.5;
