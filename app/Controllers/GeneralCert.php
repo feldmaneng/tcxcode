@@ -162,7 +162,7 @@ class GeneralCert extends BaseController {
 					 $pdf->AddPage('L');
 					}
 				if($event == 'China'){
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4.png', 0, 0, 297, 210, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4.png', 0, 0, 283, 198, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 	
 					$x=102-2;
 					$y=60;
