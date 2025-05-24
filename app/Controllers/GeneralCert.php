@@ -260,13 +260,13 @@ class GeneralCert extends BaseController {
 					$pdf->SetFont('times', '', 18);
 					$pdf->MultiCell(200, 25,"presented at TestConX Korea".$year." workshop \n ".$date, 0, 'C', 0, 0, $x2, $y+7*$z+5, true);
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)); 
-					$pdf->Line( $x3+15+4.4, 170,25.58+63+4.4, 170, $style = array() );
-					$pdf->Line( $x3+88+4.4, 170,25.58+136+4.4, 170, $style = array() );
-					$pdf->Line( $x3+161+4.4, 170,25.58+209+4.4, 170, $style = array() );
+					$pdf->Line( $x3+15+4.4, 167,25.58+63+4.4, 167, $style = array() );
+					$pdf->Line( $x3+88+4.4, 167,25.58+136+4.4, 167, $style = array() );
+					$pdf->Line( $x3+161+4.4, 167,25.58+209+4.4, 167, $style = array() );
 					$pdf->SetFont('times', '', 12);
-					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 170, true);
-					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 170, true);
-					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 170, true);
+					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 167, true);
+					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
+					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
 					$pdf->AddPage('L');
 					}
 	
