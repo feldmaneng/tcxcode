@@ -159,7 +159,7 @@ class GeneralCert extends BaseController {
 					   
 					   
 					 //$pdf->AddPage();
-					 $pdf->AddPage('L');
+					 
 					}
 				if($event == 'China'){
 					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXChinaOrangeFrameA4r2.png', 0, 0, 300, 207, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
@@ -213,7 +213,7 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(60, 23,$chair2." \nChina General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
 					$pdf->MultiCell(60, 23,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
 							
-					$pdf->AddPage('L');							
+											
 					}
 				if($event == 'Korea'){
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4r2.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
@@ -267,9 +267,13 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
+					
+					
+					}
+					if($i!= $people){
 					$pdf->AddPage('L');
 					}
-	
+					
 				
 			}	
 
