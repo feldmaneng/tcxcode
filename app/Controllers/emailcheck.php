@@ -48,12 +48,12 @@ class emailcheck extends BaseController
 			
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
-			echo "Error;ContactID;Email;GivenName;FamilyName;EventYear <br>";
+			
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 				
 			$db = \Config\Database::connect();
-					$builder = $db->table('attendance');
+					$builder = $db->table('contacts');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[2]);
 					
@@ -61,21 +61,29 @@ class emailcheck extends BaseController
 					
 					if ( $query->getNumRows() > 0 ) {
 						$count = $query->getNumRows();
+						$row = $query->getResultArray();
+						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
+							$row['EmailBounce']=1;
+						 }
+					/* if( requirement for unsubscribe is true){
+						$row['Subscribe'] = 'No';
+					} */
+					//create a column in contacts for subscription set it to enum and make the choices Yes,No,and blank
+					/* if( requirements for removing from contacts is true){
+						$builder->where('ContactID',$ID[2]);
+						$builder->delete();
+					} */
 						
-					$row = $query->getResultArray();
+						 
+						 
+						 
+						 $builder->where('ContactID', $ID[2]); 
+						 $builder->update($row);
 					
-					$textoutput =  $ID[0].";".$ID[2].";".$ID[3].";".$ID[6].";".$ID[7]."; ";
 							
-							for  ($x = 1; $x <= $count; $x++){
-								$y = $x-1;
-								$textoutput .= $row[$y]['Year']." ".$row[$y]['Event']." ";
-								
-							}
-							$textoutput .="<br>\n";
-							echo $textoutput;
+						
 					}		
-					else{
-						echo $ID[0].";".$ID[2].";".$ID[3].";".$ID[6].";".$ID[7]."; Not found <br>\n";
+					
 					}
 					
 			}

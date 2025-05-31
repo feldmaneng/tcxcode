@@ -811,7 +811,7 @@ class Mailinglist extends BaseController {
 		
 		foreach ($query->getResultArray() as $field) {
 			$verbose= "Processing " . $field['Email'] . "\t;";
-			
+			//this must be looking at attendance
 			$contactID = $mine->LookupPersonByEmail($field['Email'], FALSE);
 			if (( $field['MasterContactID'] > 0) && ($contactID !== $field['MasterContactID']) ){
 				if ($contactID <= 0) {
@@ -1058,6 +1058,7 @@ class Mailinglist extends BaseController {
 
 				
 				//$data['csvData'] = $this->csvreader->parse_file($filePath);
+				//could not find this in the library ask ira
 			$data['csvData'] = $this->tabreaderselect2->parse_file($filePath, TRUE, $field_list);
 			
 			$records_processed = 0;
@@ -1087,7 +1088,6 @@ class Mailinglist extends BaseController {
 					if (! $test_run) {
 						$builder->insert($SQLdata);
 					}
-					//$query = $this->db->get();
 					//$row = $SQLdata; //$query->row_array();
 					
 					$contactID = $this->LookupPersonByEmail($field['Attendee\'s Email']);
