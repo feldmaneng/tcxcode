@@ -31,12 +31,12 @@ class emailcheck extends BaseController
             return view('upload_event', $data);
         }
 				$file = $this->request->getFile('userfile');
-				//echo $file['full_path']."<br>";
+				
 				$originalName = $file->getClientName();
 				$idName= rand(1000,10000);
 				$newName = $idName."-".$originalName;
 				
-       // $img = $this->request->getFile('userfile');
+       
 		if (! $path = $file->store('/',$newName) ){
 					  echo $path;
 					  $error = $validation->getErrors();
@@ -53,7 +53,7 @@ class emailcheck extends BaseController
 				$ID = $list[$i];
 				
 			$db = \Config\Database::connect();
-					$builder = $db->table('contacts');
+					$builder = $db->table('contactstestemail');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[2]);
 					
@@ -65,6 +65,11 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$row['EmailBounce']=1;
 						 }
+						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
+							$row['Expo_mailing']=0;
+							$row['Tech_mailing']=0;
+						 }
+						 
 					/* if( requirement for unsubscribe is true){
 						$row['Subscribe'] = 'No';
 					} */
