@@ -87,7 +87,7 @@ class emailcheck extends BaseController
 //increment keyfirst to move to the first times one row down
 
 		
-        $data = ['errors' => 'The file has already been moved.'];
+        //$data = ['errors' => 'The file has already been moved.'];
 
         //return view('upload_event', $data);
     }
