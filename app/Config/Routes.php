@@ -458,6 +458,12 @@ $routes->post('/GeneralCert/certificates', 'GeneralCert::certificates');
 $routes->get('/Jotformpost', 'Jotformpost::postguest');  
 $routes->post('/Jotformpost', 'Jotformpost::postguest');  
 
+$routes->get('/emailcheck', 'emailcheck::index');  
+$routes->post('/emailcheck', 'emailcheck::index'); 
+
+$routes->get('/emailcheck/emailcheck', 'emailcheck::emailcheck');  
+$routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
