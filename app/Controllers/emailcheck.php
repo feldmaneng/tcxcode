@@ -52,7 +52,7 @@ class emailcheck extends BaseController
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 				
-			$db = \Config\Database::connect();
+					$db = \Config\Database::connect();
 					$builder = $db->table('contactstestemail');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[2]);
@@ -69,15 +69,7 @@ class emailcheck extends BaseController
 							$row['Expo_mailing']=0;
 							$row['Tech_mailing']=0;
 						 }
-						 
-					/* if( requirement for unsubscribe is true){
-						$row['Subscribe'] = 'No';
-					} */
-					//create a column in contacts for subscription set it to enum and make the choices Yes,No,and blank
-					/* if( requirements for removing from contacts is true){
-						$builder->where('ContactID',$ID[2]);
-						$builder->delete();
-					} */
+				
 						
 						 
 						 
