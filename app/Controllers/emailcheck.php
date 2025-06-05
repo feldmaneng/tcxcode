@@ -28,7 +28,7 @@ class emailcheck extends BaseController
         if (! $this->validateData([], $validationRule)) {
             $data = ['errors' => $this->validator->getErrors()];
 
-            return view('upload_event', $data);
+            return view('email_error', $data);
         }
 				$file = $this->request->getFile('userfile');
 				
