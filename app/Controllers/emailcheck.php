@@ -10,7 +10,7 @@ class emailcheck extends BaseController
 
     public function index()
     {
-        return view('upload_event', ['errors' => []]);
+        return view('emailcheck', ['errors' => []]);
     }
 
     public function emailcheck()
