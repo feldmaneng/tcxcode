@@ -91,4 +91,3 @@ class emailcheck extends BaseController
 
         //return view('upload_event', $data);
     }
-}
