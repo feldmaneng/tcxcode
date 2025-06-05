@@ -25,11 +25,11 @@ class emailcheck extends BaseController
             ],
         ];
 		
-        if (! $this->validateData([], $validationRule)) {
+        /* if (! $this->validateData([], $validationRule)) {
             $data = ['errors' => $this->validator->getErrors()];
 
             return view('email_error', $data);
-        }
+        } */
 				$file = $this->request->getFile('userfile');
 				
 				$originalName = $file->getClientName();
@@ -40,7 +40,7 @@ class emailcheck extends BaseController
 		if (! $path = $file->store('/',$newName) ){
 					  echo $path;
 					  $error = $validation->getErrors();
-					  return view('upload_error',$error);
+					  return view('email_error',$error);
 					} 
        
 		
@@ -82,7 +82,7 @@ class emailcheck extends BaseController
 					}		
 					
 					}
-					
+				return view('emailcheck_success');	
 			}
 //increment keyfirst to move to the first times one row down
 

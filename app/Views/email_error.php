@@ -18,7 +18,7 @@ echo "<h2>Please make sure your file size is not larger than 1 megabyte.</h2>";
 echo "<h2>Please contact TestConX if you are not able to upload your file.</h2>";
 
 
-echo anchor('', 'Return to TestConX EXPO Directory Entry'); 
+echo anchor('emailcheck', 'Upload Another File!');
 ?>
 
 </body>
