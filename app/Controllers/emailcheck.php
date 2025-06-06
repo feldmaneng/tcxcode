@@ -52,8 +52,9 @@ class emailcheck extends BaseController
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 				echo $ID[2].";";
+				/*
 				echo $ID[1].";";
-				echo $ID[0].";";
+				echo $ID[0].";"; */
 					$db = \Config\Database::connect();
 					$builder = $db->table('contactstestemail');
 					$builder->select('*');
@@ -68,14 +69,16 @@ class emailcheck extends BaseController
 							$rowb['EmailBounce']=1;
 							$builder->where('ContactID', $ID[2]); 
 							$builder->update($rowb);
+							echo "bounce;";
 						 }
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Expo_mailing']=0;
 							$rowc['Tech_mailing']=0;
 							$builder->where('ContactID', $ID[2]); 
 							$builder->update($rowc);
+							echo "unsub;";
 						 }
-				
+				echo "<br>";
 						
 						 
 						 
