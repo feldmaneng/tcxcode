@@ -88,7 +88,7 @@ class emailcheck extends BaseController
 					}		
 					
 					}
-				return view('emailcheck_success');	
+				//return view('emailcheck_success');	
 			}
 //increment keyfirst to move to the first times one row down
 
