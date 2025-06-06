@@ -51,7 +51,9 @@ class emailcheck extends BaseController
 			
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
-				
+				echo $ID[2].";";
+				echo $ID[1].";";
+				echo $ID[0].";";
 					$db = \Config\Database::connect();
 					$builder = $db->table('contactstestemail');
 					$builder->select('*');
