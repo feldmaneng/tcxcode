@@ -78,7 +78,7 @@ class emailcheck extends BaseController
 							$builder->update($rowc);
 							echo "unsub;";
 						 }
-				echo "<br>";
+				//echo "<br>";
 						
 						 
 						 
@@ -89,7 +89,7 @@ class emailcheck extends BaseController
 							
 						
 					}		
-					
+					echo "<br>";
 					}
 				//return view('emailcheck_success');	
 			}
