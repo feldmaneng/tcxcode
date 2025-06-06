@@ -60,24 +60,28 @@ class emailcheck extends BaseController
 					$builder->where('ContactID',$ID[2]);
 					
 					$query = $builder->get();
-					
-					if ( $query->getNumRows() > 0 ) {
-						$count = $query->getNumRows();
-						$row = $query->getResultArray();
+										
+					$count = $query->getNumRows();
+						
+					if ( $count > 0) {
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
-							$row['EmailBounce']=1;
+							$rowb['EmailBounce']=1;
+							$builder->where('ContactID', $ID[2]); 
+							$builder->update($rowb);
 						 }
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
-							$row['Expo_mailing']=0;
-							$row['Tech_mailing']=0;
+							$rowc['Expo_mailing']=0;
+							$rowc['Tech_mailing']=0;
+							$builder->where('ContactID', $ID[2]); 
+							$builder->update($rowc);
 						 }
 				
 						
 						 
 						 
 						 
-						 $builder->where('ContactID', $ID[2]); 
-						 $builder->update($row);
+						/*  $builder->where('ContactID', $ID[2]); 
+						 $builder->update($row); */
 					
 							
 						
