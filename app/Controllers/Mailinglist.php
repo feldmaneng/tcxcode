@@ -580,13 +580,13 @@ class Mailinglist extends BaseController {
 	
 	private function write_mailchimp($includeChinese)
 	// Writes out CSV data for MailChimp, without the Chinese Fields
-	{
+	{/* 
 			$db = \Config\Database::connect();
 			$builder = $db->table('attendance');
 			$builder->distinct('ContactID');
 			$query = $builder->get();
 			$row = $query->getRowArray();
-			$AttendanceContactID = $row['ContactID'];
+			$AttendanceContactID = $row['ContactID']; */
 		$subscribers = 0;
 		
 		//echo "Number of rows in Contacts " . $this->db->count_all_results('Contacts') . "</p>";
@@ -602,8 +602,8 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT NULL' => NULL,
 			'EmailBounce' =>"0",
-			'Expo_mailing OR Tech_mailing' => "1",
-			'ContactID' => $AttendanceContactID
+			'Expo_mailing OR Tech_mailing' => "1"
+			//'ContactID' => $AttendanceContactID
 		);					
 		$builder->where($where_criteria);
 		
