@@ -600,7 +600,7 @@ class Mailinglist extends BaseController {
 		// Query updated with switch of Active to TINYINT (0,1)
 		$where_criteria = array (
 			'Active' => "1",
-			'Email is NOT NULL' => NULL,
+			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
 			'Expo_mailing OR Tech_mailing' => "1"
 			//'ContactID' => $AttendanceContactID
