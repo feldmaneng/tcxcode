@@ -602,7 +602,7 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
-			'Expo_mailing OR Tech_mailing' => "1"
+			//'Expo_mailing OR Tech_mailing' => "1",
 			//'ContactID' => $AttendanceContactID
 		);					
 		$builder->where($where_criteria);
