@@ -49,6 +49,14 @@ class emailcheck extends BaseController
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
 			
+			$db = \Config\Database::connect();
+			$builder = $db->table('attendance');
+			$builder->distinct('ContactID');
+			$query = $builder->get();
+			$row = $query->getRowArray();
+			$AttendanceContactID = $row['ContactID'];
+			
+			
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
 				echo $ID[2].";";
@@ -56,17 +64,24 @@ class emailcheck extends BaseController
 				echo $ID[1].";";
 				echo $ID[0].";"; */
 					$db = \Config\Database::connect();
-					$builder = $db->table('contactstestemail');
+					$builder = $db->table('contactstestemail2');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[2]);
 					
 					$query = $builder->get();
 										
 					$count = $query->getNumRows();
-						
+					
 					if ( $count > 0) {
+						//this checks if the email has been bounced or unsubed and then updates the appropriate database fields
+						//$ID[0] is the error field from mailchimp
+						//$ID[2] is the ContactID field
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
+							if(!in_array($ID[2],$AttendanceContactID,true){
+								$rowb['Active']=0;
+							}
+							
 							$builder->where('ContactID', $ID[2]); 
 							$builder->update($rowb);
 							echo "bounce;";
@@ -74,6 +89,9 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Expo_mailing']=0;
 							$rowc['Tech_mailing']=0;
+							if(!in_array($ID[2],$AttendanceContactID,true){
+								$rowc['Active']=0;
+							}
 							$builder->where('ContactID', $ID[2]); 
 							$builder->update($rowc);
 							echo "unsub;";
@@ -83,8 +101,7 @@ class emailcheck extends BaseController
 						 
 						 
 						 
-						/*  $builder->where('ContactID', $ID[2]); 
-						 $builder->update($row); */
+						
 					
 							
 						
