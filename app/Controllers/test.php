@@ -12,6 +12,16 @@ class test extends BaseController
 
     public function testarray()
     {
+			$db = \Config\Database::connect();
+			$builder = $db->table('attendance');
+			$builder->distinct('ContactID');
+			$query = $builder->get();
+			$row = $query->getRowArray();
+			$array = $row['ContactID'];
+			foreach ( $array as $alsorow){
+			echo $alsorow;
+			}
+			
 		$array = array("snapple","tomato","pear");
 		
 		
