@@ -591,8 +591,8 @@ class Mailinglist extends BaseController {
 		
 		//echo "Number of rows in Contacts " . $this->db->count_all_results('Contacts') . "</p>";
 			$db = \Config\Database::connect();
-			$builder = $db->table('contacts');
-			//$builder = $db->table('contactstestemail');
+			//$builder = $db->table('contacts');
+			$builder = $db->table('contactstestemail2');
 			$builder->select('*');
 			
 
@@ -603,7 +603,7 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
-			//'Expo_mailing OR Tech_mailing' => "1",
+			'(Expo_mailing OR Tech_mailing)' => "1",
 			//'ContactID' => $AttendanceContactID
 		);					
 		$builder->where($where_criteria);

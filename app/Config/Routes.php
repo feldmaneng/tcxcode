@@ -464,6 +464,9 @@ $routes->post('/emailcheck', 'emailcheck::index');
 $routes->get('/emailcheck/emailcheck', 'emailcheck::emailcheck');  
 $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 
+$routes->get('/test/testarray', 'test::testarray');  
+$routes->post('/test/testarray', 'test::testarray');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
