@@ -624,7 +624,7 @@ class Mailinglist extends BaseController {
 		
 		echo "ContactID,Email,Action,Given Name,Family Name,Nickname (optional),Technical Program Information,Exhibiting & Sponsoring Information,Preferred Language,EUCountry";
 		if ($includeChinese) {
-			echo ",Chinese Name (optional)"; 
+			echo ",Native Name (optional)"; 
 		}
 		echo "<br>";
 		
@@ -656,7 +656,7 @@ class Mailinglist extends BaseController {
 			*/
 			
 			if ($includeChinese) {
-				echo ',"'. $row['ChineseName'] . '"'; 
+				echo ',"'. $row['NativeName'] . '"'; 
 			}
 			echo "<br>";
 		
