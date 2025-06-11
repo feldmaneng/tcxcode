@@ -18,7 +18,7 @@ class test extends BaseController
 			$query = $builder->get();
 			$row = $query->getRowArray();
 			$array = $row['ContactID'];
-			
+			echo $array;
 			foreach ( $array as $alsorow){
 			echo $alsorow;
 			}
