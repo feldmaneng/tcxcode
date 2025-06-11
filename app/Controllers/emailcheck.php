@@ -78,7 +78,7 @@ class emailcheck extends BaseController
 						//$ID[2] is the ContactID field
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
-							if(!in_array($ID[2],$AttendanceContactID,true){
+							if(!in_array($ID[2],$AttendanceContactID,true)){
 								$rowb['Active']=0;
 							}
 							
