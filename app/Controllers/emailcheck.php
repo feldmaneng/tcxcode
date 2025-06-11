@@ -89,7 +89,7 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Expo_mailing']=0;
 							$rowc['Tech_mailing']=0;
-							if(!in_array($ID[2],$AttendanceContactID,true){
+							if(!in_array($ID[2],$AttendanceContactID,true)){
 								$rowc['Active']=0;
 							}
 							$builder->where('ContactID', $ID[2]); 
