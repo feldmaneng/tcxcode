@@ -18,6 +18,7 @@ class test extends BaseController
 			$query = $builder->get();
 			$row = $query->getRowArray();
 			$array = $row['ContactID'];
+			
 			foreach ( $array as $alsorow){
 			echo $alsorow;
 			}
@@ -25,11 +26,11 @@ class test extends BaseController
 		$array = array("snapple","tomato","pear");
 		
 		
-		if(in_array("apple",$array,true)){
+		if(in_array("apple",$array)){
 			echo "there is an apple;";
 							}
 							
-		if(!in_array("apple",$array,true)){
+		if(!in_array("apple",$array)){
 			echo "no apple;";
 							}
 							
