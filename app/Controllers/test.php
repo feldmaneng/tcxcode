@@ -14,7 +14,8 @@ class test extends BaseController
     {
 			$db = \Config\Database::connect();
 			$builder = $db->table('attendance');
-			$builder->distinct('ContactID');
+			//$builder->distinct('ContactID');
+			$builder->select('ContactID');
 			$query = $builder->get();
 			$row = $query->getRowArray();
 			$array = $row['ContactID'];
