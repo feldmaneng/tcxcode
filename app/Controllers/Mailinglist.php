@@ -598,7 +598,7 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
-			//'(Exhibitinfo OR Techinfo)' => "worldwide",
+			'(ExhibitInfo OR TechInfo)' => "worldwide",
 			//'ContactID' => $AttendanceContactID
 		);					
 		$builder->where($where_criteria);
@@ -632,7 +632,7 @@ class Mailinglist extends BaseController {
 			echo "bits_db_exported". date("Y-m-d") .",";
 			echo '"'. $row['GivenName'] . '","' . $row['FamilyName'] . '","' . $row['Nickname'] . '",';
 			echo '"'.$this->expand_region($row['TechInfo']) . '",';
-			echo '"'.$this->expand_region($row['Exhibitinfo']) . '",' . $row['Language'] . ',' . $row['EUCountry'];
+			echo '"'.$this->expand_region($row['ExhibitInfo']) . '",' . $row['Language'] . ',' . $row['EUCountry'];
 			/* 
 			if ( $row['Tech_mailing'] == 0) {
 				echo "0,";
