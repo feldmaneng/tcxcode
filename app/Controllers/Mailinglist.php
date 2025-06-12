@@ -598,7 +598,8 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
-			'(ExhibitInfo OR TechInfo)' => "worldwide",
+			'ExhibitInfo' =>"worldwide",
+			//'(ExhibitInfo OR TechInfo)' => "worldwide",
 			//'ContactID' => $AttendanceContactID
 		);					
 		$builder->where($where_criteria);
