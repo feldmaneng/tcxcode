@@ -598,7 +598,8 @@ class Mailinglist extends BaseController {
 			'Active' => "1",
 			'Email is NOT' => NULL,
 			'EmailBounce' =>"0",
-			'ExhibitInfo' =>"worldwide",
+			//'ExhibitInfo' =>"worldwide",
+			'TechInfo' =>"worldwide",
 			//'(ExhibitInfo OR TechInfo)' => "worldwide",
 			//'ContactID' => $AttendanceContactID
 		);					
