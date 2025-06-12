@@ -585,9 +585,9 @@ class Mailinglist extends BaseController {
 		
 		//echo "Number of rows in Contacts " . $this->db->count_all_results('Contacts') . "</p>";
 			$db = \Config\Database::connect();
-			//$builder = $db->table('contacts');
+			$builder = $db->table('contacts');
 
-			$builder = $db->table('contactstestemail3');
+			//$builder = $db->table('contactstestemail3');
 			$builder->select('*');
 			
 
