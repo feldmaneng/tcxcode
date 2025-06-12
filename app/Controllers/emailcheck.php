@@ -59,9 +59,9 @@ class emailcheck extends BaseController
 				echo $ID[1].";";
 				echo $ID[0].";"; */
 					$db2 = \Config\Database::connect();
-					$builder2 = $db->table('attendance');
+					$builder2 = $db2->table('attendance');
 					$builder2->select('ContactID');
-					$builder->where('ContactID',$ID[2]);
+					$builder2->where('ContactID',$ID[2]);
 					$query2 = $builder2->get();
 					
 					$count2 = $query2->getNumRows();
