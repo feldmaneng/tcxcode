@@ -598,8 +598,8 @@ class Mailinglist extends BaseController {
 		$builder->where('Active', 1);
 		$builder->where('Email !=', NULL);
 		$builder->where('EmailBounce', 0);
-		$builder->where('ExhibitInfo' !=, 'none');
-		$builder->where('TechInfo' !=, 'none');
+		$builder->where('ExhibitInfo !=', 'none');
+		$builder->where('TechInfo !=', 'none');
 	
 		
 
