@@ -67,7 +67,7 @@ class emailcheck extends BaseController
 					$count2 = $query2->getNumRows();
 				
 					$db = \Config\Database::connect();
-					$builder = $db->table('contactstestemail2');
+					$builder = $db->table('contactstestemail3');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[2]);
 					
