@@ -20,9 +20,9 @@ class test extends BaseController
 			$row = $query->getRowArray();
 			$array = $row['ContactID'];
 			echo $array;
-			foreach ( $array as $alsorow){
+			/* foreach ( $array as $alsorow){
 			echo $alsorow;
-			}
+			} */
 			
 		$array = array("snapple","tomato","pear");
 		
