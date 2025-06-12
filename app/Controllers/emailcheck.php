@@ -54,14 +54,14 @@ class emailcheck extends BaseController
 			
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
-				echo $ID[2].";";
+				echo $ID[1].";";
 				/*
 				echo $ID[1].";";
 				echo $ID[0].";"; */
 					$db2 = \Config\Database::connect();
 					$builder2 = $db2->table('attendance');
 					$builder2->select('ContactID');
-					$builder2->where('ContactID',$ID[2]);
+					$builder2->where('ContactID',$ID[1]);
 					$query2 = $builder2->get();
 					
 					$count2 = $query2->getNumRows();
@@ -70,7 +70,7 @@ class emailcheck extends BaseController
 					$builder = $db->table('contacts');
 					//$builder = $db->table('contactstestemail3');
 					$builder->select('*');
-					$builder->where('ContactID',$ID[2]);
+					$builder->where('ContactID',$ID[1]);
 					
 					$query = $builder->get();
 										
@@ -79,14 +79,14 @@ class emailcheck extends BaseController
 					if ( $count > 0) {
 						//this checks if the email has been bounced or unsubed and then updates the appropriate database fields
 						//$ID[0] is the error field from mailchimp
-						//$ID[2] is the ContactID field
+						//$ID[1] is the ContactID field
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
 							if($count2 == 0){
 								$rowb['Active']=0;
 							}
 							
-							$builder->where('ContactID', $ID[2]); 
+							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowb);
 							echo "bounce;";
 						 }
@@ -96,7 +96,7 @@ class emailcheck extends BaseController
 							if($count2 == 0){
 								$rowc['Active']=0;
 							}
-							$builder->where('ContactID', $ID[2]); 
+							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowc);
 							echo "unsub;";
 						 }
