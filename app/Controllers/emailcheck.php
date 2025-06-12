@@ -90,8 +90,8 @@ class emailcheck extends BaseController
 							echo "bounce;";
 						 }
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
-							$rowc['Expo_mailing']=0;
-							$rowc['Tech_mailing']=0;
+							$rowc['Exhibitinfo']='none';
+							$rowc['Techinfo']='none';
 							if($count2 == 0){
 								$rowc['Active']=0;
 							}
