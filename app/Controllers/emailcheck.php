@@ -49,12 +49,7 @@ class emailcheck extends BaseController
 			$idrow = array_column($list,2);
 			$numrows = count($idrow);
 			
-			$db = \Config\Database::connect();
-			$builder = $db->table('attendance');
-			$builder->distinct('ContactID');
-			$query = $builder->get();
-			$row = $query->getRowArray();
-			$AttendanceContactID = $row['ContactID'];
+			
 			
 			
 			for ($i = 1; $i < $numrows; $i++){
@@ -63,6 +58,14 @@ class emailcheck extends BaseController
 				/*
 				echo $ID[1].";";
 				echo $ID[0].";"; */
+					$db2 = \Config\Database::connect();
+					$builder2 = $db->table('attendance');
+					$builder2->select('ContactID');
+					$builder->where('ContactID',$ID[2]);
+					$query2 = $builder2->get();
+					
+					$count2 = $query2->getNumRows();
+				
 					$db = \Config\Database::connect();
 					$builder = $db->table('contactstestemail2');
 					$builder->select('*');
@@ -78,7 +81,7 @@ class emailcheck extends BaseController
 						//$ID[2] is the ContactID field
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
-							if(!in_array($ID[2],$AttendanceContactID)){
+							if($count2 == 0){
 								$rowb['Active']=0;
 							}
 							
@@ -89,7 +92,7 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Expo_mailing']=0;
 							$rowc['Tech_mailing']=0;
-							if(!in_array($ID[2],$AttendanceContactID)){
+							if($count2 == 0){
 								$rowc['Active']=0;
 							}
 							$builder->where('ContactID', $ID[2]); 
