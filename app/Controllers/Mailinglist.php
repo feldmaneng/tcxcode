@@ -595,13 +595,15 @@ class Mailinglist extends BaseController {
 		
 		// Query updated with switch of Active to TINYINT (0,1)
 		
-		$builder->where('Active', 1);
+		/* $builder->where('Active', 1);
 		$builder->where('Email !=', NULL);
 		$builder->where('EmailBounce', 0);
 		$builder->where('ExhibitInfo !=', 'none');
-		$builder->where('TechInfo !=', 'none');
+		$builder->where('TechInfo !=', 'none'); */
 	
-		
+		//$where = "name='Joe' AND status='boss' OR status='active'";
+		$where = "Active = '1' AND Email != 'NULL' AND EmailBounce ='0' And (ExhibitInfo != 'none' OR TechInfo != 'none')";
+		$builder->where($where);
 
 		
 		$query = $builder->get();
