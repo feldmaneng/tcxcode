@@ -594,16 +594,13 @@ class Mailinglist extends BaseController {
 		
 		
 		// Query updated with switch of Active to TINYINT (0,1)
-		$where_criteria = array (
-			'Active' => "1",
-			'Email is NOT' => NULL,
-			'EmailBounce' =>"0",
-			//'ExhibitInfo' =>"worldwide",
-			'TechInfo' =>"worldwide",
-			//'(ExhibitInfo OR TechInfo)' => "worldwide",
-			//'ContactID' => $AttendanceContactID
-		);					
-		$builder->where($where_criteria);
+		
+		$builder->where('Active', 1);
+		$builder->where('Email !=', NULL);
+		$builder->where('EmailBounce', 0);
+		$builder->where('ExhibitInfo' !=, 'none');
+		$builder->where('TechInfo' !=, 'none');
+	
 		
 
 		
