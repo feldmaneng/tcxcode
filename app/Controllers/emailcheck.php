@@ -92,7 +92,7 @@ class emailcheck extends BaseController
 						
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
-							$rowb['Notes'] = $notes . "Bounced - " . date("Y-m-d H:i:s");
+							$rowb['Notes'] = $notes . "Bounced - " . date("Y-m-d H:i:s").".";
 							//$rowb['Notes'].="Bounced - ".date("Y-m-d H:i:s");
 							if($count2 == 0){
 								$rowb['Active']=0;
@@ -105,7 +105,7 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Exhibitinfo']='none';
 							$rowc['Techinfo']='none';
-							//$rowb['Notes'].="Unsubscribed - ".date("Y-m-d H:i:s");
+							$rowb['Notes'] = $notes . "Unsubscribed - " . date("Y-m-d H:i:s").".";
 							if($count2 == 0){
 								$rowc['Active']=0;
 							}
