@@ -105,7 +105,7 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Exhibitinfo']='none';
 							$rowc['Techinfo']='none';
-							$rowb['Notes'] = $notes . "Unsubscribed - " . date("Y-m-d H:i:s").".";
+							$rowc['Notes'] = $notes . "Unsubscribed - " . date("Y-m-d H:i:s").".";
 							if($count2 == 0){
 								$rowc['Active']=0;
 							}
