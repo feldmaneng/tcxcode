@@ -81,7 +81,7 @@ class emailcheck extends BaseController
 						//$ID[0] is the error field from mailchimp
 						//$ID[1] is the ContactID field
 						$db3 = \Config\Database::connect();
-						$builder3 = $db->table('contacts');
+						$builder3 = $db3->table('contacts');
 						//$builder3 = $db3->table('contactstestemail3');
 						$builder3->select('*');
 						$builder3->where('ContactID',$ID[1]);
