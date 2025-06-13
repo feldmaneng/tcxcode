@@ -54,7 +54,7 @@ class emailcheck extends BaseController
 			
 			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
-				//echo $ID[1].";";
+				echo $ID[1].";";
 				/*
 				echo $ID[1].";";
 				echo $ID[0].";"; */
@@ -67,8 +67,8 @@ class emailcheck extends BaseController
 					$count2 = $query2->getNumRows();
 				
 					$db = \Config\Database::connect();
-					//$builder = $db->table('contacts');
-					$builder = $db->table('contactstestemail3');
+					$builder = $db->table('contacts');
+					//$builder = $db->table('contactstestemail3');
 					$builder->select('*');
 					$builder->where('ContactID',$ID[1]);
 					
@@ -81,8 +81,8 @@ class emailcheck extends BaseController
 						//$ID[0] is the error field from mailchimp
 						//$ID[1] is the ContactID field
 						$db3 = \Config\Database::connect();
-						//$builder = $db->table('contacts');
-						$builder3 = $db3->table('contactstestemail3');
+						$builder = $db->table('contacts');
+						//$builder3 = $db3->table('contactstestemail3');
 						$builder3->select('*');
 						$builder3->where('ContactID',$ID[1]);
 						
@@ -100,7 +100,7 @@ class emailcheck extends BaseController
 							
 							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowb);
-							//echo "bounce;";
+							echo "bounce;";
 						 }
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Exhibitinfo']='none';
@@ -111,7 +111,7 @@ class emailcheck extends BaseController
 							}
 							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowc);
-							//echo "unsub;";
+							echo "unsub;";
 						 }
 				
 						
@@ -123,7 +123,7 @@ class emailcheck extends BaseController
 							
 						
 					}		
-					//echo "<br>";
+					echo "<br>";
 					}
 					
 			}
