@@ -52,9 +52,9 @@ class emailcheck extends BaseController
 			
 			
 			
-			for ($i = 1; $i <= $numrows; $i++){
+			for ($i = 1; $i < $numrows; $i++){
 				$ID = $list[$i];
-				echo $ID[1].";";
+				//echo $ID[1].";";
 				/*
 				echo $ID[1].";";
 				echo $ID[0].";"; */
@@ -100,7 +100,7 @@ class emailcheck extends BaseController
 							
 							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowb);
-							echo "bounce;";
+							//echo "bounce;";
 						 }
 						 if($ID[0]=="email address has been unsubscribed from this audience and can't be re-imported."){
 							$rowc['Exhibitinfo']='none';
@@ -111,7 +111,7 @@ class emailcheck extends BaseController
 							}
 							$builder->where('ContactID', $ID[1]); 
 							$builder->update($rowc);
-							echo "unsub;";
+							//echo "unsub;";
 						 }
 				
 						
@@ -123,7 +123,7 @@ class emailcheck extends BaseController
 							
 						
 					}		
-					echo "<br>";
+					//echo "<br>";
 					}
 					
 			}
