@@ -38,7 +38,7 @@ class emailcheck extends BaseController
 				
        
 		if (! $path = $file->store('/',$newName) ){
-					  echo $path;
+					  //echo $path;
 					  $error = $validation->getErrors();
 					  return view('email_error',$error);
 					} 
@@ -93,7 +93,7 @@ class emailcheck extends BaseController
 						 if($ID[0]=="email address has been hard bounced from this audience and can't be imported."){
 							$rowb['EmailBounce']=1;
 							$rowb['Notes'] = $notes . "Bounced - " . date("Y-m-d H:i:s").".";
-							//$rowb['Notes'].="Bounced - ".date("Y-m-d H:i:s");
+							
 							if($count2 == 0){
 								$rowb['Active']=0;
 							}
@@ -113,7 +113,7 @@ class emailcheck extends BaseController
 							$builder->update($rowc);
 							echo "unsub;";
 						 }
-				//echo "<br>";
+				
 						
 						 
 						 
@@ -125,12 +125,7 @@ class emailcheck extends BaseController
 					}		
 					echo "<br>";
 					}
-				//return view('emailcheck_success');	
+					
 			}
-//increment keyfirst to move to the first times one row down
 
-		
-        //$data = ['errors' => 'The file has already been moved.'];
-
-        //return view('upload_event', $data);
     }
