@@ -52,7 +52,7 @@ class emailcheck extends BaseController
 			
 			
 			
-			for ($i = 1; $i < $numrows; $i++){
+			for ($i = 1; $i <= $numrows; $i++){
 				$ID = $list[$i];
 				echo $ID[1].";";
 				/*
