@@ -3,7 +3,12 @@
 namespace App\Controllers;
 
 use CodeIgniter\Files\File;
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
 
+} 
 class emailcheck extends BaseController
 {
     protected $helpers = ['form'];

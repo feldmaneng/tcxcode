@@ -4,6 +4,13 @@ namespace App\Controllers;
 use Config\Database as ConfigDatabase;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
+
+$session = session();
+if ( !$session->tcx_logged_in ) {
+	throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(); 
+	die ("Login failure"); // Shouldn't execute but here just in case.
+
+} 
 class GeneralCert extends BaseController {
 	public function __construct()
 	{
