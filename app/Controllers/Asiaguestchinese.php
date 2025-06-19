@@ -583,8 +583,308 @@ $session->set($newdata);
 	
 	//return $this->_example_output($output);
 	return $this->_one_company_output($output);     
+	}
+	public function multigrid() {
+		$crud = $this->_getGroceryCrudEnterprise();
+
+		$crud->setApiUrlPath('/Asiaguestchinese/guest_list');
+		$output = $crud->render();
+
+		$crud2 = $this->_getGroceryCrudEnterprise();
+
+		$crud2->setApiUrlPath('/Asiaguestchinese/guest_list2');
+		$output2 = $crud2->render();
+
+		$output->output .= '<br/>' . $output2->output;
+
+		return $this->_example_output($output);
+	}
+	public function guest_list()
+	{
+	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
+	$session = session(); 
+	
+	
+	/* Check if a secret key is passed */
+	if (isset($_GET["id"]))  {
+		$secretKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET["id"]); /* Try to santize any inputs */
+		$_SESSION["SecretKey"] = $secretKey;
+	} else {
+		$secretKey = $_SESSION["SecretKey"];
+	}
+$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud->setCsrfTokenName(csrf_token());
+    $crud->setCsrfTokenValue(csrf_hash());
+
+/* example 
+$db = \Config\Database::connect();
+			$builder = $db->table('contacts');
+			$builder->select('*');
+			$builder->where('ContactID',$id);
+			$builder->where('ToPrint','Yes');
+			
+			$query = $builder->get(); */
+			
+$db = db_connect('registration');
+$builder = $db->table('chinacompany');
+$builder->where('SecretKey', $secretKey);
+
+
+
+	
+	
+	if ($builder->countAllResults(false) != 1) {
+		sleep(20); /* slow down a brute force */ 
+		echo "<pre>";
+		echo "<h1>Error - Please use the special link provided or contact the office for assistance.</h1>";
+		echo "</pre>";
+		
+		die();
+	}
+	$query = $builder->get();
+	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$query =$db->query($sql, [$secretKey]);
+	$row = $query->getRow();
+	//ask ira
+	$companyID = $row->CompanyID;
+	$_SESSION["CompanyID"] = $companyID; 
+	$_SESSION["Company"] = $row->Company;
+	$guestLimit = $row->InviteCount;
+	$_SESSION["GuestLimit"] = $guestLimit;
+	$staffID = $row->StaffID;
+	$_SESSION["Event"] = BiTSEvent;
+	
+	$staffName = "TBD";
+	if ($staffID > 0) {
+	// ask ira
+	$db3 = db_connect('registration');
+	$builder3 = $db3->table('guests');
+	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$query3 =$db3->query($sql3, [$staffID]);
+	$row = $query3->getRow();
+	
+	
+		$staffName = $row->GivenName . " " . $row->FamilyName;
+	}
+	$_SESSION["StaffName"] = $staffName;
+	$db4 = db_connect('registration');
+	$builder4 = $db4->table('guests');
+	$builder4->where('InvitedByCompanyID' , $companyID);
+	$builder4->where('EventYear', EventYear);
+	//echo $builder4->countAllResults(false);
+	if ($builder4->countAllResults(false) >= $guestLimit) {
+		$crud->unsetAdd();
+		
+	}   
+	$query4 = $builder4->get();
+	//echo $builder4->countAllResults(false);
+	  
+	
+
+	$crud->setTable('guests');
+	$crud->where(['InvitedByCompanyID'=>$companyID,
+					'EventYear'=> EventYear]); 
+	$crud->setSubject('Guest 来宾', 'Guests 来宾');
+
+	
+	 $crud->columns(['Email',
+	'GivenName',
+	'FamilyName',
+	'ChineseName',
+	'Company',
+	'CN_Company']); 
+	$crud->fields([
+	'Email',
+	'GivenName',
+	'FamilyName',
+	'InvitedByCompanyID',
+	'EventYear',
+	'ChineseName',
+	'NameOnBadge',
+	'Title',
+	'Company',
+	'CN_Company',
+	'Address1',
+	'Address2',
+	'City',
+	'State',
+	'PCode',
+	'Country',
+	'Phone',
+	'Mobile',
+	'ToPrint'
+	]);
+	$crud->readOnlyFields([
+	'InvitedByCompanyID',
+	'EventYear']);
+	
+
+\Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
+  $text=trim($value);
+
+  if ($text === null || $text === '') {
+  if($fields['CN_Company'] || $fields['CN_Company']){
+	  return false;
+  }
+  return false;
 }
-public function guest_list()
+  return true;
+  
+
+}, 'Use English or Chinese company name. 请使用英文公司名或中文公司名');
+
+
+
+\Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
+	$text=trim($value);
+ 
+  if ($text === null || $text === '') {
+  
+  return false;
+}
+  return true;
+
+
+
+}, 'English Family (Last) or Chinese Name required. 请输入中文/英文姓');
+	
+	
+ 
+
+\Valitron\Validator::addRule('checkPhone', function($field, $value, array $params, array $fields) {
+  $text=trim($value);
+ 
+ if ($text === null || $text === '') {
+  
+  return false;
+}
+  return true;
+ 
+
+},'Work or Mobile phone number required. 请输入联系方式');
+  
+ 
+\Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
+{
+	
+	$db2 = db_connect('registration');
+
+	$builder2 = $db2->table('guests');
+
+	$builder2->where('EventYear', EventYear);
+	$builder2->where('Email', $value);
+   
+   $rowcount = (int)$builder2->countAllResults(false);
+ 
+	if($rowcount != 0)
+	{
+		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
+
+		$query2 =$db2->query($sql,[EventYear,$value]);
+		$row2 = $query2->getRow();
+		
+		$foundID =$row2->ContactID;
+	
+			if($foundID != $fields['ContactID'])
+			{
+			return false;
+			}
+		
+	}
+	return true;
+	
+	
+},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.<br>该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
+
+
+
+
+
+	
+	$crud->setRule('Email','required');
+	$crud->setRule('Email','email');
+	$crud->setRule('Email','checkEmail');
+	$crud->setRule('Company','checkCompany');
+	$crud->setRule('Company','required');
+	$crud->setRule('CN_Company','checkCompany');
+	$crud->setRule('GivenName','checkFamilyName');
+	$crud->setRule('GivenName','required');
+	$crud->setRule('FamilyName','checkFamilyName');
+	$crud->setRule('FamilyName','required');
+	$crud->setRule('ChineseName','checkFamilyName');
+	$crud->setRule('Phone','checkPhone');
+	$crud->setRule('Mobile','checkPhone');
+		
+	$crud->displayAs('Email','Email Address 电邮地址');
+	$crud->displayAs('GivenName','Given (First) Name 名（英文）');
+	$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
+	$crud->displayAs('ChineseName','Chinese/Korean Name');
+	$crud->displayAs('Company','Company Name 公司名称（英文）');
+	$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
+	$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
+	$crud->displayAs('Title','Job Title 抬头');
+	$crud->displayAs('Address1','Street 地址行1');
+	$crud->displayAs('Address2','Street 地址行2');
+	$crud->displayAs('City','City 城市');
+	$crud->displayAs('State','State/Province 州/省');
+	$crud->displayAs('PCode','Postal/Zip Code 邮编');
+	$crud->displayAs('Country','Country 国家');
+	$crud->displayAs('Phone','Work Phone 单位电话');
+	$crud->displayAs('Mobile','Mobile Phone 手机');
+
+	
+	/* $crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('InvitedByCompanyID','hidden');
+	$crud->fieldType('EventYear','hidden');
+	$crud->fieldType('BanquetCompanyID','hidden');
+	$crud->fieldType('Invited','hidden');
+	$crud->fieldType('ToPrint','hidden');  */
+	
+	$crud->fieldType('hidden','ContactID');
+	$crud->fieldType('hidden','InvitedByCompanyID');
+	$crud->fieldType('hidden','EventYear');
+	$crud->fieldType('hidden','BanquetCompanyID');
+	$crud->fieldType('hidden','Invited');
+	$crud->fieldType('hidden','ToPrint'); 
+	// if we've edited it or added it we should set it to print
+	
+	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
+	
+	//No need to do this as a callback since can set value with hidden type immediately above
+	//$this->grocery_crud->callback_before_insert(array($this,'set_invited_by'));
+
+	// Force a refresh after a delete in case the number of guests falls below the guest 
+	// limit so the add button is shown again	
+	/* $crud->setLangString('delete_success_message',
+		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
+		 <script type="text/javascript">
+		  window.location = "'.site_url(strtolower(__CLASS__).'/'.strtolower(__FUNCTION__)).'";
+		 </script>
+		 <div style="display:none">
+		 '
+   );  */
+	//$crud->setLanguagePath('/tcxcode/vendor/grocrey-crud/enterprise/src/GroceryCrud/i18n/');
+	$crud->setLanguage('Spanish');
+	//$crud->setLanguage("english-chinese");
+	$output = $crud->render();
+	$newdata = [
+    "SecretKey"  => $secretKey,
+    "CompanyID"     => $companyID,
+    "Company" => $row->Company,
+	"GuestLimit" => $guestLimit,
+	"Event" => BiTSEvent,
+	"StaffName" => $staffName,
+	"Output" => $output,
+	];
+
+	$session->set($newdata);		
+	
+	
+	
+	//return $this->_example_output($output);
+	return $this->_one_company_output($output);        
+	}
+  public function guest_list2()
 {
 	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
 	$session = session(); 
@@ -860,16 +1160,15 @@ $builder->where('SecretKey', $secretKey);
 	"Event" => BiTSEvent,
 	"StaffName" => $staffName,
 	"Output" => $output,
-];
+	];
 
-$session->set($newdata);		
+	$session->set($newdata);		
 	
 	
 	
 	//return $this->_example_output($output);
 	return $this->_one_company_output($output);        
-}
-                                  
+	}                                
 public function companyVerify($company, $otherField) {
   $this->form_validation->set_message('companyVerify','Use English or Chinese company name. 请使用英文公司名或中文公司名');
   return (trim($company) != '' || trim($this->input->post($otherField)) != '');
