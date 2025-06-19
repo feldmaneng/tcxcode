@@ -373,6 +373,9 @@ $routes->post('/presentations/attendance', 'Presentations::attendance');
 $routes->get('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 $routes->post('/Asiaguestchinese/company123', 'Asiaguestchinese::company123');
 
+$routes->get('/Asiaguestchinese/multigrid', 'Asiaguestchinese::multigrid');
+$routes->post('/Asiaguestchinese/multigrid', 'Asiaguestchinese::multigrid');
+
 $routes->get('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
 $routes->post('/Asiaguestchinese/contact585442', 'Asiaguestchinese::contact585442');
 
@@ -381,6 +384,9 @@ $routes->post('/Asiaguestchinese/guest_list/?id=(:any)', 'Asiaguestchinese::gues
 
 $routes->get('/Asiaguestchinese/guest_list', 'Asiaguestchinese::guest_list');
 $routes->post('/Asiaguestchinese/guest_list', 'Asiaguestchinese::guest_list');
+
+$routes->get('/Asiaguestchinese/guest_list2', 'Asiaguestchinese::guest_list2');
+$routes->post('/Asiaguestchinese/guest_list2', 'Asiaguestchinese::guest_list2');
 
 $routes->get('/Chinaguest/guest_list/?id=(:any)', 'Chinaguest::guest_list');
 $routes->post('/Chinaguest/guest_list/?id=(:any)', 'Chinaguest::guest_list');
