@@ -354,6 +354,22 @@ public function Guestcrudkorea()
 		
 }
 
+	public function multigrid() {
+		$crud = $this->_getGroceryCrudEnterprise();
+
+		$crud->setApiUrlPath('/Guest/Guestcrudchina');
+		$output = $crud->render();
+
+		$crud2 = $this->_getGroceryCrudEnterprise();
+
+		$crud2->setApiUrlPath('/Guest/Guestcrudkorea');
+		$output2 = $crud2->render();
+
+		$output->output .= '<br/>' . $output2->output;
+
+		return $this->_example_output($output);
+	}
+	
 public function Guestcrudchina()
 {
 		$crud = $this->_getGroceryCrudEnterprise('registration');
