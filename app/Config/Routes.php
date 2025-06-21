@@ -130,6 +130,9 @@ $routes->post('/badgemesa/TestConXsingle/(:num)', 'Badgemesa::TestConXsingle');
 $routes->get('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');       
 $routes->post('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');
 
+$routes->get('/Guest/multigrid', 'Guest::multigrid');       
+$routes->post('/Guest/multigrid', 'Guest::multigrid');
+
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
