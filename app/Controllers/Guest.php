@@ -1641,7 +1641,8 @@ return view('one_company.php',(array)$output);
             echo $output->output;
             exit;
         }
-		return view('example.php', (array)$output);
+		 $this->load->view('example.php', $output); 
+		//return view('example.php', (array)$output);
        // return view('testconx_template.php', (array)$output);
     }
 
