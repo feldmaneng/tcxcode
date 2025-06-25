@@ -332,8 +332,8 @@ public function Guestcrudkorea()
 {
 		$crud = $this->_getGroceryCrudEnterprise('registration');
 
-        //$crud->setCsrfTokenName(csrf_token());
-       // $crud->setCsrfTokenValue(csrf_hash());
+        $crud->setCsrfTokenName(csrf_token());
+       $crud->setCsrfTokenValue(csrf_hash());
 			
 	$crud->setTable('guests');
    
@@ -374,8 +374,8 @@ public function Guestcrudchina()
 {
 		$crud = $this->_getGroceryCrudEnterprise('registration');
 
-        //$crud->setCsrfTokenName(csrf_token());
-        //$crud->setCsrfTokenValue(csrf_hash());
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
 			
 	$crud->setTable('guests');
    
