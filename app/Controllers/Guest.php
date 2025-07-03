@@ -370,6 +370,34 @@ public function Guestcrudkorea()
 		return $this->_example_output($output);
 	}
 	
+	public function testgrid1(){
+		$crud = $this->_getGroceryCrudEnterprise('registration');
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+			
+		$crud->setTable('guests');
+		$output = $crud->render();
+
+	return $this->_example_output($output);
+		
+		
+	}
+	
+	public function testgrid2(){
+		$crud = $this->_getGroceryCrudEnterprise('registration');
+
+        $crud->setCsrfTokenName(csrf_token());
+        $crud->setCsrfTokenValue(csrf_hash());
+			
+		$crud->setTable('guests');
+		$output = $crud->render();
+
+	return $this->_example_output($output);
+		
+		
+	}
+	
 public function Guestcrudchina()
 {
 		$crud = $this->_getGroceryCrudEnterprise('registration');
