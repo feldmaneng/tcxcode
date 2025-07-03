@@ -357,12 +357,12 @@ public function Guestcrudkorea()
 	public function multigrid() {
 		$crud = $this->_getGroceryCrudEnterprise();
 
-		$crud->setApiUrlPath('/Guest/Guestcrudchina');
+		$crud->setApiUrlPath('/Guest/testgrid1');
 		$output = $crud->render();
 
 		$crud2 = $this->_getGroceryCrudEnterprise();
 
-		$crud2->setApiUrlPath('/Guest/Guestcrudkorea');
+		$crud2->setApiUrlPath('/Guest/testgrid2');
 		$output2 = $crud2->render();
 
 		$output->output .= '<br/>' . $output2->output;

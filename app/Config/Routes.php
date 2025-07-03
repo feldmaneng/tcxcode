@@ -133,6 +133,12 @@ $routes->post('/Guest/TestConXsingle/(:num)', 'Guest::TestConXsingle');
 $routes->get('/Guest/multigrid', 'Guest::multigrid');       
 $routes->post('/Guest/multigrid', 'Guest::multigrid');
 
+$routes->get('/Guest/testgrid1', 'Guest::testgrid1');       
+$routes->post('/Guest/testgrid1', 'Guest::testgrid1');
+
+$routes->get('/Guest/testgrid2', 'Guest::testgrid2');       
+$routes->post('/Guest/testgrid2', 'Guest::testgrid2');
+
 $routes->get('/D2000/moveD2000', 'D2000::moveD2000');       
 $routes->post('/D2000/moveD2000', 'D2000::moveD2000');
 
