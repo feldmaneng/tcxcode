@@ -55,7 +55,7 @@ public function index()
 			$TYPE=$results[$n]["D2000"];
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest2025');
+		 $builder = $db->table('attendancetest');
 		 $query = $builder->get();
 		 
 			 $array = [
