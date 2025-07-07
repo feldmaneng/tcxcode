@@ -52,7 +52,7 @@ public function index()
 			$GIVENNAME=$results[$n]["GivenName"];
 			$LASTNAME=$results[$n]["FamilyName"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["D2000"];
+			$TYPE=$results[$n]["d2000"];
 			
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
