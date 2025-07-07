@@ -34,7 +34,7 @@ helper('text');
 public function index()
 {
 	echo "<UL>";	
-	echo "<li><a href=" . site_url('D2000/moveD2000') . ">D2000</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomil') . ">D2000</a></li>";
 	echo "</UL>";
 	
 }
