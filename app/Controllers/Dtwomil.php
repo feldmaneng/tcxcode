@@ -49,8 +49,6 @@ public function index()
 		 for($i=1 ; $i <= $people ; $i++){
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
-			$GIVENNAME=$results[$n]["GivenName"];
-			$LASTNAME=$results[$n]["FamilyName"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
 			
