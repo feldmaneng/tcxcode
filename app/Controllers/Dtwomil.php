@@ -60,8 +60,6 @@ public function index()
 		 
 			 $array = [
 			'ContactID'   => $CONTACTID,
-			'GivenName'  => $GIVENNAME,
-			'FamilyName'  => $LASTNAME,
 			'Email'  => $EMAIL,
 			'Type' => $TYPE,
 				];
