@@ -41,7 +41,7 @@ public function index()
 	function moveDtwomil(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('D2000 !=', NULL);
+		 $builder -> where('d2000 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
