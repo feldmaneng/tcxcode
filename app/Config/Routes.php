@@ -142,6 +142,9 @@ $routes->post('/Guest/testgrid2', 'Guest::testgrid2');
 $routes->get('/D2000/moveD2000', 'D2000::moveD2000');       
 $routes->post('/D2000/moveD2000', 'D2000::moveD2000');
 
+$routes->get('/Dtwomil/moveDtwomil', 'Dtwomil::moveDtwomil');       
+$routes->post('/Dtwomil/moveDtwomil', 'Dtwomil::moveDtwomil');
+
 $routes->get('/badgemesa/testconxguests', 'Badgemesa::testconxguests');          
 $routes->post('/badgemesa/testconxguests', 'Badgemesa::testconxguests');
 
