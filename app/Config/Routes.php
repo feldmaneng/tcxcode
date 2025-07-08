@@ -142,6 +142,33 @@ $routes->post('/Guest/testgrid2', 'Guest::testgrid2');
 $routes->get('/D2000/moveD2000', 'D2000::moveD2000');       
 $routes->post('/D2000/moveD2000', 'D2000::moveD2000');
 
+$routes->get('/Dtwomil/moveDtwomilone', 'Dtwomil::moveDtwomilone');       
+$routes->post('/Dtwomil/moveDtwomilone', 'Dtwomil::moveDtwomilone');
+
+$routes->get('/Dtwomil/moveDtwomiltwo', 'Dtwomil::moveDtwomiltwo');       
+$routes->post('/Dtwomil/moveDtwomiltwo', 'Dtwomil::moveDtwomiltwo');
+
+$routes->get('/Dtwomil/moveDtwomilthree', 'Dtwomil::moveDtwomilthree');       
+$routes->post('/Dtwomil/moveDtwomilthree', 'Dtwomil::moveDtwomilthree');
+
+$routes->get('/Dtwomil/moveDtwomilfour', 'Dtwomil::moveDtwomilfour');       
+$routes->post('/Dtwomil/moveDtwomilfour', 'Dtwomil::moveDtwomilfour');
+
+$routes->get('/Dtwomil/moveDtwomilfive', 'Dtwomil::moveDtwomilfive');       
+$routes->post('/Dtwomil/moveDtwomilfive', 'Dtwomil::moveDtwomilfive');
+
+$routes->get('/Dtwomil/moveDtwomilsix', 'Dtwomil::moveDtwomilsix');       
+$routes->post('/Dtwomil/moveDtwomilsix', 'Dtwomil::moveDtwomilsix');
+
+$routes->get('/Dtwomil/moveDtwomilseven', 'Dtwomil::moveDtwomilseven');       
+$routes->post('/Dtwomil/moveDtwomilseven', 'Dtwomil::moveDtwomilseven');
+
+$routes->get('/Dtwomil/moveDtwomileight', 'Dtwomil::moveDtwomileight');       
+$routes->post('/Dtwomil/moveDtwomileight', 'Dtwomil::moveDtwomileight');
+
+$routes->get('/Dtwomil/moveDtwomilnine', 'Dtwomil::moveDtwomilnine');       
+$routes->post('/Dtwomil/moveDtwomilnine', 'Dtwomil::moveDtwomilnine');
+
 $routes->get('/Dtwomil/moveDtwomil', 'Dtwomil::moveDtwomil');       
 $routes->post('/Dtwomil/moveDtwomil', 'Dtwomil::moveDtwomil');
 
