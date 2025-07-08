@@ -35,10 +35,289 @@ public function index()
 {
 	echo "<UL>";	
 	echo "<li><a href=" . site_url('Dtwomil/moveDtwomil') . ">D2000</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilone') . ">D2001</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomiltwo') . ">D2002</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilthree') . ">D2003</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilfour') . ">D2004</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilfive') . ">D2005</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilsix') . ">D2006</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilseven') . ">D2007</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomileight') . ">D2008</a></li>";
+	echo "<li><a href=" . site_url('Dtwomil/moveDtwomilnine') . ">D2009</a></li>";
 	echo "</UL>";
 	
 }
 	function moveDtwomil(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilone(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomiltwo(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilthree(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilfour(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilfive(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilsix(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilseven(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomileight(){
+		 $db = db_connect();
+		 $builder = $db->table('contacts');
+		 $builder -> where('d2000 !=', NULL);
+		 $query = $builder->get();
+		 $people = $query->getNumRows();
+		 $results = $query->getResultArray();
+		 
+		 for($i=1 ; $i <= $people ; $i++){
+			$n=$i-1;
+			$CONTACTID=$results[$n]["ContactID"];
+			$EMAIL=$results[$n]["Email"];
+			$TYPE=$results[$n]["d2000"];
+			
+		 $db = db_connect();
+		 $builder = $db->table('attendancetest');
+		 $query = $builder->get();
+		 
+			 $array = [
+			'ContactID'   => $CONTACTID,
+			'Email'  => $EMAIL,
+			'Type' => $TYPE,
+				];
+
+		$builder->set($array);
+		$builder->insert();
+			
+			
+		 }			 
+	}
+	function moveDtwomilnine(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
 		 $builder -> where('d2000 !=', NULL);
