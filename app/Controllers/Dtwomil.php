@@ -218,7 +218,7 @@ public function index()
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
-			 $Year = 2004;
+			 $Year = 2005;
 			
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
@@ -250,7 +250,7 @@ public function index()
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
-			$Year = 2004;
+			$Year = 2006;
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
 		 $query = $builder->get();
@@ -281,6 +281,7 @@ public function index()
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
+			$Year = 2007;
 			
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
@@ -290,6 +291,7 @@ public function index()
 			'ContactID'   => $CONTACTID,
 			'Email'  => $EMAIL,
 			'Type' => $TYPE,
+			'Year' => $Year,
 				];
 
 		$builder->set($array);
@@ -311,6 +313,7 @@ public function index()
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
+			$Year = 2008;
 			
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
@@ -320,6 +323,7 @@ public function index()
 			'ContactID'   => $CONTACTID,
 			'Email'  => $EMAIL,
 			'Type' => $TYPE,
+			'Year' => $Year,
 				];
 
 		$builder->set($array);
@@ -341,6 +345,7 @@ public function index()
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
 			$TYPE=$results[$n]["d2000"];
+			$Year = 2009;
 			
 		 $db = db_connect();
 		 $builder = $db->table('attendancetest');
@@ -350,6 +355,7 @@ public function index()
 			'ContactID'   => $CONTACTID,
 			'Email'  => $EMAIL,
 			'Type' => $TYPE,
+			'Year' => $Year,
 				];
 
 		$builder->set($array);
