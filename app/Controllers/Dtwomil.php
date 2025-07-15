@@ -70,6 +70,7 @@ public function index()
 			'Email'  => $EMAIL,
 			'Type' => $TYPE,
 			'Year' => $Year,
+			'Event' => "Mesa",
 				];
 
 		$builder->set($array);
