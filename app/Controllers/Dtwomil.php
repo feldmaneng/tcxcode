@@ -62,7 +62,7 @@ public function index()
 			$TYPE=$results[$n]["d2000"];
 			$Year = 2000;
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -94,7 +94,7 @@ public function index()
 			$TYPE=$results[$n]["d2000"];
 			$Year = 2001;
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -126,7 +126,7 @@ public function index()
 			$TYPE=$results[$n]["d2000"];
 			$Year = 2002;
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -159,7 +159,7 @@ public function index()
 			$Year = 2003;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -192,7 +192,7 @@ public function index()
 			$Year = 2004;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -226,7 +226,7 @@ public function index()
 			 $Year = 2005;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -258,7 +258,7 @@ public function index()
 			$TYPE=$results[$n]["d2000"];
 			$Year = 2006;
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -291,7 +291,7 @@ public function index()
 			$Year = 2007;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -324,7 +324,7 @@ public function index()
 			$Year = 2008;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
@@ -357,7 +357,7 @@ public function index()
 			$Year = 2009;
 			
 		 $db = db_connect();
-		 $builder = $db->table('attendancetest');
+		 $builder = $db->table('attendance');
 		 $query = $builder->get();
 		 
 			 $array = [
