@@ -82,7 +82,7 @@ public function index()
 	function moveDtwomilone(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2001 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -91,7 +91,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2001"];
 			$Year = 2001;
 		 $db = db_connect();
 		 $builder = $db->table('attendance');
@@ -114,7 +114,7 @@ public function index()
 	function moveDtwomiltwo(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2002 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -123,7 +123,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2002"];
 			$Year = 2002;
 		 $db = db_connect();
 		 $builder = $db->table('attendance');
@@ -146,7 +146,7 @@ public function index()
 	function moveDtwomilthree(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2003 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -155,7 +155,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2003"];
 			$Year = 2003;
 			
 		 $db = db_connect();
@@ -179,7 +179,7 @@ public function index()
 	function moveDtwomilfour(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2004 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -188,7 +188,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2004"];
 			$Year = 2004;
 			
 		 $db = db_connect();
@@ -212,7 +212,7 @@ public function index()
 	function moveDtwomilfive(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2005 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -222,7 +222,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2005"];
 			 $Year = 2005;
 			
 		 $db = db_connect();
@@ -246,7 +246,7 @@ public function index()
 	function moveDtwomilsix(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2006 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -255,7 +255,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2006"];
 			$Year = 2006;
 		 $db = db_connect();
 		 $builder = $db->table('attendance');
@@ -278,7 +278,7 @@ public function index()
 	function moveDtwomilseven(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2007 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -287,7 +287,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2007"];
 			$Year = 2007;
 			
 		 $db = db_connect();
@@ -311,7 +311,7 @@ public function index()
 	function moveDtwomileight(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2008 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -320,7 +320,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2008"];
 			$Year = 2008;
 			
 		 $db = db_connect();
@@ -344,7 +344,7 @@ public function index()
 	function moveDtwomilnine(){
 		 $db = db_connect();
 		 $builder = $db->table('contacts');
-		 $builder -> where('d2000 !=', NULL);
+		 $builder -> where('d2009 !=', NULL);
 		 $query = $builder->get();
 		 $people = $query->getNumRows();
 		 $results = $query->getResultArray();
@@ -353,7 +353,7 @@ public function index()
 			$n=$i-1;
 			$CONTACTID=$results[$n]["ContactID"];
 			$EMAIL=$results[$n]["Email"];
-			$TYPE=$results[$n]["d2000"];
+			$TYPE=$results[$n]["d2009"];
 			$Year = 2009;
 			
 		 $db = db_connect();
