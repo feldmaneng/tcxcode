@@ -1669,8 +1669,8 @@ return view('one_company.php',(array)$output);
             echo $output->output;
             exit;
         }
-		 //$this->load->view('example.php', $output); 
-		return view('enterpriseexample2.php', (array)$output);
+		 $this->load->view('enterpriseexample2.php', $output); 
+		//return view('enterpriseexample2.php', (array)$output);
        //return view('testconx_template.php', (array)$output);
     }
 
