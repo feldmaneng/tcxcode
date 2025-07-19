@@ -3,9 +3,9 @@
 <head>
  <meta charset="utf-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<?php foreach($js_files as $file): ?>
+/* <?php foreach($js_files as $file): ?>
     <script src="<?php echo $file; ?>"></script>
-<?php endforeach; ?>
+<?php endforeach; ?> */
 <?php
 if (!empty($css_files)) {
 foreach($css_files as $file) { ?>
