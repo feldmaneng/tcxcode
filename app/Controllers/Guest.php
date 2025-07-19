@@ -1670,7 +1670,7 @@ return view('one_company.php',(array)$output);
             exit;
         }
 		 //$this->load->view('example.php', $output); 
-		return view('example2.html', (array)$output);
+		return view('enterpriseexample2.php', (array)$output);
        //return view('testconx_template.php', (array)$output);
     }
 
