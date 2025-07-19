@@ -15,7 +15,8 @@ class GroceryCrud extends BaseConfig
             'default_language'	=> 'English',
 
             // This is the 'assets' folder where all the JavaScript, CSS, images and font files are located
-            'assets_folder' => base_url() . '/vendor/grocery-crud/',
+           // 'assets_folder' => base_url() . '/vendor/grocery-crud/',
+			'assets_folder' => base_url() . '/vendor/grocery-crud/enterprise/public/vendor/grocery-crud',
 
             // The default per page when a user firstly see a list page
             'default_per_page'	=> '10',
