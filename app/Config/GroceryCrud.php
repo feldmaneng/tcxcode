@@ -13,8 +13,9 @@ class GroceryCrud extends BaseConfig
             // Lithuanian, Mongolian, Norwegian, Persian, Polish, Portuguese, Brazilian Portuguese, Romanian,
             // Russian, Slovak, Spanish, Thai, Turkish, Ukrainian, Vietnamese
             'default_language'	=> 'English',
-
+//sftp://testconx@ftp.testconx.org/home/testconx/tcxcode/vendor/grocery-crud/enterprise/public/vendor/grocery-crud
             // This is the 'assets' folder where all the JavaScript, CSS, images and font files are located
+			//'assets_folder' => base_url() . '/vendor/grocery-crud/enterprise/public/vendor/grocery-crud/',
             'assets_folder' => base_url() . '/vendor/grocery-crud/',
 
             // The default per page when a user firstly see a list page

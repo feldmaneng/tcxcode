@@ -1,11 +1,9 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
  <meta charset="utf-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <?php foreach($js_files as $file): ?>
-    <script src="<?php echo $file; ?>"></script>
-<?php endforeach; ?> 
+
 <?php
 if (!empty($css_files)) {
 foreach($css_files as $file) { ?>
@@ -14,6 +12,7 @@ foreach($css_files as $file) { ?>
 }
 }
 ?>
+
 </head>
 <body style="font-family: Arial;">
 

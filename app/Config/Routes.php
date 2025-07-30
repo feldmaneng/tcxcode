@@ -34,6 +34,9 @@ $routes->setAutoRoute(false);
 //$routes->get('pages', [Pages::class, 'index']);
 //$routes->get('(:segment)', [Pages::class, 'view']);
 
+$routes->get('/viewviewtest', 'viewviewtest::index');          
+$routes->post('/viewviewtest', 'viewviewtest::index');
+
 $routes->get('/', 'Main::index');
 
 $routes->get('uploadevent', 'uploadevent::index');          // Add this line.
