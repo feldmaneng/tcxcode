@@ -39,8 +39,9 @@
     },
     "repositories": {
         "grocery-crud": {
-            "type": "artifact",
-            "url": "artifacts/"
+            "type": "composer",
+            "url": "https://composer.grocerycrud.com/"
         }
     }
+    
 }
