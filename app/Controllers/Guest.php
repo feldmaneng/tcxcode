@@ -1236,7 +1236,7 @@ $builder->where('SecretKey', $secretKey);
 		
 		die();
 	}
-	die("Test1");
+	
 	$companyID = $row->CompanyID;
 	$_SESSION["CompanyID"] = $companyID; 
 	$_SESSION["Company"] = $row->Company;
@@ -1427,7 +1427,7 @@ $builder->where('SecretKey', $secretKey);
 
 
 
-
+die("Test1");
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
