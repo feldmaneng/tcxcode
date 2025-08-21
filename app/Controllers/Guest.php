@@ -1427,7 +1427,7 @@ $builder->where('SecretKey', $secretKey);
 
 
 
-die("Test1");
+
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
@@ -1564,10 +1564,10 @@ $crud->callbackAfterDelete(function ($stateParameters) {
 
 $session->set($newdata);		
 	
+	//die("Test1");
 	
-	
-	//return $this->_example_output($output);
-	return $this->_one_company_output($output);        
+	return $this->_example_output($output);
+	//return $this->_one_company_output($output);        
 }
                                   
 public function companyVerify($company, $otherField) {
