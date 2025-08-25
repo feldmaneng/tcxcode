@@ -1194,7 +1194,7 @@ public function guest_list()
 	} else {
 		$secretKey = $_SESSION["SecretKey"];
 	}
-$crud = $this->_getGroceryCrudEnterprise('registration');
+	$crud = $this->_getGroceryCrudEnterprise('registration');
 	$crud->setCsrfTokenName(csrf_token());
     $crud->setCsrfTokenValue(csrf_hash());
 
@@ -1288,7 +1288,7 @@ $builder->where('SecretKey', $secretKey);
 	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
-	 $crud->columns(['Email',
+	$crud->columns(['Email',
 	'GivenName',
 	'FamilyName',
 	'NativeName',
@@ -1341,7 +1341,7 @@ $builder->where('SecretKey', $secretKey);
 	}); */
 
 
-
+ // valitron stuff here 8/25
 
 
 

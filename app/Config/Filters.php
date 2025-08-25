@@ -31,11 +31,12 @@ class Filters extends \CodeIgniter\Config\Filters
      * applied before and after every request.
      */
      //IMF Ref: https://www.codeigniter.com/user_guide/libraries/security.html#cross-site-request-forgery-csrf
-    public array $globals = [
+     public array $globals = [
         'before' => [
             // 'honeypot',
            // 'csrf',
             'csrf' => ['except' => ['Jotformpost/']],
+			'csrf' => ['except' => ['Guest/*']],
             // 'invalidchars',
         ],
         'after' => [
@@ -59,7 +60,7 @@ class Filters extends \CodeIgniter\Config\Filters
     //public array $methods = [];
 	
 	public array $methods = [
-    'POST' => ['invalidchars', 'csrf'],
+    //'POST' => ['invalidchars', 'csrf'],
     'GET'  => ['csrf'],
 	];
 
