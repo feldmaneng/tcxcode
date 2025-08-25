@@ -28,15 +28,16 @@ class Filters extends BaseConfig
      * applied before and after every request.
      */
      //IMF Ref: https://www.codeigniter.com/user_guide/libraries/security.html#cross-site-request-forgery-csrf
-    public array $globals = [
+     public array $globals = [
         'before' => [
             // 'honeypot',
            // 'csrf',
             'csrf' => ['except' => ['Jotformpost/']],
+			'csrf' => ['except' => ['Guest/*']],
             // 'invalidchars',
         ],
         'after' => [
-            'toolbar',
+            
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -53,7 +54,12 @@ class Filters extends BaseConfig
      * permits any HTTP method to access a controller. Accessing the controller
      * with a method you don’t expect could bypass the filter.
      */
-    public array $methods = [];
+    //public array $methods = [];
+	
+	public array $methods = [
+    //'POST' => ['invalidchars', 'csrf'],
+    'GET'  => ['csrf'],
+	];
 
     /**
      * List of filter aliases that should run on any
