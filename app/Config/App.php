@@ -468,4 +468,5 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+	public string $permittedURIChars = 'a-z 0-9~%.:_\-';
 }
