@@ -1474,7 +1474,8 @@ $builder->where('SecretKey', $secretKey);
 	$crud->unsetPrint();
 	$crud->unsetExport();
 	$output = $crud->render();
-	$newdata = [
+	//test comment 8/25
+/* 	$newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
     "Company" => $row->Company,
@@ -1484,7 +1485,7 @@ $builder->where('SecretKey', $secretKey);
 	"Output" => $output,
 ];
 
-$session->set($newdata);		
+$session->set($newdata);	 */	
 	
 
 	
