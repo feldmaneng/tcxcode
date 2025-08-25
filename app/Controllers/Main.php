@@ -41,7 +41,7 @@ class Main extends BaseController {
  		   return $this->response->setStatusCode(405)->setBody('Method Not Allowed');
 		}
     	
-    	$model = model(Users::class);
+    	$model = model('Users');
     	
     	$request = \Config\Services::request();
     	
@@ -57,8 +57,10 @@ class Main extends BaseController {
        	]);
   
         if ($isValid) { 
+			$password = $request->getPost('password');
         	$username = $request->getPost('username');
-        	$loggedIn = $model->getCheckUserPassword ($username, $request->getPost('password'));
+			echo $password;
+        	$loggedIn = $model->getCheckUserPassword ($username, $password);
             $data = array(  
                 'username' => $username,
                 );    

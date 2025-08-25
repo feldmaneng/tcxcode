@@ -1594,9 +1594,10 @@ return view('one_company.php',(array)$output);
             exit;
         }
 		 //$this->load->view('enterpriseexample2.php', $output); 
-		//return view('enterpriseexample2.php', (array)$output);
-       return view('testconx_template.php', (array)$output);
+		return view('enterpriseexample2.php', (array)$output);
+       //return view('testconx_template.php', (array)$output);
     }
+
 
     private function _getDbData($dbgroup = 'default') {
        // $db = (new ConfigDatabase())->default;
@@ -1612,6 +1613,8 @@ return view('one_company.php',(array)$output);
             ]
         ];
     }
+
+
     private function _getGroceryCrudEnterprise($dbgroup = 'default', $bootstrap = true, $jquery = true) {
         $db = $this->_getDbData($dbgroup);
 

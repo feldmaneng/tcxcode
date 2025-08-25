@@ -23,8 +23,16 @@ class GroceryCrudPublisher extends Publisher
      *
      * @var string
      */
-    protected $destination = FCPATH;
-
+     
+    // Need to update as our code base is OUTSIDE of public_html
+	// Was unable to get this to work due to protections in Config/Publisher.php
+	// Or to specify the public_html directory
+	// So just have to copy from project testconx/public/vendor to ~/public_html/vendor
+	// protected $destination = '/home/testconx/public_html/vendor/';
+	// IMF 7/30/25
+	protected $destination = FCPATH;
+	    
+	    
     /**
      * Use the "publish" method to indicate that this
      * class is ready to be discovered and automated.
