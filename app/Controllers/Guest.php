@@ -1333,12 +1333,12 @@ $builder->where('SecretKey', $secretKey);
     return $_SESSION["EventYear"];
 }); */
 
-	//test comment 8/25
-/* 	$crud->callbackAddForm(function ($data) {
+	
+	$crud->callbackAddForm(function ($data) {
 		$data['EventYear']=$_SESSION["EventYear"];
 		$data['InvitedByCompanyID']=$_SESSION["CompanyID"];
 		return $data;
-	}); */
+	});
 
 
  // valitron stuff here 8/25
@@ -1347,7 +1347,7 @@ $builder->where('SecretKey', $secretKey);
 
 
 	//test comment 8/25
-	/* 
+	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
 	$crud->setRule('Email','checkEmail');
@@ -1399,7 +1399,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->displayAs('Phone','Work Phone');
 		$crud->displayAs('Mobile','Mobile Phone');
 
-	} */
+	}
 	
 	//older do no uncomment
 	/* $crud->displayAs('Email','Email Address 电邮地址');
@@ -1420,15 +1420,15 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
 	//test comment 8/25
-	/* $crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('ContactID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
-	$crud->fieldType('ToPrint','hidden'); */
+	$crud->fieldType('ToPrint','hidden');
 	
 	//test comment 8/25
-	/* $crud->callbackAfterInsert(function ($stateParameters) {
+	$crud->callbackAfterInsert(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
     return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest/guest_list/?id='.$_SESSION["SecretKey"]);
 });
@@ -1436,7 +1436,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->callbackAfterDelete(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
     return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest/guest_list/?id='.$_SESSION["SecretKey"]);
-}); */
+});
 	//older comment
 	/* $crud->fieldType('hidden','ContactID');
 	$crud->fieldType('hidden','InvitedByCompanyID');
@@ -1465,17 +1465,17 @@ $builder->where('SecretKey', $secretKey);
 	//$crud->setLanguage('Spanish');
 	//$crud->setLanguage("english-chinese");
 	//test comment 8/25
-	/* if( $_SESSION["EventYear"] == 'China2024'){
+	if( $_SESSION["EventYear"] == 'China2024'){
 		$testconxevent = 'TestConX China 2024';
 	}
 	if( $_SESSION["EventYear"] == 'Korea2024'){
 		$testconxevent = 'TestConX Korea 2024';
-	} */
+	}
 	$crud->unsetPrint();
 	$crud->unsetExport();
 	$output = $crud->render();
 	//test comment 8/25
-/* 	$newdata = [
+	$newdata = [
     "SecretKey"  => $secretKey,
     "CompanyID"     => $companyID,
     "Company" => $row->Company,
@@ -1485,7 +1485,7 @@ $builder->where('SecretKey', $secretKey);
 	"Output" => $output,
 ];
 
-$session->set($newdata);	 */	
+$session->set($newdata);		
 	
 
 	
