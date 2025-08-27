@@ -1389,6 +1389,88 @@ $crud->callbackBeforeUpdate(function () {
 
 
  // valitron stuff here 8/25
+\Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
+  $text=trim($value);
+
+  if ($text === null || $text === '') {
+  if($fields['CN_Company'] || $fields['CN_Company']){
+	  return false;
+  }
+  return false;
+}
+  return true;
+  
+
+}, 'Use English or Chinese company name. 请使用英文公司名或中文公司名');
+
+
+
+\Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
+	$text=trim($value);
+ 
+  if ($text === null || $text === '') {
+  
+  return false;
+}
+  return true;
+
+
+
+}, 'English Family (Last) or Chinese Name required. 请输入中文/英文姓');
+	
+	
+ 
+
+\Valitron\Validator::addRule('checkPhone', function($field, $value, array $params, array $fields) {
+  $text=trim($value);
+ 
+ if ($text === null || $text === '') {
+  
+  return false;
+}
+  return true;
+ 
+
+},'Work or Mobile phone number required. 请输入联系方式');
+  
+ 
+\Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
+{
+	
+	$db2 = db_connect('registration');
+
+	$builder2 = $db2->table('guests');
+
+	$builder2->where('EventYear', $_SESSION["EventYear"]);
+	$builder2->where('Email', $value);
+   
+   $rowcount = (int)$builder2->countAllResults(false);
+ 
+	if($rowcount != 0)
+	{
+	
+		// Not sure why we made another pass at the guest list...
+		// Turning off for now as we simply have found a dupe already
+		/*
+		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
+
+		$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
+		$row2 = $query2->getRow();
+		
+		$foundID =$row2->ContactID;
+	
+			if($foundID != $fields['ContactID'])
+			{
+			return false;
+			}
+	    */
+	    
+	    return false;
+	}
+	return true;
+	
+	
+},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.<br>该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
 
