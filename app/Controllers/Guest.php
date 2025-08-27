@@ -1241,6 +1241,7 @@ $builder->where('SecretKey', $secretKey);
 	$_SESSION["CompanyID"] = $companyID; 
 	$_SESSION["Company"] = $row->Company;
 	$guestLimit = $row->InviteCount;
+	//update? 8/26
 	$_SESSION["GuestLimit"] = $guestLimit;
 	$staffID = $row->StaffID;
 	$_SESSION["Event"] = BiTSEvent;//Switch Event based on Event Year
@@ -1268,6 +1269,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->unsetAdd();
 		
 	}   
+	$currentguestcount = $builder4->countAllResults(false);
 	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
 	  
@@ -1333,6 +1335,28 @@ $builder->where('SecretKey', $secretKey);
     return $_SESSION["EventYear"];
 }); */
 
+
+
+	$employeecount = $currentguestcount/5;
+	$employeecount = round($employeecount);
+	//update this is example code this code below is the stucture of $stateParameters
+	/* $stateParameters = (object)[
+    'primaryKeyValue' => '1234', //primary key value
+    'data' => [ // data to update
+        'customerName' => 'John',
+        'phone' => '1234567890',
+        ...
+    ]
+]; */
+	$crud->callbackBeforeUpdate(function ($stateParameters) {
+    $city = $stateParameters->data['EmployeeCount'];
+
+    if ($stateParameters->data['EmployeeCount']< $employeecount) {
+        $stateParameters->data['EmploymentCount'] = $employeecount;
+    }
+
+    return $stateParameters;
+});
 	
 	$crud->callbackAddForm(function ($data) {
 		$data['EventYear']=$_SESSION["EventYear"];
