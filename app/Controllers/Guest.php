@@ -1348,7 +1348,9 @@ $builder->where('SecretKey', $secretKey);
         ...
     ]
 ]; */
-	$crud->callbackBeforeUpdate(function ($stateParameters) {
+
+//incorrect we do not need to edit the table they can see here, they can see guest we need to edit chinacompany
+	/* $crud->callbackBeforeUpdate(function ($stateParameters) {
     $city = $stateParameters->data['EmployeeCount'];
 
     if ($stateParameters->data['EmployeeCount']< $employeecount) {
@@ -1356,6 +1358,27 @@ $builder->where('SecretKey', $secretKey);
     }
 
     return $stateParameters;
+}); */
+
+$crud->callbackBeforeUpdate(function () {
+	$db9 = db_connect('registration');
+	$builder9 = $db9->table('chinacompany');
+	$builder9->where('SecretKey', $secretKey);
+	$query9 = $builder9->get();
+	$row9 = $query9->getRow();
+    
+
+    if ($row9->EmployeeCount < $employeecount) {
+        $updatecount = [
+		'EmployeeCount' => $employeecount,
+			];
+	$db0 = db_connect('registration');
+	$builder0 = $db0->table('chinacompany');
+	$builder0->where('SecretKey', $secretKey);	
+	$builder0->update($updatecount);
+    }
+
+    //return $stateParameters;
 });
 	
 	$crud->callbackAddForm(function ($data) {
