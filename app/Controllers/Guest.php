@@ -1378,7 +1378,7 @@ $crud->callbackBeforeUpdate(function () {
 	$builder0->update($updatecount);
     }
 
-    //return $stateParameters;
+    return;
 });
 	
 	$crud->callbackAddForm(function ($data) {
