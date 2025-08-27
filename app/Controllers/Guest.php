@@ -1340,7 +1340,7 @@ $builder->where('SecretKey', $secretKey);
 	$builder11->where('EventYear', $_SESSION["EventYear"]);
 	$builder11->where('Related', false);
 	$query11 = $builder11->get();
-	$currentguestcount = $query11->countAllResults(false);
+	$currentguestcount = $query11->getNumRows();
 	$employeecount = $currentguestcount/5;
 	$employeecount = round($employeecount);
 	echo "Total number of guests invited: ".$currentguestcount;
