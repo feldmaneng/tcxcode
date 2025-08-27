@@ -1269,7 +1269,7 @@ $builder->where('SecretKey', $secretKey);
 		$crud->unsetAdd();
 		
 	}   
-	$currentguestcount = $builder4->countAllResults(false);
+	
 	$query4 = $builder4->get();
 	//echo $builder4->countAllResults(false);
 	  
@@ -1334,11 +1334,15 @@ $builder->where('SecretKey', $secretKey);
 
     return $_SESSION["EventYear"];
 }); */
-
-
-
+	$db11 = db_connect('registration');
+	$builder11 = $db4->table('guests');
+	$builder11->where('InvitedByCompanyID' , $companyID);
+	$builder11->where('EventYear', $_SESSION["EventYear"]);
+	$builder11->where('Related', false);
+	$currentguestcount = $builder11->countAllResults(false);
 	$employeecount = $currentguestcount/5;
 	$employeecount = round($employeecount);
+	echo "Total number of guests invited: ".$currentguestcount;
 	//update this is example code this code below is the stucture of $stateParameters
 	/* $stateParameters = (object)[
     'primaryKeyValue' => '1234', //primary key value
