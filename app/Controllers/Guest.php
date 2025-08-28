@@ -1344,7 +1344,7 @@ $builder->where('SecretKey', $secretKey);
 	$employeecount = $currentguestcount/5;
 	$employeecount = round($employeecount);
 	$newdata = [
-	"TotalGuestCount" = $currentguestcount,
+	"TotalGuestCount" => $currentguestcount,
 	];
 	
 	
