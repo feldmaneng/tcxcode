@@ -1338,7 +1338,7 @@ $builder->where('SecretKey', $secretKey);
 	$builder11 = $db4->table('guests');
 	$builder11->where('InvitedByCompanyID' , $companyID);
 	$builder11->where('EventYear', $_SESSION["EventYear"]);
-	$builder11->where('Related', false);
+	$builder11->where('Related', true);
 	$query11 = $builder11->get();
 	$currentguestcount = $query11->getNumRows();
 	$employeecount = $currentguestcount/5;
