@@ -41,7 +41,7 @@ $company = $_SESSION["Company"];
 $staffName = $_SESSION["StaffName"];
 $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
-
+$totalguest = $SESSION["TotalGuestCount"];
 
 
 $var = "Hello World!";
@@ -54,6 +54,7 @@ $html = <<<EOT
 		
 		<br>
  		<h1> $event; </h1>
+		<h1> $totalguest; </h1>
    		<h2> 	 $company</h2>
    		<p>TestConX EXPO Staff: $staffName <br>
    		(The person in charge of your booth. They will also receive a Full Conference registration.)</p>
@@ -74,7 +75,7 @@ echo $html;
      }
      
  ?>
- <?php
+<?php
 if (!empty($js_files)) {
     foreach($js_files as $file) { ?>
         <script src="<?php echo $file; ?>"></script>

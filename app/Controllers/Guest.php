@@ -1343,7 +1343,11 @@ $builder->where('SecretKey', $secretKey);
 	$currentguestcount = $query11->getNumRows();
 	$employeecount = $currentguestcount/5;
 	$employeecount = round($employeecount);
-	echo "Total number of guests invited: ".$currentguestcount;
+	$newdata = [
+	"TotalGuestCount" = $currentguestcount,
+	];
+	
+	
 	//update this is example code this code below is the stucture of $stateParameters
 	/* $stateParameters = (object)[
     'primaryKeyValue' => '1234', //primary key value
@@ -1364,8 +1368,8 @@ $builder->where('SecretKey', $secretKey);
 
     return $stateParameters;
 }); */
-
-$crud->callbackBeforeUpdate(function () {
+//comment 8/27 test passing variable to view with TotalGuestCount
+/* $crud->callbackBeforeUpdate(function () {
 	$db9 = db_connect('registration');
 	$builder9 = $db9->table('chinacompany');
 	$builder9->where('SecretKey', $secretKey);
@@ -1384,7 +1388,7 @@ $crud->callbackBeforeUpdate(function () {
     }
 
     return;
-});
+}); */
 	
 	$crud->callbackAddForm(function ($data) {
 		$data['EventYear']=$_SESSION["EventYear"];
