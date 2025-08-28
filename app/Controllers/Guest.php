@@ -1343,9 +1343,10 @@ $builder->where('SecretKey', $secretKey);
 	$currentguestcount = $query11->getNumRows();
 	$employeecount = $currentguestcount/5;
 	$employeecount = round($employeecount);
-	$newdata = [
+	//8/26 added to the bottom withe the rest of $newdata
+	/* $newdata = [
 	"TotalGuestCount" => $currentguestcount,
-	];
+	]; */
 	
 	
 	//update this is example code this code below is the stucture of $stateParameters
@@ -1621,6 +1622,7 @@ $builder->where('SecretKey', $secretKey);
 	"Event" => $testconxevent,
 	"StaffName" => $staffName,
 	"Output" => $output,
+	"TotalGuestCount" => $currentguestcount,
 ];
 
 $session->set($newdata);		
