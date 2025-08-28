@@ -41,7 +41,7 @@ $company = $_SESSION["Company"];
 $staffName = $_SESSION["StaffName"];
 $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
-$totalguest = $SESSION["TotalGuestCount"];
+$totalguest = $_SESSION["TotalGuestCount"];
 
 
 $var = "Hello World!";
