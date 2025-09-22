@@ -21,7 +21,7 @@ use CodeIgniter\Files\File;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
-
+$session = session();
 
 class ExhibitorDirectory extends BaseController {
 
@@ -53,7 +53,9 @@ helper('html');
 			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
 			
 			$db = db_connect('registration');
-			$builder = $db->table('chinacompany');
+			//$builder = $db->table('chinacompany');
+			$builder = $db->table('expodirectory');
+			
 			$builder->where('SecretKey', $secretKey);
 			$query = $builder->get();
 			$row = $query->getRow();
