@@ -51,8 +51,8 @@ helper('html');
 			$session->set('secretKey', $_GET["key"]);
 			echo $secretKey;
 			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
-			
-			$db = db_connect('registration');
+			$db  = \Config\Database::connect('registration');
+			//$db = db_connect('registration');
 			//$builder = $db->table('chinacompany');
 			$builder = $db->table('expodirectory');
 			
@@ -61,12 +61,17 @@ helper('html');
 			$row = $query->getRow();
 			//$keyreturn = session('secretKey');
 			//$session->set('success', "");
-
+			$db2  = \Config\Database::connect('registration');
+			$builder2 = $db2->table('expodirectory');
+			$builder2->where('SecretKey', $secretKey);
+			$query2 = $builder2->get();
+			$entry = $query2->getRow;
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
 				//'Year' => "2024",
 				//'Event' => "Mesa",
-				'Entry' => $model->getEntry($secretKey),
+				'Entry' => $entry,
+				//'Entry' => $model->getEntry($secretKey),
 				'PriorEntryImage' => "example.png", //Default image, updated below
 				'StatusMessage' => session('statusMessage'),
 				'PromptMessage' => "Please make any changes below and press either Approve, Save Draft, or Cancel button.",
