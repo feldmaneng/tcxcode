@@ -49,7 +49,7 @@ helper('html');
 			
 			$secretKey = $_GET["key"];
 			$session->set('secretKey', $_GET["key"]);
-			
+			echo $secretKey;
 			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
 			
 			$db = db_connect('registration');
