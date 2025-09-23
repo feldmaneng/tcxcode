@@ -163,9 +163,8 @@ helper('html');
 				'Status' => $status,
 				'Upload' => session('upload_status')
 			); 
-				$db  = \Config\Database::connect('registration');
+			$db  = \Config\Database::connect('registration');
 				
-			//$db = db_connect('registration');
 			$builder = $db->table('expodirectory');
 						
 			$builder->where('SecretKey', $secretKey);

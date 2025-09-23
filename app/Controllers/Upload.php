@@ -89,8 +89,15 @@ class Upload extends BaseController {
 						];
 		
 					$secretKey = session('secretKey');
-
-					$update_status = $model->updateEntry($secretKey, $data_update);
+					$db  = \Config\Database::connect('registration');
+						
+					$builder = $db->table('expodirectory');
+								
+					$builder->where('SecretKey', $secretKey);
+								
+					$update_status = $builder->update($data_update);
+					//model
+					//$update_status = $model->updateEntry($secretKey, $data_update);
 					if (!$update_status) {
 						$session->set('statusMessage', "ERROR: Update failure.");
 					} else {
