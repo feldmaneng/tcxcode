@@ -29,7 +29,9 @@ class DirectoryEntry extends Model
 			
 	public function updateEntry($secretKey, $data_update)
 	{
-		$db = db_connect('registration');
+		$db  = \Config\Database::connect('registration');
+				
+		//$db = db_connect('registration');
 		$builder = $db->table('expodirectory');
 					
 		$builder->where('SecretKey', $secretKey);
