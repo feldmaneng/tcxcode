@@ -21,6 +21,7 @@ use CodeIgniter\Files\File;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Controller;
+use App\Models\DirectoryEntry;
 $session = session();
 
 class ExhibitorDirectory extends BaseController {
@@ -127,7 +128,7 @@ helper('html');
 		$session = session(); 
 		$secretKey = session('secretKey');
 		
-		$model = model(DirectoryEntry::class);
+		$model = model(DirectoryEntry);
     	
 		$request = \Config\Services::request();
 		
