@@ -49,7 +49,7 @@ helper('html');
 			
 			$secretKey = $_GET["key"];
 			$session->set('secretKey', $_GET["key"]);
-			echo $secretKey;
+			//echo $secretKey;
 			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
 			$db  = \Config\Database::connect('registration');
 			//$db = db_connect('registration');
@@ -66,7 +66,7 @@ helper('html');
 			$builder2->where('SecretKey', $secretKey);
 			$query2 = $builder2->get();
 			$entry = $query2->getRow();
-			$count = $query2 ->getNumRows();
+			//$count = $query2 ->getNumRows();
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
 				//'Year' => "2024",
