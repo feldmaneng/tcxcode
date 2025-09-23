@@ -65,7 +65,8 @@ helper('html');
 			$builder2 = $db2->table('expodirectory');
 			$builder2->where('SecretKey', $secretKey);
 			$query2 = $builder2->get();
-			$entry = $query2->getRow;
+			$entry = $query2->getRow();
+			$count = $query2 ->getNumRows();
 			$data = array(
 				'logo_dir' => "/EXPOdirectory/",
 				//'Year' => "2024",
