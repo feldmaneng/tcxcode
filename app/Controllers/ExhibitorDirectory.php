@@ -163,8 +163,16 @@ helper('html');
 				'Status' => $status,
 				'Upload' => session('upload_status')
 			); 
+				$db  = \Config\Database::connect('registration');
 				
-			$update_status = $model->updateEntry($secretKey, $data_update);
+			//$db = db_connect('registration');
+			$builder = $db->table('expodirectory');
+						
+			$builder->where('SecretKey', $secretKey);
+						
+			$update_status = $builder->update($data_update);
+			// below is the model
+			//$update_status = $model->updateEntry($secretKey, $data_update);
 			if (!$update_status) {
 				$session->set('statusMessage', "ERROR: Update failure.");
 			}
