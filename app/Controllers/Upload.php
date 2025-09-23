@@ -83,9 +83,9 @@ class Upload extends BaseController {
 					
 				/// Missing file rename code here
 					
-					$upload_stat = 'New';
-					$data_update = [
-							'Upload' => $upload_stat,
+					$uploadstat = 'New';
+					$dataupdate = [
+							'Upload' => $uploadstat,
 						];
 		
 					$secretKey = session('secretKey');
@@ -95,10 +95,10 @@ class Upload extends BaseController {
 								
 					$builder->where('SecretKey', $secretKey);
 								
-					$update_status = $builder->replace($data_update);
+					$updatestatus = $builder->update($dataupdate);
 					//model
 					//$update_status = $model->updateEntry($secretKey, $data_update);
-					if (!$update_status) {
+					if (!$updatestatus) {
 						$session->set('statusMessage', "ERROR: Update failure.");
 					} else {
 						$session->set('statusMessage', "Your file, $originalName, was successfully uploaded!");
