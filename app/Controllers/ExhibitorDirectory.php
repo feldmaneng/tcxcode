@@ -127,8 +127,8 @@ helper('html');
     	
 		$session = session(); 
 		$secretKey = session('secretKey');
-		
-		$model = model(DirectoryEntry);
+		//model
+		//$model = model(DirectoryEntry);
     	
 		$request = \Config\Services::request();
 		
