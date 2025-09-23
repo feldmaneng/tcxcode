@@ -85,7 +85,7 @@ class Upload extends BaseController {
 					
 					$upload_stat = 'New';
 					$data_update = [
-							'Upload' => $upload_stat
+							'Upload' => $upload_stat,
 						];
 		
 					$secretKey = session('secretKey');
@@ -95,7 +95,7 @@ class Upload extends BaseController {
 								
 					$builder->where('SecretKey', $secretKey);
 								
-					$update_status = $builder->update($data_update);
+					$update_status = $builder->replace($data_update);
 					//model
 					//$update_status = $model->updateEntry($secretKey, $data_update);
 					if (!$update_status) {
