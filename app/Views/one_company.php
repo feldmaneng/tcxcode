@@ -43,6 +43,13 @@ $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
 $totalguest = $_SESSION["TotalGuestCount"];
 
+$staffLimit =
+$totalInviteLimit = $staffLimit + $guestLimit; //Stop allowing the addition of people at this number
+$invitedStaffCount = // Row count of Related=1
+$message = '';
+if ($invitedStaffCount > $staffLimit) {
+	$message = "<b>You have reached the limit of invites for employee and others related to your company. Do not invite more related people without contacting the TestConX Office.</b>";
+}
 
 $var = "Hello World!";
 $html = <<<EOT
@@ -56,11 +63,13 @@ $html = <<<EOT
  		<h1> $event; </h1>
 		<h1> $totalguest; </h1>
    		<h2> 	 $company</h2>
-   		<p>TestConX EXPO Staff: $staffName <br>
-   		(The person in charge of your booth. They will also receive a Full Conference registration.)</p>
-   		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration.
-   			For customers, staff, and other guests.<br>
-   			</p>
+   		<p>TestConX EXPO Coordinator: $staffName </p>
+   		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration for customers and other guests.</p>
+   		   The limit for staff, employees, and other people related to your company is $staffLimit.<br>
+   		<p>This form will stop accepting registrations at a total of $totalInviteLimit.</p>
+		<p>The TestConX Office will regularly review registrations. At last count you had $invitedStaffCount.<br>
+			$message</p>
+		
     </div>
 </div>
 EOT;
