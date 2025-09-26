@@ -1247,7 +1247,7 @@ $builder->where('SecretKey', $secretKey);
 	$staffID = $row->StaffID;
 	$_SESSION["Event"] = BiTSEvent;//Switch Event based on Event Year
 	$_SESSION["EventYear"] = $row->EventYear;
-	
+	$Limit = $EmployeeLimit + $guestLimit;
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	// ask ira
@@ -1266,7 +1266,7 @@ $builder->where('SecretKey', $secretKey);
 	$builder4->where('InvitedByCompanyID' , $companyID);
 	$builder4->where('EventYear', $_SESSION["EventYear"]);
 	//echo $builder4->countAllResults(false);
-	if ($builder4->countAllResults(false) >= $guestLimit) {
+	if ($builder4->countAllResults(false) >= $Limit) {
 		$crud->unsetAdd();
 		
 	}   
