@@ -1631,7 +1631,7 @@ $builder->where('SecretKey', $secretKey);
 	"Event" => $testconxevent,
 	"StaffName" => $staffName,
 	"Output" => $output,
-	"TotalGuestCount" => $currentguestcount,
+	"GuestCount" => $currentguestcount,
 	"StaffCount" => $staffcount,
 	"StaffLimit" => $Employeelimit,
 ];

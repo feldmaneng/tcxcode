@@ -41,7 +41,7 @@ $company = $_SESSION["Company"];
 $staffName = $_SESSION["StaffName"];
 $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
-$totalguest = $_SESSION["TotalGuestCount"];
+$guestCount = $_SESSION["GuestCount"];
 $invitedStaffCount = $_SESSION["StaffCount"];
 $staffLimit = $_SESSION["StaffLimit"];
 
@@ -62,14 +62,14 @@ $html = <<<EOT
 		
 		
 		<br>
- 		<h1> $event </h1>
+ 		<h1> $event - Guest List for $company </h1>
 		
-   		<h2>$company</h2>
+   		
    		<p>TestConX EXPO Coordinator: $staffName </p>
    		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration for customers and other guests.</p>
    		   The limit for staff, employees, and other people related to your company is $staffLimit.<br>
    		<p>This form will stop accepting registrations at a total of $totalInviteLimit.</p>
-		<p>The TestConX Office will regularly review registrations. At last count you had $invitedStaffCount.<br>
+		<p>The TestConX Office will regularly review registrations. At last count you had $invitedStaffCount staff and $guestCount guests.<br>
 			$message</p>
 		
     </div>
