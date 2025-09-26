@@ -199,10 +199,10 @@ function TestConXsingle($graphics = TRUE)
 				$pdf->SetTextColor(0,0,0);
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
-					if($EventYear == "Korea2024"){
+					if($EventYear == "Korea2025"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
-			else if($EventYear == "China2024"){
+			else if($EventYear == "China2025"){
 				$pdf->SetFont('cid0cs', '', 55,);
 			}
 			else{
@@ -343,7 +343,7 @@ public function Guestcrudkorea()
 	
 	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->setUniqueId('korea_2024_guest11');
+	$crud->setUniqueId('korea_2025_guest11');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
@@ -413,7 +413,7 @@ public function Guestcrudchina()
 	
 	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->setUniqueId('china_2024_guest11');
+	$crud->setUniqueId('china_2025_guest11');
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
@@ -1236,8 +1236,9 @@ $builder->where('SecretKey', $secretKey);
 		
 		die();
 	}
-	
+	$Employeelimit = $row->EmployeeCount;
 	$companyID = $row->CompanyID;
+	$companypass = $row->Company;
 	$_SESSION["CompanyID"] = $companyID; 
 	$_SESSION["Company"] = $row->Company;
 	$guestLimit = $row->InviteCount;
@@ -1279,12 +1280,12 @@ $builder->where('SecretKey', $secretKey);
 	$crud->where(['InvitedByCompanyID'=>$companyID,
 					'EventYear'=> $_SESSION["EventYear"]]); 
 					
-	if( $_SESSION["EventYear"] == 'China2024'){
-		$testconxevent = 'TestConX China 2024';
+	if( $_SESSION["EventYear"] == 'China2025'){
+		$testconxevent = 'TestConX China 2025';
 		$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	}
-	if( $_SESSION["EventYear"] == 'Korea2024'){
-		$testconxevent = 'TestConX Korea 2024';
+	if( $_SESSION["EventYear"] == 'Korea2025'){
+		$testconxevent = 'TestConX Korea 2025';
 		$crud->setSubject('Guest', 'Guests');
 	}
 	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
@@ -1334,6 +1335,14 @@ $builder->where('SecretKey', $secretKey);
 
     return $_SESSION["EventYear"];
 }); */
+	$db12 = db_connect('registration');
+	$builder12 = $db4->table('guests');
+	$builder12->where('InvitedByCompanyID' , $companyID);
+	$builder12->where('EventYear', $_SESSION["EventYear"]);
+	$builder12->where('Related', '1');
+	$query12 = $builder12->get();
+	$staffcount = $query12->getNumRows();
+
 	$db11 = db_connect('registration');
 	$builder11 = $db4->table('guests');
 	$builder11->where('InvitedByCompanyID' , $companyID);
@@ -1500,8 +1509,8 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('NativeName','checkFamilyName');
 	$crud->setRule('Phone','checkPhone');
 	$crud->setRule('Mobile','checkPhone');
-			if( $_SESSION["EventYear"] == 'China2024'){
-		$testconxevent = 'TestConX China 2024';
+			if( $_SESSION["EventYear"] == 'China2025'){
+		$testconxevent = 'TestConX China 2025';
 		$crud->displayAs('Email','Email Address 电邮地址');
 		$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 		$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
@@ -1519,8 +1528,8 @@ $builder->where('SecretKey', $secretKey);
 		$crud->displayAs('Phone','Work Phone 单位电话');
 		$crud->displayAs('Mobile','Mobile Phone 手机');
 	}
-	if( $_SESSION["EventYear"] == 'Korea2024'){
-		$testconxevent = 'TestConX Korea 2024';
+	if( $_SESSION["EventYear"] == 'Korea2025'){
+		$testconxevent = 'TestConX Korea 2025';
 		$crud->displayAs('Email','Email Address');
 		$crud->displayAs('GivenName','Given (First) Name');
 		$crud->displayAs('FamilyName','Family (Last) Name');
@@ -1623,8 +1632,11 @@ $builder->where('SecretKey', $secretKey);
 	"StaffName" => $staffName,
 	"Output" => $output,
 	"TotalGuestCount" => $currentguestcount,
+	"StaffCount" => $staffcount,
+	"StaffLimit" => $Employeelimit,
 ];
 
+//staffcount if the related field
 $session->set($newdata);		
 	
 

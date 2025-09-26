@@ -42,8 +42,10 @@ $staffName = $_SESSION["StaffName"];
 $guestLimit = $_SESSION["GuestLimit"];
 $output2 = $_SESSION["Output"];
 $totalguest = $_SESSION["TotalGuestCount"];
+$invitedStaffCount = $_SESSION["StaffCount"];
+$staffLimit = $_SESSION["StaffLimit"];
 
-$staffLimit =
+
 $totalInviteLimit = $staffLimit + $guestLimit; //Stop allowing the addition of people at this number
 $invitedStaffCount = // Row count of Related=1
 $message = '';
