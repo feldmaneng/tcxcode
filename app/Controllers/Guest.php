@@ -1727,7 +1727,7 @@ return view('one_company.php',(array)$output);
 }
 
 
- private function _example_output($output = null) {
+ public function _example_output($output = null) {
         if (isset($output->isJSONResponse) && $output->isJSONResponse) {
             header('Content-Type: application/json; charset=utf-8');
             echo $output->output;
