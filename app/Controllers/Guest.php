@@ -1604,11 +1604,11 @@ $builder->where('SecretKey', $secretKey);
 	//$crud->setLanguage('Spanish');
 	//$crud->setLanguage("english-chinese");
 	//test comment 8/25
-	if( $_SESSION["EventYear"] == 'China2024'){
-		$testconxevent = 'TestConX China 2024';
+	if( $_SESSION["EventYear"] == 'China2025'){
+		$testconxevent = 'TestConX China 2025';
 	}
-	if( $_SESSION["EventYear"] == 'Korea2024'){
-		$testconxevent = 'TestConX Korea 2024';
+	if( $_SESSION["EventYear"] == 'Korea2025'){
+		$testconxevent = 'TestConX Korea 2025';
 	}
 	$crud->unsetPrint();
 	$crud->unsetExport();
