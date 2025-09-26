@@ -69,7 +69,7 @@ $html = <<<EOT
    		<p>You are entitled to invite $guestLimit guests to receive complimentary <b>Full Conference</b> registration for customers and other guests.</p>
    		   The limit for staff, employees, and other people related to your company is $staffLimit.<br>
    		<p>This form will stop accepting registrations at a total of $totalInviteLimit.</p>
-		<p>The TestConX Office will regularly review registrations. At last count you had $invitedStaffCount staff and $guestCount guests.<br>
+		<p>The TestConX Office will regularly review registrations. At last review you have used $invitedStaffCount staff and $guestCount guest registrations.<br>
 			$message</p>
 		
     </div>
