@@ -1247,7 +1247,7 @@ $builder->where('SecretKey', $secretKey);
 	$staffID = $row->StaffID;
 	$_SESSION["Event"] = BiTSEvent;//Switch Event based on Event Year
 	$_SESSION["EventYear"] = $row->EventYear;
-	$Limit = $EmployeeLimit + $guestLimit;
+	$Limit = $Employeelimit + $guestLimit;
 	$staffName = "TBD";
 	if ($staffID > 0) {
 	// ask ira
