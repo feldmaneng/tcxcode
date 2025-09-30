@@ -50,7 +50,7 @@ $totalInviteLimit = $staffLimit + $guestLimit; //Stop allowing the addition of p
 
 $message = '';
 if ($invitedStaffCount >= $staffLimit) {
-	$message = "<b>You have reached the limit of invites for employee and others related to your company. Do not invite more related people without contacting the TestConX Office.</b>";
+	$message = "<b>You have reached the limit of invites for staff and others related to your company. Do not invite more related people without contacting the TestConX Office.</b>";
 }
 
 $var = "Hello World!";
