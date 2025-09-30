@@ -1295,6 +1295,7 @@ $builder->where('SecretKey', $secretKey);
 	'GivenName',
 	'FamilyName',
 	'NativeName',
+	'Related',
 	'Company',
 	'CN_Company']); 
 	$crud->fields([
@@ -1305,6 +1306,7 @@ $builder->where('SecretKey', $secretKey);
 	'FamilyName',
 	'NativeName',
 	'NameOnBadge',
+	'Related',
 	'Title',
 	'Company',
 	'CN_Company',
@@ -1512,9 +1514,10 @@ $builder->where('SecretKey', $secretKey);
 			if( $_SESSION["EventYear"] == 'China2025'){
 		$testconxevent = 'TestConX China 2025';
 		$crud->displayAs('Email','Email Address 电邮地址');
+		$crud->displayAs('Related','Guest or Staff');
 		$crud->displayAs('GivenName','Given (First) Name 名（英文）');
 		$crud->displayAs('FamilyName','Family (Last) Name 姓（英文）');
-		$crud->displayAs('NativeName','Native Name');
+		$crud->displayAs('NativeName','Chinese/Korean Name');
 		$crud->displayAs('Company','Company Name 公司名称（英文）');
 		$crud->displayAs('CN_Company','Chinese Company Name 公司名称（中文）');
 		$crud->displayAs('NameOnBadge','First Name on Badge 名牌显示名');
@@ -1531,9 +1534,10 @@ $builder->where('SecretKey', $secretKey);
 	if( $_SESSION["EventYear"] == 'Korea2025'){
 		$testconxevent = 'TestConX Korea 2025';
 		$crud->displayAs('Email','Email Address');
+		$crud->displayAs('Related','Guest or Staff');
 		$crud->displayAs('GivenName','Given (First) Name');
 		$crud->displayAs('FamilyName','Family (Last) Name');
-		$crud->displayAs('NativeName','Native Name');
+		$crud->displayAs('NativeName','Korean/Chinese Name');
 		$crud->displayAs('Company','Company Name');
 		$crud->displayAs('CN_Company','Chinese/Korean Company Name');
 		$crud->displayAs('NameOnBadge','First Name on Badge');
@@ -1574,6 +1578,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('BanquetCompanyID','hidden');
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
+	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
 	
 	//test comment 8/25
 	$crud->callbackAfterInsert(function ($stateParameters) {

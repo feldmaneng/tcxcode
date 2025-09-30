@@ -52,6 +52,9 @@ $message = '';
 if ($invitedStaffCount >= $staffLimit) {
 	$message = "<b>You have reached the limit of invites for staff and others related to your company. Do not invite more related people without contacting the TestConX Office.</b>";
 }
+if ($guestCount >= $guestLimit) {
+	$message = "<b>You have reached the limit of guest invites. Do not invite more people without contacting the TestConX Office.</b>";
+}
 
 $var = "Hello World!";
 $html = <<<EOT
