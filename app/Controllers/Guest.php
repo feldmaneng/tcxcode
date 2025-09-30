@@ -1489,7 +1489,7 @@ $builder->where('SecretKey', $secretKey);
 	return true;
 	
 	
-},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.<br>该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
+},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
 

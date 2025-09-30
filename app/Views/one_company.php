@@ -49,7 +49,7 @@ $staffLimit = $_SESSION["StaffLimit"];
 $totalInviteLimit = $staffLimit + $guestLimit; //Stop allowing the addition of people at this number
 
 $message = '';
-if ($invitedStaffCount > $staffLimit) {
+if ($invitedStaffCount >= $staffLimit) {
 	$message = "<b>You have reached the limit of invites for employee and others related to your company. Do not invite more related people without contacting the TestConX Office.</b>";
 }
 
