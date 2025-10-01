@@ -1472,20 +1472,20 @@ $builder->where('SecretKey', $secretKey);
 	
 		// Not sure why we made another pass at the guest list...
 		// Turning off for now as we simply have found a dupe already
-		/*
-		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
+		if($rowcount == 1){
+				$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
 
-		$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
-		$row2 = $query2->getRow();
-		
-		$foundID =$row2->ContactID;
-	
-			if($foundID != $fields['ContactID'])
-			{
-			return false;
-			}
-	    */
+				$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
+				$row2 = $query2->getRow();
+				
+				$foundID =$row2->ContactID;
+			
+					if($foundID == $fields['ContactID'])
+					{
+						return true;
+					}
 	    
+	    }
 	    return false;
 	}
 	return true;
