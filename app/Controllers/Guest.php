@@ -1480,9 +1480,9 @@ $builder->where('SecretKey', $secretKey);
 			$builder2->where('EventYear', $_SESSION["EventYear"]);
 			$builder2->where('Email', $value);
 			$row2 = $query2->getRow();
-			$foundID =$row2->ContactID;
+			$foundID =(int)$row2->ContactID;
 			 
-			 
+			 //$foundID = 3;
 			/* 	$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
 
 				$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
