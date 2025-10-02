@@ -1492,10 +1492,10 @@ $builder->where('SecretKey', $secretKey);
 				 */
 				
 						
-					if($foundID == $stateParameters->primaryKeyValue)
+					/* if($foundID == $stateParameters->primaryKeyValue)
 					{
 						return true;
-					}
+					} */
 					/* 
 					if($foundID == $fields['ContactID'])
 					{
