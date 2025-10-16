@@ -1519,7 +1519,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
-	$crud->setRule('Email','checkEmail',[ContactID]);
+	$crud->setRule('Email','checkEmail',[$fields['ContactID']]);
 	$crud->setRule('Company','checkCompany');
 	$crud->setRule('Company','required');
 	$crud->setRule('CN_Company','checkCompany');
