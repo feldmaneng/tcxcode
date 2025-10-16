@@ -1596,7 +1596,8 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
 	//test comment 8/25
-	$crud->fieldType('ContactID', 'hidden');
+	//made contactID hidden 10/16
+	//$crud->fieldType('ContactID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
