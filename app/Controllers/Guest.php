@@ -1299,6 +1299,7 @@ $builder->where('SecretKey', $secretKey);
 	'Company',
 	'CN_Company']); 
 	$crud->fields([
+	'ContactID',
 	'Email',
 	'InvitedByCompanyID',
 	'EventYear',
@@ -1321,6 +1322,7 @@ $builder->where('SecretKey', $secretKey);
 	'ToPrint'
 	]);
 	
+	$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
@@ -1474,10 +1476,10 @@ $builder->where('SecretKey', $secretKey);
 		// Not sure why we made another pass at the guest list...
 		// Turning off for now as we simply have found a dupe already
 		 if($rowcount == 1){
-			 /* if($fields['ContactID'] > 0)
+			  if($fields['ContactID'] > 0)
 			 {
 				 return true;
-			 } */
+			 } 
 			/*  $db2 = db_connect('registration');
 
 			$builder2 = $db2->table('guests');
@@ -1506,7 +1508,7 @@ $builder->where('SecretKey', $secretKey);
 					{
 						return true;
 					} */
-			return true;
+			return false;
 	    } 
 	    return false;
 	}
