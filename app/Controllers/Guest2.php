@@ -1500,7 +1500,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('FamilyName','requiredWithout','NativeName');
 	
 	$crud->setRule('GivenName','requiredWith','FamilyName');
-	$crud->setRule('FamilyName','requiredWith''GivenName');
+	$crud->setRule('FamilyName','requiredWith','GivenName');
 	
 //	$crud->setRule('GivenName','checkFamilyName');
 //	$crud->setRule('GivenName','required');
