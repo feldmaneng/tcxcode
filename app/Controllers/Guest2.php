@@ -1468,12 +1468,12 @@ $builder->where('SecretKey', $secretKey);
 	$builder2->where('EventYear', $_SESSION["EventYear"]);
 	$builder2->where('Email', $value); 
    
-   	return false; // force the message
+
    	 	
    //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $builder2->getNumRows();
    
-
+   return false; // force the message
 
  /*
 	if ($rowcount != 0) {
