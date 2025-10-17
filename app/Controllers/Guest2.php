@@ -1490,24 +1490,21 @@ $builder->where('SecretKey', $secretKey);
 },'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
-
-
-	//test comment 8/25
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
-	$crud->setRule('Email','checkEmail');
-	$crud->setRule('Company','checkCompany');
+//	$crud->setRule('Email','checkEmail');
+//	$crud->setRule('Company','checkCompany');
 	$crud->setRule('Company','required');
-	$crud->setRule('CN_Company','checkCompany');
+//	$crud->setRule('CN_Company','checkCompany');
 	$crud->setRule('GivenName','checkFamilyName');
 	$crud->setRule('GivenName','required');
 	$crud->setRule('FamilyName','checkFamilyName');
 	$crud->setRule('FamilyName','required');
 	$crud->setRule('NativeName','checkFamilyName');
-	$crud->setRule('Phone','checkPhone');
-	$crud->setRule('Mobile','checkPhone');
-			if( $_SESSION["EventYear"] == 'China2025'){
+//	$crud->setRule('Phone','checkPhone');
+//	$crud->setRule('Mobile','checkPhone');
+	if( $_SESSION["EventYear"] == 'China2025'){
 		$testconxevent = 'TestConX China 2025';
 		$crud->displayAs('Email','Email Address 电邮地址');
 		$crud->displayAs('Related','Guest or Staff');
@@ -1580,12 +1577,12 @@ $builder->where('SecretKey', $secretKey);
 	//test comment 8/25
 	$crud->callbackAfterInsert(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
-    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest/guest_list/?id='.$_SESSION["SecretKey"]);
+    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
 });
 
 	$crud->callbackAfterDelete(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
-    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest/guest_list/?id='.$_SESSION["SecretKey"]);
+    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
 });
 	//older comment
 	/* $crud->fieldType('hidden','ContactID');
