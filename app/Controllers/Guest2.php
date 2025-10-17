@@ -1483,8 +1483,10 @@ $builder->where('SecretKey', $secretKey);
 			// Need to check if the current ContactID is what was found
 			
 			$row2 = $query2->getRow();
+			log_message ('error', "rowcount ".$rowcount." fields ContactID ".$fields['ContactID']);
 			if ( isset($fields['ContactID']) &&
 				($row2->ContactID == $fields['ContactID']) )	{
+				log_message ('error', "row ContactID ".$row2->ContactID);
 				 return true;
 			}  
 			
@@ -1495,7 +1497,7 @@ $builder->where('SecretKey', $secretKey);
 	return true;
 	
 
-},'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
+},'Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
 	
