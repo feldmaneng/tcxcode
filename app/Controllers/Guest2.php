@@ -1470,6 +1470,8 @@ $builder->where('SecretKey', $secretKey);
    
    //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $builder2->getNumRows();
+   
+   return false; // force the message
  
 	if($rowcount != 0) {
 		if($rowcount == 1){
