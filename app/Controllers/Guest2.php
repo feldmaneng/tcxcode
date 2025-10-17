@@ -1428,7 +1428,7 @@ $builder->where('SecretKey', $secretKey);
   return true;
   
 
-}, 'Use English or Chinese company name. 请使用英文公司名或中文公司名');
+}, 'Use English or Chinese/Korean company name. 请使用英文公司名或中文公司名');
 
 
 
@@ -1440,7 +1440,7 @@ $builder->where('SecretKey', $secretKey);
   return false;
 }
   return true;
-}, 'English Family (Last) or Chinese Name required. 请输入中文/英文姓');
+}, 'English Family (Last) or Chinese/Korean Name required. 请输入中文/英文姓');
 	
 	
  
@@ -1495,7 +1495,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('Email','email');
 //	$crud->setRule('Email','checkEmail');
 	$crud->setRule('Company','checkCompany');
-	$crud->setRule('Company','required');
+//	$crud->setRule('Company','required');
 	$crud->setRule('CN_Company','checkCompany');
 	$crud->setRule('GivenName','checkFamilyName');
 	$crud->setRule('GivenName','required');
