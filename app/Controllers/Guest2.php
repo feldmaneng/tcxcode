@@ -1461,7 +1461,7 @@ $builder->where('SecretKey', $secretKey);
 {
 	//if $fields contact > 0 then die
    return false; // force the message
-	
+/*	
 	$db2 = db_connect('registration');
 
 	$builder2 = $db2->table('guests');
@@ -1477,19 +1477,19 @@ $builder->where('SecretKey', $secretKey);
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
 		 	// If ContactID is set we are assuming that this is an edit of an existing record
-		 	/*
+		 
 			if ( isset($fields['ContactID']) && ($fields['ContactID'] > 0))
 			{
 				 return true;
 			}  
-			*/
+			
 		}
 		return false;
 
 	}
 	return true;
 	
-	
+*/	
 },'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
