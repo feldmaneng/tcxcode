@@ -445,6 +445,12 @@ $routes->post('/Chinaguest/guest_list', 'Chinaguest::guest_list');
 $routes->get('/Guest/guest_list/?id=(:any)', 'Guest::guest_list');
 $routes->post('/Guest/guest_list/?id=(:any)', 'Guest::guest_list');
 
+$routes->get('/Guest2/guest_list/?id=(:any)', 'Guest2::guest_list');
+$routes->post('/Guest2/guest_list/?id=(:any)', 'Guest2::guest_list');
+
+$routes->get('/Guest2/guest_list', 'Guest2::guest_list');
+$routes->post('/Guest2/guest_list', 'Guest2::guest_list');
+
 $routes->get('/Guest/guest_list', 'Guest::guest_list');
 $routes->post('/Guest/guest_list', 'Guest::guest_list');
 
