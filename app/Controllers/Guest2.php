@@ -1430,7 +1430,7 @@ $builder->where('SecretKey', $secretKey);
   
 
 }, 'Use English or Chinese/Korean company name. 请使用英文公司名或中文公司名');
-*/
+
 
 
 \Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
@@ -1442,7 +1442,7 @@ $builder->where('SecretKey', $secretKey);
 }
   return true;
 }, 'English Family (Last) or Chinese/Korean Name required. 请输入中文/英文姓');
-	
+*/
 	
  
 /*
@@ -1494,15 +1494,19 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
 	$crud->setRule('Email','checkEmail');
-//	$crud->setRule('Company','checkCompany');
 	$crud->setRule('Company','requiredWithout','CN_Company');
-//	$crud->setRule('CN_Company','checkCompany');
 	$crud->setRule('CN_Company','requiredWithout','Company');
-	$crud->setRule('GivenName','checkFamilyName');
-	$crud->setRule('GivenName','required');
-	$crud->setRule('FamilyName','checkFamilyName');
-	$crud->setRule('FamilyName','required');
-	$crud->setRule('NativeName','checkFamilyName');
+	$crud->setRule('GivenName','requiredWithout','NativeName');
+	$crud->setRule('FamilyName','requiredWithout','NativeName');
+	
+	$crud->setRule('GivenName','requiredWith','FamilyName');
+	$crud->setRule('FamilyName','requiredWith''GivenName');
+	
+//	$crud->setRule('GivenName','checkFamilyName');
+//	$crud->setRule('GivenName','required');
+//	$crud->setRule('FamilyName','checkFamilyName');
+//	$crud->setRule('FamilyName','required');
+//	$crud->setRule('NativeName','checkFamilyName');
 //	$crud->setRule('Phone','checkPhone');
 //	$crud->setRule('Mobile','checkPhone');
 	$crud->setRule('Phone','requiredWithout','Mobile');
