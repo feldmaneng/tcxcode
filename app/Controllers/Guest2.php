@@ -1416,6 +1416,7 @@ $builder->where('SecretKey', $secretKey);
 
 
  // valitron stuff here 8/25
+/*
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
   $text=trim($value);
 
@@ -1429,7 +1430,7 @@ $builder->where('SecretKey', $secretKey);
   
 
 }, 'Use English or Chinese/Korean company name. 请使用英文公司名或中文公司名');
-
+*/
 
 
 \Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
@@ -1444,7 +1445,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	
  
-
+/*
 \Valitron\Validator::addRule('checkPhone', function($field, $value, array $params, array $fields) {
   $text=trim($value);
  
@@ -1454,8 +1455,8 @@ $builder->where('SecretKey', $secretKey);
   return true;
 
 },'Work or Mobile phone number required. 请输入联系方式');
-  
- 
+*/
+
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
 	//if $fields contact > 0 then die
@@ -1470,14 +1471,15 @@ $builder->where('SecretKey', $secretKey);
    //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $builder2->getNumRows();
  
-	if($rowcount != 0)
-	{
+	if($rowcount != 0) {
 		if($rowcount == 1){
 		 	// If ContactID is set we are assuming that this is an edit of an existing record
+		 	/*
 			if ( isset($fields['ContactID']) && ($fields['ContactID'] > 0))
 			{
 				 return true;
 			}  
+			*/
 		}
 		return false;
 
@@ -1491,7 +1493,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
-//	$crud->setRule('Email','checkEmail');
+	$crud->setRule('Email','checkEmail');
 //	$crud->setRule('Company','checkCompany');
 	$crud->setRule('Company','requiredWithout','CN_Company');
 //	$crud->setRule('CN_Company','checkCompany');
