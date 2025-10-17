@@ -1292,36 +1292,38 @@ $builder->where('SecretKey', $secretKey);
 
 	
 	$crud->columns(['Email',
-	'GivenName',
-	'FamilyName',
-	'NativeName',
-	'Related',
-	'Company',
-	'CN_Company']); 
+		'GivenName',
+		'FamilyName',
+		'NativeName',
+		'Related',
+		'Company',
+		'CN_Company'
+	]); 
 	$crud->fields([
-	'ContactID',
-	'Email',
-	'InvitedByCompanyID',
-	'EventYear',
-	'GivenName',
-	'FamilyName',
-	'NativeName',
-	'NameOnBadge',
-	'Related',
-	'Title',
-	'Company',
-	'CN_Company',
-	'Address1',
-	'Address2',
-	'City',
-	'State',
-	'PCode',
-	'Country',
-	'Phone',
-	'Mobile',
-	'ToPrint'
+		'ContactID',
+		'Email',
+		'InvitedByCompanyID',
+		'EventYear',
+		'GivenName',
+		'FamilyName',
+		'NativeName',
+		'NameOnBadge',
+		'Related',
+		'Title',
+		'Company',
+		'CN_Company',
+		'Address1',
+		'Address2',
+		'City',
+		'State',
+		'PCode',
+		'Country',
+		'Phone',
+		'Mobile',
+		'ToPrint'
 	]);
-	$crud->readOnlyFields(['ContactID']);
+	
+	//IMF $crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
@@ -1332,13 +1334,14 @@ $builder->where('SecretKey', $secretKey);
 	/* $crud->callbackAddField('InvitedByCompanyID', function () {
    
     return $_SESSION["CompanyID"];
-});
+	});
 
 	$crud->callbackAddField('EventYear', function () {
     
 
     return $_SESSION["EventYear"];
-}); */
+	}); */
+	
 	$db12 = db_connect('registration');
 	$builder12 = $db4->table('guests');
 	$builder12->where('InvitedByCompanyID' , $companyID);
@@ -1347,6 +1350,7 @@ $builder->where('SecretKey', $secretKey);
 	$query12 = $builder12->get();
 	$staffcount = $query12->getNumRows();
 
+	//IMF simplify later...
 	$db11 = db_connect('registration');
 	$builder11 = $db4->table('guests');
 	$builder11->where('InvitedByCompanyID' , $companyID);
@@ -1370,7 +1374,7 @@ $builder->where('SecretKey', $secretKey);
         'phone' => '1234567890',
         ...
     ]
-]; */
+		]; */
 
 //incorrect we do not need to edit the table they can see here, they can see guest we need to edit chinacompany
 	/* $crud->callbackBeforeUpdate(function ($stateParameters) {
@@ -1415,12 +1419,12 @@ $builder->where('SecretKey', $secretKey);
 \Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
   $text=trim($value);
 
-  if ($text === null || $text === '') {
-  if($fields['CN_Company'] || $fields['CN_Company']){
-	  return false;
+  if (empty($text)) {
+	  if (empty($fields['Company']) && empty($fields['CN_Company'])){
+		  return false;
+	  }
   }
-  return false;
-}
+
   return true;
   
 
@@ -1431,14 +1435,11 @@ $builder->where('SecretKey', $secretKey);
 \Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
 	$text=trim($value);
  
-  if ($text === null || $text === '') {
+  if (empty($text)) {
   
   return false;
 }
   return true;
-
-
-
 }, 'English Family (Last) or Chinese Name required. 请输入中文/英文姓');
 	
 	
@@ -1447,7 +1448,7 @@ $builder->where('SecretKey', $secretKey);
 \Valitron\Validator::addRule('checkPhone', function($field, $value, array $params, array $fields) {
   $text=trim($value);
  
- if ($text === null || $text === '') {
+  if (empty($text)) {
   
   return false;
 }
@@ -1468,49 +1469,20 @@ $builder->where('SecretKey', $secretKey);
 	$builder2->where('EventYear', $_SESSION["EventYear"]);
 	$builder2->where('Email', $value); 
    
-   $rowcount = (int)$builder2->countAllResults(false);
+   //IMF $rowcount = (int)$builder2->countAllResults(false);
+   $rowcount = $builder2->getNumRows();
  
 	if($rowcount != 0)
 	{
-	
-		// Not sure why we made another pass at the guest list...
-		// Turning off for now as we simply have found a dupe already
-		 if($rowcount == 1){
-			   if($fields['ContactID']>0)
-			 {
+		if($rowcount == 1){
+		 	// If ContactID is set we are assuming that this is an edit of an existing record
+			if ( isset($fields['ContactID']) && ($fields['ContactID'] > 0))
+			{
 				 return true;
-			 }  
-			/*  $db2 = db_connect('registration');
+			}  
+		}
+		return false;
 
-			$builder2 = $db2->table('guests');
-
-			$builder2->where('EventYear', $_SESSION["EventYear"]);
-			$builder2->where('Email', $value);
-			$row2 = $query2->getRow();
-			$foundID =(int)$row2->ContactID; */
-			 
-			 //$foundID = 3;
-			/* 	$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
-
-				$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
-				$row2 = $query2->getRow();
-				
-				$foundID =$row2->ContactID;
-				 */
-				
-						
-					/* if($foundID == $stateParameters->primaryKeyValue)
-					{
-						return true;
-					} */
-					/* 
-					if($foundID == $fields['ContactID'])
-					{
-						return true;
-					} */
-			return false;
-	    } 
-	    return false;
 	}
 	return true;
 	
