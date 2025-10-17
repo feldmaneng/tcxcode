@@ -1491,11 +1491,10 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->setRule('Email','required');
 	$crud->setRule('Email','email');
-//	$crud->setRule('Email','checkEmail');
-	$crud->setRule('Company','checkCompany');
-//	$crud->setRule('Company','required');
+	$crud->setRule('Email','checkEmail');
+//	$crud->setRule('Company','checkCompany');
 	$crud->setRule('Company','requiredWithout','CN_Company');
-	$crud->setRule('CN_Company','checkCompany');
+//	$crud->setRule('CN_Company','checkCompany');
 	$crud->setRule('CN_Company','requiredWithout','Company');
 	$crud->setRule('GivenName','checkFamilyName');
 	$crud->setRule('GivenName','required');
@@ -1504,6 +1503,8 @@ $builder->where('SecretKey', $secretKey);
 	$crud->setRule('NativeName','checkFamilyName');
 //	$crud->setRule('Phone','checkPhone');
 //	$crud->setRule('Mobile','checkPhone');
+	$crud->setRule('Phone','requiredWithout','Mobile');
+	$crud->setRule('Mobile','requiredWithout','Phone');
 	if( $_SESSION["EventYear"] == 'China2025'){
 		$testconxevent = 'TestConX China 2025';
 		$crud->displayAs('Email','Email Address 电邮地址');
