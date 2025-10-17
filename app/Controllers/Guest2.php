@@ -1324,7 +1324,7 @@ $builder->where('SecretKey', $secretKey);
 	]);
 	
 	//IMF $crud->readOnlyFields(['ContactID']);
-	$crud->fieldType('ContactID', 'invisible');
+	//$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
@@ -1567,9 +1567,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Phone','Work Phone 单位电话');
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
-	//test comment 8/25
-	//made contactID hidden 10/16
-	//$crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('ContactID', 'invisible'); // Use invisible instead of hidden to skip all validation
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
