@@ -1459,9 +1459,8 @@ $builder->where('SecretKey', $secretKey);
 
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
-	//if $fields contact > 0 then die
-   return false; // force the message
-/*	
+
+	
 	$db2 = db_connect('registration');
 
 	$builder2 = $db2->table('guests');
@@ -1469,11 +1468,14 @@ $builder->where('SecretKey', $secretKey);
 	$builder2->where('EventYear', $_SESSION["EventYear"]);
 	$builder2->where('Email', $value); 
    
+   	return false; // force the message
+   	 	
    //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $builder2->getNumRows();
    
 
- 
+
+ /*
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
 		 	// If ContactID is set we are assuming that this is an edit of an existing record
