@@ -1483,13 +1483,13 @@ $builder->where('SecretKey', $secretKey);
 			// Need to check if the current ContactID is what was found
 			
 			$row2 = $query2->getRow();
-			log_message ('critial', "rowcount ".$rowcount);
+			log_message ('debug', "rowcount ".$rowcount);
 			if ( isset($fields['ContactID'] )) {
 				log_message ('debug',"fields ContactID ".$fields['ContactID']);
 			} else {
 				log_message ('debug',"fields ContactID is not set");
 			}
-			log_message ('critical', "row ContactID ".$row2->ContactID);
+			log_message ('debug', "row ContactID ".$row2->ContactID);
 			
 			if ( isset($fields['ContactID']) &&
 				($row2->ContactID == $fields['ContactID']) )	{
