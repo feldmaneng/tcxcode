@@ -1460,6 +1460,7 @@ $builder->where('SecretKey', $secretKey);
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
 	//if $fields contact > 0 then die
+   return false; // force the message
 	
 	$db2 = db_connect('registration');
 
@@ -1471,10 +1472,10 @@ $builder->where('SecretKey', $secretKey);
    //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $builder2->getNumRows();
    
-   return false; // force the message
+
  
-	if($rowcount != 0) {
-		if($rowcount == 1){
+	if ($rowcount != 0) {
+		if ($rowcount == 1) {
 		 	// If ContactID is set we are assuming that this is an edit of an existing record
 		 	/*
 			if ( isset($fields['ContactID']) && ($fields['ContactID'] > 0))
