@@ -1467,15 +1467,15 @@ $builder->where('SecretKey', $secretKey);
 
 	$builder2->where('EventYear', $_SESSION["EventYear"]);
 	$builder2->where('Email', $value); 
-   
+    $query2 = $builder2->get();
 
    	 	
    //IMF $rowcount = (int)$builder2->countAllResults(false);
-   $rowcount = $builder2->getNumRows();
+   $rowcount = $query2->getNumRows();
    
-   return false; // force the message
+  // return false; // force the message
 
- /*
+
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
 		 	// If ContactID is set we are assuming that this is an edit of an existing record
@@ -1491,7 +1491,7 @@ $builder->where('SecretKey', $secretKey);
 	}
 	return true;
 	
-*/	
+
 },'Someone has already invited that person since the email already exists on the guest list. Email addresses must be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
 
