@@ -1470,13 +1470,21 @@ $builder->where('SecretKey', $secretKey);
     $query2 = $builder2->get();
 
     $rowcount = $query2->getNumRows();
-
+    
+    //Add new record:
+    // if unique email $rowcount = 0; if previously used > 0 (supposed to be 1)
+    //update of a record
+    //  $rowcount = 1 if no change to email address
+    //  $rowcount = 0 if new (unique) email address
+    //  $rowcount = 1 if changed and another person has that email address already
+    
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
-		 	// If ContactID is set we are assuming that this is an edit of an existing record
-		 
-			if ( isset($fields['ContactID']) && ($fields['ContactID'] > 0))
-			{
+			// Need to check if the current ContactID is what was found
+			
+			$row2 = $query2->getRow();
+			if ( isset($fields['ContactID']) &&
+				($row2->ContactID == $fields['ContactID']) )	{
 				 return true;
 			}  
 			
