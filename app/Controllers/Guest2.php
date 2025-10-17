@@ -1449,11 +1449,9 @@ $builder->where('SecretKey', $secretKey);
   $text=trim($value);
  
   if (empty($text)) {
-  
-  return false;
-}
+  	return false;
+  }
   return true;
- 
 
 },'Work or Mobile phone number required. 请输入联系方式');
   
@@ -1496,7 +1494,9 @@ $builder->where('SecretKey', $secretKey);
 //	$crud->setRule('Email','checkEmail');
 	$crud->setRule('Company','checkCompany');
 //	$crud->setRule('Company','required');
+	$crud->setRule('Company','requiredWithout','CN_Company');
 	$crud->setRule('CN_Company','checkCompany');
+	$crud->setRule('CN_Company','requiredWithout','Company');
 	$crud->setRule('GivenName','checkFamilyName');
 	$crud->setRule('GivenName','required');
 	$crud->setRule('FamilyName','checkFamilyName');
