@@ -1323,7 +1323,7 @@ $builder->where('SecretKey', $secretKey);
 		'ToPrint'
 	]);
 	
-	$crud->readOnlyFields(['ContactID']);
+	//$crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
