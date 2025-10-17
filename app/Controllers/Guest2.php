@@ -19,7 +19,7 @@ define("EventYearChina", "China2025");// For selecting records only for this yea
 define("EventYearKorea", "Korea2025");// For selecting records only for this year's event.Remove later replace with session variable
 $session = session(); 
 
-class Guest extends BaseController {
+class Guest2 extends BaseController {
 
  
 function __construct()
@@ -1476,7 +1476,7 @@ $builder->where('SecretKey', $secretKey);
 		// Not sure why we made another pass at the guest list...
 		// Turning off for now as we simply have found a dupe already
 		 if($rowcount == 1){
-			   if($fields['ContactID'])
+			   if($fields['ContactID']>0)
 			 {
 				 return true;
 			 }  
