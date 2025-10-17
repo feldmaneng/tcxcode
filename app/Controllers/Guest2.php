@@ -1490,6 +1490,7 @@ $builder->where('SecretKey', $secretKey);
 				log_message ('debug',"fields ContactID is not set");
 			}
 			log_message ('debug', "row ContactID ".$row2->ContactID);
+			log_message ('debug', print_r($fields, true));
 			
 			if ( isset($fields['ContactID']) &&
 				($row2->ContactID == $fields['ContactID']) )	{
