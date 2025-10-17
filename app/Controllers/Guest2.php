@@ -1323,7 +1323,7 @@ $builder->where('SecretKey', $secretKey);
 		'ToPrint'
 	]);
 	
-	$crud->readOnlyFields(['ContactID']);
+	//IMF $crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
@@ -1469,12 +1469,7 @@ $builder->where('SecretKey', $secretKey);
 	$builder2->where('Email', $value); 
     $query2 = $builder2->get();
 
-   	 	
-   //IMF $rowcount = (int)$builder2->countAllResults(false);
    $rowcount = $query2->getNumRows();
-   
-  // return false; // force the message
-
 
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
@@ -1574,7 +1569,7 @@ $builder->where('SecretKey', $secretKey);
 
 	//test comment 8/25
 	//made contactID hidden 10/16
-	//$crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('ContactID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
