@@ -1589,7 +1589,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Phone','Work Phone 单位电话');
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
-	$crud->fieldType('ContactID', 'invisible'); // Use invisible instead of hidden to skip all validation
+	$crud->fieldType('ContactID', 'hidden'); // Use invisible instead of hidden to skip all validation
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
