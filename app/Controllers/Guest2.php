@@ -1484,7 +1484,7 @@ $builder->where('SecretKey', $secretKey);
 			
 			$row2 = $query2->getRow();
 			log_message ('critial', "rowcount ".$rowcount);
-			if ( isset($fields['ContactID'] ) {
+			if ( isset($fields['ContactID'] )) {
 				log_message ('debug',"fields ContactID ".$fields['ContactID']);
 			} else {
 				log_message ('debug',"fields ContactID is not set");
