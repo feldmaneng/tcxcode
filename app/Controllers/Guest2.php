@@ -1489,7 +1489,7 @@ $builder->where('SecretKey', $secretKey);
 
 	if ( isset($fields['ContactID']) ) {
 		log_message ('debug', "fields ContactID ".$fields['ContactID']);
-		if (isempty($fields['ContactID'])) {
+		if (empty($fields['ContactID'])) {
 			unset($fields['ContactID']);
 			log_message ('debug', "Unset fields ContactID");
 			log_message ('debug', print_r($fields, true));
