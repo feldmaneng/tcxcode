@@ -1323,7 +1323,7 @@ $builder->where('SecretKey', $secretKey);
 		'ToPrint'
 	]);
 	
-	$crud->readOnlyFields(['ContactID']);
+	//$crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
 	
 	/* $crud->readOnlyFields([
@@ -1490,12 +1490,15 @@ $builder->where('SecretKey', $secretKey);
 		log_message ('debug', "row ContactID is not set");
 	}
 	log_message ('debug', print_r($fields, true));
+
     
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
 			// Need to check if the current ContactID is what was found
 			
 			$row2 = $query2->getRow();
+			
+			log_message ('debug', "Row ".print_r($row2));
 			
 			if ( isset($fields['ContactID']) &&
 				($row2->ContactID == $fields['ContactID']) )	{
@@ -1594,7 +1597,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Phone','Work Phone 单位电话');
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
-	//$crud->fieldType('ContactID', 'hidden'); // Use invisible instead of hidden to skip all validation
+	$crud->fieldType('ContactID', 'hidden'); // Use invisible instead of hidden to skip all validation
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
