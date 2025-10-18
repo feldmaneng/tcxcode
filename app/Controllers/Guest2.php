@@ -1409,6 +1409,18 @@ $builder->where('SecretKey', $secretKey);
 }); */
 	
 	$crud->callbackAddForm(function ($data) {
+		if ( isset($data['ContactID']) ) {
+		log_message ('debug', "data ContactID ".$data['ContactID']);
+		if (empty($data['ContactID'])) {
+			unset($data['ContactID']);
+			log_message ('debug', "Unset data ContactID");
+			log_message ('debug', print_r($data, true));
+		}
+				
+	} else {
+				log_message ('debug', "data ContactID is not set");
+	}
+
 		$data['EventYear']=$_SESSION["EventYear"];
 		$data['InvitedByCompanyID']=$_SESSION["CompanyID"];
 		return $data;
@@ -1487,17 +1499,6 @@ $builder->where('SecretKey', $secretKey);
 
 	log_message ('debug', print_r($fields, true));
 
-	if ( isset($fields['ContactID']) ) {
-		log_message ('debug', "fields ContactID ".$fields['ContactID']);
-		if (empty($fields['ContactID'])) {
-			unset($fields['ContactID']);
-			log_message ('debug', "Unset fields ContactID");
-			log_message ('debug', print_r($fields, true));
-		}
-				
-	} else {
-				log_message ('debug', "fields ContactID is not set");
-	}
 
     
 	if ($rowcount != 0) {
