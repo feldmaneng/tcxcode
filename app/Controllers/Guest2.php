@@ -1479,12 +1479,16 @@ $builder->where('SecretKey', $secretKey);
     //  $rowcount = 1 if changed and another person has that email address already
     
 	log_message ('debug', "rowcount ".$rowcount);
-	if ( isset($fields['ContactID'] )) {
+	if ( isset($fields['ContactID']) ) {
 		log_message ('debug',"fields ContactID ".$fields['ContactID']);
 	} else {
 		log_message ('debug',"fields ContactID is not set");
 	}
-	log_message ('debug', "row ContactID ".$row2->ContactID);
+	if ( isset($row2->ContactID) ) {
+		log_message ('debug', "row ContactID ".$row2->ContactID);
+	} else {
+		log_message ('debug', "row ContactID is not set");
+	}
 	log_message ('debug', print_r($fields, true));
     
 	if ($rowcount != 0) {
