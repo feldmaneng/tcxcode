@@ -1487,6 +1487,18 @@ $builder->where('SecretKey', $secretKey);
 
 	log_message ('debug', print_r($fields, true));
 
+	if ( isset($fields['ContactID']) ) {
+		log_message ('debug', "fields ContactID ".$fields['ContactID']);
+		if (isempty($fields['ContactID'])) {
+			unset($fields['ContactID']);
+			log_message ('debug', "Unset fields ContactID");
+			log_message ('debug', print_r($fields, true));
+		}
+				
+	} else {
+				log_message ('debug', "fields ContactID is not set");
+	}
+
     
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
