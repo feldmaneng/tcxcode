@@ -1484,11 +1484,7 @@ $builder->where('SecretKey', $secretKey);
 	} else {
 		log_message ('debug',"fields ContactID is not set");
 	}
-	if ( isset($row2->ContactID) ) {
-		log_message ('debug', "row ContactID ".$row2->ContactID);
-	} else {
-		log_message ('debug', "row ContactID is not set");
-	}
+
 	log_message ('debug', print_r($fields, true));
 
     
@@ -1498,8 +1494,18 @@ $builder->where('SecretKey', $secretKey);
 			
 			$row2 = $query2->getRow();
 			
-			log_message ('debug', "Row ".print_r($row2));
+			if ( isset($row2->ContactID) ) {
+				log_message ('debug', "row ContactID ".$row2->ContactID);
+			} else {
+				log_message ('debug', "row ContactID is not set");
+			}
 			
+			if ( isset($row2->Email) ) {
+				log_message ('debug', "row Email ".$row2->Email);
+			} else {
+				log_message ('debug', "row Email is not set");
+			}
+
 			if ( isset($fields['ContactID']) &&
 				($row2->ContactID == $fields['ContactID']) )	{
 
