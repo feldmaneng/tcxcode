@@ -1642,7 +1642,7 @@ $builder->where('SecretKey', $secretKey);
     	} else {
     		$data['OldEmail'] = $data['Email'];
     	}
-	
+	});
 
 /*
 	$crud->callbackBeforeInsert(function ($stateParameters) {
