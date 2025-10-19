@@ -1625,7 +1625,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->callbackColumn('menu_title', function ($value, $row) {
     	if (empty($row->Email)) {
     		$row->OldEmail = "new_email";
-    	} else
+    	} else {
     		$row->OldEmail = $row->Email;
     	}
 	});
