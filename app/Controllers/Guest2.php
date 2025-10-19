@@ -1495,7 +1495,7 @@ $builder->where('SecretKey', $secretKey);
     //  $rowcount = 0 if new (unique) email address
     //  $rowcount = 1 if changed and another person has that email address already
     
-	if ($rowcount = 0) {
+	if ($rowcount == 0) {
 		// No one else has that email address
 		return true;
 	}
