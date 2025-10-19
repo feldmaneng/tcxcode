@@ -1300,7 +1300,7 @@ $builder->where('SecretKey', $secretKey);
 		'CN_Company'
 	]); 
 	$crud->fields([
-		'ContactID',
+		'OldEmail', //'ContactID',
 		'Email',
 		'InvitedByCompanyID',
 		'EventYear',
@@ -1325,6 +1325,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	//$crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
+	$crud-fieldType('OldEmail', 'virtual');
 	
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
@@ -1459,7 +1460,19 @@ $builder->where('SecretKey', $secretKey);
 
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
+	log_message ('debug', "rowcount ".$rowcount);
+	if ( isset($fields['ContactID']) ) {
+		log_message ('debug',"fields ContactID ".$fields['ContactID']);
+	} else {
+		log_message ('debug',"fields ContactID is not set");
+	}
 
+	log_message ('debug', print_r($fields, true));
+
+	// Email is unchanged
+	if ($fields['OldEmail'] === $fields['Email']) {
+		return true;
+	}
 	
 	$db2 = db_connect('registration');
 
@@ -1478,16 +1491,13 @@ $builder->where('SecretKey', $secretKey);
     //  $rowcount = 0 if new (unique) email address
     //  $rowcount = 1 if changed and another person has that email address already
     
-	log_message ('debug', "rowcount ".$rowcount);
-	if ( isset($fields['ContactID']) ) {
-		log_message ('debug',"fields ContactID ".$fields['ContactID']);
-	} else {
-		log_message ('debug',"fields ContactID is not set");
+	if ($rowcount = 0) {
+		// No one else has that email address
+		return true;
 	}
-
-	log_message ('debug', print_r($fields, true));
-
-
+	return false;
+	
+	/*
     
 	if ($rowcount != 0) {
 		if ($rowcount == 1) {
@@ -1518,7 +1528,7 @@ $builder->where('SecretKey', $secretKey);
 
 	}
 	return true;
-	
+	*/
 
 },'Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
 
@@ -1604,7 +1614,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Phone','Work Phone 单位电话');
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
-	$crud->fieldType('ContactID', 'hidden'); // Use invisible instead of hidden to skip all validation
+	//$crud->fieldType('ContactID', 'hidden'); // Use invisible instead of hidden to skip all validation
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
@@ -1612,7 +1622,17 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('ToPrint','hidden');
 	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
 	
-	//test comment 8/25
+	$crud->callbackBeforeInsert(function ($stateParameters) {
+    	$stateParameters->data['OldEmail'] = "new_email";
+    	return $stateParameters;
+	});
+	
+	$crud->callbackBeforeUpdae(function ($stateParameters) {
+    	$stateParameters->data['OldEmail'] = $stateParameters->data['Email'];
+    	return $stateParameters;
+	});
+
+
 	$crud->callbackAfterInsert(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
     return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
