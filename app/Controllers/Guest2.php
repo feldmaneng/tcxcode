@@ -1622,6 +1622,15 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('ToPrint','hidden');
 	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
 	
+	$crud->callbackColumn('menu_title', function ($value, $row) {
+    	if (empty($row->Email)) {
+    		$row->OldEmail = "new_email";
+    	} else
+    		$row->OldEmail = $row->Email;
+    	}
+	});
+
+/*
 	$crud->callbackBeforeInsert(function ($stateParameters) {
     	$stateParameters->data['OldEmail'] = "new_email";
     	return $stateParameters;
@@ -1631,7 +1640,7 @@ $builder->where('SecretKey', $secretKey);
     	$stateParameters->data['OldEmail'] = $stateParameters->data['Email'];
     	return $stateParameters;
 	});
-
+*/
 
 	$crud->callbackAfterInsert(function ($stateParameters) {
     $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
