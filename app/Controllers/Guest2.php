@@ -1325,7 +1325,7 @@ $builder->where('SecretKey', $secretKey);
 	
 	//$crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
-	$crud-fieldType('OldEmail', 'virtual');
+	$crud->fieldType('OldEmail', 'virtual');
 	
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
