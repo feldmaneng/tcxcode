@@ -1291,7 +1291,9 @@ $builder->where('SecretKey', $secretKey);
 	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
 
 	
-	$crud->columns(['Email',
+	$crud->columns([
+		'Email',
+		'OldEmail', 
 		'GivenName',
 		'FamilyName',
 		'NativeName',
@@ -1300,8 +1302,9 @@ $builder->where('SecretKey', $secretKey);
 		'CN_Company'
 	]); 
 	$crud->fields([
-		'OldEmail', //'ContactID',
+		//'ContactID',
 		'Email',
+		'OldEmail',
 		'InvitedByCompanyID',
 		'EventYear',
 		'GivenName',
