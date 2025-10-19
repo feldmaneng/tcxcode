@@ -1622,7 +1622,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('ToPrint','hidden');
 	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
 	
-	$crud->callbackColumn('menu_title', function ($value, $row) {
+	$crud->callbackColumn('OldEmail', function ($value, $row) {
     	if (empty($row->Email)) {
     		$row->OldEmail = "new_email";
     	} else {
