@@ -1329,6 +1329,7 @@ $builder->where('SecretKey', $secretKey);
 	//$crud->readOnlyFields(['ContactID']);
 	//$crud->fieldType('ContactID', 'invisible');
 	$crud->fieldType('OldEmail', 'virtual');
+	$crud->fieldTypeColumn('OldEmail','invisible');
 	
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
@@ -1624,7 +1625,8 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('Invited','hidden');
 	$crud->fieldType('ToPrint','hidden');
 	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
-	
+
+/*	
 	$crud->callbackColumn('OldEmail', function ($value, $row) {
     	if (empty($row->Email)) {
     		$row->OldEmail = "new_email";
@@ -1632,6 +1634,15 @@ $builder->where('SecretKey', $secretKey);
     		$row->OldEmail = $row->Email;
     	}
 	});
+*/
+	
+	$crud->callbackEditForm(function ($data) {
+	   	if (empty($data['Email'])) {
+    		$data['OldEmail'] = "new_email";
+    	} else {
+    		$data['OldEmail'] = $data['Email'];
+    	}
+	
 
 /*
 	$crud->callbackBeforeInsert(function ($stateParameters) {
