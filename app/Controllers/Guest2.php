@@ -1464,7 +1464,7 @@ $builder->where('SecretKey', $secretKey);
 
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
-	log_message ('debug', "rowcount ".$rowcount);
+
 	if ( isset($fields['ContactID']) ) {
 		log_message ('debug',"fields ContactID ".$fields['ContactID']);
 	} else {
@@ -1487,7 +1487,7 @@ $builder->where('SecretKey', $secretKey);
     $query2 = $builder2->get();
 
     $rowcount = $query2->getNumRows();
-    
+    log_message ('debug', "rowcount ".$rowcount);
     //Add new record:
     // if unique email $rowcount = 0; if previously used > 0 (supposed to be 1)
     //update of a record
