@@ -1627,7 +1627,7 @@ $builder->where('SecretKey', $secretKey);
     	return $stateParameters;
 	});
 	
-	$crud->callbackBeforeUpdae(function ($stateParameters) {
+	$crud->callbackBeforeUpdate(function ($stateParameters) {
     	$stateParameters->data['OldEmail'] = $stateParameters->data['Email'];
     	return $stateParameters;
 	});
