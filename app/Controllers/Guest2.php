@@ -1642,6 +1642,8 @@ $builder->where('SecretKey', $secretKey);
     	} else {
     		$data['OldEmail'] = $data['Email'];
     	}
+    	
+    	return $data;
 	});
 
 /*
