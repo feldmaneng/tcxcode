@@ -1497,7 +1497,7 @@ $crud->callbackBeforeUpdate(function ($stateParameters) {
 	
 	//$crud->setRule('Email','required');
 
-	$crud->requiredFields(['Email');
+	$crud->requiredFields(['Email']);
 	$crud->fieldType('Email', 'email');
 	$crud->setRule('Email','email');
 	//  $crud->setRule('Email','checkEmail');
