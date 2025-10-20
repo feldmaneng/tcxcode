@@ -1489,13 +1489,13 @@ function uniqueEmailcallback ($stateParameters) {
     return $stateParameters;
 };
 
-$crud->callbackBeforeUpdate($stateParameters) {
+$crud->callbackBeforeUpdate(function ($stateParameters) {
 	return $this->uniqueEmailcallback($stateParameters);
-}
+});
 
-$crud->callbackBeforeInsert($stateParameters) {
+$crud->callbackBeforeInsert(function ($stateParameters) {
 	return $this->uniqueEmailcallback($stateParameters);
-}
+});
 
 
 //	log_message ('debug', print_r($fields, true));
