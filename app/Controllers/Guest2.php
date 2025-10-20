@@ -1456,7 +1456,7 @@ $builder->where('SecretKey', $secretKey);
 */
 
 
-function uniqueEmailcallback ($stateParameters) {
+public function uniqueEmailcallback ($stateParameters) {
     $db2 = db_connect('registration');
     $builder2 = $db2->table('guests');
 
