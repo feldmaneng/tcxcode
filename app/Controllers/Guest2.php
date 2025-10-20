@@ -1464,13 +1464,14 @@ $builder->where('SecretKey', $secretKey);
 
 \Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
 {
-
+	/*
 	if ( isset($fields['ContactID']) ) {
 		log_message ('debug',"fields ContactID ".$fields['ContactID']);
 	} else {
 		log_message ('debug',"fields ContactID is not set");
 	}
-
+	*/
+	
 	log_message ('debug', print_r($fields, true));
 
 	// Email is unchanged
