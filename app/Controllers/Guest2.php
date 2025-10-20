@@ -1213,7 +1213,7 @@ public function uniqueEmailcallback ($stateParameters) {
 
     // Case 3: Email is unique → OK
     return $stateParameters;
-};
+}
 
 public function guest_list()
 {
