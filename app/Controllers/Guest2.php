@@ -1293,7 +1293,6 @@ $builder->where('SecretKey', $secretKey);
 	
 	$crud->columns([
 		'Email',
-		'OldEmail', 
 		'GivenName',
 		'FamilyName',
 		'NativeName',
@@ -1302,9 +1301,7 @@ $builder->where('SecretKey', $secretKey);
 		'CN_Company'
 	]); 
 	$crud->fields([
-		//'ContactID',
 		'Email',
-		'OldEmail',
 		'InvitedByCompanyID',
 		'EventYear',
 		'GivenName',
@@ -1326,11 +1323,7 @@ $builder->where('SecretKey', $secretKey);
 		'ToPrint'
 	]);
 	
-	//$crud->readOnlyFields(['ContactID']);
-	//$crud->fieldType('ContactID', 'invisible');
-	$crud->fieldType('OldEmail', 'virtual');
-	$crud->fieldTypeColumn('OldEmail','invisible');
-	
+
 	/* $crud->readOnlyFields([
 	'InvitedByCompanyID',
 	'EventYear']); */
@@ -1462,86 +1455,52 @@ $builder->where('SecretKey', $secretKey);
 },'Work or Mobile phone number required. 请输入联系方式');
 */
 
-\Valitron\Validator::addRule('checkEmail', function($field, $value, array $params, array $fields)
-{
-	/*
-	if ( isset($fields['ContactID']) ) {
-		log_message ('debug',"fields ContactID ".$fields['ContactID']);
-	} else {
-		log_message ('debug',"fields ContactID is not set");
-	}
-	*/
-	
-	log_message ('debug', print_r($fields, true));
+$crud->callbackBeforeUpdate(function ($stateParameters) {
 
-	// Email is unchanged
-	if ($fields['OldEmail'] === $fields['Email']) {
-		return true;
-	}
-	
-	$db2 = db_connect('registration');
+    $db2 = db_connect('registration');
+    $builder2 = $db2->table('guests');
 
-	$builder2 = $db2->table('guests');
-
-	$builder2->where('EventYear', $_SESSION["EventYear"]);
-	$builder2->where('Email', $value); 
+    $builder2->where('EventYear', $_SESSION["EventYear"]);
+    $builder2->where('Email', $stateParameters->data['Email']);
     $query2 = $builder2->get();
 
     $rowcount = $query2->getNumRows();
-    log_message ('debug', "rowcount ".$rowcount);
-    //Add new record:
-    // if unique email $rowcount = 0; if previously used > 0 (supposed to be 1)
-    //update of a record
-    //  $rowcount = 1 if no change to email address
-    //  $rowcount = 0 if new (unique) email address
-    //  $rowcount = 1 if changed and another person has that email address already
-    
-	if ($rowcount == 0) {
-		// No one else has that email address
-		return true;
-	}
-	return false;
-	
-	/*
-    
-	if ($rowcount != 0) {
-		if ($rowcount == 1) {
-			// Need to check if the current ContactID is what was found
-			
-			$row2 = $query2->getRow();
-			
-			if ( isset($row2->ContactID) ) {
-				log_message ('debug', "row ContactID ".$row2->ContactID);
-			} else {
-				log_message ('debug', "row ContactID is not set");
-			}
-			
-			if ( isset($row2->Email) ) {
-				log_message ('debug', "row Email ".$row2->Email);
-			} else {
-				log_message ('debug', "row Email is not set");
-			}
 
-			if ( isset($fields['ContactID']) &&
-				($row2->ContactID == $fields['ContactID']) )	{
+    log_message('debug', "callbackBeforeUpdate - rowcount: {$rowcount}");
 
-				 return true;
-			}  
-			
-		}
-		return false;
+    // If email already exists in DB
+    if ($rowcount != 0) {
+        $row2 = $query2->getRow();
+        log_message('debug', "Existing record ContactID: {$row2->ContactID}");
+        log_message('debug', "Current primaryKeyValue: {$stateParameters->primaryKeyValue}");
 
-	}
-	return true;
-	*/
+        // Case 1: Email belongs to the same ContactID being updated → OK
+        if ($rowcount == 1 && $row2->ContactID == $stateParameters->primaryKeyValue) {
+            return $stateParameters;
+        }
 
-},'Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique.该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。');
+       // Case 2: Email exists for another ContactID → Block update
+       $errorMessage = new \GroceryCrud\Core\Error\ErrorMessage();
+       return $errorMessage->setMessage("Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique. 该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。\n");
+
+    }
+
+    // Case 3: Email is unique → OK
+    return $stateParameters;
+});
+
+
+//	log_message ('debug', print_r($fields, true));
+
 
 
 	
-	$crud->setRule('Email','required');
+	//$crud->setRule('Email','required');
+
+	$crud->requiredFields(['Email');
+	$crud->fieldType('Email', 'email');
 	$crud->setRule('Email','email');
-	$crud->setRule('Email','checkEmail');
+	//  $crud->setRule('Email','checkEmail');
 	$crud->setRule('Company','requiredWithout','CN_Company');
 	$crud->setRule('CN_Company','requiredWithout','Company');
 	$crud->setRule('GivenName','requiredWithout','NativeName');
@@ -1627,47 +1586,16 @@ $builder->where('SecretKey', $secretKey);
 	$crud->fieldType('ToPrint','hidden');
 	$crud->fieldType('Related','dropdown',['0' =>'Guest','1'=> 'Staff']);
 
-/*	
-	$crud->callbackColumn('OldEmail', function ($value, $row) {
-    	if (empty($row->Email)) {
-    		$row->OldEmail = "new_email";
-    	} else {
-    		$row->OldEmail = $row->Email;
-    	}
-	});
-*/
-	
-	$crud->callbackEditForm(function ($data) {
-	   	if (empty($data['Email'])) {
-    		$data['OldEmail'] = "new_email";
-    	} else {
-    		$data['OldEmail'] = $data['Email'];
-    	}
-    	
-    	return $data;
-	});
-
-/*
-	$crud->callbackBeforeInsert(function ($stateParameters) {
-    	$stateParameters->data['OldEmail'] = "new_email";
-    	return $stateParameters;
-	});
-	
-	$crud->callbackBeforeUpdate(function ($stateParameters) {
-    	$stateParameters->data['OldEmail'] = $stateParameters->data['Email'];
-    	return $stateParameters;
-	});
-*/
 
 	$crud->callbackAfterInsert(function ($stateParameters) {
-    $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
-    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
-});
+    	$redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
+    	return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
+	});
 
 	$crud->callbackAfterDelete(function ($stateParameters) {
-    $redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
-    return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
-});
+    	$redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
+   	 	return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
+	});
 	//older comment
 	/* $crud->fieldType('hidden','ContactID');
 	$crud->fieldType('hidden','InvitedByCompanyID');
