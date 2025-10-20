@@ -1181,6 +1181,40 @@ $session->set($newdata);
 	//return $this->_example_output($output);
 	return $this->_one_company_output($output);     
 }
+
+public function uniqueEmailcallback ($stateParameters) {
+    $db2 = db_connect('registration');
+    $builder2 = $db2->table('guests');
+
+    $builder2->where('EventYear', $_SESSION["EventYear"]);
+    $builder2->where('Email', $stateParameters->data['Email']);
+    $query2 = $builder2->get();
+
+    $rowcount = $query2->getNumRows();
+
+    log_message('debug', "callbackBeforeUpdate - rowcount: {$rowcount}");
+
+    // If email already exists in DB
+    if ($rowcount != 0) {
+        $row2 = $query2->getRow();
+        log_message('debug', "Existing record ContactID: {$row2->ContactID}");
+        log_message('debug', "Current primaryKeyValue: {$stateParameters->primaryKeyValue}");
+
+        // Case 1: Email belongs to the same ContactID being updated → OK
+        if ($rowcount == 1 && $row2->ContactID == $stateParameters->primaryKeyValue) {
+            return $stateParameters;
+        }
+
+       // Case 2: Email exists for another ContactID → Block update
+       $errorMessage = new \GroceryCrud\Core\Error\ErrorMessage();
+       return $errorMessage->setMessage("Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique. 该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。\n");
+
+    }
+
+    // Case 3: Email is unique → OK
+    return $stateParameters;
+};
+
 public function guest_list()
 {
 	//https://www.testconxchina.org/ci.php/china/guest_list/?id=iwp093bczs
@@ -1456,38 +1490,7 @@ $builder->where('SecretKey', $secretKey);
 */
 
 
-public function uniqueEmailcallback ($stateParameters) {
-    $db2 = db_connect('registration');
-    $builder2 = $db2->table('guests');
 
-    $builder2->where('EventYear', $_SESSION["EventYear"]);
-    $builder2->where('Email', $stateParameters->data['Email']);
-    $query2 = $builder2->get();
-
-    $rowcount = $query2->getNumRows();
-
-    log_message('debug', "callbackBeforeUpdate - rowcount: {$rowcount}");
-
-    // If email already exists in DB
-    if ($rowcount != 0) {
-        $row2 = $query2->getRow();
-        log_message('debug', "Existing record ContactID: {$row2->ContactID}");
-        log_message('debug', "Current primaryKeyValue: {$stateParameters->primaryKeyValue}");
-
-        // Case 1: Email belongs to the same ContactID being updated → OK
-        if ($rowcount == 1 && $row2->ContactID == $stateParameters->primaryKeyValue) {
-            return $stateParameters;
-        }
-
-       // Case 2: Email exists for another ContactID → Block update
-       $errorMessage = new \GroceryCrud\Core\Error\ErrorMessage();
-       return $errorMessage->setMessage("Someone has already invited that person since the email already exists on the guest list. Email addresses MUST be unique. 该客户已被邀请，邮箱地址已出现在客户列表上。邮箱地址不能重复。\n");
-
-    }
-
-    // Case 3: Email is unique → OK
-    return $stateParameters;
-};
 
 $crud->callbackBeforeUpdate(function ($stateParameters) {
 	return $this->uniqueEmailcallback($stateParameters);
