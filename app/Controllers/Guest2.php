@@ -1487,14 +1487,14 @@ function uniqueEmailcallback ($stateParameters) {
 
     // Case 3: Email is unique → OK
     return $stateParameters;
-});
+};
 
-$crud->callbackBeforeUpdate(function uniqueEmailcallback($stateParameters) {
-	return $stateParameters;
+$crud->callbackBeforeUpdate($stateParameters) {
+	return $this->uniqueEmailcallback($stateParameters);
 }
 
-$crud->callbackBeforeInsert(function uniqueEmailcallback($stateParameters) {
-	return $stateParameters;
+$crud->callbackBeforeInsert($stateParameters) {
+	return $this->uniqueEmailcallback($stateParameters);
 }
 
 
