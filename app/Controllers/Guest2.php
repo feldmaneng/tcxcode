@@ -1455,8 +1455,8 @@ $builder->where('SecretKey', $secretKey);
 },'Work or Mobile phone number required. 请输入联系方式');
 */
 
-$crud->callbackBeforeUpdate(function ($stateParameters) {
 
+function uniqueEmailcallback ($stateParameters) {
     $db2 = db_connect('registration');
     $builder2 = $db2->table('guests');
 
@@ -1488,6 +1488,14 @@ $crud->callbackBeforeUpdate(function ($stateParameters) {
     // Case 3: Email is unique → OK
     return $stateParameters;
 });
+
+$crud->callbackBeforeUpdate(function uniqueEmailcallback($stateParameters) {
+	return $stateParameters;
+}
+
+$crud->callbackBeforeInsert(function uniqueEmailcallback($stateParameters) {
+	return $stateParameters;
+}
 
 
 //	log_message ('debug', print_r($fields, true));
