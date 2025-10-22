@@ -1417,44 +1417,16 @@ $builder->where('SecretKey', $secretKey);
 
  // valitron stuff here 8/25
 /*
-\Valitron\Validator::addRule('checkCompany', function($field, $value, array $params, array $fields) {
-  $text=trim($value);
-
-  if (empty($text)) {
-	  if (empty($fields['Company']) && empty($fields['CN_Company'])){
-		  return false;
-	  }
-  }
-
-  return true;
-  
-
-}, 'Use English or Chinese/Korean company name. 请使用英文公司名或中文公司名');
+'Use English or Chinese/Korean company name. 请使用英文公司名或中文公司名'
 
 
 
-\Valitron\Validator::addRule('checkFamilyName', function($field, $value, array $params, array $fields) {
-	$text=trim($value);
- 
-  if (empty($text)) {
-  
-  return false;
-}
-  return true;
-}, 'English Family (Last) or Chinese/Korean Name required. 请输入中文/英文姓');
+'English Family (Last) or Chinese/Korean Name required. 请输入中文/英文姓'
 */
 	
  
 /*
-\Valitron\Validator::addRule('checkPhone', function($field, $value, array $params, array $fields) {
-  $text=trim($value);
- 
-  if (empty($text)) {
-  	return false;
-  }
-  return true;
-
-},'Work or Mobile phone number required. 请输入联系方式');
+'Work or Mobile phone number required. 请输入联系方式'
 */
 
 $crud->callbackBeforeUpdate(function ($stateParameters) {
@@ -1521,12 +1493,12 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
 
 
 	
-	//$crud->setRule('Email','required');
+	
 
 	$crud->requiredFields(['Email']);
 	$crud->fieldType('Email', 'email');
 	$crud->setRule('Email','email');
-	//  $crud->setRule('Email','checkEmail');
+	
 	$crud->setRule('Company','requiredWithout','CN_Company');
 	$crud->setRule('CN_Company','requiredWithout','Company');
 	$crud->setRule('GivenName','requiredWithout','NativeName');
@@ -1535,13 +1507,7 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
 	$crud->setRule('GivenName','requiredWith','FamilyName');
 	$crud->setRule('FamilyName','requiredWith','GivenName');
 	
-//	$crud->setRule('GivenName','checkFamilyName');
-//	$crud->setRule('GivenName','required');
-//	$crud->setRule('FamilyName','checkFamilyName');
-//	$crud->setRule('FamilyName','required');
-//	$crud->setRule('NativeName','checkFamilyName');
-//	$crud->setRule('Phone','checkPhone');
-//	$crud->setRule('Mobile','checkPhone');
+
 	$crud->setRule('Phone','requiredWithout','Mobile');
 	$crud->setRule('Mobile','requiredWithout','Phone');
 	if( $_SESSION["EventYear"] == 'China2025'){
@@ -1622,34 +1588,7 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
     	$redirectResponse = new \GroceryCrud\Core\Redirect\RedirectResponse();
    	 	return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest2/guest_list/?id='.$_SESSION["SecretKey"]);
 	});
-	//older comment
-	/* $crud->fieldType('hidden','ContactID');
-	$crud->fieldType('hidden','InvitedByCompanyID');
-	$crud->fieldType('hidden','EventYear');
-	$crud->fieldType('hidden','BanquetCompanyID');
-	$crud->fieldType('hidden','Invited');
-	$crud->fieldType('hidden','ToPrint');  */
-	// if we've edited it or added it we should set it to print
 	
-	// Don't set so default update occurs $this->grocery_crud->field_type('Stamp','hidden');
-	
-	//No need to do this as a callback since can set value with hidden type immediately above
-	//$this->grocery_crud->callback_before_insert(array($this,'set_invited_by'));
-
-	// Force a refresh after a delete in case the number of guests falls below the guest 
-	// limit so the add button is shown again	
-	/* $crud->setLangString('delete_success_message',
-		 'Your data has been successfully deleted from the database.<br/>Please wait while you are redirecting to the list page.\\n已从数据库里成功删除您的数据。正在返回列表，请稍后
-		 <script type="text/javascript">
-		  window.location = "'.site_url(strtolower(__CLASS__).'/'.strtolower(__FUNCTION__)).'";
-		 </script>
-		 <div style="display:none">
-		 '
-   );  */
-	//$crud->setLanguagePath('/tcxcode/vendor/grocrey-crud/enterprise/src/GroceryCrud/i18n/');
-	//$crud->setLanguage('Spanish');
-	//$crud->setLanguage("english-chinese");
-	//test comment 8/25
 	if( $_SESSION["EventYear"] == 'China2025'){
 		$testconxevent = 'TestConX China 2025';
 	}
