@@ -17,6 +17,9 @@ class test extends BaseController
 
     public function testarray()
     {
+    
+    
+    /*
 			$db = \Config\Database::connect();
 			$builder = $db->table('attendance');
 			//$builder->distinct('ContactID');
@@ -25,9 +28,7 @@ class test extends BaseController
 			$row = $query->getRowArray();
 			$array = $row['ContactID'];
 			echo $array;
-			/* foreach ( $array as $alsorow){
-			echo $alsorow;
-			} */
+
 			
 		$array = array("snapple","tomato","pear");
 		
@@ -38,8 +39,13 @@ class test extends BaseController
 							
 		if(!in_array("apple",$array)){
 			echo "no apple;";
-							}
+			}
 							
+	*/
+	
+	echo $_SERVER['CI_ENVIRONMENT'];
+	
+	log_message('debug', "Debug message to be written");
 	}
 }
 
