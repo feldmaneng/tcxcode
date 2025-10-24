@@ -116,13 +116,11 @@ class GeneralCert extends BaseController {
 			//$FIRSTNAME=$results2[0]["GivenName"];
 			//$LASTNAME=$results2[0]["FamilyName"];
 			if(!empty($row2->Nickname)){
-				$FIRSTNAME=$row2->Nickname;
-			}
-			else{
-				$FIRSTNAME=$row2->GivenName;
+				$NICKNAME=$row2->Nickname;
 			}
 			
 			
+			$FIRSTNAME=$row2->GivenName;
 			$LASTNAME=$row2->FamilyName;
 			
 			$TITLE=$results[$n]["Title"];
@@ -144,8 +142,12 @@ class GeneralCert extends BaseController {
 					  $pdf->SetFont('times', '', 18);
 						$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, 87.5, $y+1.5*$z, true);
 						 $pdf->SetFont('times', '', 24);
-						 
-					   $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
+						 if(!empty($row2->Nickname)){
+							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
+						 }
+						 else{
+							$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
+						 }
 						$pdf->SetFont('times', '', 18);
 						if($SESSION == 'Poster' || $SESSION == 'Best Poster')
 						{
@@ -201,8 +203,12 @@ class GeneralCert extends BaseController {
 				  $pdf->SetFont('times', '', 18);
 					$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, $x, $y+1.5*$z, true);
 					 $pdf->SetFont('times', '', 24);
-					 
-				   $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					 if(!empty($row2->Nickname)){
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					 }
+					 else{
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					 }
 					$pdf->SetFont('times', '', 18);
 					if($SESSION == 'Poster' || $SESSION == 'Best Poster')
 					{
@@ -258,7 +264,12 @@ class GeneralCert extends BaseController {
 					$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, $x, $y+1.5*$z, true);
 					$pdf->SetFont('times', '', 24);
 					 
-					$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					if(!empty($row2->Nickname)){
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					 }
+					 else{
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+					 }
 					$pdf->SetFont('times', '', 18);
 					if($SESSION == 'Poster' || $SESSION == 'Best Poster')
 					{
