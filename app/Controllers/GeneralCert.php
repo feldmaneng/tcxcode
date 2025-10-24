@@ -265,7 +265,7 @@ class GeneralCert extends BaseController {
 					
 					$pdf->MultiCell(200, 25,$TITLE, 0, 'C', 0, 0, $x2, $y+5*$z, true);
 					$pdf->SetFont('times', '', 18);
-					$pdf->MultiCell(200, 25,"presented at TestConX Korea".$year." workshop \n ".$date, 0, 'C', 0, 0, $x2, $y+7*$z+5, true);
+					$pdf->MultiCell(200, 25,"presented at TestConX Korea ".$year." workshop \n ".$date, 0, 'C', 0, 0, $x2, $y+7*$z+5, true);
 					$style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)); 
 					$pdf->Line( $x3+15+4.4, 167,25.58+63+4.4, 167, $style = array() );
 					$pdf->Line( $x3+88+4.4, 167,25.58+136+4.4, 167, $style = array() );
