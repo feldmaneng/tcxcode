@@ -106,17 +106,25 @@ class GeneralCert extends BaseController {
 		$builder2 = $db->table('contacts');
 		$builder2 -> where('ContactID', $CONTACTID);
 		$query2 = $builder2->get();
-		$results2 = $query2->getResultArray();
-		echo $results[$n]["ContactID"];
+		//$results2 = $query2->getResultArray();
+		$row2 = $query2->getRow();
 		
-		echo $results2[$n]["GivenName"];
-		die();	
 			
     
 			
 			
-			$FIRSTNAME=$results2[$n]["GivenName"];
-			$LASTNAME=$results2[$n]["FamilyName"];
+			//$FIRSTNAME=$results2[0]["GivenName"];
+			//$LASTNAME=$results2[0]["FamilyName"];
+			if(!empty($row2->Nickname)){
+				$FIRSTNAME=$row2->Nickname;
+			}
+			else{
+				$FIRSTNAME=$row2->GivenName;
+			}
+			
+			
+			$LASTNAME=$row2->FamilyName;
+			
 			$TITLE=$results[$n]["Title"];
 			$SESSION=$results[$n]["Session"];
 
