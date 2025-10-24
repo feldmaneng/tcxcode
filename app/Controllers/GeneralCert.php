@@ -223,6 +223,8 @@ class GeneralCert extends BaseController {
 											
 					}
 				if($event == 'Korea'){
+					//for different fonts use cid0jp for japanese, use cid0kr for korean, use cid0ct for chinese
+					
 					//$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4r2.png', 5, 5, 287, 205, 'PNG', '', '',true,300, '', false, false, 0, false, false, false);
 					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/TestConXKoreaOrangeFrameA4Final.png', 0, 0,300,204, 'PNG', '', '',true,300, '', false, false, 0, false, false, true);
 					$x=102-2;
