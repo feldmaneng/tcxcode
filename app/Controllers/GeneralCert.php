@@ -107,7 +107,7 @@ class GeneralCert extends BaseController {
 		$builder2 -> where('ContactID', $CONTACTID);
 		$query2 = $builder2->get();
 		$results2 = $query2->getResultArray();
-			
+		echo $results[$n]["ContactID"];
 			
 			
     
