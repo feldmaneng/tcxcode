@@ -160,8 +160,9 @@ class GeneralCert extends BaseController {
 							 if($FIRSTNAME == $NICKNAME){
 								$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
 								}
+								else{
 							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
-							 
+								}
 						 }
 						 else{
 							$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
@@ -241,7 +242,9 @@ class GeneralCert extends BaseController {
 						  if($FIRSTNAME == $NICKNAME){
 							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 						  }
+						  else{
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+						  }
 					 }
 					 else{
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
@@ -319,7 +322,9 @@ class GeneralCert extends BaseController {
 						if($FIRSTNAME == $NICKNAME){
 							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 						  }
+						  else{
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+						  }
 					 }
 					 else{
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
