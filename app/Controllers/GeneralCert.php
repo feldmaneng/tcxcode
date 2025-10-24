@@ -142,6 +142,20 @@ class GeneralCert extends BaseController {
 					  $pdf->SetFont('times', '', 18);
 						$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, 87.5, $y+1.5*$z, true);
 						 $pdf->SetFont('times', '', 24);
+						 $length1 = strlen($FIRSTNAME);
+						 $length2 = strlen($LASTNAME);
+						 if(!empty($row2->Nickname)){
+							 $length3 = strlen($NICKNAME);
+							 $length = $length1 + $length2 + $length3;
+						 }
+						 else{
+							 $length = $length1 + $length2;
+						 }
+						 
+						 if($length > 18)
+						{
+						$pdf->SetFont('times', '', 20);
+						}
 						 if(!empty($row2->Nickname)){
 							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, 87.5, $y+2.5*$z, true);
 						 }
@@ -203,6 +217,22 @@ class GeneralCert extends BaseController {
 				  $pdf->SetFont('times', '', 18);
 					$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, $x, $y+1.5*$z, true);
 					 $pdf->SetFont('times', '', 24);
+					 
+					 $length1 = strlen($FIRSTNAME);
+						 $length2 = strlen($LASTNAME);
+						 if(!empty($row2->Nickname)){
+							 $length3 = strlen($NICKNAME);
+							 $length = $length1 + $length2 + $length3;
+						 }
+						 else{
+							 $length = $length1 + $length2;
+						 }
+						 
+						 if($length > 18)
+						{
+						$pdf->SetFont('times', '', 20);
+						}
+						
 					 if(!empty($row2->Nickname)){
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 					 }
@@ -263,7 +293,21 @@ class GeneralCert extends BaseController {
 					$pdf->SetFont('times', '', 18);
 					$pdf->MultiCell(100, 25,"This Certificate is Awarded to", 0, 'C', 0, 0, $x, $y+1.5*$z, true);
 					$pdf->SetFont('times', '', 24);
+					$length1 = strlen($FIRSTNAME);
+					 $length2 = strlen($LASTNAME);
+					 if(!empty($row2->Nickname)){
+						 $length3 = strlen($NICKNAME);
+						 $length = $length1 + $length2 + $length3;
+					 }
+					 else{
+						 $length = $length1 + $length2;
+					 }
 					 
+					 if($length > 18)
+					{
+						$pdf->SetFont('times', '', 20);
+					}
+						
 					if(!empty($row2->Nickname)){
 						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 					 }
