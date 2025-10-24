@@ -96,15 +96,25 @@ class GeneralCert extends BaseController {
 		
 		$pdf->AddPage('L');
 		
+		
 		for($i=1 ; $i <= $people ; $i++)
 			{
+				$n=$i-1;
 //this determines how many rows the sheet has
-
+		$CONTACTID=$results[$n]["ContactID"];
+		$db2 = \Config\Database::connect();
+		$builder2 = $db->table('contacts');
+		$builder2 -> where('ContactID', $CONTACTID);
+		$query2 = $builder2->get();
+		$results2 = $query2->getResultArray();
+			
+			
+			
     
-			$n=$i-1;
-
-			$FIRSTNAME=$results[$n]["GivenName"];
-			$LASTNAME=$results[$n]["FamilyName"];
+			
+			
+			$FIRSTNAME=$results2[$n]["GivenName"];
+			$LASTNAME=$results2[$n]["FamilyName"];
 			$TITLE=$results[$n]["Title"];
 			$SESSION=$results[$n]["Session"];
 
