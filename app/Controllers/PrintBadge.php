@@ -91,10 +91,11 @@ class PrintBadge extends BaseController
 			$session = session();
 
 			$id = $_POST["BadgeID"];
-			echo $id;
+			
 			
 			$eventYear = $_POST["eventYearID"];
-			echo $eventYear;
+			
+			
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
@@ -400,12 +401,12 @@ $pdf->IncludeJS($js);
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		echo test1;
+		
 		if($eventYear == "Korea2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 		}
-		echo test2;
+		
 		if($eventYear == "China2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreviewchina');
 		//return view('PrintView', ['errors' => []]);		
