@@ -91,6 +91,7 @@ class PrintBadge extends BaseController
 			$session = session();
 
 			$id = $_POST["BadgeID"];
+			echo $id;
 			$eventYear = $_POST["eventYearID"];
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
@@ -105,7 +106,7 @@ class PrintBadge extends BaseController
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
-			
+			print_r($results);
 			
 			if ($people != 1){
 				if($eventYear == "China2025"){
