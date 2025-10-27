@@ -107,10 +107,10 @@ class PrintBadge extends BaseController
 			
 			
 			if ($people != 1){
-				if($eventYear == "China2024"){
+				if($eventYear == "China2025"){
 				return view('PrintViewChinaError', ['errors' => []]);
 				}
-				if($eventYear == "Korea2024"){
+				if($eventYear == "Korea2025"){
 				return view('PrintViewKoreaError', ['errors' => []]);
 				}
 			}
@@ -128,10 +128,10 @@ class PrintBadge extends BaseController
 					$builder->update($data);
 			}
 			else{
-				if($eventYear == "China2024"){
+				if($eventYear == "China2025"){
 				return view('PrintViewChinaDuplicate', ['errors' => []]);
 				}
-				if($eventYear == "Korea2024"){
+				if($eventYear == "Korea2025"){
 				return view('PrintViewKoreaDuplicate', ['errors' => []]);
 				}
 				
@@ -266,10 +266,10 @@ class PrintBadge extends BaseController
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2024"){
+			if($EventYear == "Korea2025"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
-			else if($EventYear == "China2024"){
+			else if($EventYear == "China2025"){
 				$pdf->SetFont('cid0cs', '', 55,);
 			}
 			else{
@@ -396,11 +396,11 @@ $pdf->IncludeJS($js);
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
-		if($eventYear == "Korea2024"){
+		if($eventYear == "Korea2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 		}
-		if($eventYear == "China2024"){
+		if($eventYear == "China2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreviewchina');
 		//return view('PrintView', ['errors' => []]);		
 		}
