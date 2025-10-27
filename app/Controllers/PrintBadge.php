@@ -94,7 +94,7 @@ class PrintBadge extends BaseController
 			$eventYear = $_POST["eventYearID"];
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,ChineseName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			$builder->where('Email', $id);
@@ -165,9 +165,9 @@ class PrintBadge extends BaseController
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
-			if (!empty($results[$n]["ChineseName"])){
+			if (!empty($results[$n]["NativeName"])){
 				
-					$NameOnBadge=$results[$n]["ChineseName"];
+					$NameOnBadge=$results[$n]["NativeName"];
 			}	
 			else if (!empty($results[$n]["NameOnBadge"])){
 				
@@ -199,7 +199,7 @@ class PrintBadge extends BaseController
 				$Dinner=$results[$n]["Dinner"];
 				$type = $results[$n]["Type"];
 				$Email = $results[$n]["Email"];
-				$ChineseName = $results[$n]["ChineseName"];
+				$NativeName = $results[$n]["NativeName"];
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
