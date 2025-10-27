@@ -98,9 +98,10 @@ class PrintBadge extends BaseController
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			//$builder->where('Email', $id);
-			$builder->where('EventYear', $eventYear);
-			$builder->orwhere('ContactID',$id);
-			$builder->where('EventYear', $eventYear);
+			//$builder->where('EventYear', $eventYear);
+			//$builder->orwhere('ContactID',$id);
+			//$builder->where('EventYear', $eventYear);
+			$builder->where('ContactID',$id);
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
