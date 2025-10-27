@@ -109,7 +109,7 @@ class PrintBadge extends BaseController
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
-			print_r($results);
+			
 			
 			if ($people != 1){
 				if($eventYear == "China2025"){
