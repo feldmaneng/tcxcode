@@ -397,10 +397,12 @@ $pdf->IncludeJS($js);
 		//echo($pdf);
 		//return view('PrintView', ['errors' => []]);
 		//exit();	
+		echo test1;
 		if($eventYear == "Korea2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreview');
 		//return view('PrintView', ['errors' => []]);		
 		}
+		echo test2;
 		if($eventYear == "China2025"){
 		return redirect()->to('https://www.testconx.org/forms.php/PrintBadge/printpreviewchina');
 		//return view('PrintView', ['errors' => []]);		
