@@ -371,6 +371,7 @@ class PrintBadge extends BaseController
 				// QRCODE,H : QR-CODE Best error correction
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
+				$pdf->MultiCell(100,10,$ContactID, 0, 'L', 0, 0, 7,90, true);
 				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
 				
 					
