@@ -271,11 +271,16 @@ class PrintBadge extends BaseController
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2025"){
-			$pdf->SetFont('cid0kr', '', 55,);
-			}
-			else if($EventYear == "China2025"){
-				$pdf->SetFont('cid0cs', '', 55,);
+			if (!empty($results[$n]["NativeName"])){
+				if($EventYear == "Korea2025"){
+				$pdf->SetFont('cid0kr', '', 55,);
+				}
+				else if($EventYear == "China2025"){
+					$pdf->SetFont('cid0cs', '', 55,);
+				}
+				else{
+					$pdf->SetFont('helvetica', 'B', 55);
+				}
 			}
 			else{
 				$pdf->SetFont('helvetica', 'B', 55);
