@@ -2060,7 +2060,7 @@ exit();
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
 				 */
-				
+				$pdf->Ln(40);
 				//here is where we need the fonts
 				
 				// convert TTF font to TCPDF format and store it on the fonts folder
