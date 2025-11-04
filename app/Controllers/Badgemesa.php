@@ -2052,14 +2052,14 @@ exit();
 					$Tutorial="";
 					}
 					 */
-				$pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
+				/* $pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
 
 				$pdf->SetFont('stsongstdlight', 'B', 75);
 				$pdf->SetFillColor(255, 255, 255);
 				$pdf->SetTextColor(0,0,0);
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
-				
+				 */
 				
 				//here is where we need the fonts
 				
