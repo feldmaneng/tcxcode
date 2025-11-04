@@ -127,6 +127,9 @@ $routes->post('/badgemesa/BadgesMesaExhibitor', 'Badgemesa::BadgesMesaExhibitor'
 $routes->get('/badgemesa/Korea', 'Badgemesa::Korea');          
 $routes->post('/badgemesa/Korea', 'Badgemesa::Korea');
 
+$routes->get('/badgemesa/China', 'Badgemesa::China');          
+$routes->post('/badgemesa/China', 'Badgemesa::China');
+
 
 $routes->get('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');          
 $routes->post('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');
