@@ -2076,11 +2076,11 @@ exit();
 					$pdf->SetFont('cid0cs', '', 55,);
 				}
 				else{
-					$pdf->SetFont('helvetica', 'B', 55);
+					$pdf->SetFont('arial', 'B', 55);
 				}
 			}
 			else{
-				$pdf->SetFont('helvetica', 'B', 55);
+				$pdf->SetFont('arial', 'B', 55);
 			}
 				//$pdf->SetFont('helvetica', 'B', 55);
 				//$pdf->SetFont('stsongstdlight', '', 55);
@@ -2098,12 +2098,12 @@ exit();
 				
 			
 				//$pdf->Cell(0, 0,$CN_Company, 0, 1, 'C', 0, '', 1);
-				$pdf->SetFont('helvetica', 'B', 25);
+				$pdf->SetFont('arial', 'B', 25);
 				if(strlen($FamilyName)>8){
-				$pdf->SetFont('helvetica', 'B', 22);
+				$pdf->SetFont('arial', 'B', 22);
 				}
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
-				$pdf->SetFont('stsongstdlight', 'B', 25);
+				$pdf->SetFont('arial', 'B', 25);
 				if(strlen($Company)>12){
 				$pdf->SetFont('stsongstdlight', 'B', 17);
 				}
