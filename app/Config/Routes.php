@@ -124,6 +124,10 @@ $routes->post('/badgemesa/BadgesMesaBlankEXPO', 'Badgemesa::BadgesMesaBlankEXPO'
 $routes->get('/badgemesa/BadgesMesaExhibitor', 'Badgemesa::BadgesMesaExhibitor');          
 $routes->post('/badgemesa/BadgesMesaExhibitor', 'Badgemesa::BadgesMesaExhibitor');
 
+$routes->get('/badgemesa/Korea', 'Badgemesa::Korea');          
+$routes->post('/badgemesa/Korea', 'Badgemesa::Korea');
+
+
 $routes->get('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');          
 $routes->post('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');
 
@@ -194,6 +198,8 @@ $routes->post('/badgetest', 'Badgemesatest::index');
 
 $routes->get('/badgemesatest/test', 'Badgemesatest::test');          
 $routes->post('/badgemesatest/test', 'Badgemesatest::test');
+
+
 
 $routes->get('/testtcpdf', 'Badges\Tcpdfexample');        
 $routes->post('/testtcpdf', 'Badges\Tcpdfexample');
