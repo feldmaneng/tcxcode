@@ -1876,8 +1876,8 @@ exit();
 			
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-			InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			
 			$builder->where('EventYear', $eventYear);
