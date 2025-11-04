@@ -1755,7 +1755,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2024"){
+			if($EventYear == "Korea2025"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
 			else if($EventYear == "China2024"){
@@ -1985,7 +1985,7 @@ exit();
 				
 				
 				$GivenName=$results[$n]["GivenName"];
-				echo "<h1>".$GivenName."</h1>";
+				//echo "<h1>".$GivenName." ".$i."</h1>";
 				
 				
 				//$CN_Company=$results[$n]["CN_Company"];
@@ -2179,7 +2179,7 @@ exit();
 			 
 			 
 			 }
-		$pdf->Output('My-File-Name.pdf', 'I');
+		$pdf->Output('My-File-Name123.pdf', 'I');
 		//echo($pdf);		
 		exit();
 			
@@ -2211,7 +2211,7 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge('testconx','Mesa2025', FALSE,'Professional');
+	$this->Blankbadge('testconx','Korea2025', FALSE,'Professional');
 	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
