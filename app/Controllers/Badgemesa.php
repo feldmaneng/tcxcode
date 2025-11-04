@@ -1985,7 +1985,7 @@ exit();
 				
 				
 				$GivenName=$results[$n]["GivenName"];
-				echo "<h1>".$GivenName."</h1>";
+				//echo "<h1>".$GivenName." ".$i."</h1>";
 				
 				
 				//$CN_Company=$results[$n]["CN_Company"];
