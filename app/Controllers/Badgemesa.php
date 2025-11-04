@@ -1906,14 +1906,14 @@ exit();
 			
 			
 			
-			if ($people != 1){
+			/* if ($people != 1){
 				if($eventYear == "China2025"){
 				return view('PrintViewChinaError', ['errors' => []]);
 				}
 				if($eventYear == "Korea2025"){
 				return view('PrintViewKoreaError', ['errors' => []]);
 				}
-			}
+			} */
 				
 	// $height = '158.75';
 	// 	$width = '107.95';
