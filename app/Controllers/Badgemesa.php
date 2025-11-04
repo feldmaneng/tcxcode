@@ -1870,7 +1870,7 @@ exit();
 	  }		
 
 
-		function Korea($eventYear = 'Korea2025')
+		function Korea($eventYear = 'China2025')
 		{
 			
 			
