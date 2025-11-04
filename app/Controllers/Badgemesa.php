@@ -1873,7 +1873,7 @@ exit();
 		function Korea($eventYear = 'Korea2025')
 		{
 			
-			
+			ob_clean();
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
