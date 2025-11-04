@@ -1870,7 +1870,7 @@ exit();
 	  }		
 
 
-		function Korea($eventyear = 'Korea2025')
+		function Korea($eventYear = 'Korea2025')
 		{
 			
 			
@@ -1880,7 +1880,7 @@ exit();
 			InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 			
 			
-			$builder->where('EventYear', $eventyear);
+			$builder->where('EventYear', $eventYear);
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
