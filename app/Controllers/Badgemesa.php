@@ -1873,6 +1873,10 @@ exit();
 
 		function Korea($eventYear = 'Korea2025')
 		{
+			/* logic 
+			native name for that country and event
+			name on badge
+			given name */
 			
 			
 			$db = \Config\Database::connect('registration');
@@ -2533,7 +2537,7 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge('testconx','Korea2025', FALSE,'Professional');
+	$this->Blankbadge('testconx','Mesa2025', FALSE,'Professional');
 	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
