@@ -1871,7 +1871,7 @@ exit();
 	  }		
 
 
-		function Korea($eventYear = 'Korea2025')
+		function Asia($eventYear = 'Korea2025')
 		{
 			/* logic 
 			native name for that country and event
@@ -1882,7 +1882,7 @@ exit();
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
 			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
+	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime,Type');
 			
 			
 			$builder->where('EventYear', $eventYear);
@@ -2007,6 +2007,8 @@ exit();
 				$type = $results[$n]["Type"];
 				$Email = $results[$n]["Email"];
 				$NativeName = $results[$n]["NativeName"];
+				$Type = $results[$n]["Type"];
+				
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
@@ -2193,7 +2195,7 @@ exit();
 			
 		}
 		
-		function China($eventYear = 'China2025')
+		function Chinax($eventYear = 'China2025')
 		{
 			
 			
@@ -2517,6 +2519,15 @@ exit();
 function BadgesMesaProfessional () {
 	$this->Testbadge("testconx","Mesa2024", TRUE,"Professional");
 }
+
+function Korea () {
+	$this->Asia("Korea2025");
+}
+
+function China () {
+	$this->Asia("China2025");
+}
+
 function BadgesMesaExhibitor () {
 	$this->Testbadge("testconx","Mesa2024", True,"Exhibitor");
 }
