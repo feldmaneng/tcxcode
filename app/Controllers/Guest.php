@@ -333,20 +333,22 @@ public function Guestcrudkorea()
 		$crud = $this->_getGroceryCrudEnterprise('registration');
 
         $crud->setCsrfTokenName(csrf_token());
-       $crud->setCsrfTokenValue(csrf_hash());
+		$crud->setCsrfTokenValue(csrf_hash());
 			
-	$crud->setTable('guests');
-   
-	$crud->where(['guests.EventYear' => EventYearKorea]);
-   		
+		$crud->setTable('guests');
+	   
+		$crud->where(['guests.EventYear' => EventYearKorea]);
+			
+			
 		
-	
-	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->setUniqueId('korea_2025_guest11');
-	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-    			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
-		});
+		$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+		$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+		$crud->setUniqueId('korea_2025_guest12');
+		
+		$crud->fieldType('Type', 'dropdown', ['EXPO' => 'Option 1', 'Professional' => 'Option 2']);
+		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
+					return site_url('/Guest/TestConXsingle/') . $row->ContactID;
+			});
 
 	$output = $crud->render();
 
@@ -411,9 +413,10 @@ public function Guestcrudchina()
    		
 		
 	
-	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->setUniqueId('china_2025_guest11');
+	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->setUniqueId('china_2025_guest12');
+	$crud->fieldType('Type', 'dropdown', ['EXPO' => 'Option 1', 'Professional' => 'Option 2']);
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
 		});
