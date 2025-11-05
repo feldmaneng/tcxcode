@@ -2177,7 +2177,10 @@ exit();
 				
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
 				$pdf->SetFont('helvetica', '', 32);
-				$pdf->MultiCell(100,30,'EXPO', 0, 'L', 0, 0, 60,99, true);
+				if($Type == 'EXPO'){
+					$pdf->MultiCell(100,30,'EXPO', 0, 'L', 0, 0, 60,99, true);
+				}
+				
 				$pdf->SetFont('helvetica', '', 8);
 				$pdf->MultiCell(100,3,$ContactID, 0, 'L', 0, 0, 9,107, true);
 				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
