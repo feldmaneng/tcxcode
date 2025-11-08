@@ -62,7 +62,7 @@ function TestConXsingle($graphics = TRUE)
 				$db  = \Config\Database::connect('registration');
 				$builder = $db->table('guests');
 				$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,NativeName');
+				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,NativeName,Type');
 				
 				$builder->where('ContactID', $id);
 				
@@ -145,7 +145,7 @@ function TestConXsingle($graphics = TRUE)
 				$Control=$results[$n]["Control"];
 				$Message=$results[$n]["Message"];
 				$Dinner=$results[$n]["Dinner"];
-				$type = $results[$n]["Type"];
+				$Type = $results[$n]["Type"];
 				$Email = $results[$n]["Email"];
 				
 				
@@ -221,10 +221,11 @@ function TestConXsingle($graphics = TRUE)
 				
 				
 				
-				if($type=="EXPOtiny"){
-				$pdf->SetFont('helvetica', '', 40);
-				$pdf->MultiCell(45, 20,"EXPO", 0, 'L', 0, 0, 45,120, true);
-				//$pdf->Rect(45, 123, 80, 30, 'F',array(), array(250,174,2));
+				
+				}
+				$pdf->SetFont('helvetica', '', 32);
+				if($Type == 'EXPO'){
+					$pdf->MultiCell(100,30,'EXPO', 0, 'L', 0, 0, 60,99, true);
 				}
 				
 				$pdf->SetFont('helvetica', '', 8);
@@ -255,6 +256,12 @@ function TestConXsingle($graphics = TRUE)
 				
 				//$code="3880";
 				// QRCODE,H : QR-CODE Best error correction
+				$pdf->SetFont('helvetica', '', 32);
+				if($Type == 'EXPO'){
+					$pdf->MultiCell(100,30,'EXPO', 0, 'L', 0, 0, 60,99, true);
+				}
+				$pdf->SetFont('helvetica', '', 8);
+				$pdf->MultiCell(100,3,$ContactID, 0, 'L', 0, 0, 9,107, true);
 				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 115, 30, 30, $style, 'N');
 				
 					
