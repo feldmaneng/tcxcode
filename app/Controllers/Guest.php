@@ -130,7 +130,7 @@ function TestConXsingle($graphics = TRUE)
 				
 				
 				$GivenName=$results[$n]["GivenName"];
-				echo "<h1>".$GivenName."</h1>";
+				//echo "<h1>".$GivenName."</h1>";
 				
 				
 				//$CN_Company=$results[$n]["CN_Company"];
@@ -178,13 +178,13 @@ function TestConXsingle($graphics = TRUE)
 				} */
 				
 				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
-					  $pdf->SetFont('cid0kr', '', 55,);
+					  $pdf->SetFont('cid0kr','B',55,);
 				  }
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
-					$pdf->SetFont('cid0cs', '', 55,);
+					$pdf->SetFont('cid0cs','B',55,);
 				}
 				else{
-					$pdf->SetFont('helvetica', 'B', 55);
+					$pdf->SetFont('helvetica','B',55);
 				}
 				
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
@@ -205,9 +205,9 @@ function TestConXsingle($graphics = TRUE)
 					}
 				  }
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $Company)){
-					$pdf->SetFont('cid0cs', '', 25,);
+					$pdf->SetFont('cid0cs', 'B', 25,);
 					if(strlen($Company)>12){
-					$pdf->SetFont('cid0cs', '', 17);
+					$pdf->SetFont('cid0cs', 'B', 17);
 					}
 				}
 				else{

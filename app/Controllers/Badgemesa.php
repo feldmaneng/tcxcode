@@ -2032,7 +2032,7 @@ exit();
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if (!empty($results[$n]["NativeName"])){
+			/* if (!empty($results[$n]["NativeName"])){
 				if($EventYear == "Korea2025"){
 				$pdf->SetFont('cid0kr', '', 55,);
 				}
@@ -2045,7 +2045,20 @@ exit();
 			}
 			else{
 				$pdf->SetFont('helvetica', 'B', 55);
-			}
+			} */
+			
+			
+			
+			
+			if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
+					  $pdf->SetFont('cid0kr','',55,);
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0cs','',55,);
+				}
+				else{
+					$pdf->SetFont('helvetica','B',55);
+				}
 				//$pdf->SetFont('helvetica', 'B', 55);
 				//$pdf->SetFont('stsongstdlight', '', 55);
 				//$pdf->SetFont('cid0jp', '', 40);
@@ -2069,15 +2082,15 @@ exit();
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
 				
 				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $Company)){
-					  $pdf->SetFont('cid0kr', 'B', 25,);
+					  $pdf->SetFont('cid0kr', '', 25,);
 					  if(strlen($Company)>12){
-					$pdf->SetFont('cid0kr', 'B', 17);
+					$pdf->SetFont('cid0kr', '', 17);
 					}
 				  }
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $Company)){
-					$pdf->SetFont('cid0cs', 'B', 25,);
+					$pdf->SetFont('cid0cs', '', 25,);
 					if(strlen($Company)>12){
-					$pdf->SetFont('cid0cs', 'B', 17);
+					$pdf->SetFont('cid0cs', '', 17);
 				}
 				}
 				else{
