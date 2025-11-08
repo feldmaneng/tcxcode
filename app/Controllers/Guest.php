@@ -186,26 +186,41 @@ function TestConXsingle($graphics = TRUE)
 				else{
 					$pdf->SetFont('helvetica', 'B', 55);
 				}
-				//$pdf->SetFont('helvetica', 'B', 55);
-				//$pdf->SetFont('stsongstdlight', '', 55);
-				//$pdf->SetFont('cid0jp', '', 40);
-				//你好
-				//$txt = 'こんにちは世界';
-				//$txt = '你好';
-				//$pdf->Write(0, $txt, '', 0, 'L', true, 0, false, false, 0);
+				
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 			
 			
-				//$pdf->Cell(0, 0,$CN_Company, 0, 1, 'C', 0, '', 1);
+				
 				$pdf->SetFont('helvetica', 'B', 25);
 				if(strlen($FamilyName)>8){
 				$pdf->SetFont('helvetica', 'B', 22);
 				}
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
 				$pdf->SetFont('helvetica', 'B', 25);
-				if(strlen($Company)>12){
-				$pdf->SetFont('helvetica', 'B', 17);
+				
+				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $Company)){
+					  $pdf->SetFont('cid0kr', 'B', 25,);
+					  if(strlen($Company)>12){
+					$pdf->SetFont('cid0kr', 'B', 17);
+					}
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $Company)){
+					$pdf->SetFont('cid0cs', 'B', 25,);
+					if(strlen($Company)>12){
+					$pdf->SetFont('cid0cs', 'B', 17);
 				}
+				}
+				else{
+					
+					$pdf->SetFont('helvetica', 'B', 25);
+					if(strlen($Company)>12){
+					$pdf->SetFont('helvetica', 'B', 17);
+				}
+				}
+				
+				/* if(strlen($Company)>12){
+				$pdf->SetFont('helvetica', 'B', 17);
+				} */
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
 				
