@@ -205,9 +205,9 @@ function TestConXsingle($graphics = TRUE)
 					}
 				  }
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $Company)){
-					$pdf->SetFont('cid0cs', 'B', 25,);
+					$pdf->SetFont('cid0cs', '', 25,);
 					if(strlen($Company)>12){
-					$pdf->SetFont('cid0cs', 'B', 17);
+					$pdf->SetFont('cid0cs', '', 17);
 					}
 				}
 				else{
