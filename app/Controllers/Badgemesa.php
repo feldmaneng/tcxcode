@@ -1972,18 +1972,21 @@ exit();
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
-			if (!empty($results[$n]["NativeName"])){
+				$NativeName0 = trim($results[$n]["NativeName"]);
+				$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
+				$GivenName0 = trim($results[$n]["GivenName"]);
+			if (!empty($NativeName0)){
 				
-					$NameOnBadge=$results[$n]["NativeName"];
+					$NameOnBadge=$NativeName0;
 			}	
-			else if (!empty($results[$n]["NameOnBadge"])){
+			else if (!empty($NameOnBadge0)){
 				
-					$NameOnBadge=$results[$n]["NameOnBadge"];
-					
+					$NameOnBadge=$NameOnBadge0;
+						
 			}
 			else {
 				
-				$NameOnBadge=$results[$n]["GivenName"];
+				$NameOnBadge=$GivenName0;
 				
 			}
 			
@@ -2018,55 +2021,9 @@ exit();
 				else{
 				$HardCopy="0";
 				}
-				if($EventYear == "tinyml2024"){
-					if($Tutorial==1){
-					$Tutorial="SYMPOSIUM";
-					}
-					else{
-					$Tutorial="";
-					}
-					}
+				
 					
-				if($EventYear == "tinyml2024"){
-					if($Dinner==1){
-					$Dinnertext="Dinner";
-					}
-					else{
-					$Dinnertext="";
-					}
-					}
-				if($EventYear == "emea2024"){
-					if($Tutorial==1){
-					$Tutorial="Social";
-					}
-					else{
-					$Tutorial="";
-					}
-					}	
-				if($EventYear == "emea2024"){
-					if($Dinner==1){
-					$Dinnertext="Dinner";
-					}
-					else{
-					$Dinnertext="";
-					}
-					}
 					
-					/* if($Tutorial==1){
-					$Tutorial="TUTORIAL";
-					}
-					else{
-					$Tutorial="";
-					}
-					 */
-				/* $pdf->Button('print', 30, 10, 'Print Badge', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 255), 'strokeColor'=>array(0, 0, 0)));
-
-				$pdf->SetFont('stsongstdlight', 'B', 75);
-				$pdf->SetFillColor(255, 255, 255);
-				$pdf->SetTextColor(0,0,0);
-				$pdf->SetFont('helvetica', 'B', 75);
-				$pdf->Ln(40);
-				 */
 				$pdf->Ln(40);
 				//here is where we need the fonts
 				
@@ -2110,6 +2067,29 @@ exit();
 				$pdf->SetFont('helvetica', 'B', 22);
 				}
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
+				
+				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $Company)){
+					  $pdf->SetFont('cid0kr', 'B', 25,);
+					  if(strlen($Company)>12){
+					$pdf->SetFont('cid0kr', 'B', 17);
+					}
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $Company)){
+					$pdf->SetFont('cid0cs', 'B', 25,);
+					if(strlen($Company)>12){
+					$pdf->SetFont('cid0cs', 'B', 17);
+				}
+				}
+				else{
+					
+					$pdf->SetFont('helvetica', 'B', 25);
+					if(strlen($Company)>12){
+					$pdf->SetFont('helvetica', 'B', 17);
+				}
+				}
+				
+				
+				
 				$pdf->SetFont('helvetica', 'B', 25);
 				if(strlen($Company)>12){
 				$pdf->SetFont('helvetica', 'B', 17);
