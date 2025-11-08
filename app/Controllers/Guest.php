@@ -62,7 +62,7 @@ function TestConXsingle($graphics = TRUE)
 				$db  = \Config\Database::connect('registration');
 				$builder = $db->table('guests');
 				$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner','NativeName');
+				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,NativeName');
 				
 				$builder->where('ContactID', $id);
 				
