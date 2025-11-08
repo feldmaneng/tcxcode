@@ -198,7 +198,7 @@ function TestConXsingle($graphics = TRUE)
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
 				$pdf->SetFont('helvetica', 'B', 25);
 				
-				/* if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $Company)){
+				 if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $Company)){
 					  $pdf->SetFont('cid0kr', 'B', 25,);
 					  if(strlen($Company)>12){
 					$pdf->SetFont('cid0kr', 'B', 17);
@@ -216,7 +216,7 @@ function TestConXsingle($graphics = TRUE)
 					if(strlen($Company)>12){
 					$pdf->SetFont('helvetica', 'B', 17);
 					}
-				} */
+				} 
 				
 				/* if(strlen($Company)>12){
 				$pdf->SetFont('helvetica', 'B', 17);
