@@ -111,11 +111,11 @@ function TestConXsingle($graphics = TRUE)
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
-			if (!empty($NativeName0){
+			if (!empty($NativeName0)){
 				
 					$NameOnBadge=$NativeName0;
 			}	
-			else if (!empty($NameOnBadge0){
+			else if (!empty($NameOnBadge0)){
 				
 					$NameOnBadge=$NameOnBadge0;
 						
