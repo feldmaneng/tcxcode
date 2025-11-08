@@ -104,13 +104,14 @@ function TestConXsingle($graphics = TRUE)
 				$pages=0;
 				
 				
-		$NativeName0 = trim($results[$n]["NativeName"]);
-		$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
-		$GivenName0 = trim($results[$n]["GivenName"]);
+		
 		for($i=1; $i<=$people; $i++){ 
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
+				$NativeName0 = trim($results[$n]["NativeName"]);
+				$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
+				$GivenName0 = trim($results[$n]["GivenName"]);
 			if (!empty($NativeName0)){
 				
 					$NameOnBadge=$NativeName0;
