@@ -237,7 +237,7 @@ function TestConXsingle($graphics = TRUE)
 				
 				
 				
-				}
+				
 				$pdf->SetFont('helvetica', '', 32);
 				if($Type == 'EXPO'){
 					$pdf->MultiCell(100,30,'EXPO', 0, 'L', 0, 0, 60,99, true);
