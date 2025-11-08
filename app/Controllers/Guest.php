@@ -62,7 +62,7 @@ function TestConXsingle($graphics = TRUE)
 				$db  = \Config\Database::connect('registration');
 				$builder = $db->table('guests');
 				$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
-				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner','NativeName');
 				
 				$builder->where('ContactID', $id);
 				
@@ -103,22 +103,26 @@ function TestConXsingle($graphics = TRUE)
 				$filler=0;
 				$pages=0;
 				
+				
+		$NativeName0 = trim($results[$n]["NativeName"]);
+		$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
+		$GivenName0 = trim($results[$n]["GivenName"]);
 		for($i=1; $i<=$people; $i++){ 
 				$n = $i-1;
 				// Define what special labels go on the badges
 				$label ="0";
-			if (!empty($results[$n]["ChineseName"])){
+			if (!empty($NativeName0){
 				
-					$NameOnBadge=$results[$n]["ChineseName"];
+					$NameOnBadge=$NativeName0;
 			}	
-			else if (!empty($results[$n]["NameOnBadge"])){
+			else if (!empty($NameOnBadge0){
 				
-					$NameOnBadge=$results[$n]["NameOnBadge"];
+					$NameOnBadge=$NameOnBadge0;
 						
 			}
 			else {
 				
-				$NameOnBadge=$results[$n]["GivenName"];
+				$NameOnBadge=$GivenName0;
 				
 			}
 				
@@ -129,6 +133,7 @@ function TestConXsingle($graphics = TRUE)
 				
 				
 				//$CN_Company=$results[$n]["CN_Company"];
+				
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
@@ -151,39 +156,7 @@ function TestConXsingle($graphics = TRUE)
 				else{
 				$HardCopy="0";
 				}
-				if($EventYear == "tinyml2024"){
-					if($Tutorial==1){
-					$Tutorial="SYMPOSIUM";
-					}
-					else{
-					$Tutorial="";
-					}
-					}
-					
-				if($EventYear == "tinyml2024"){
-					if($Dinner==1){
-					$Dinnertext="Dinner";
-					}
-					else{
-					$Dinnertext="";
-					}
-					}
-				if($EventYear == "emea2024"){
-					if($Tutorial==1){
-					$Tutorial="Social";
-					}
-					else{
-					$Tutorial="";
-					}
-					}	
-				if($EventYear == "emea2024"){
-					if($Dinner==1){
-					$Dinnertext="Dinner";
-					}
-					else{
-					$Dinnertext="";
-					}
-					}
+				
 					
 					/* if($Tutorial==1){
 					$Tutorial="TUTORIAL";
@@ -199,15 +172,19 @@ function TestConXsingle($graphics = TRUE)
 				$pdf->SetTextColor(0,0,0);
 				$pdf->SetFont('helvetica', 'B', 75);
 				$pdf->Ln(40);
-					if($EventYear == "Korea2025"){
-			$pdf->SetFont('cid0kr', '', 55,);
-			}
-			else if($EventYear == "China2025"){
-				$pdf->SetFont('cid0cs', '', 55,);
-			}
-			else{
-				$pdf->SetFont('helvetica', 'B', 55);
-			}
+				/* if (preg_match('/[\x{3040}-\x{30FF}]/u', $text)) {
+						return 'Japanese';
+				} */
+				
+				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
+					  $pdf->SetFont('cid0kr', '', 55,);
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0cs', '', 55,);
+				}
+				else{
+					$pdf->SetFont('helvetica', 'B', 55);
+				}
 				//$pdf->SetFont('helvetica', 'B', 55);
 				//$pdf->SetFont('stsongstdlight', '', 55);
 				//$pdf->SetFont('cid0jp', '', 40);
