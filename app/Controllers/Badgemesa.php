@@ -2103,10 +2103,7 @@ exit();
 				
 				
 				
-				$pdf->SetFont('helvetica', 'B', 25);
-				if(strlen($Company)>12){
-				$pdf->SetFont('helvetica', 'B', 17);
-				}
+				
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
 				
