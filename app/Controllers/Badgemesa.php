@@ -1886,6 +1886,8 @@ exit();
 			
 			
 			$builder->where('EventYear', $eventYear);
+			$builder->where('ToPrint', 'Yes');
+			$builder->orderBy('FamilyName ASC, GivenName ASC');
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
