@@ -1986,7 +1986,7 @@ exit();
 				
 				$korean = 0;
 			}
-			if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge0)){
+			if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NativeName0)){
 				$chinese = 1;
 			}
 			else{
