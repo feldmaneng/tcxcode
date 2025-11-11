@@ -1978,21 +1978,79 @@ exit();
 				$NativeName0 = trim($results[$n]["NativeName"]);
 				$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
 				$GivenName0 = trim($results[$n]["GivenName"]);
-			if (!empty($NativeName0)){
 				
-					$NameOnBadge=$NativeName0;
-			}	
+			if(preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NativeName0)){
+				$korean = 1;
+			}
+			else{
+				
+				$korean = 0;
+			}
+			if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
+				$chinese = 1;
+			}
+			else{
+				
+				$chinese = 0;
+			}
+			if ( $EventYear = "China2025" && $chinese){
+					
+				
+				if (!empty($NativeName0)){
+					
+						$NameOnBadge=$NativeName0;
+				}	
+				else if (!empty($NameOnBadge0)){
+					
+						$NameOnBadge=$NameOnBadge0;
+							
+				}
+				else {
+					
+					$NameOnBadge=$GivenName0;
+					
+				}
+			}
 			else if (!empty($NameOnBadge0)){
+					
+						$NameOnBadge=$NameOnBadge0;
+							
+				}
+				else {
+					
+					$NameOnBadge=$GivenName0;
+					
+				}
 				
-					$NameOnBadge=$NameOnBadge0;
-						
-			}
-			else {
-				
-				$NameOnBadge=$GivenName0;
-				
-			}
 			
+			if ( $EventYear = "Korea2025" && $korean){
+					
+				
+				if (!empty($NativeName0)){
+					
+						$NameOnBadge=$NativeName0;
+				}	
+				else if (!empty($NameOnBadge0)){
+					
+						$NameOnBadge=$NameOnBadge0;
+							
+				}
+				else {
+					
+					$NameOnBadge=$GivenName0;
+					
+				}
+			}
+			else if (!empty($NameOnBadge0)){
+					
+						$NameOnBadge=$NameOnBadge0;
+							
+				}
+				else {
+					
+					$NameOnBadge=$GivenName0;
+					
+				}
 				
 				
 				$GivenName=$results[$n]["GivenName"];
@@ -2018,6 +2076,10 @@ exit();
 				
 				$pdf->AddPage('P',$pageLayout);
 				$Dinnertext="";
+				
+				
+				
+				
 				if($HardCopy==1){
 				$HardCopy="HC";
 				}
