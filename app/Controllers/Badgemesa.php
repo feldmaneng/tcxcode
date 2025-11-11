@@ -1979,7 +1979,7 @@ exit();
 				$NameOnBadge0 = trim($results[$n]["NameOnBadge"]);
 				$GivenName0 = trim($results[$n]["GivenName"]);
 				
-			if(preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NativeName0)){
+			/* if(preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NativeName0)){
 				$korean = 1;
 			}
 			else{
@@ -2050,7 +2050,7 @@ exit();
 					
 					$NameOnBadge=$GivenName0;
 					
-				}
+				} */
 				
 				
 				$GivenName=$results[$n]["GivenName"];
