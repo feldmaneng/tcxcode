@@ -82,6 +82,7 @@ class Badgemesa extends BaseController {
 		echo "<LI>Print <a href=" . site_url('/badgemesa/Korea') . ">Korea</a></LI>";
 		echo "<LI>Print <a href=" . site_url('/badgemesa/China') . ">China</a></LI>";
 		echo "<LI>Clear <a href=" . site_url('/badgemesa/clearprint') . ">To Print flag</a></LI>";
+		echo "<LI>Clear <a href=" . site_url('/badgemesa/YesPrint') . ">To Print flag Yes</a></LI>";
 		echo "</OL>";
 		echo "<br><br>";
 		
@@ -2586,6 +2587,19 @@ function Related (){
 	$builder->where('ToPrint', 'Yes');
 	$data = array (
 		'ToPrint' => 'No');
+	$builder->update($data);
+	
+
+	}
+	function YesPrint ()
+	{
+
+	
+	$db  = \Config\Database::connect('registration');
+	$builder = $db->table('guests');
+	$builder->where('ToPrint', 'No');
+	$data = array (
+		'ToPrint' => 'Yes');
 	$builder->update($data);
 	
 

@@ -104,6 +104,9 @@ $routes->post('/badgemesa/Blankbadge', 'Badgemesa::Blankbadge');
 $routes->get('/badgemesa/clearprint', 'Badgemesa::clearprint');          
 $routes->post('/badgemesa/clearprint', 'Badgemesa::clearprint');
 
+$routes->get('/badgemesa/YesPrint', 'Badgemesa::YesPrint');          
+$routes->post('/badgemesa/YesPrint', 'Badgemesa::YesPrint');
+
 $routes->get('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');          
 $routes->post('/badgemesa/BadgestinymlProfessional', 'Badgemesa::BadgestinymlProfessional');
 
