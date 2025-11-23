@@ -721,7 +721,7 @@ class S2_match_db extends BaseController {
 	
 	function crosscheck_users1()
 	{
-		$this->crosscheck(1,499,FALSE);
+		$this->crosscheck(1,100,FALSE);
 	}
 
 	function crosscheck_users500()
