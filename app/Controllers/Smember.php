@@ -1208,7 +1208,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	}
 	
 	function reset_china_1() {
-		$this->reset_china_users(1, 100);
+		$this->reset_china_users(1, 499);
 	}
 	function reset_china_500() {
 		$this->reset_china_users(500, 999);
