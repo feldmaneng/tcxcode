@@ -19,7 +19,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
 // Highest s2member ID
-define("MAXUSER", "10000");
+define("MAXUSER", "11000");
 
 //require '/../bitscode/Kint/Kint.class.php';
 //include (substr($_SERVER["DOCUMENT_ROOT"], 0, stripos($_SERVER["DOCUMENT_ROOT"],"public_html")) ."bitscode/Kint/Kint.class.php");
@@ -103,6 +103,7 @@ class Smember extends BaseController {
 		echo "<li><a href=" . site_url('/smember/set_mesa_users') . ">Set Mesa event users</a></li>";
 		
 		echo "<li><a href=" . site_url('/smember/preview_add_to_database') . ">Preview of Add missing s2 users to BiTS database</a></li>";
+		echo "<li><a href=" . site_url('/smember/preview_add_to_database2') . ">Preview of Add missing s2 users to BiTS database part2</a></li>";
 		echo "<li><a href=" . site_url('/smember/add_to_database') . ">Add missing s2 users to BiTS database</a></li>";
 		echo "<li><a href=" . site_url('/smember/write_mailchimp_with_Chinese') . ">Write CSV for MailChimp WITH s2 usernames, s2 emails, & Chinese Names</a></li>";
 
@@ -979,7 +980,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		$this->crosscheck(1,MAXUSER,TRUE);
 	}
 	
-	// Adds s2members who do have a BiTS ID to the BiTS Database
+	// Adds s2members who do NOT have a BiTS ID to the BiTS Database
 	// In preview mode until $write is set TRUE
 	private function add_to_bits_database ($start, $end, $write = FALSE) {
 	
@@ -1117,7 +1118,11 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	}
 	
 	function preview_add_to_database () {
-		$this->add_to_bits_database(1, MAXUSER, FALSE);
+		$this->add_to_bits_database(1, 4999, FALSE);
+	}
+	
+	function preview_add_to_database2 () {
+		$this->add_to_bits_database(5000, MAXUSER, FALSE);
 	}
 	
 	function add_to_database () {
