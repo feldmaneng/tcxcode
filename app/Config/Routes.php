@@ -349,6 +349,9 @@ $routes->post('/smember/find_user_list', 'Smember::find_user_list');
 $routes->get('/contactsID/findID', 'contactsID::findID');  
 $routes->post('/contactsID/findID', 'contactsID::findID'); 
 
+$routes->get('/contactsID/lookup', 'contactsID::lookup');  
+$routes->post('/contactsID/lookup', 'contactsID::lookup');
+
 
 $routes->get('/smember/reset_mesa_all', 'Smember::reset_mesa_all');  
 $routes->post('/smember/reset_mesa_all', 'Smember::reset_mesa_all');  
