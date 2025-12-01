@@ -24,7 +24,7 @@ if ( !$session->tcx_logged_in ) {
 // Some variables for each year
 
 $session = session(); 
-$year=2025;
+$year=2026;
 class Presentations extends BaseController {
 
  
@@ -105,7 +105,7 @@ helper('text');
 
 public function mesa()
 		{
-	$year=2025;
+	$year=2026;
     
     $year2=$year+1;
 	
