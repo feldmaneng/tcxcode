@@ -43,12 +43,12 @@ helper('text');
 		echo "<h1>TestConX Presentations - TestConX Office use only</h1>";
 		echo "<h4>TestConX Confidential</h4>";
 		echo "<OL>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/general') . ">General</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/mesa') . ">Mesa</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/china') . ">China</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/korea') . ">Korea</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/authors') . ">Authors</a></LI>";
-		echo "<LI>EXPO entries for <a href=" . site_url('/presentations/attendance') . ">Attendance</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/general') . ">General</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/mesa') . ">Mesa</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/china') . ">China</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/korea') . ">Korea</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/authors') . ">Authors</a></LI>";
+		echo "<LI>entries for <a href=" . site_url('/presentations/attendance') . ">Attendance</a></LI>";
 		echo "</OL>";
 	}
 	

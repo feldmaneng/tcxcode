@@ -90,6 +90,8 @@ class Database extends BaseController {
 			echo "<LI><a href=" . site_url('/print') . ">Print Badges Korea and China</a></LI>";
 			echo "<LI><a href=" . site_url('/uploadevent') . ">Upload Mail Bounces to get events and years</a></LI>";
 			echo "<LI><a href=" . site_url('/emailcheck') . ">Take a csv of bounced emails from Mail Chimp</a></LI>";
+			echo "<LI><a href=" . site_url('/contactsID/lookup') . ">Submit an CSV with just emails to find CONTACT IDS</a></LI>";
+			
 			echo"</ul>";
 				
 				

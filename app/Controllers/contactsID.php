@@ -15,42 +15,48 @@ if ( !$session->tcx_logged_in ) {
 }
 
 class contactsID extends BaseController {
-function findID(){
-		
-		
-		$emailerror=0;
-//$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
-if (($handle = fopen("round3checkr2.csv", "r")) !== FALSE) {
-	//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
-		
-	$list = array_map('str_getcsv', file('round3checkr2.csv'));
 	
-	$idrow = array_column($list,0);
-	$numrows = count($idrow);
-	for ($i = 0; $i < $numrows; $i++){
-		$email = $list[$i]; 
-	$db = \Config\Database::connect();
-			$builder = $db->table('contacts');
-			$builder->select('*');
-			$builder->where('Email',$email);
+	public function lookup(){
+		
+		return view('contactID_upload',['error' => ' ']);	
+	  }
+	function findID(){
 			
-			$query = $builder->get();
+			$file = $this->request->getFile('userfile');
+			$emailerror=0;
+	//$list = array_map('str_getcsv', file('listofdeaduserstest.csv'));
+	//if (($handle = fopen("round3checkr2.csv", "r")) !== FALSE) {
+		//while(($list = fgetcsv($handle, 1000, ",")) !==FALSE){
 			
-			if ( $query->getNumRows() > 0 ) {
+		//$list = array_map('str_getcsv', file('round3checkr2.csv'));
+		$list = array_map('str_getcsv', file($file));
+		
+		$idrow = array_column($list,0);
+		$numrows = count($idrow);
+		for ($i = 0; $i < $numrows; $i++){
+			$email = $list[$i]; 
+		$db = \Config\Database::connect();
+				$builder = $db->table('contacts');
+				$builder->select('*');
+				$builder->where('Email',$email);
 				
-			$row = $query->getResultArray(); 
-			echo $email[0].", ".$row[0]['ContactID'] . "<br>\n";
-				//print_r($row);		
-			}		
-			else{
-				echo $email[0].", Not found <br>\n";
-			}
-			
-	}
-//increment keyfirst to move to the first times one row down
+				$query = $builder->get();
+				
+				if ( $query->getNumRows() > 0 ) {
+					
+				$row = $query->getResultArray(); 
+				echo $email[0].", ".$row[0]['ContactID'] . "<br>\n";
+					//print_r($row);		
+				}		
+				else{
+					echo $email[0].", Not found <br>\n";
+				}
+				
+		}
+	//increment keyfirst to move to the first times one row down
 
+		//}
 	}
-}
 }
 
 ?>
