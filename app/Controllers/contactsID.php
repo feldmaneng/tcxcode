@@ -20,6 +20,14 @@ if ( !$session->tcx_logged_in ) {
 
 class contactsID extends BaseController {
 	
+	public function __construct()
+        {
+                
+                helper('form');
+				helper('text');
+				helper('url');
+        }
+	
 	public function lookup(){
 		
 		return view('contactID_upload',['error' => ' ']);	
