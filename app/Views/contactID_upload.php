@@ -5,7 +5,7 @@
 <title>Upload Form</title>
 </head>
 <body>
-<?= validation_list_errors() ?>
+
 
 	<h3>Contact ID Lookup</h3>
 	
