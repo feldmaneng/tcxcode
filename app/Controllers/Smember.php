@@ -996,7 +996,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			
 			if ($wp_ID % 25 == 0) {
 				$this->diag_log("s2_match_dp: Adding to BiTS DB user " . $wp_ID );
-				echo "# smember.php: Checking TestConX WP user " . $wp_ID . " against the contacts database";
+				// Does not work as most modern browsers fully buffer now
+				// echo "# smember.php: Checking TestConX WP user " . $wp_ID . " against the contacts database";
 			}
 			
 			$s2_user = $this->s2_get_user_by_id($wp_ID);
