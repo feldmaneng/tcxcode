@@ -1096,8 +1096,10 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 					//echo "<p>Not Found - WP ID = " . $wp_ID . "</p>";
 				} else {
 					if (!empty($s2_user['data']['user_login'])) {
+						$this->echo_diag_log ($wp_ID . "\t". $s2_user['data']['user_login'] . "\tNot Found<br>");
 						echo $wp_ID . "\t". $s2_user['data']['user_login'] . "\tNot Found<br>";
 					}
+					$this->echo_diag_log ($wp_ID . "\t". 'API error reads: '.$s2_user['error'] . "<br>")
 					echo $wp_ID . "\t". 'API error reads: '.$s2_user['error'] . "<br>";
 				}
 			}
