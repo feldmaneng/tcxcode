@@ -1083,11 +1083,13 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 						echo "<br>";
 						$empty_output = FALSE;
 					}
+					$this->echo_diag_log ($wp_ID . "\t". $s2_user['data']['user_login'] . "\t" . $BiTS_ID . "\t" . $status . "<br>");
 					echo $wp_ID . "\t". $s2_user['data']['user_login'] . "\t" . $BiTS_ID . "\t" . $status . "<br>";
 				// It appears that PHP has a problem with a bunch of if's that don't result in anything being output
 				// Without regular echo get 200 HTTP Okay error and no other output. 
 				} else {
 					$empty_output = TRUE;
+					$this->echo_diag_log (".");
 					echo ".";
 					//echo "<p>False or has BiTS_ID</p>";
 				} 
