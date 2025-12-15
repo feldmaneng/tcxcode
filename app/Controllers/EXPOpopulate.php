@@ -74,7 +74,7 @@ class EXPOpopulate extends BaseController
 		
 		$builder->where('Year', $yearprevious);
 		$builder->where('Event',$event);
-		
+		$last2 = substr($year,-2,2);
 		
 
 		$query = $builder->get();
@@ -88,7 +88,7 @@ class EXPOpopulate extends BaseController
 		//$results[$i]['EntryID']="NULL";
 		unset($results[$i]['EntryID']);
 		$results[$i]['Year']= $year;
-		$results[$i]['SecretKey'] = "25".$hexkey;	
+		$results[$i]['SecretKey'] = $last2.$hexkey;	
 		$builder->insert($results[$i]);
 		}
 		
