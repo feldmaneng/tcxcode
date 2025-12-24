@@ -1142,8 +1142,11 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		
 		$this->diag_log("starting reset_china_users");
 		echo "<p>Starting resetting China users from Level 1 to Level 0 " . "</p>";
+		$this->diag_log("Starting resetting China users from Level 1 to Level 0 ");
 		echo "<p>Starting at " . $start . "</p>";
+		$this->diag_log("Starting at " . $start);
 		echo "WP ID\tUser Name\tBiTS DB ID\tMessage 1\tMessage 2<br>";
+		$this->diag_log("WP ID\tUser Name\tBiTS DB ID\tMessage 1\tMessage 2");
 		
 		$max_time = 0;
 		$min_time = 100000;
@@ -1167,8 +1170,10 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 					$status = $this->s2_update_user_level($wp_ID, 0);
 					if ($status) {
 						echo "Reset user:\t". $wp_ID . "\t from Level:\t" . $s2_user['level'] . "\tto Level 0 <br>";
+						$this->diag_log("Reset user:\t". $wp_ID . "\t from Level:\t" . $s2_user['level'] . "\tto Level 0");
 					} else {
 						echo "Failed to reset user:\t" . $wp_ID . " - ". $status . "<br>";
+						$this->diag_log("Failed to reset user:\t" . $wp_ID . " - ". $status);
 					}
 				} /*else {
 					echo ".";
@@ -1213,6 +1218,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		
 		$output .= "<p>Total execution time ". $total_execution_time . "</p>";
 		echo $output;
+		$this->diag_log($output);
 
 		//$this->load->view('s2member');
 		
@@ -1435,13 +1441,13 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	function set_china_users() {
 		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
 		// Do twice since we had two China events in 2018
-		$this->set_event_users("2024", "China", "c2024", "", 1);
+		$this->set_event_users("2025", "China", "c2025", "", 1);
 	}
 	
 	function set_korea_users() {
 		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
 		// Do twice since we had two China events in 2018
-		$this->set_event_users("2024", "Korea", "k2024", "", 1);
+		$this->set_event_users("2025", "Korea", "k2025", "", 1);
 	}
 	
 	
