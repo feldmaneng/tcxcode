@@ -25,7 +25,7 @@ if ( !$session->tcx_logged_in ) {
 // Some variables for each year
 
 $session = session(); 
-$year=2025;
+$year=2026;
 class Expo extends BaseController {
 
  
@@ -266,7 +266,7 @@ $NewSecret=substr(str_shuffle($Permittedcharacters),0,10);
 	}
 		
 	
-	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2025, $PriorYear = 2024) 
+	function list_expo_entries($Event, $PriorEvent = "Mesa", $Year = 2026, $PriorYear = 2025) 
 	// Reads the BiTS EXPO registration database and dumps the entries
 	{
 		//$Year = 2022;
