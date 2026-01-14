@@ -794,7 +794,8 @@ class Mailinglist extends BaseController {
 	{
 		$mine = new Contacts();
 		
-		
+			$db2 = \Config\Database::connect();
+			$builder2 = $db2->table('contacts');
 		
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
@@ -842,7 +843,7 @@ class Mailinglist extends BaseController {
 						'Origin' => EventYear
 					);
 					if ( $update ) {
-						$builder->insert($SQLdata);
+						$builder2->insert($SQLdata);
 						//$query = $this->db->get();
 						//$row = $SQLdata; //$query->row_array();
 			
