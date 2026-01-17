@@ -1433,13 +1433,13 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	function set_china_users() {
 		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
 		// Do twice since we had two China events in 2018
-		$this->set_event_users("2024", "China", "c2024", "", 1);
+		$this->set_event_users("2025", "China", "c2025", "", 1);
 	}
 	
 	function set_korea_users() {
 		//$this->set_event_users("2018", "Suzhou", "c2018", "tc2018", 1);
 		// Do twice since we had two China events in 2018
-		$this->set_event_users("2024", "Korea", "k2024", "", 1);
+		$this->set_event_users("2025", "Korea", "k2025", "", 1);
 	}
 	
 	
