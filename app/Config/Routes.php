@@ -370,6 +370,9 @@ $routes->post('/smember/set_mesa_users', 'Smember::set_mesa_users');
 $routes->get('/smember/preview_add_to_database', 'Smember::preview_add_to_database');  
 $routes->post('/smember/preview_add_to_database', 'Smember::preview_add_to_database'); 
 
+$routes->get('/smember/preview_add_to_database2', 'Smember::preview_add_to_database2');  
+$routes->post('/smember/preview_add_to_database2', 'Smember::preview_add_to_database2'); 
+
 $routes->get('/smember/add_to_database', 'Smember::add_to_database');  
 $routes->post('/smember/add_to_database', 'Smember::add_to_database'); 
 
