@@ -1303,7 +1303,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 									// Okay now create the user
 									$password = $this->generatePassword();
 									//RE ENABLE
-									//$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
+									$wp_ID = $this->s2_create_user($username, $row['Email'], $row['ContactID'], $password, $row['GivenName'], $row['FamilyName']);
 									if ($wp_ID) {
 												
 									$data = [
