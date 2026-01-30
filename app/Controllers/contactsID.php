@@ -57,7 +57,7 @@ class contactsID extends BaseController {
 				if ( $query->getNumRows() > 0 ) {
 					
 				$row = $query->getResultArray(); 
-				echo $email[0].", ".$row[0]['ContactID'] .", ".$row[0]['FirstName'].", ".$row[0]['LastName'] . "<br>\n";
+				echo $email[0].", ".$row[0]['ContactID'] .", ".$row[0]['GivenName'].", ".$row[0]['FamilyName'] . "<br>\n";
 					//print_r($row);		
 				}		
 				else{
