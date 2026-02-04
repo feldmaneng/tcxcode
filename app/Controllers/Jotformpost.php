@@ -35,7 +35,7 @@ class Jotformpost extends BaseController {
 	
 	function postguest()
 	{
-		$eventYear = "Mesa2025"; //$_POST["eventYearID"];
+		$eventYear = "Mesa2026"; //$_POST["eventYearID"];
 		
 		//die ("Reaching function");
 		
@@ -66,14 +66,14 @@ class Jotformpost extends BaseController {
 		if (strlen($_POST['attendeesemail']) > 0) {
 			$email = $_POST['attendeesemail'];
 		}
-				
+		//https://pci.jotform.com/form/260336014432142 add the current year ending url digits (that is 2026)
 		// Security check to make sure only certain forms are allowed
-		if (!str_contains('250591362320146, 250236372630147, 250600864598161, 243396386676171', $_POST['formID'])) {
+		if (!str_contains('260336014432142, otherformnumbers', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
-		if (($_POST['formID'] == "250591362320146") ||
-			($_POST['formID'] == "250236372630147") ) {
+		if (($_POST['formID'] == "260336014432142") ||
+			($_POST['formID'] == "otherexpo") ) {
 			$type = "EXPO";
 		} else {
 			if (str_contains($fees,'Exhibitor'))  {
