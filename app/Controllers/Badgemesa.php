@@ -123,7 +123,7 @@ class Badgemesa extends BaseController {
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'mesa2025'
+    'guests.EventYear' => 'mesa2026'
 ]);
 		//echo site_url('/badgemesa/TestConXsingle/');
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Email','Company','Type','Tutorial']);
@@ -2621,14 +2621,14 @@ function BadgestinymlEXPOONLY () {
 
 
 function BadgesMesaBlankProfessional (){
-	$this->Blankbadge('testconx','Mesa2025', FALSE,'Professional');
+	$this->Blankbadge('testconx','Mesa2026', FALSE,'Professional');
 	//$this->Blankbadge();
 }
 function BadgesMesaBlankExhibitor (){
-	$this->Blankbadge("testconx","Mesa2025", FALSE,"Exhibitor");
+	$this->Blankbadge("testconx","Mesa2026", FALSE,"Exhibitor");
 }
 function BadgesMesaBlankEXPO (){
-	$this->Blankbadge("testconx","Mesa2025", FALSE,"EXPO");
+	$this->Blankbadge("testconx","Mesa2026", FALSE,"EXPO");
 }
 
 function BadgestinymlBlankProfessional (){
