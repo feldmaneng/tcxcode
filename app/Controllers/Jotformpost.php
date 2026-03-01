@@ -58,8 +58,14 @@ class Jotformpost extends BaseController {
 		## Data to Save
 		*/
 
-		$fees = implode('; ',$_POST['fees']);
-
+		$fees = '';
+		if (isset($_POST['fees'])) {
+			$fees = implode('; ',$_POST['fees']);
+		}
+		if (isset($_POST['myproducts']['total'])) {
+			$fees = $_POST['myproducts']['total'];
+		}
+		
 		// Required fields
 		$tutorial = '0';
 		$email = 'invalid_email';
@@ -68,12 +74,12 @@ class Jotformpost extends BaseController {
 		}
 		//https://pci.jotform.com/form/260336014432142 add the current year ending url digits (that is 2026)
 		// Security check to make sure only certain forms are allowed
-		if (!str_contains('260336014432142, otherformnumbers', $_POST['formID'])) {
+		if (!str_contains('260336014432142, 260351610976154, 253415296943161, otherformnumbers', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
 		if (($_POST['formID'] == "260336014432142") ||
-			($_POST['formID'] == "otherexpo") ) {
+			($_POST['formID'] == "260351610976154") ) { //Test EXPO
 			$type = "EXPO";
 		} else {
 			if (str_contains($fees,'Exhibitor'))  {
@@ -91,8 +97,8 @@ class Jotformpost extends BaseController {
 			}		
 		}
 			
-		// 250600864598161 Prof or Exhibitor
-		// 243396386676171
+
+		// 253415296943161 Prof or Exhibitor
 		
 
 		$data = [

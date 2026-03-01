@@ -5,7 +5,7 @@
     <title>Login Page</title>  
 </head>  
 <body>  
-    <div style="text-align: center;"><h1>TestConX 2025</h1></div>;
+    <div style="text-align: center;"><h1>TestConX 2026</h1></div>;
 
 	
 	<div style="text-align: center;">
@@ -17,7 +17,7 @@
 	<h1>Thank You!</h1>
 	</div>
 	<div style="text-align: center;">Your registration has been received.</div>
-	<div style="text-align: center;">We look forward to seeing you at the&nbsp;TestConX&nbsp;workshop <strong>March 2-5, 2025</strong>&nbsp;in Mesa, Arizona.</div>
+	<div style="text-align: center;">We look forward to seeing you at the&nbsp;TestConX&nbsp;workshop <strong>March 1-4, 2026</strong>&nbsp;in Mesa, Arizona.</div>
 	<p>&nbsp;</p>
 	<div style="text-align: center;">Don't forget to <strong>reserve you room</strong> at the</div>
 	<div style="text-align: center;"><a href="https://www.hilton.com/en/hotels/meswhdt-doubletree-phoenix-mesa/">DoubleTree by Hilton Phoenix Mesa</a></div>
@@ -35,7 +35,7 @@
 	<div style="text-align: center;">
 	<p>&nbsp;</p>
 	<p>&nbsp;</p>
-	<div style="text-align: center;">To enter another Professional Registration please click <a href="https://form.jotform.com/243396386676171" target="_self">here</a>.</div>
+	<div style="text-align: center;">To enter another Professional Registration please click <a href="https://pci.jotform.com/form/253415296943161" target="_self">here</a>.</div>
 	<p>&nbsp;</p>
 	</div>
 	</div>
