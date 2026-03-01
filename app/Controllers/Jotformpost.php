@@ -68,12 +68,12 @@ class Jotformpost extends BaseController {
 		}
 		//https://pci.jotform.com/form/260336014432142 add the current year ending url digits (that is 2026)
 		// Security check to make sure only certain forms are allowed
-		if (!str_contains('260336014432142, 260588969326172, otherformnumbers', $_POST['formID'])) {
+		if (!str_contains('260336014432142, 260351610976154, otherformnumbers', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
 		if (($_POST['formID'] == "260336014432142") ||
-			($_POST['formID'] == "260588969326172") ) {
+			($_POST['formID'] == "260351610976154") ) { //Test EXPO
 			$type = "EXPO";
 		} else {
 			if (str_contains($fees,'Exhibitor'))  {
