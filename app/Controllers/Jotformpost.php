@@ -42,9 +42,9 @@ class Jotformpost extends BaseController {
 		/***
 		Display the data keys and values for debugging purposes.
 		***/
-		//echo '<pre>', print_r($_POST, 1) , '</pre>';
+		echo '<pre>', print_r($_POST, 1) , '</pre>';
 		
-		//die ("debug");
+		die ("debug");
 		
 		/***
 		Test the data if it's a valid submission by checking the submission ID.
