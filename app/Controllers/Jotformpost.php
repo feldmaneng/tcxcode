@@ -59,10 +59,10 @@ class Jotformpost extends BaseController {
 		*/
 
 		$fees = '';
-		if (isset($_POST['fees']) {
+		if (isset($_POST['fees'])) {
 			$fees = implode('; ',$_POST['fees']);
 		}
-		if (isset($_POST['product']) {
+		if (isset($_POST['product'])) {
 			$fees = implode('; ',$_POST['product']);
 		}
 		
