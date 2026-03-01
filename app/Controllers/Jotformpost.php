@@ -62,8 +62,8 @@ class Jotformpost extends BaseController {
 		if (isset($_POST['fees'])) {
 			$fees = implode('; ',$_POST['fees']);
 		}
-		if (isset($_POST['product'])) {
-			$fees = implode('; ',$_POST['product']);
+		if (isset($_POST['myproducts'])) {
+			$fees = implode('; ',$_POST['myproducts']);
 		}
 		
 		// Required fields
