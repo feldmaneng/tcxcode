@@ -66,6 +66,7 @@ class Jotformpost extends BaseController {
 			$fees = $_POST['myproducts']['total'];
 		}
 		
+		
 		// Required fields
 		$tutorial = '0';
 		$email = 'invalid_email';
@@ -82,6 +83,8 @@ class Jotformpost extends BaseController {
 			($_POST['formID'] == "260351610976154") ) { //Test EXPO
 			$type = "EXPO";
 		} else {
+			$type = 'NULL';
+			
 			if (str_contains($fees,'Exhibitor'))  {
 				$type = "Exhibitor"; 
 			}			
