@@ -37,7 +37,7 @@ class Jotformpost extends BaseController {
 	{
 		$eventYear = "Mesa2026"; //$_POST["eventYearID"];
 		
-		die ("Reaching function");
+		//die ("Reaching function");
 		
 		/***
 		Display the data keys and values for debugging purposes.
