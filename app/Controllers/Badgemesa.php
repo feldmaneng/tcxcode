@@ -147,7 +147,7 @@ class Badgemesa extends BaseController {
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
 		$crud ->fieldtype('ToPrint','enum',['Yes','No']);
 		$crud ->fieldtype('Dinner','enum',['1','0']);
-		$crud ->fieldtype('EventYear','enum',['mesa2025']);
+		$crud ->fieldtype('EventYear','enum',['mesa2026']);
 
 		
 		
