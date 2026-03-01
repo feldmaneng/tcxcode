@@ -58,8 +58,14 @@ class Jotformpost extends BaseController {
 		## Data to Save
 		*/
 
-		$fees = implode('; ',$_POST['fees']);
-
+		$fees = '';
+		if (isset($_POST['fees']) {
+			$fees = implode('; ',$_POST['fees']);
+		}
+		if (isset($_POST['product']) {
+			$fees = implode('; ',$_POST['product']);
+		}
+		
 		// Required fields
 		$tutorial = '0';
 		$email = 'invalid_email';
