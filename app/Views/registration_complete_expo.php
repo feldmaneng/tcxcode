@@ -5,7 +5,7 @@
     <title>Login Page</title>  
 </head>  
 <body>  
-    <div style="text-align: center;"><h1>TestConX 2025</h1></div>;
+    <div style="text-align: center;"><h1>TestConX 2026</h1></div>;
 
 	
 	<div style="text-align: center;">
@@ -19,8 +19,8 @@
 	<div style="text-align: center;">Your registration has been received.</div>
 	<div style="text-align: center;">We look forward to seeing you at the&nbsp;TestConX&nbsp;workshop EXPO</div>
 	<div style="text-align: center;">
-	<p style="margin: 0px 0px 1.313em; color: #000000; font-family: Lato, sans-serif; font-size: 14px; background-color: #ffffff;"><span style="font-weight: bold;">Monday March 3, 2025 6:00pm - 9:00pm</span></p>
-	<p style="margin: 0px 0px 1.313em; color: #000000; font-family: Lato, sans-serif; font-size: 14px; background-color: #ffffff;"><span style="font-weight: bold;">Tuesday March 4, 2025 3:30pm - 6:30pm</span></p>
+	<p style="margin: 0px 0px 1.313em; color: #000000; font-family: Lato, sans-serif; font-size: 14px; background-color: #ffffff;"><span style="font-weight: bold;">Monday March 2, 2026 6:00pm - 9:00pm</span></p>
+	<p style="margin: 0px 0px 1.313em; color: #000000; font-family: Lato, sans-serif; font-size: 14px; background-color: #ffffff;"><span style="font-weight: bold;">Tuesday March 3, 2026 3:30pm - 6:30pm</span></p>
 	</div>
 	<div style="text-align: center;">in Mesa, Arizona.</div>
 	<p>&nbsp;</p>
