@@ -1461,8 +1461,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		//die();
 		
 		//xdebug_break();
-		$koreaYear = "k2024";
-		$chinaYear = "c2024";
+		$koreaYear = "k2025";
+		$chinaYear = "c2025";
 		$this->diag_log("starting reset_mesa_users");
 		echo "<p>Starting resetting Mesa users from Level 4 to Level 0 " . "</p>";
 		echo "<p>If they were at China in the last year - i.e ". $chinaYear. " is set in ccaps , they will be set to Level 1</p>";
