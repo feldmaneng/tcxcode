@@ -1444,7 +1444,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 	
 	
 	function set_mesa_users() {
-		$this->set_event_users("2025", "Mesa", "2025", "t2025", 4);
+		$this->set_event_users("2026", "Mesa", "2026", "t2026", 4);
 	}
 	
 	// Not fully written / debugged - wait unitl March 2018 to run...
