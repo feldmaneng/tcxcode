@@ -1276,7 +1276,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		//d($query->result_array());
 
 		
-		echo "\tType\tBiTS DB ID\tWP ID\tWordPress Username\tPassword\tEmail\tLinkedInEmail\ts2 Level\tMessage 1\tMessage 2<br>\n";
+		echo "\tType;\tBiTS DB ID;\tWP ID;\tWordPress Username;\tPassword;\tEmail;\tLinkedInEmail;\ts2 Level;\tMessage 1;\tMessage 2;<br>\n";
 		foreach ($query->getResultArray() as $row) {
 			//print_r($row);
 			$status = "";
@@ -1317,20 +1317,20 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 									//$builder2->update($data);
 										// Best to stuff it in the row table? Seems okay.
 										//doesn't work $row['WordPressID'] = $wp_ID;
-										$status .= "\tAdding user as WP ID\t" . $wp_ID ."\tusername:\t" . $username . "\tpass:\t" . $password;
+										$status .= "\tAdding user as WP ID\t" . $wp_ID .";\tusername:\t" . $username . ";\tpass:\t" . $password;
 										//$this->echo_diag_log($status);
 										// And for neatness record their WP ID back into the BiTS Database	
 										$this->WriteWordPressID($row['ContactID'], $wp_ID);
 								
 									} else {
-										$status .= "\tFailed to create user";
+										$status .= ";\tFailed to create user";
 									}
 								} else {						
-									$status .= "\tEmail " . $row['Email'] . " already in use - add failed";
+									$status .= ";\tEmail " . $row['Email'] . " already in use - add failed";
 								}
 							}
 						} else {
-							$status .="\tGiven or Family name is empty - username generation skipped";
+							$status .=";\tGiven or Family name is empty - username generation skipped";
 						
 						}
 				
@@ -1352,7 +1352,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 					}
 					if ($s2_data['level'] > $s2_level) {
 						$new_level = $s2_data['level'];
-						$status .="\tstaying at original level ";					
+						$status .=";\tstaying at original level ";					
 					}
 
 					// Check Tutorial and add cc_cap if needed
@@ -1361,7 +1361,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 							$new_ccaps .=",";
 						}
 						$new_ccaps .= $tutorial;
-						$status .= "\tAdding tutorial";
+						$status .= ";\tAdding tutorial";
 					}
 					
 					// temporary fix for accounts prematurely created in error
@@ -1388,16 +1388,16 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 					$result = $this->s2_api("modify_user", $data);
 				
 					if ($result && empty($result['error']) && !empty($result['ID'])) {
-						$status .= "\ts2member user data updated";
+						$status .= ";\ts2member user data updated";
 					} elseif (!empty($result['error'])) {
-						$status .= '\tAPI error reads: '.$result['error'];
+						$status .= ';\tAPI error reads: '.$result['error'];
 					}
 				
 				} else {
 					if (empty($s2_data['error'])) {
-						$status = "\tMis-match on BiTS ID";
+						$status = ";\tMis-match on BiTS ID";
 					} else {
-						$status = "\tAPI error reads: " . $s2_data['error'];
+						$status = ";\tAPI error reads: " . $s2_data['error'];
 					}
 				}
 			
@@ -1411,8 +1411,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			if (empty($password)) { $password =" "; }
 			if (empty($linkedInEmail)) { $linkedInEmail = " ";}
 			
-			$message = $row['Type'] . "\t" . $row['ContactID'] . "\t" . $wp_ID . "\t" . $username . "\t" . $password . "\t" . $row['Email'] ."\t";
-			$message .= $linkedInEmail . "\t" . $new_level . $status;
+			$message = $row['Type'] . ";\t" . $row['ContactID'] . ";\t" . $wp_ID . ";\t" . $username . ";\t" . $password . ";\t" . $row['Email'] .";\t";
+			$message .= $linkedInEmail . ";\t" . $new_level . $status;
 			
 			echo $message . "<br>\n";
 			$this->diag_log($message);
