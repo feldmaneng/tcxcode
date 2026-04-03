@@ -1255,6 +1255,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		$builder->where('attendance.ContactID = contacts.ContactID');
 		$builder->where('Year = ' . $year);
 		$builder->where('Event = "' . $event . '"');
+		$builder->where('Type = Professional');
 		//$builder->orderby('AttendanceID','ASC');
 		$builder->orderby('AttendanceID','DESC');
 		
