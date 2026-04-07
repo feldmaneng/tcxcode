@@ -1284,6 +1284,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			//print_r($row);
 			$status = "";
 			$wp_ID = $row['WordPressID'];
+			
 			$message = "processing wordpressID: ".$wp_ID."\n";
 			echo $message . "processing";
 			$this->diag_log($message);
@@ -1345,7 +1346,12 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 						//$wp_id = 8912;
 				// Look up s2member record, verify BiTS DB ID matches
 				$s2_data = $this->s2_get_user_by_id($wp_ID);
-				if ((empty($s2_data['error'])) && ($s2_data['s2member_custom_fields']['bits_id'] == $row['ContactID'])) {
+				if (empty($s2_data['s2member_custom_fields']['bits_id'])){
+					$bits_ID = '';
+				} else {
+					$bits_ID = $s2_data['s2member_custom_fields']['bits_id'];
+				}
+				if ((empty($s2_data['error'])) && ($bits_ID == $row['ContactID'])) {
 					$username = $s2_data['data']['user_login'];
 					// Assume if URL is LinkedIn then the email address is their primary LinkedIN email address
 					// this is the convention set by OneAllSocial
