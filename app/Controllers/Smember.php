@@ -357,8 +357,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			'user_pass' => $password,
 			'first_name' => $given,
 			'last_name' => $family,
-			'custom_fields' => array('BiTS_ID' => $BiTS_ID,
-									 'BiTS_regular_email' => $email),
+			'custom_fields' => array('bits_id' => $BiTS_ID,
+									 'bits_regular_email' => $email),
 			'modify_if_login_exists' => '0', // do NOT modify existing
 			'notification' => '0' // do NOT send notification
 		);
@@ -732,8 +732,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			
 			if ($s2_user && empty($s2_user['error'])) {
 				// If not recheck'ing skip records that have a BiTS_ID set already
-				if ( $recheck || empty($s2_user['s2member_custom_fields']['BiTS_ID']) ||
-					 ($s2_user['s2member_custom_fields']['BiTS_ID'] == 0) ) 
+				if ( $recheck || empty($s2_user['s2member_custom_fields']['bits_id']) ||
+					 ($s2_user['s2member_custom_fields']['bits_id'] == 0) ) 
 					 {
 					 
 							
@@ -773,9 +773,9 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 							}
 						}
 						// Check if their BiTS_ID is set already
-						if ( empty($s2_user['s2member_custom_fields']['BiTS_ID']) || 
-							($s2_user['s2member_custom_fields']['BiTS_ID'] == 0)	) {
-								$custom_fields = array("BiTS_ID" => $BiTS_ID);
+						if ( empty($s2_user['s2member_custom_fields']['bits_id']) || 
+							($s2_user['s2member_custom_fields']['bits_id'] == 0)	) {
+								$custom_fields = array("bits_id" => $BiTS_ID);
 								if ( !$found_by_name ) {
 									// Set just the BiTS ID
 									$result = $this->s2_update_user_custom_fields($wp_ID, $custom_fields);
@@ -793,10 +793,10 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 								}
 						} else {
 							// Check if the same?
-							if (intval($s2_user['s2member_custom_fields']['BiTS_ID']) == $BiTS_ID ) {
+							if (intval($s2_user['s2member_custom_fields']['bits_id']) == $BiTS_ID ) {
 								//$status .= "\tBiTS ID matches";
 							} else {
-								$status .= "\tNO match on BiTS ID - s2 has: " . $s2_user['s2member_custom_fields']['BiTS_ID'];
+								$status .= "\tNO match on BiTS ID - s2 has: " . $s2_user['s2member_custom_fields']['bits_id'];
 							}
 						}
 						
@@ -1002,8 +1002,8 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			//echo $wp_ID . "<br>";
 			
 			if ($s2_user && empty($s2_user['error'])) {
-				if (empty($s2_user['s2member_custom_fields']['BiTS_ID']) ||
-					 ($s2_user['s2member_custom_fields']['BiTS_ID'] == 0) )
+				if (empty($s2_user['s2member_custom_fields']['bits_id']) ||
+					 ($s2_user['s2member_custom_fields']['bits_id'] == 0) )
 					 {
 					 				
 					//echo "<pre>";
@@ -1064,7 +1064,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 									
 							// Now add their BiTS database ID to their WP record
 							if ( ($BiTS_ID > 0) ) {
-								$custom_fields = array("BiTS_ID" => $BiTS_ID);
+								$custom_fields = array("bits_id" => $BiTS_ID);
 								$result = $this->s2_update_user_custom_fields($wp_ID, $custom_fields);
 							}
 										
@@ -1345,7 +1345,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 						//$wp_id = 8912;
 				// Look up s2member record, verify BiTS DB ID matches
 				$s2_data = $this->s2_get_user_by_id($wp_ID);
-				if ((empty($s2_data['error'])) && ($s2_data['s2member_custom_fields']['BiTS_ID'] == $row['ContactID'])) {
+				if ((empty($s2_data['error'])) && ($s2_data['s2member_custom_fields']['bits_id'] == $row['ContactID'])) {
 					$username = $s2_data['data']['user_login'];
 					// Assume if URL is LinkedIn then the email address is their primary LinkedIN email address
 					// this is the convention set by OneAllSocial
