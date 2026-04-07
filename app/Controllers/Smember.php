@@ -1255,7 +1255,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 
 		//$message = "Starting at " . $start;
 		//$this->echo_diag_log($message);
-		
+		$typeprof = 'Professional';
 		$db = \Config\Database::connect();
 		$builder = $db->table('contacts');
 		$builder->select('AttendanceID, attendance.ContactID, WordPressID, contacts.Email,attendance.Email AS AttendanceEmail, Type, Tutorial, GivenName, FamilyName');
@@ -1263,7 +1263,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		$builder->where('attendance.ContactID = contacts.ContactID');
 		$builder->where('Year = ' . $year);
 		$builder->where('Event = "' . $event . '"');
-		$builder->where('Type = Professional');
+		$builder->where('Type', $typeprof);
 		$builder->orderby('AttendanceID','ASC');
 		//$builder->orderby('AttendanceID','DESC');
 		
