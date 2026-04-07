@@ -1255,7 +1255,7 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		$builder->where('attendance.ContactID = contacts.ContactID');
 		$builder->where('Year = ' . $year);
 		$builder->where('Event = "' . $event . '"');
-		$builder->where('Type', $typeprof);
+		//$builder->where('Type', $typeprof);
 		//$builder->orderby('AttendanceID','ASC');
 		$builder->orderby('AttendanceID','DESC');
 		
@@ -1285,9 +1285,9 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 			$status = "";
 			$wp_ID = $row['WordPressID'];
 			
-			$message = "processing wordpressID: ".$wp_ID."\n";
+			/* $message = "processing wordpressID: ".$wp_ID."\n";
 			echo $message . "processing";
-			$this->diag_log($message);
+			$this->diag_log($message); */
 			
 			$username = "";
 			$password = "";
