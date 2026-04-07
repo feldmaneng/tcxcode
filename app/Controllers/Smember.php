@@ -1279,9 +1279,15 @@ if (($handle = fopen($deleteusers, "r")) !== FALSE) {
 		
 		echo "\tType;\tBiTS DB ID;\tWP ID;\tWordPress Username;\tPassword;\tEmail;\tLinkedInEmail;\ts2 Level;\tMessage 1;\tMessage 2;<br>\n";
 		foreach ($query->getResultArray() as $row) {
+			
+			
 			//print_r($row);
 			$status = "";
 			$wp_ID = $row['WordPressID'];
+			$message = "processing wordpressID: ".$wp_ID."\n";
+			echo $message . "processing";
+			$this->diag_log($message);
+			
 			$username = "";
 			$password = "";
 			$linkedInEmail = "";
