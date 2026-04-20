@@ -2,10 +2,22 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use Config\Database;
 
 class CreateApiClients extends Migration
 {
     protected $DBGroup = 'control';
+
+    // Explicitly bind forge to the 'control' group so this table is always
+    // created in the control DB regardless of how spark is invoked.
+    // Required because $this->forge from the parent only follows $DBGroup
+    // reliably when migrations are run with `spark migrate -g control`.
+    public function __construct()
+    {
+        parent::__construct();
+        $this->db    = Database::connect($this->DBGroup);
+        $this->forge = Database::forge($this->DBGroup);
+    }
 
     public function up()
     {
@@ -25,5 +37,8 @@ class CreateApiClients extends Migration
         $this->forge->createTable('api_clients');
     }
 
-    public function down() { $this->forge->dropTable('api_clients'); }
+    public function down()
+    {
+        $this->forge->dropTable('api_clients');
+    }
 }
