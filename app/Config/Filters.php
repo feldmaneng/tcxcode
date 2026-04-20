@@ -24,6 +24,13 @@ class Filters extends \CodeIgniter\Config\Filters
 		'forcehttps'    => \CodeIgniter\Filters\ForceHTTPS::class,
 		'pagecache'     => \CodeIgniter\Filters\PageCache::class,
 		'performance'   => \CodeIgniter\Filters\PerformanceMetrics::class,
+		
+		'cors'     => \App\Filters\CorsFilter::class,
+        'throttle' => \App\Filters\ThrottleFilter::class,
+        'hmac'     => \App\Filters\HmacAuthFilter::class,
+        'jwt'      => \App\Filters\JwtAuthFilter::class,
+        'apiAuth'  => \App\Filters\ApiAuthFilter::class,
+        'audit'    => \App\Filters\AuditLogFilter::class,
     ];
 
     /**

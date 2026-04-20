@@ -545,6 +545,27 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
+// Section for API routing
+
+$routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($routes) {
+
+    // Public auth endpoints
+    $routes->post('auth/login',   'AuthController::login',   ['filter' => 'cors']);
+    $routes->post('auth/refresh', 'AuthController::refresh', ['filter' => 'cors']);
+    $routes->options('auth/(:any)', 'AuthController::options', ['filter' => 'cors']);
+
+    // Protected resources: HMAC OR JWT (apiAuth tries HMAC first, falls back to JWT)
+    $routes->group('contacts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'ContactsController::index');
+        $routes->get('(:num)',     'ContactsController::show/$1');
+        $routes->post('/',         'ContactsController::create');
+        $routes->put('(:num)',     'ContactsController::update/$1');
+        $routes->delete('(:num)',  'ContactsController::delete/$1');
+        $routes->options('(:any)', 'ContactsController::options', ['filter' => 'cors']);
+    });
+});
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
