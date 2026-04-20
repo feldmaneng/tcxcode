@@ -12,6 +12,8 @@ class HmacAuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+    	log_message('error', 'HMAC: method=' . $request->getMethod() . ' path=' . $request->getUri()->getPath() . ' bodyLen=' . strlen($request->getBody() ?? ''));
+
         if (!$request instanceof IncomingRequest) return;
 
         $key  = $request->getHeaderLine('X-Api-Key');
