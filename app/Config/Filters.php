@@ -2,15 +2,22 @@
 
 namespace Config;
 
-use CodeIgniter\Config\BaseConfig;
+//use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Config\Filters as BaseFilters;
+
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 
-class Filters extends \CodeIgniter\Config\Filters
-{
+//added from Lovable
+use CodeIgniter\Filters\ForceHTTPS;
+use CodeIgniter\Filters\PageCache;
+use CodeIgniter\Filters\PerformanceMetrics;
+
+class Filters extends BaseFilters
+
     /**
      * Configures aliases for Filter classes to
      * make reading things nicer and simpler.
@@ -21,9 +28,9 @@ class Filters extends \CodeIgniter\Config\Filters
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-		'forcehttps'    => \CodeIgniter\Filters\ForceHTTPS::class,
-		'pagecache'     => \CodeIgniter\Filters\PageCache::class,
-		'performance'   => \CodeIgniter\Filters\PerformanceMetrics::class,
+		'forcehttps'    => ForceHTTPS::class,
+		'pagecache'     => PageCache::class,
+		'performance'   => PerformanceMetrics::class,
 		
 		'cors'     => \App\Filters\CorsFilter::class,
         'throttle' => \App\Filters\ThrottleFilter::class,
@@ -31,6 +38,8 @@ class Filters extends \CodeIgniter\Config\Filters
         'jwt'      => \App\Filters\JwtAuthFilter::class,
         'apiAuth'  => \App\Filters\ApiAuthFilter::class,
         'audit'    => \App\Filters\AuditLogFilter::class,
+        'hmac'     => \App\Filters\HmacAuthFilter::class,
+        
     ];
 
     /**
@@ -66,8 +75,8 @@ class Filters extends \CodeIgniter\Config\Filters
     //public array $methods = [];
 	
 	public array $methods = [
-    //'POST' => ['invalidchars', 'csrf'],
-    'GET'  => ['csrf'],
+		'POST' => ['invalidchars', 'csrf'],
+		'GET'  => ['csrf'],
 	];
 
     /**
@@ -77,7 +86,15 @@ class Filters extends \CodeIgniter\Config\Filters
      * Example:
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
-    public array $filters = [];
+    
+    public array $filters = [
+        // Apply HMAC auth to every /api/v1/* route, all HTTP methods.
+        'hmac' => [
+            'before' => [
+                'api/v1/*',
+            ],
+        ],
+    ];
 	
 	public array $required = [
     'before' => [
