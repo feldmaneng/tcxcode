@@ -11,8 +11,9 @@ class CreateApiClients extends Migration
             'id'                => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
             'name'              => ['type' => 'VARCHAR', 'constraint' => 100],
             'api_key'           => ['type' => 'VARCHAR', 'constraint' => 64],
-            'secret_encrypted'  => ['type' => 'TEXT'],   // base64( CI4 Encrypter ciphertext of raw secret )
-            'secret_hash'       => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true], // optional bcrypt for spot checks
+            // Raw HMAC secret encrypted with CI4 Encrypter (app.encryption.key).
+            // HMAC verification needs the original secret, so a one-way hash will not work here.
+            'secret_encrypted'  => ['type' => 'TEXT'],
             'active'            => ['type' => 'TINYINT', 'constraint' => 1, 'default' => 1],
             'created_at'        => ['type' => 'DATETIME'],
             'rotated_at'        => ['type' => 'DATETIME', 'null' => true],

@@ -29,11 +29,10 @@ class HmacAuthFilter implements FilterInterface
         $body  = (string) $request->getBody();
         $path  = '/' . ltrim($request->getUri()->getPath(), '/');
         $skew  = (int) env('app.HMAC_MAX_SKEW_SECONDS', 300);
-        // We store BCRYPT(secret). Verifier needs the raw secret. We keep it
-        // server-side in an env-derived per-client secret? No: bcrypt is one-way.
-        // For HMAC we must store the secret recoverable. Store secret encrypted
-        // with app key, or use api_clients.secret column as raw secret + restrict
-        // table access. Here we store as encrypted via CI4 Encryption.
+
+        // HMAC verification requires the raw shared secret (cannot use a one-way hash).
+        // The secret is stored encrypted at rest with CI4's Encrypter (app.encryption.key)
+        // and decrypted in-memory only for signature verification.
         $encrypter = service('encrypter');
         try {
             $secret = $encrypter->decrypt(base64_decode($client['secret_encrypted']));
@@ -46,7 +45,6 @@ class HmacAuthFilter implements FilterInterface
             return service('response')->setStatusCode(401)->setJSON(['error' => 'hmac_' . $reason]);
         }
 
-        // Stash auth context for downstream
         $request->apiAuth = ['type' => 'hmac', 'client_id' => $client['id'], 'client_name' => $client['name']];
     }
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
