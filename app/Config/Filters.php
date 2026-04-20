@@ -51,7 +51,7 @@ class Filters extends BaseFilters
         'before' => [
             // 'honeypot',
            // 'csrf',
-            'csrf' => ['except' => ['Jotformpost/', 'Guest/*', 'api/v1/*']],
+            'csrf' => ['except' => ['Jotformpost/', 'Guest/*', 'api/*']],
             // 'invalidchars',
         ],
         'after' => [
