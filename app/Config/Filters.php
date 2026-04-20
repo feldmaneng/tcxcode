@@ -42,8 +42,7 @@ class Filters extends \CodeIgniter\Config\Filters
         'before' => [
             // 'honeypot',
            // 'csrf',
-            'csrf' => ['except' => ['Jotformpost/', 'Guest/*']],
-			//'csrf' => ['except' => ['Guest/*']],  // Was cancelling out the Jotformpost exemption above - so combined
+            'csrf' => ['except' => ['Jotformpost/', 'Guest/*', 'api/v1/*']],
             // 'invalidchars',
         ],
         'after' => [
