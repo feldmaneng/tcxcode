@@ -38,7 +38,7 @@ class Filters extends BaseFilters
         'jwt'      => \App\Filters\JwtAuthFilter::class,
         'apiAuth'  => \App\Filters\ApiAuthFilter::class,
         'audit'    => \App\Filters\AuditLogFilter::class,
-        'hmac'     => \App\Filters\HmacAuthFilter::class,
+
         
     ];
 
@@ -51,7 +51,7 @@ class Filters extends BaseFilters
         'before' => [
             // 'honeypot',
            // 'csrf',
-            'csrf' => ['except' => ['Jotformpost/', 'Guest/*', 'api/*']],
+            'csrf' => ['except' => ['Jotformpost/', 'Guest/*', 'api/v1/*']],
             // 'invalidchars',
         ],
         'after' => [
@@ -75,8 +75,8 @@ class Filters extends BaseFilters
     //public array $methods = [];
 	
 	public array $methods = [
-		'POST' => ['invalidchars', 'csrf'],
-		'GET'  => ['csrf'],
+		'POST' => ['invalidchars'], //, 'csrf'],
+		// 'GET' => ['csrf'],   // pointless — CSRF doesn't validate GET; safe to drop
 	];
 
     /**
