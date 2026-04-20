@@ -47,7 +47,13 @@ class HmacAuthFilter implements FilterInterface
             return service('response')->setStatusCode(401)->setJSON(['error' => 'hmac_' . $reason]);
         }
 
-        $request->apiAuth = ['type' => 'hmac', 'client_id' => $client['id'], 'client_name' => $client['name']];
+
+        // Expose the authenticated client to controllers via request headers
+        // instead of a dynamic property (deprecated in PHP 8.2+, fatal in PHP 9).
+        $request->setHeader('X-Auth-Client-Id', (string) $client['id']);
+        $request->setHeader('X-Auth-Client-Name', (string) $client['name']);
+        $request->setHeader('X-Auth-Type', 'hmac');
+        
     }
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
 }
