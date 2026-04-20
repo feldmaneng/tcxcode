@@ -5,8 +5,6 @@ use CodeIgniter\Database\Migration;
 
 class CreateRefreshTokens extends Migration
 {
-    protected $DBGroup = 'control';
-
     public function up()
     {
         $this->forge->addField([
