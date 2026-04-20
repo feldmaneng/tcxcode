@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class ApiClientModel extends Model
 {
+    protected $DBGroup = 'control';
     protected $table = 'api_clients';
     protected $primaryKey = 'id';
     protected $returnType = 'array';

@@ -5,6 +5,8 @@ use CodeIgniter\Database\Migration;
 
 class CreateApiClients extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $this->forge->addField([

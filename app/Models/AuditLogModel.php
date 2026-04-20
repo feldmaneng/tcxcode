@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class AuditLogModel extends Model
 {
+    protected $DBGroup = 'control';
     protected $table = 'api_audit_log';
     protected $primaryKey = 'id';
     protected $returnType = 'array';
