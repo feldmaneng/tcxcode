@@ -1,73 +1,281 @@
 <?php
+
 namespace App\Controllers\Api\V1;
 
-use App\Libraries\JwtService;
-use App\Models\RefreshTokenModel;
+use App\Models\AuthModel;
+use CodeIgniter\RESTful\ResourceController;
 
-class AuthController extends BaseApiController
+/**
+ * AuthController — handles authentication endpoints.
+ * All endpoints require HMAC service-key authentication (same as contacts).
+ * No JWT issued — the TanStack frontend manages its own encrypted session cookies.
+ *
+ * Column mapping (control.users):
+ *   UserID, UserName, PasswordHash, GivenName, FamilyName,
+ *   TOTPSecret, TOTPEnabled, WebAuthnCredentialID, WebAuthnPublicKey,
+ *   WebAuthnCounter, WebAuthnTransports
+ */
+class AuthController extends ResourceController
 {
+    protected AuthModel $authModel;
+
+    public function __construct()
+    {
+        $this->authModel = new AuthModel();
+    }
+
     /**
-     * POST /api/v1/auth/login  { username, password }
-     * Replace the verifyUserCredentials() body with your real user lookup.
+     * POST /api/v1/auth/login
+     * Body: { username, password } or { username, skip_password: true }
+     * Returns: { user: { id, username, given_name, totp_enabled } }
      */
     public function login()
     {
-        $rules = [
-            'username' => 'required|string|max_length[100]',
-            'password' => 'required|string|min_length[1]|max_length[200]',
-        ];
-        if (!$this->validate($rules)) return $this->jsonError(422, 'validation_failed', $this->validator->getErrors());
+        $username = $this->request->getJsonVar('username');
+        $password = $this->request->getJsonVar('password');
+        $skipPassword = $this->request->getJsonVar('skip_password');
 
-        $username = $this->request->getJsonVar('username') ?? $this->request->getPost('username');
-        $password = $this->request->getJsonVar('password') ?? $this->request->getPost('password');
-
-        $user = $this->verifyUserCredentials($username, $password);
-        if (!$user) return $this->jsonError(401, 'invalid_credentials');
-
-        return $this->response->setJSON($this->issueTokenPair($user));
-    }
-
-    public function refresh()
-    {
-        $rt = $this->request->getJsonVar('refresh_token');
-        if (!$rt) return $this->jsonError(422, 'refresh_token_required');
-
-        $hash  = hash('sha256', $rt);
-        $model = new RefreshTokenModel();
-        $row   = $model->where('token_hash', $hash)->first();
-        if (!$row || $row['revoked_at'] !== null || strtotime($row['expires_at']) < time()) {
-            return $this->jsonError(401, 'refresh_invalid');
+        if (empty($username)) {
+            return $this->failValidationErrors(['username' => 'Username is required']);
         }
-        // Rotate
-        $model->update($row['id'], ['revoked_at' => date('Y-m-d H:i:s')]);
-        return $this->response->setJSON($this->issueTokenPair(['id' => $row['user_id']]));
-    }
 
-    private function issueTokenPair(array $user): array
-    {
-        $accessTtl  = (int) env('app.JWT_TTL_SECONDS', 900);
-        $refreshTtl = (int) env('app.REFRESH_TTL_SECONDS', 604800);
-        $access     = JwtService::issue(['sub' => (string) $user['id']], $accessTtl);
-        $refresh    = bin2hex(random_bytes(32));
-        (new RefreshTokenModel())->insert([
-            'user_id'    => (string) $user['id'],
-            'token_hash' => hash('sha256', $refresh),
-            'expires_at' => date('Y-m-d H:i:s', time() + $refreshTtl),
-            'created_at' => date('Y-m-d H:i:s'),
+        $user = $this->authModel->findByUsername($username);
+        
+        log_message('debug', 'Login attempt: user=' . $username . ', found=' . ($user ? 'yes' : 'no'));
+		if ($user) {
+			log_message('debug', 'Hash starts with: ' . substr($user['PasswordHash'], 0, 7));
+			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
+		}
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid credentials');
+        }
+
+        // skip_password is used after TOTP verification (second call)
+        if (!$skipPassword) {
+            if (empty($password) || !password_verify($password, $user['PasswordHash'])) {
+                return $this->failUnauthorized('Invalid credentials');
+            }
+        }
+
+        return $this->respond([
+            'user' => [
+                'id'           => (int) $user['UserID'],
+                'username'     => $user['UserName'],
+                'given_name'   => $user['GivenName'] ?? $user['UserName'],
+                'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
+            ],
         ]);
-        return ['access_token' => $access, 'refresh_token' => $refresh, 'expires_in' => $accessTtl, 'token_type' => 'Bearer'];
     }
 
     /**
-     * REPLACE THIS with your real user lookup against your existing users table.
-     * Must return ['id' => <stable id>, ...] on success or null on failure.
+     * POST /api/v1/auth/totp/verify
+     * Body: { username, totp_code }
      */
-    private function verifyUserCredentials(string $username, string $password): ?array
+    public function totpVerify()
     {
-        // Example placeholder — wire to your actual auth table:
-        // $u = (new \App\Models\UserModel())->where('username', $username)->first();
-        // if (!$u || !password_verify($password, $u['password_hash'])) return null;
-        // return $u;
-        return null;
+        $username = $this->request->getJsonVar('username');
+        $code     = $this->request->getJsonVar('totp_code');
+
+        $user = $this->authModel->findByUsername($username);
+        if (!$user || empty($user['TOTPSecret'])) {
+            return $this->failUnauthorized('TOTP not configured');
+        }
+
+        // Use a TOTP library (e.g. RobThree/TwoFactorAuth) to verify
+        $tfa = new \RobThree\Auth\TwoFactorAuth('ContactsApp');
+        $valid = $tfa->verifyCode($user['TOTPSecret'], $code, 1);
+
+        return $this->respond(['verified' => $valid]);
+    }
+
+    /**
+     * POST /api/v1/auth/totp/setup
+     * Body: { username, secret }
+     * Stores the TOTP secret and enables TOTP for the user.
+     */
+    public function totpSetup()
+    {
+        $username = $this->request->getJsonVar('username');
+        $secret   = $this->request->getJsonVar('secret');
+
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        // Encrypt the secret before storing (recommended)
+        $encrypter = \Config\Services::encrypter();
+        $encrypted = base64_encode($encrypter->encrypt($secret));
+
+        $this->authModel->update($user['UserID'], [
+            'TOTPSecret'  => $encrypted,
+            'TOTPEnabled' => 1,
+        ]);
+
+        return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/totp/remove
+     * Body: { username }
+     */
+    public function totpRemove()
+    {
+        $username = $this->request->getJsonVar('username');
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        $this->authModel->update($user['UserID'], [
+            'TOTPSecret'  => null,
+            'TOTPEnabled' => 0,
+        ]);
+
+        return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/store-challenge
+     * Body: { username, challenge }
+     */
+    public function passkeyStoreChallenge()
+    {
+        $username  = $this->request->getJsonVar('username');
+        $challenge = $this->request->getJsonVar('challenge');
+
+        // Store challenge temporarily (cache or DB)
+        cache()->save("webauthn_challenge_{$username}", $challenge, 300);
+
+        return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/get-challenge
+     * Body: { username }
+     */
+    public function passkeyGetChallenge()
+    {
+        $username = $this->request->getJsonVar('username');
+        $challenge = cache("webauthn_challenge_{$username}");
+
+        if (!$challenge) {
+            return $this->failNotFound('No active challenge');
+        }
+
+        return $this->respond(['challenge' => $challenge]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/register-verify
+     * Body: { username, credential_id, public_key, counter, transports }
+     */
+    public function passkeyRegisterVerify()
+    {
+        $username     = $this->request->getJsonVar('username');
+        $credentialId = $this->request->getJsonVar('credential_id');
+        $publicKey    = $this->request->getJsonVar('public_key');
+        $counter      = $this->request->getJsonVar('counter');
+        $transports   = $this->request->getJsonVar('transports');
+
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        $this->authModel->update($user['UserID'], [
+            'WebAuthnCredentialID' => $credentialId,
+            'WebAuthnPublicKey'    => $publicKey,
+            'WebAuthnCounter'      => (int) $counter,
+            'WebAuthnTransports'   => is_array($transports) ? implode(',', $transports) : $transports,
+        ]);
+
+        // Clean up challenge
+        cache()->delete("webauthn_challenge_{$username}");
+
+        return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/get-credentials
+     * Body: { username }
+     */
+    public function passkeyGetCredentials()
+    {
+        $username = $this->request->getJsonVar('username');
+        $user = $this->authModel->findByUsername($username);
+
+        if (!$user || empty($user['WebAuthnCredentialID'])) {
+            return $this->respond(['credentials' => []]);
+        }
+
+        return $this->respond([
+            'credentials' => [
+                [
+                    'credential_id' => $user['WebAuthnCredentialID'],
+                    'transports'    => $user['WebAuthnTransports']
+                        ? explode(',', $user['WebAuthnTransports'])
+                        : [],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/auth-verify
+     * Body: { credential_id, username? }
+     * Returns user, credential data, and stored challenge for verification.
+     */
+    public function passkeyAuthVerify()
+    {
+        $credentialId = $this->request->getJsonVar('credential_id');
+        $username     = $this->request->getJsonVar('username');
+
+        $user = $this->authModel->findByCredentialId($credentialId);
+        if (!$user) {
+            return $this->failNotFound('Credential not found');
+        }
+
+        $challengeKey = $username ?: '__anonymous__';
+        $challenge = cache("webauthn_challenge_{$challengeKey}");
+
+        return $this->respond([
+            'user' => [
+                'id'         => (int) $user['UserID'],
+                'username'   => $user['UserName'],
+                'given_name' => $user['GivenName'] ?? $user['UserName'],
+            ],
+            'credential' => [
+                'credential_id' => $user['WebAuthnCredentialID'],
+                'public_key'    => $user['WebAuthnPublicKey'],
+                'counter'       => (int) $user['WebAuthnCounter'],
+                'transports'    => $user['WebAuthnTransports']
+                    ? explode(',', $user['WebAuthnTransports'])
+                    : [],
+            ],
+            'challenge' => $challenge,
+        ]);
+    }
+
+    /**
+     * POST /api/v1/auth/passkey/update-counter
+     * Body: { credential_id, counter }
+     */
+    public function passkeyUpdateCounter()
+    {
+        $credentialId = $this->request->getJsonVar('credential_id');
+        $counter      = $this->request->getJsonVar('counter');
+
+        $user = $this->authModel->findByCredentialId($credentialId);
+        if (!$user) {
+            return $this->failNotFound('Credential not found');
+        }
+
+        $this->authModel->update($user['UserID'], [
+            'WebAuthnCounter' => (int) $counter,
+        ]);
+
+        return $this->respond(['success' => true]);
     }
 }

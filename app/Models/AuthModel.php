@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Models\AuthModel;
+use CodeIgniter\RESTful\ResourceController;
+
 
 /**
  * AuthModel — queries the control.users table for authentication.
