@@ -31,6 +31,9 @@ class AuthController extends ResourceController
      */
     public function login()
     {
+    
+    	log_message('debug', 'Login attempt starting');
+    	
         $username = $this->request->getJsonVar('username');
         $password = $this->request->getJsonVar('password');
         $skipPassword = $this->request->getJsonVar('skip_password');
