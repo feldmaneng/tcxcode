@@ -6,12 +6,17 @@ use CodeIgniter\Model;
 
 /**
  * AuthModel — queries the control.users table for authentication.
+ *
+ * Actual column names:
+ *   UserID (PK), UserName, PasswordHash, GivenName, FamilyName, Updated,
+ *   TOTPSecret, TOTPEnabled, WebAuthnCredentialID, WebAuthnPublicKey,
+ *   WebAuthnCounter, WebAuthnTransports
  */
 class AuthModel extends Model
 {
     protected $DBGroup    = 'control'; // adjust to your DB group
     protected $table      = 'users';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'UserID';
 
     protected $allowedFields = [
         'TOTPSecret',
@@ -27,7 +32,7 @@ class AuthModel extends Model
      */
     public function findByUsername(string $username): ?array
     {
-        return $this->where('username', $username)->first();
+        return $this->where('UserName', $username)->first();
     }
 
     /**

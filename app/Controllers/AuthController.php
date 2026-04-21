@@ -9,6 +9,11 @@ use CodeIgniter\RESTful\ResourceController;
  * AuthController — handles authentication endpoints.
  * All endpoints require HMAC service-key authentication (same as contacts).
  * No JWT issued — the TanStack frontend manages its own encrypted session cookies.
+ *
+ * Column mapping (control.users):
+ *   UserID, UserName, PasswordHash, GivenName, FamilyName,
+ *   TOTPSecret, TOTPEnabled, WebAuthnCredentialID, WebAuthnPublicKey,
+ *   WebAuthnCounter, WebAuthnTransports
  */
 class AuthController extends ResourceController
 {
@@ -41,16 +46,16 @@ class AuthController extends ResourceController
 
         // skip_password is used after TOTP verification (second call)
         if (!$skipPassword) {
-            if (empty($password) || !password_verify($password, $user['password'])) {
+            if (empty($password) || !password_verify($password, $user['PasswordHash'])) {
                 return $this->failUnauthorized('Invalid credentials');
             }
         }
 
         return $this->respond([
             'user' => [
-                'id'           => (int) $user['id'],
-                'username'     => $user['username'],
-                'given_name'   => $user['given_name'] ?? $user['username'],
+                'id'           => (int) $user['UserID'],
+                'username'     => $user['UserName'],
+                'given_name'   => $user['GivenName'] ?? $user['UserName'],
                 'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
             ],
         ]);
@@ -96,7 +101,7 @@ class AuthController extends ResourceController
         $encrypter = \Config\Services::encrypter();
         $encrypted = base64_encode($encrypter->encrypt($secret));
 
-        $this->authModel->update($user['id'], [
+        $this->authModel->update($user['UserID'], [
             'TOTPSecret'  => $encrypted,
             'TOTPEnabled' => 1,
         ]);
@@ -116,7 +121,7 @@ class AuthController extends ResourceController
             return $this->failNotFound('User not found');
         }
 
-        $this->authModel->update($user['id'], [
+        $this->authModel->update($user['UserID'], [
             'TOTPSecret'  => null,
             'TOTPEnabled' => 0,
         ]);
@@ -172,7 +177,7 @@ class AuthController extends ResourceController
             return $this->failNotFound('User not found');
         }
 
-        $this->authModel->update($user['id'], [
+        $this->authModel->update($user['UserID'], [
             'WebAuthnCredentialID' => $credentialId,
             'WebAuthnPublicKey'    => $publicKey,
             'WebAuthnCounter'      => (int) $counter,
@@ -230,9 +235,9 @@ class AuthController extends ResourceController
 
         return $this->respond([
             'user' => [
-                'id'         => (int) $user['id'],
-                'username'   => $user['username'],
-                'given_name' => $user['given_name'] ?? $user['username'],
+                'id'         => (int) $user['UserID'],
+                'username'   => $user['UserName'],
+                'given_name' => $user['GivenName'] ?? $user['UserName'],
             ],
             'credential' => [
                 'credential_id' => $user['WebAuthnCredentialID'],
@@ -260,7 +265,7 @@ class AuthController extends ResourceController
             return $this->failNotFound('Credential not found');
         }
 
-        $this->authModel->update($user['id'], [
+        $this->authModel->update($user['UserID'], [
             'WebAuthnCounter' => (int) $counter,
         ]);
 
