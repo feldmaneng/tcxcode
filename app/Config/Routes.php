@@ -545,16 +545,11 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
-// Section for API routing
 
+// Section for API routing
 $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($routes) {
 
-    // Public auth endpoints
-    $routes->post('auth/login',   'AuthController::login',   ['filter' => 'cors']);
-    $routes->post('auth/refresh', 'AuthController::refresh', ['filter' => 'cors']);
-    $routes->options('auth/(:any)', 'AuthController::options', ['filter' => 'cors']);
-
-    // Protected resources: HMAC OR JWT (apiAuth tries HMAC first, falls back to JWT)
+    // Protected resources: HMAC OR JWT
     $routes->group('contacts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',          'ContactsController::index');
         $routes->get('(:num)',     'ContactsController::show/$1');
@@ -565,18 +560,19 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     });
 });
 
-// Authentication routes (all POST, service-key authenticated)
-$routes->post('api/v1/auth/login',                    'AuthController::login');
-$routes->post('api/v1/auth/totp/verify',              'AuthController::totpVerify');
-$routes->post('api/v1/auth/totp/setup',               'AuthController::totpSetup');
-$routes->post('api/v1/auth/totp/remove',              'AuthController::totpRemove');
-$routes->post('api/v1/auth/passkey/store-challenge',   'AuthController::passkeyStoreChallenge');
-$routes->post('api/v1/auth/passkey/get-challenge',     'AuthController::passkeyGetChallenge');
-$routes->post('api/v1/auth/passkey/register-verify',   'AuthController::passkeyRegisterVerify');
-$routes->post('api/v1/auth/passkey/get-credentials',   'AuthController::passkeyGetCredentials');
-$routes->post('api/v1/auth/passkey/auth-verify',       'AuthController::passkeyAuthVerify');
-$routes->post('api/v1/auth/passkey/update-counter',    'AuthController::passkeyUpdateCounter');
-
+// Authentication routes — use the correct namespace
+$routes->group('api/v1/auth', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post('login',                    'AuthController::login');
+    $routes->post('totp/verify',              'AuthController::totpVerify');
+    $routes->post('totp/setup',               'AuthController::totpSetup');
+    $routes->post('totp/remove',              'AuthController::totpRemove');
+    $routes->post('passkey/store-challenge',   'AuthController::passkeyStoreChallenge');
+    $routes->post('passkey/get-challenge',     'AuthController::passkeyGetChallenge');
+    $routes->post('passkey/register-verify',   'AuthController::passkeyRegisterVerify');
+    $routes->post('passkey/get-credentials',   'AuthController::passkeyGetCredentials');
+    $routes->post('passkey/auth-verify',       'AuthController::passkeyAuthVerify');
+    $routes->post('passkey/update-counter',    'AuthController::passkeyUpdateCounter');
+});
 
 
 /*
