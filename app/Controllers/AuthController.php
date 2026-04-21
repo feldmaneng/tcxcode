@@ -40,6 +40,13 @@ class AuthController extends ResourceController
         }
 
         $user = $this->authModel->findByUsername($username);
+        
+        log_message('debug', 'Login attempt: user=' . $username . ', found=' . ($user ? 'yes' : 'no'));
+		if ($user) {
+			log_message('debug', 'Hash starts with: ' . substr($user['PasswordHash'], 0, 7));
+			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
+		}
+
         if (!$user) {
             return $this->failUnauthorized('Invalid credentials');
         }
