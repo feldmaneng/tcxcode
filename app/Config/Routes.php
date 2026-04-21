@@ -565,6 +565,19 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     });
 });
 
+// Authentication routes (all POST, service-key authenticated)
+$routes->post('api/v1/auth/login',                    'AuthController::login');
+$routes->post('api/v1/auth/totp/verify',              'AuthController::totpVerify');
+$routes->post('api/v1/auth/totp/setup',               'AuthController::totpSetup');
+$routes->post('api/v1/auth/totp/remove',              'AuthController::totpRemove');
+$routes->post('api/v1/auth/passkey/store-challenge',   'AuthController::passkeyStoreChallenge');
+$routes->post('api/v1/auth/passkey/get-challenge',     'AuthController::passkeyGetChallenge');
+$routes->post('api/v1/auth/passkey/register-verify',   'AuthController::passkeyRegisterVerify');
+$routes->post('api/v1/auth/passkey/get-credentials',   'AuthController::passkeyGetCredentials');
+$routes->post('api/v1/auth/passkey/auth-verify',       'AuthController::passkeyAuthVerify');
+$routes->post('api/v1/auth/passkey/update-counter',    'AuthController::passkeyUpdateCounter');
+
+
 
 /*
  * --------------------------------------------------------------------
