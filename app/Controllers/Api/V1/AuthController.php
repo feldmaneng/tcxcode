@@ -82,22 +82,22 @@ class AuthController extends ResourceController
             return $this->failUnauthorized('TOTP not configured');
         }
 
-        $secret = $user['TOTPSecret'];
-
-        try {
-            $decodedSecret = base64_decode($secret, true);
-            if ($decodedSecret !== false) {
-                $secret = \Config\Services::encrypter()->decrypt($decodedSecret);
-            }
-        } catch (\Throwable $e) {
-            // Keep backwards compatibility with any legacy plain-text secrets.
+        $secret = $this->normalizeTotpSecret($user['TOTPSecret']);
+        if ($secret === null) {
+            log_message('error', '[AuthController::totpVerify] Invalid stored TOTP secret for user: ' . $username);
+            return $this->respond(['verified' => false, 'message' => 'Stored TOTP secret is invalid. Reconfigure 2FA.'], 200);
         }
 
-        $tfa = new \RobThree\Auth\TwoFactorAuth(
-            new \RobThree\Auth\Providers\Qr\QRServerProvider(),
-            'ContactsApp'
-        );
-        $valid = $tfa->verifyCode($secret, $code, 1);
+        try {
+            $tfa = new \RobThree\Auth\TwoFactorAuth(
+                new \RobThree\Auth\Providers\Qr\QRServerProvider(),
+                'ContactsApp'
+            );
+            $valid = $tfa->verifyCode($secret, $code, 1);
+        } catch (\Throwable $e) {
+            log_message('error', '[AuthController::totpVerify] Verification failed: ' . $e->getMessage());
+            return $this->respond(['verified' => false, 'message' => 'TOTP verification failed'], 200);
+        }
 
         return $this->respond(['verified' => $valid]);
     }
@@ -117,12 +117,9 @@ class AuthController extends ResourceController
             return $this->failNotFound('User not found');
         }
 
-        // Encrypt the secret before storing (recommended)
-        $encrypter = \Config\Services::encrypter();
-        $encrypted = base64_encode($encrypter->encrypt($secret));
-
+        // Store the base32 secret as-is (TanStack server handles generation/validation)
         $this->authModel->update($user['UserID'], [
-            'TOTPSecret'  => $encrypted,
+            'TOTPSecret'  => $secret,
             'TOTPEnabled' => 1,
         ]);
 
@@ -311,14 +308,6 @@ class AuthController extends ResourceController
         }
 
         $user = $this->authModel->findByUsername($username);
-        
-                log_message('debug', 'Login attempt: user=' . $username . ', found=' . ($user ? 'yes' : 'no'));
-		if ($user) {
-			log_message('debug', 'Hash starts with: ' . substr($user['PasswordHash'], 0, 7));
-			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
-		}
-
- 
         if (!$user) {
             return $this->failNotFound('User not found');
         }
@@ -351,5 +340,45 @@ class AuthController extends ResourceController
             'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
             'has_passkey'  => !empty($user['WebAuthnCredentialID']),
         ]);
+    }
+
+    private function normalizeTotpSecret(?string $secret): ?string
+    {
+        if ($secret === null) {
+            return null;
+        }
+
+        $candidates = [];
+        $trimmed = trim($secret);
+
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $candidates[] = $trimmed;
+
+        if (str_starts_with($trimmed, 'otpauth://')) {
+            $query = parse_url($trimmed, PHP_URL_QUERY);
+            if (is_string($query)) {
+                parse_str($query, $params);
+                if (!empty($params['secret']) && is_string($params['secret'])) {
+                    $candidates[] = $params['secret'];
+                }
+            }
+        }
+
+        $decoded = base64_decode($trimmed, true);
+        if ($decoded !== false && is_string($decoded) && $decoded !== '') {
+            $candidates[] = $decoded;
+        }
+
+        foreach ($candidates as $candidate) {
+            $normalized = strtoupper(preg_replace('/[^A-Z2-7]/i', '', $candidate) ?? '');
+            if ($normalized !== '' && preg_match('/^[A-Z2-7]+$/', $normalized) === 1) {
+                return $normalized;
+            }
+        }
+
+        return null;
     }
 }
