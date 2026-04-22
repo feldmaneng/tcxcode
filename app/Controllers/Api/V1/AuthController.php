@@ -97,23 +97,31 @@ class AuthController extends ResourceController
     public function totpSetup()
     {
         $username = $this->request->getJsonVar('username');
-        $secret   = $this->request->getJsonVar('secret');
+        $code     = $this->request->getJsonVar('totp_code');
 
         $user = $this->authModel->findByUsername($username);
-        if (!$user) {
-            return $this->failNotFound('User not found');
+        if (!$user || empty($user['TOTPSecret'])) {
+            return $this->failUnauthorized('TOTP not configured');
         }
 
-        // Encrypt the secret before storing (recommended)
-        $encrypter = \Config\Services::encrypter();
-        $encrypted = base64_encode($encrypter->encrypt($secret));
+        $secret = $user['TOTPSecret'];
 
-        $this->authModel->update($user['UserID'], [
-            'TOTPSecret'  => $encrypted,
-            'TOTPEnabled' => 1,
-        ]);
+        try {
+            $decodedSecret = base64_decode($secret, true);
+            if ($decodedSecret !== false) {
+                $secret = \Config\Services::encrypter()->decrypt($decodedSecret);
+            }
+        } catch (\Throwable $e) {
+            // Keep backwards compatibility with any legacy plain-text secrets.
+        }
 
-        return $this->respond(['success' => true]);
+        $tfa = new \RobThree\Auth\TwoFactorAuth(
+            new \RobThree\Auth\Providers\Qr\QRServerProvider(),
+            'ContactsApp'
+        );
+        $valid = $tfa->verifyCode($secret, $code, 1);
+
+        return $this->respond(['verified' => $valid]);
     }
 
     /**
