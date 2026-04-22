@@ -83,7 +83,7 @@ class AuthController extends ResourceController
         }
 
         // Use a TOTP library (e.g. RobThree/TwoFactorAuth) to verify
-        $tfa = new \RobThree\Auth\TwoFactorAuth('ContactsApp');
+        $tfa = new \RobThree\Auth\TwoFactorAuth();
         $valid = $tfa->verifyCode($user['TOTPSecret'], $code, 1);
 
         return $this->respond(['verified' => $valid]);
