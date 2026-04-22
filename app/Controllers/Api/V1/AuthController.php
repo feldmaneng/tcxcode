@@ -122,6 +122,9 @@ class AuthController extends ResourceController
 
     /**
      * POST /api/v1/auth/totp/setup
+     * Body: { username, secret }
+     */
+    public function totpSetup()
     {
         $username = $this->request->getJsonVar('username');
         $secret   = $this->request->getJsonVar('secret');
