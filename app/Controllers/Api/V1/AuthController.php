@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\AuthModel;
+use App\Controllers\Api\V1;
 use CodeIgniter\RESTful\ResourceController;
 
 /**

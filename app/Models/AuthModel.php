@@ -19,6 +19,9 @@ class AuthModel extends Model
     protected $primaryKey = 'UserID';
 
     protected $allowedFields = [
+        'UserName',
+        'GivenName',
+        'FamilyName',
         'PasswordHash',
         'TOTPSecret',
         'TOTPEnabled',
