@@ -560,6 +560,9 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     $routes->post('auth/passkey/get-credentials',      'AuthController::passkeyGetCredentials');
     $routes->post('auth/passkey/auth-verify',          'AuthController::passkeyAuthVerify');
     $routes->post('auth/passkey/update-counter',       'AuthController::passkeyUpdateCounter');
+    $routes->post('auth/change-password',  				'AuthController::changePassword');
+	$routes->post('auth/security-status',   			'AuthController::securityStatus');
+
     $routes->options('auth/(:any)',                    'AuthController::options', ['filter' => 'cors']);
 
     // Protected contacts

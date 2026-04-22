@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Api\V1;
+namespace App\Controllers;
 
 use App\Models\AuthModel;
 use CodeIgniter\RESTful\ResourceController;
@@ -31,9 +31,6 @@ class AuthController extends ResourceController
      */
     public function login()
     {
-    
-    	log_message('debug', 'Login attempt starting');
-    	
         $username = $this->request->getJsonVar('username');
         $password = $this->request->getJsonVar('password');
         $skipPassword = $this->request->getJsonVar('skip_password');
@@ -50,6 +47,7 @@ class AuthController extends ResourceController
 			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
 		}
 
+        
         if (!$user) {
             return $this->failUnauthorized('Invalid credentials');
         }
@@ -280,5 +278,58 @@ class AuthController extends ResourceController
         ]);
 
         return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/change-password
+     * Body: { username, current_password, new_password }
+     */
+    public function changePassword()
+    {
+        $username        = $this->request->getJsonVar('username');
+        $currentPassword = $this->request->getJsonVar('current_password');
+        $newPassword     = $this->request->getJsonVar('new_password');
+
+        if (empty($username) || empty($currentPassword) || empty($newPassword)) {
+            return $this->failValidationErrors(['error' => 'All fields are required']);
+        }
+
+        if (strlen($newPassword) < 12) {
+            return $this->failValidationErrors(['error' => 'New password must be at least 12 characters']);
+        }
+
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        if (!password_verify($currentPassword, $user['PasswordHash'])) {
+            return $this->failUnauthorized('Current password is incorrect');
+        }
+
+        $this->authModel->update($user['UserID'], [
+            'PasswordHash' => password_hash($newPassword, PASSWORD_BCRYPT),
+        ]);
+
+        return $this->respond(['success' => true]);
+    }
+
+    /**
+     * POST /api/v1/auth/security-status
+     * Body: { username }
+     * Returns: { totp_enabled, has_passkey }
+     */
+    public function securityStatus()
+    {
+        $username = $this->request->getJsonVar('username');
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        return $this->respond([
+            'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
+            'has_passkey'  => !empty($user['WebAuthnCredentialID']),
+        ]);
     }
 }
