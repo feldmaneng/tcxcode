@@ -103,11 +103,25 @@ class AuthController extends ResourceController
     }
 
     /**
-     * POST /api/v1/auth/totp/setup
-     * Body: { username, secret }
-     * Stores the TOTP secret and enables TOTP for the user.
+     * POST /api/v1/auth/totp/get-secret
+     * Body: { username }
+     * Returns the raw stored TOTP secret for server-side verification.
      */
-    public function totpSetup()
+    public function totpGetSecret()
+    {
+        $username = $this->request->getJsonVar('username');
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        return $this->respond([
+            'secret' => $user['TOTPSecret'] ?? null,
+        ]);
+    }
+
+    /**
+     * POST /api/v1/auth/totp/setup
     {
         $username = $this->request->getJsonVar('username');
         $secret   = $this->request->getJsonVar('secret');

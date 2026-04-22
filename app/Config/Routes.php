@@ -553,6 +553,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     $routes->post('auth/login',                       'AuthController::login');
     $routes->post('auth/totp/verify',                 'AuthController::totpVerify');
     $routes->post('auth/totp/setup',                  'AuthController::totpSetup');
+    $routes->post('auth/totp/get-secret',          		'AuthController::totpGetSecret');
     $routes->post('auth/totp/remove',                 'AuthController::totpRemove');
     $routes->post('auth/passkey/store-challenge',      'AuthController::passkeyStoreChallenge');
     $routes->post('auth/passkey/get-challenge',        'AuthController::passkeyGetChallenge');
