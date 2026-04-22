@@ -82,28 +82,6 @@ class AuthController extends ResourceController
             return $this->failUnauthorized('TOTP not configured');
         }
 
-        // Use a TOTP library (e.g. RobThree/TwoFactorAuth) to verify
-        $tfa = new \RobThree\Auth\TwoFactorAuth();
-        $valid = $tfa->verifyCode($user['TOTPSecret'], $code, 1);
-
-        return $this->respond(['verified' => $valid]);
-    }
-
-    /**
-     * POST /api/v1/auth/totp/setup
-     * Body: { username, secret }
-     * Stores the TOTP secret and enables TOTP for the user.
-     */
-    public function totpSetup()
-    {
-        $username = $this->request->getJsonVar('username');
-        $code     = $this->request->getJsonVar('totp_code');
-
-        $user = $this->authModel->findByUsername($username);
-        if (!$user || empty($user['TOTPSecret'])) {
-            return $this->failUnauthorized('TOTP not configured');
-        }
-
         $secret = $user['TOTPSecret'];
 
         try {
@@ -122,6 +100,33 @@ class AuthController extends ResourceController
         $valid = $tfa->verifyCode($secret, $code, 1);
 
         return $this->respond(['verified' => $valid]);
+    }
+
+    /**
+     * POST /api/v1/auth/totp/setup
+     * Body: { username, secret }
+     * Stores the TOTP secret and enables TOTP for the user.
+     */
+    public function totpSetup()
+    {
+        $username = $this->request->getJsonVar('username');
+        $secret   = $this->request->getJsonVar('secret');
+
+        $user = $this->authModel->findByUsername($username);
+        if (!$user) {
+            return $this->failNotFound('User not found');
+        }
+
+        // Encrypt the secret before storing (recommended)
+        $encrypter = \Config\Services::encrypter();
+        $encrypted = base64_encode($encrypter->encrypt($secret));
+
+        $this->authModel->update($user['UserID'], [
+            'TOTPSecret'  => $encrypted,
+            'TOTPEnabled' => 1,
+        ]);
+
+        return $this->respond(['success' => true]);
     }
 
     /**
