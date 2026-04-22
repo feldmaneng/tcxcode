@@ -32,15 +32,13 @@ class AuthController extends ResourceController
      */
     public function login()
     {
-        log_message('debug', '[AuthController::login] *** HIT *** Method=' . $this->request->getMethod() . ' URI=' . current_url());
-        log_message('debug', '[AuthController::login] Headers: ' . json_encode($this->request->headers()));
-        log_message('debug', '[AuthController::login] Raw body: ' . $this->request->getBody());
+        log_message('debug', '[AuthController::login] *** HIT *** Method=' . $this->request->getMethod());
 
         $username = $this->request->getJsonVar('username');
         $password = $this->request->getJsonVar('password');
         $skipPassword = $this->request->getJsonVar('skip_password');
 
-        log_message('debug', '[AuthController::login] Parsed — username=' . ($username ?? 'NULL') . ' skip_password=' . ($skipPassword ? 'true' : 'false'));
+        log_message('debug', '[AuthController::login] Parsed — username=' . ($username ?? 'NULL'));
 
         if (empty($username)) {
             return $this->failValidationErrors(['username' => 'Username is required']);
