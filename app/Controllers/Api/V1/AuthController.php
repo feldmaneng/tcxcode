@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api\V1;
 
-use App\Controllers\Api\V1;
+use App\Models\AuthModel;
 use CodeIgniter\RESTful\ResourceController;
 
 /**
@@ -21,6 +21,7 @@ class AuthController extends ResourceController
 
     public function __construct()
     {
+        log_message('debug', '[AuthController] __construct called — controller instantiated');
         $this->authModel = new AuthModel();
     }
 
@@ -31,26 +32,21 @@ class AuthController extends ResourceController
      */
     public function login()
     {
-    
-    	log_message('debug', 'Login attempt starting');
-    	
+        log_message('debug', '[AuthController::login] *** HIT *** Method=' . $this->request->getMethod() . ' URI=' . current_url());
+        log_message('debug', '[AuthController::login] Headers: ' . json_encode($this->request->headers()));
+        log_message('debug', '[AuthController::login] Raw body: ' . $this->request->getBody());
+
         $username = $this->request->getJsonVar('username');
         $password = $this->request->getJsonVar('password');
         $skipPassword = $this->request->getJsonVar('skip_password');
+
+        log_message('debug', '[AuthController::login] Parsed — username=' . ($username ?? 'NULL') . ' skip_password=' . ($skipPassword ? 'true' : 'false'));
 
         if (empty($username)) {
             return $this->failValidationErrors(['username' => 'Username is required']);
         }
 
         $user = $this->authModel->findByUsername($username);
-        
-        log_message('debug', 'Login attempt: user=' . $username . ', found=' . ($user ? 'yes' : 'no'));
-		if ($user) {
-			log_message('debug', 'Hash starts with: ' . substr($user['PasswordHash'], 0, 7));
-			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
-		}
-
-        
         if (!$user) {
             return $this->failUnauthorized('Invalid credentials');
         }
@@ -302,6 +298,14 @@ class AuthController extends ResourceController
         }
 
         $user = $this->authModel->findByUsername($username);
+        
+                log_message('debug', 'Login attempt: user=' . $username . ', found=' . ($user ? 'yes' : 'no'));
+		if ($user) {
+			log_message('debug', 'Hash starts with: ' . substr($user['PasswordHash'], 0, 7));
+			log_message('debug', 'password_verify result: ' . (password_verify($password, $user['PasswordHash']) ? 'true' : 'false'));
+		}
+
+ 
         if (!$user) {
             return $this->failNotFound('User not found');
         }
