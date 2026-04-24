@@ -98,6 +98,31 @@ class ContactsController extends BaseApiController
         return $out;
     }
 
+	private function write_archive ($id = null, $delete = FALSE) {
+		// Grab the existing record
+        $old_row = (new ContactModel())->find((int) $id);
+        if (!$old_row) return $this->jsonError(404, 'Old row not_found');
+
+		// We've also assumed only one record got returend since primary_key is unique
+		//If we have more than 1 row, for some reason, only the first row will be written to the archive
+		$archive_row = $old_row;
+		
+		//Save the ContactID since the ForeignKey relationship will set the ContactID to NULL when the 
+		//record is deleted from Contacts
+		$archive_row['OriginalContactID'] = $old_row['ContactID'];
+		
+		// Modify the notes field to indicate who deleted this record
+		// Unfortunately we don't have the user info handy $this->determine_user()
+		if ( $delete ) {
+			$archive_row['Notes'] = "DELETED " . date("Y-m-d h:i:sa") . " by API ". $archive_row['Notes'];
+		}
+	
+		$ok = $db->table('contacts_archive')->insert($archive_row); 
+		if (!$ok) return $this->jsonError(500, 'write_archive_failed', $db->errors());
+		return;
+	
+	}
+	
     /** GET /api/v1/contacts */
     public function index()
     {
@@ -192,18 +217,29 @@ class ContactsController extends BaseApiController
         $dbRow = $this->apiToDb($payload, true);
         if (empty($dbRow)) return $this->jsonError(400, 'no_updatable_fields');
 
-        $ok = $model->update((int) $id, $dbRow);
+		// Archive old copy
+		$ok = $write_archive ($id);
+			
+		$ok = $model->update((int) $id, $dbRow);
         if (!$ok) return $this->jsonError(500, 'update_failed', $model->errors());
         return $this->response->setJSON(['data' => $this->dbToApi($model->find((int) $id))]);
     }
 
-    /** DELETE /api/v1/contacts/{id} — soft delete */
+    /** DELETE /api/v1/contacts/{id} — hard delete */
     public function delete($id = null)
     {
         $model = new ContactModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
-        $model->update((int) $id, ['Active' => 0, 'EmailPermission' => 0]);
+        
+		// Archive old copy
+		$ok = $write_archive ($id, TRUE);
+		
+        // $model->update((int) $id, ['Active' => 0, 'EmailPermission' => 0]);
+        $ok = $model->delete((int) $id);
+        if (!$ok) return $this->jsonError(500, 'delete_failed', $model->errors());
+        
+        // maybe fix the return 
         return $this->response->setStatusCode(200)->setJSON(['data' => ['id' => (int) $id, 'active' => 0, 'soft_deleted' => true]]);
     }
 
