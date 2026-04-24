@@ -218,7 +218,7 @@ class ContactsController extends BaseApiController
         if (empty($dbRow)) return $this->jsonError(400, 'no_updatable_fields');
 
 		// Archive old copy
-		$ok = $this->$write_archive ($id);
+		$ok = $this->write_archive ($id);
 			
 		$ok = $model->update((int) $id, $dbRow);
         if (!$ok) return $this->jsonError(500, 'update_failed', $model->errors());
@@ -233,7 +233,7 @@ class ContactsController extends BaseApiController
         if (!$row) return $this->jsonError(404, 'not_found');
         
 		// Archive old copy
-		$ok = $this->$write_archive ($id, TRUE);
+		$ok = $this->write_archive ($id, TRUE);
 		
         // $model->update((int) $id, ['Active' => 0, 'EmailPermission' => 0]);
         $ok = $model->delete((int) $id);
