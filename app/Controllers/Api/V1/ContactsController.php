@@ -99,6 +99,8 @@ class ContactsController extends BaseApiController
     }
 
 	private function write_archive ($id = null, $delete = FALSE) {
+		$db = \Config\Database::connect();
+		
 		// Grab the existing record
         $old_row = (new ContactModel())->find((int) $id);
         if (!$old_row) return $this->jsonError(404, 'Old row not_found');
