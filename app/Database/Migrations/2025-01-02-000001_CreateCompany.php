@@ -1,14 +1,15 @@
 <?php
-namespace App\Database\Migrations;
+/* namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+*/
 
 /**
  * Migration is documentation-only — the existing `company` table is in the
  * legacy schema. Run only on fresh installs. The shape mirrors the production
  * column definitions provided by the product owner.
  */
-class CreateCompany extends Migration
+/* class CreateCompany extends Migration
 {
     public function up()
     {
@@ -38,3 +39,4 @@ class CreateCompany extends Migration
         $this->forge->dropTable('company');
     }
 }
+*/
