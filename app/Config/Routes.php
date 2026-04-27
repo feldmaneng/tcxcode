@@ -547,26 +547,49 @@ $routes->post('/test/testarray', 'test::testarray');
 
 
 // Section for API routing
+//
+// Combines:
+//  - Auth endpoints (HMAC service-key authenticated, used by the TanStack frontend
+//    for password / TOTP / passkey / change-password / security-status)
+//  - Contacts API (HMAC or JWT via the apiAuth filter)
+
 $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($routes) {
 
-    // Auth endpoints
-    $routes->post('auth/login',                       'AuthController::login');
-    $routes->post('auth/totp/verify',                 'AuthController::totpVerify');
-    $routes->post('auth/totp/setup',                  'AuthController::totpSetup');
-    $routes->post('auth/totp/get-secret',          		'AuthController::totpGetSecret');
-    $routes->post('auth/totp/remove',                 'AuthController::totpRemove');
-    $routes->post('auth/passkey/store-challenge',      'AuthController::passkeyStoreChallenge');
-    $routes->post('auth/passkey/get-challenge',        'AuthController::passkeyGetChallenge');
-    $routes->post('auth/passkey/register-verify',      'AuthController::passkeyRegisterVerify');
-    $routes->post('auth/passkey/get-credentials',      'AuthController::passkeyGetCredentials');
-    $routes->post('auth/passkey/auth-verify',          'AuthController::passkeyAuthVerify');
-    $routes->post('auth/passkey/update-counter',       'AuthController::passkeyUpdateCounter');
-    $routes->post('auth/change-password',  				'AuthController::changePassword');
-	$routes->post('auth/security-status',   			'AuthController::securityStatus');
+    // ---------------------------------------------------------------------
+    // Public auth endpoints (CORS only — JWT login/refresh)
+    // ---------------------------------------------------------------------
+    $routes->post('auth/login',     'AuthController::login',   ['filter' => 'cors']);
+    $routes->post('auth/refresh',   'AuthController::refresh', ['filter' => 'cors']);
+    $routes->options('auth/(:any)', 'AuthController::options', ['filter' => 'cors']);
 
-    $routes->options('auth/(:any)',                    'AuthController::options', ['filter' => 'cors']);
+    // ---------------------------------------------------------------------
+    // Service-key authenticated auth endpoints (HMAC)
+    // Used by the TanStack frontend for TOTP, passkeys, password change, etc.
+    // ---------------------------------------------------------------------
+    $routes->group('auth', ['filter' => ['cors', 'apiAuth']], function ($routes) {
+        // TOTP
+        $routes->post('totp/verify',                 'AuthController::totpVerify');
+        $routes->post('totp/setup',                  'AuthController::totpSetup');
+        $routes->post('totp/get-secret',             'AuthController::totpGetSecret');
+        $routes->post('totp/remove',                 'AuthController::totpRemove');
 
-    // Protected contacts
+        // Passkey / WebAuthn
+        $routes->post('passkey/store-challenge',     'AuthController::passkeyStoreChallenge');
+        $routes->post('passkey/get-challenge',       'AuthController::passkeyGetChallenge');
+        $routes->post('passkey/register-verify',     'AuthController::passkeyRegisterVerify');
+        $routes->post('passkey/get-credentials',     'AuthController::passkeyGetCredentials');
+        $routes->post('passkey/auth-verify',         'AuthController::passkeyAuthVerify');
+        $routes->post('passkey/update-counter',      'AuthController::passkeyUpdateCounter');
+
+        // Account
+        $routes->post('change-password',             'AuthController::changePassword');
+        $routes->post('security-status',             'AuthController::securityStatus');
+    });
+
+    // ---------------------------------------------------------------------
+    // Protected resources: HMAC OR JWT
+    // (apiAuth tries HMAC first, then falls back to JWT)
+    // ---------------------------------------------------------------------
     $routes->group('contacts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',          'ContactsController::index');
         $routes->get('(:num)',     'ContactsController::show/$1');
@@ -575,8 +598,29 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)',  'ContactsController::delete/$1');
         $routes->options('(:any)', 'ContactsController::options', ['filter' => 'cors']);
     });
-});
 
+    // Companies
+    $routes->group('companies', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',                    'CompaniesController::index');
+        $routes->get('(:num)',               'CompaniesController::show/$1');
+        $routes->get('(:num)/contacts',      'CompaniesController::contacts/$1');
+        $routes->post('/',                   'CompaniesController::create');
+        $routes->put('(:num)',               'CompaniesController::update/$1');
+        $routes->delete('(:num)',            'CompaniesController::delete/$1');
+        $routes->options('(:any)',           'CompaniesController::options', ['filter' => 'cors']);
+    });
+
+    // Markets (hierarchical tags)
+    $routes->group('markets', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',                       'MarketsController::index');
+        $routes->get('(:num)',                  'MarketsController::show/$1');
+        $routes->get('(:num)/descendants',      'MarketsController::descendants/$1');
+        $routes->post('/',                      'MarketsController::create');
+        $routes->put('(:num)',                  'MarketsController::update/$1');
+        $routes->delete('(:num)',               'MarketsController::delete/$1');
+        $routes->options('(:any)',              'MarketsController::options', ['filter' => 'cors']);
+    });
+});
 
 
 /*
