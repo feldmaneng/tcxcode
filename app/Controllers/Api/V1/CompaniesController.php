@@ -76,6 +76,10 @@ class CompaniesController extends BaseApiController
             ->get()->getResultArray();
         $set = [];
         foreach ($parents as $p) $set[(int) $p['ParentID']] = true;
+        foreach ($rows as &$r) {
+            $r['is_parent'] = isset($set[(int) $r['id']]) ? 1 : 0;
+        }
+        unset($r);
     }
 
     /** Compute all descendant CompanyIDs of $rootId (BFS, capped depth) */
