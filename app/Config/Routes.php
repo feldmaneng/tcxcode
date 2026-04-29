@@ -604,6 +604,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('/',                    'CompaniesController::index');
         $routes->get('(:num)',               'CompaniesController::show/$1');
         $routes->get('(:num)/contacts',      'CompaniesController::contacts/$1');
+        $routes->get('(:num)/descendants',   'CompaniesController::descendants/$1');
         $routes->post('/',                   'CompaniesController::create');
         $routes->put('(:num)',               'CompaniesController::update/$1');
         $routes->delete('(:num)',            'CompaniesController::delete/$1');

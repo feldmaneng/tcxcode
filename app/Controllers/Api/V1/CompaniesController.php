@@ -76,8 +76,29 @@ class CompaniesController extends BaseApiController
             ->get()->getResultArray();
         $set = [];
         foreach ($parents as $p) $set[(int) $p['ParentID']] = true;
-        foreach ($rows as &$r) $r['is_parent'] = isset($set[(int) $r['id']]) ? 1 : 0;
     }
+
+    /** Compute all descendant CompanyIDs of $rootId (BFS, capped depth) */
+    private function descendantIds(int $rootId): array
+    {
+        $db = Database::connect();
+        $all = [];
+        $frontier = [$rootId];
+        for ($depth = 0; $depth < 10 && !empty($frontier); $depth++) {
+            $rows = $db->table('company')
+                ->select('CompanyID')
+                ->whereIn('ParentID', $frontier)
+                ->get()->getResultArray();
+            $next = [];
+            foreach ($rows as $r) {
+                $cid = (int) $r['CompanyID'];
+                if ($cid === $rootId || isset($all[$cid])) continue;
+                $all[$cid] = true;
+                $next[] = $cid;
+            }
+            $frontier = $next;
+        }
+        return array_map('intval', array_keys($all));
 
     /** GET /api/v1/companies */
     public function index()
@@ -200,7 +221,26 @@ class CompaniesController extends BaseApiController
             'active'      => (int) $c['Active'],
         ], $contacts);
 
+        // Embed direct children (id, name) for the General tab
+        $kids = $db->table('company')
+            ->select('CompanyID, Name')
+            ->where('ParentID', (int) $id)
+            ->orderBy('Name', 'ASC')
+            ->get()->getResultArray();
+        $api['children'] = array_map(fn($k) => [
+            'id'   => (int) $k['CompanyID'],
+            'name' => $k['Name'],
+        ], $kids);
+
         return $this->response->setJSON(['data' => $api]);
+    }
+
+    /** GET /api/v1/companies/{id}/descendants — flat list of descendant ids (BFS) */
+    public function descendants($id = null)
+    {
+        $rootId = (int) $id;
+        if ($rootId <= 0) return $this->jsonError(400, 'invalid_id');
+        return $this->response->setJSON(['data' => $this->descendantIds($rootId)]);
     }
 
     /** GET /api/v1/companies/{id}/contacts */
@@ -261,6 +301,18 @@ class CompaniesController extends BaseApiController
         $marketIds = $this->extractMarketIds($payload);
         $dbRow = $this->apiToDb($payload);
         if (empty($dbRow) && !$hasMarketKey) return $this->jsonError(400, 'no_updatable_fields');
+
+        // Cycle guard: parent_id may not be self or any descendant
+        if (array_key_exists('parent_id', $payload) && $payload['parent_id'] !== null) {
+            $newParent = (int) $payload['parent_id'];
+            if ($newParent === (int) $id) {
+                return $this->jsonError(409, 'invalid_parent', ['message' => 'A company cannot be its own parent.']);
+            }
+            $descendants = $this->descendantIds((int) $id);
+            if (in_array($newParent, $descendants, true)) {
+                return $this->jsonError(409, 'invalid_parent', ['message' => 'Parent cannot be a descendant of this company (would create a cycle).']);
+            }
+        }
 
         if (!empty($dbRow)) {
             $dbRow['Stamp'] = date('Y-m-d H:i:s');
