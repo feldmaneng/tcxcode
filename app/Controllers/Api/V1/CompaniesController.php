@@ -99,6 +99,7 @@ class CompaniesController extends BaseApiController
             $frontier = $next;
         }
         return array_map('intval', array_keys($all));
+    }
 
     /** GET /api/v1/companies */
     public function index()
