@@ -8,12 +8,13 @@ use Config\Database;
 
 class CompaniesController extends BaseApiController
 {
+    // Legacy `company` table has no Active or IsParent columns.
+    // - `active` is synthesized as 1 for every row (UI keeps showing the field but it's read-only/always-on).
+    // - `is_parent` is computed on the fly from ParentID children.
     private const FIELD_MAP = [
         'id'             => 'CompanyID',
         'name'           => 'Name',
         'parent_id'      => 'ParentID',
-        'is_parent'      => 'IsParent',
-        'active'         => 'Active',
         'cn_name'        => 'CN_Name',
         'url'            => 'URL',
         'stock_market'   => 'Stock_Market',
@@ -24,9 +25,9 @@ class CompaniesController extends BaseApiController
         'stamp'          => 'Stamp',
     ];
 
-    private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'is_parent'];
+    private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'is_parent', 'active'];
 
-    private const FILTERABLE = ['active', 'parent_id', 'stock_market'];
+    private const FILTERABLE = ['parent_id', 'stock_market'];
     private const SORTABLE   = ['id', 'name', 'added', 'stamp'];
 
     private function dbToApi(array $row): array
@@ -35,6 +36,9 @@ class CompaniesController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
+        // Synthesize fields the legacy table doesn't store.
+        $out['active'] = 1;
+        $out['is_parent'] = 0; // overwritten by attachIsParent() for list/show
         return $out;
     }
 
@@ -49,7 +53,7 @@ class CompaniesController extends BaseApiController
         return $out;
     }
 
-    /** Attach market_ids array to a company row */
+    /** Attach market_ids array + computed is_parent flag to a company row */
     private function attachMarkets(array &$row): void
     {
         $db = Database::connect();
@@ -58,6 +62,21 @@ class CompaniesController extends BaseApiController
             ->where('CompanyID', (int) $row['id'])
             ->get()->getResultArray();
         $row['market_ids'] = array_map(fn($r) => (int) $r['MarketID'], $rows);
+    }
+
+    /** Bulk-compute is_parent for a set of rows in one query (avoids N+1) */
+    private function attachIsParentBulk(array &$rows): void
+    {
+        if (empty($rows)) return;
+        $ids = array_map(fn($r) => (int) $r['id'], $rows);
+        $parents = Database::connect()->table('company')
+            ->select('ParentID')
+            ->whereIn('ParentID', $ids)
+            ->groupBy('ParentID')
+            ->get()->getResultArray();
+        $set = [];
+        foreach ($parents as $p) $set[(int) $p['ParentID']] = true;
+        foreach ($rows as &$r) $r['is_parent'] = isset($set[(int) $r['id']]) ? 1 : 0;
     }
 
     /** GET /api/v1/companies */
@@ -137,6 +156,7 @@ class CompaniesController extends BaseApiController
             $this->attachMarkets($api);
             $data[] = $api;
         }
+        $this->attachIsParentBulk($data);
 
         return $this->response->setJSON([
             'data' => $data,
@@ -156,6 +176,9 @@ class CompaniesController extends BaseApiController
         if (!$row) return $this->jsonError(404, 'not_found');
         $api = $this->dbToApi($row);
         $this->attachMarkets($api);
+        // Compute is_parent for the single row
+        $singleton = [&$api];
+        $this->attachIsParentBulk($singleton);
 
         // Embed contacts at this company (id, name, email, active)
         $db = Database::connect();
@@ -206,7 +229,6 @@ class CompaniesController extends BaseApiController
         }
         $marketIds = $this->extractMarketIds($payload);
         $dbRow = $this->apiToDb($payload);
-        if (!array_key_exists('Active', $dbRow)) $dbRow['Active'] = 1;
         if (!array_key_exists('Added', $dbRow)) $dbRow['Added'] = date('Y-m-d H:i:s');
         $dbRow['Stamp'] = date('Y-m-d H:i:s');
 
@@ -215,8 +237,6 @@ class CompaniesController extends BaseApiController
         if (!$id) return $this->jsonError(500, 'insert_failed', $model->errors());
 
         $this->syncMarkets((int) $id, $marketIds);
-        $this->refreshIsParent((int) $id);
-        if (!empty($dbRow['ParentID'])) $this->refreshIsParent((int) $dbRow['ParentID']);
 
         return $this->show((int) $id)->setStatusCode(201);
     }
@@ -238,20 +258,6 @@ class CompaniesController extends BaseApiController
         $dbRow = $this->apiToDb($payload);
         if (empty($dbRow) && !$hasMarketKey) return $this->jsonError(400, 'no_updatable_fields');
 
-        // Cannot deactivate parent if it has active children
-        if (array_key_exists('Active', $dbRow) && (int) $dbRow['Active'] === 0) {
-            $childCount = $model->builder()
-                ->where('ParentID', (int) $id)
-                ->where('Active', 1)
-                ->countAllResults();
-            if ($childCount > 0) {
-                return $this->jsonError(409, 'has_active_children', [
-                    'message' => 'Cannot deactivate a parent with active children. Deactivate the children first.',
-                    'active_children' => $childCount,
-                ]);
-            }
-        }
-
         if (!empty($dbRow)) {
             $dbRow['Stamp'] = date('Y-m-d H:i:s');
             if (!$model->update((int) $id, $dbRow)) {
@@ -261,39 +267,30 @@ class CompaniesController extends BaseApiController
 
         if ($hasMarketKey) $this->syncMarkets((int) $id, $marketIds);
 
-        // Refresh IsParent flags for old & new parent
-        $this->refreshIsParent((int) $id);
-        $oldParent = (int) ($existing['ParentID'] ?? 0);
-        $newParent = array_key_exists('ParentID', $dbRow) ? (int) $dbRow['ParentID'] : $oldParent;
-        if ($oldParent) $this->refreshIsParent($oldParent);
-        if ($newParent && $newParent !== $oldParent) $this->refreshIsParent($newParent);
-
         return $this->show((int) $id);
     }
 
-    /** DELETE /api/v1/companies/{id} — soft-delete (Active=0) */
+    /** DELETE /api/v1/companies/{id} — hard delete (legacy table has no Active column).
+     *  Blocked when the company has children; clean up the junction table first. */
     public function delete($id = null)
     {
         $model = new CompanyModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
 
-        // Block if it is a parent with any active child
-        $activeChildren = $model->builder()
-            ->where('ParentID', (int) $id)
-            ->where('Active', 1)
-            ->countAllResults();
-        if ($activeChildren > 0) {
-            return $this->jsonError(409, 'has_active_children', [
-                'message' => 'Cannot archive a parent company while it has active children.',
-                'active_children' => $activeChildren,
+        $children = $model->builder()->where('ParentID', (int) $id)->countAllResults();
+        if ($children > 0) {
+            return $this->jsonError(409, 'has_children', [
+                'message' => 'Cannot delete a company that has child companies. Reassign or delete the children first.',
+                'children' => $children,
             ]);
         }
 
-        $model->update((int) $id, ['Active' => 0, 'Stamp' => date('Y-m-d H:i:s')]);
-        if (!empty($row['ParentID'])) $this->refreshIsParent((int) $row['ParentID']);
+        $db = Database::connect();
+        $db->table('company_markets')->where('CompanyID', (int) $id)->delete();
+        $model->delete((int) $id);
 
-        return $this->response->setJSON(['data' => ['id' => (int) $id, 'active' => 0, 'archived' => true]]);
+        return $this->response->setJSON(['data' => ['id' => (int) $id, 'deleted' => true]]);
     }
 
     private function extractMarketIds(array $payload): array
@@ -332,19 +329,11 @@ class CompaniesController extends BaseApiController
         $db->transComplete();
     }
 
-    private function refreshIsParent(int $companyId): void
-    {
-        $model = new CompanyModel();
-        $childCount = $model->builder()->where('ParentID', $companyId)->countAllResults();
-        $model->update($companyId, ['IsParent' => $childCount > 0 ? 1 : 0]);
-    }
-
     private function validationRules(bool $isUpdate, ?int $idForUnique = null): array
     {
         return [
             'name'           => ($isUpdate ? 'permit_empty' : 'required') . '|string|max_length[100]',
             'parent_id'      => 'permit_empty|is_natural',
-            'active'         => 'permit_empty|in_list[0,1]',
             'cn_name'        => 'permit_empty|string|max_length[50]',
             'url'            => 'permit_empty|max_length[200]',
             'stock_market'   => 'permit_empty|string|max_length[10]',

@@ -11,7 +11,7 @@ class CompanyModel extends Model
     protected $useAutoIncrement = true;
     protected $useTimestamps    = false;
     protected $allowedFields    = [
-        'Name', 'ParentID', 'IsParent', 'Active', 'CN_Name', 'URL',
+        'Name', 'ParentID', 'CN_Name', 'URL',
         'Stock_Market', 'Ticker_Symbol', 'Research_link', 'Notes',
         'Added', 'Stamp',
     ];
