@@ -100,8 +100,12 @@ class CompaniesController extends BaseApiController
             $builder->groupStart()
                 ->like('Name', $q)
                 ->orLike('CN_Name', $q)
-                ->orLike('Ticker_Symbol', $q)
-                ->groupEnd();
+                ->orLike('Ticker_Symbol', $q);
+            // Also match CompanyID when the query is a positive integer
+            if (ctype_digit($q)) {
+                $builder->orWhere('CompanyID', (int) $q);
+            }
+            $builder->groupEnd();
         }
 
         // Markets filter — supports comma-separated list with trailing '+' for include-descendants.

@@ -1,6 +1,7 @@
 <?php
 namespace App\Filters;
 
+use App\Libraries\ApiAuthContext;
 use App\Libraries\JwtService;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -22,7 +23,7 @@ class JwtAuthFilter implements FilterInterface
         } catch (\Throwable $e) {
             return service('response')->setStatusCode(401)->setJSON(['error' => 'jwt_invalid']);
         }
-        $request->apiAuth = ['type' => 'jwt', 'user_id' => $claims['sub'] ?? null, 'claims' => $claims];
+        ApiAuthContext::set(['type' => 'jwt', 'user_id' => $claims['sub'] ?? null, 'claims' => $claims]);
     }
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
 }

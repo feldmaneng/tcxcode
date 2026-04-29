@@ -1,6 +1,7 @@
 <?php
 namespace App\Filters;
 
+use App\Libraries\ApiAuthContext;
 use App\Libraries\HmacVerifier;
 use App\Models\ApiClientModel;
 use CodeIgniter\Filters\FilterInterface;
@@ -45,7 +46,7 @@ class HmacAuthFilter implements FilterInterface
             return service('response')->setStatusCode(401)->setJSON(['error' => 'hmac_' . $reason]);
         }
 
-        $request->apiAuth = ['type' => 'hmac', 'client_id' => $client['id'], 'client_name' => $client['name']];
+        ApiAuthContext::set(['type' => 'hmac', 'client_id' => $client['id'], 'client_name' => $client['name']]);
     }
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
 }

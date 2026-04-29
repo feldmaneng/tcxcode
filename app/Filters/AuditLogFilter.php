@@ -1,6 +1,7 @@
 <?php
 namespace App\Filters;
 
+use App\Libraries\ApiAuthContext;
 use App\Models\AuditLogModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
@@ -13,7 +14,7 @@ class AuditLogFilter implements FilterInterface
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         try {
-            $auth = $request->apiAuth ?? null;
+            $auth = ApiAuthContext::get();
             $body = (string) $request->getBody();
             (new AuditLogModel())->insert([
                 'client_id'    => $auth['client_id']    ?? null,
