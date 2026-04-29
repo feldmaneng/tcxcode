@@ -22,7 +22,7 @@ class CompaniesController extends BaseApiController
         'research_link'  => 'Research_link',
         'notes'          => 'Notes',
         'added'          => 'Added',
-        'stamp'          => 'Stamp',
+        'stamp'          => 'Updated',
     ];
 
     private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'is_parent', 'active'];
@@ -278,8 +278,7 @@ class CompaniesController extends BaseApiController
         }
         $marketIds = $this->extractMarketIds($payload);
         $dbRow = $this->apiToDb($payload);
-        if (!array_key_exists('Added', $dbRow)) $dbRow['Added'] = date('Y-m-d H:i:s');
-        $dbRow['Stamp'] = date('Y-m-d H:i:s');
+        // Added/Updated are managed by MySQL defaults (CURRENT_TIMESTAMP / ON UPDATE CURRENT_TIMESTAMP).
 
         $model = new CompanyModel();
         $id = $model->insert($dbRow, true);
@@ -320,7 +319,7 @@ class CompaniesController extends BaseApiController
         }
 
         if (!empty($dbRow)) {
-            $dbRow['Stamp'] = date('Y-m-d H:i:s');
+            // Updated is auto-maintained by MySQL ON UPDATE CURRENT_TIMESTAMP.
             if (!$model->update((int) $id, $dbRow)) {
                 return $this->jsonError(500, 'update_failed', $model->errors());
             }
