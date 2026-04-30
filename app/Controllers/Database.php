@@ -161,7 +161,7 @@ class Database extends BaseController {
 			'NativeName',
 			'Active', 'TechInfo', 'ExhibitInfo',
 			'CorrespondenceType','Email_only', 'Record_type',
-			'Title','Company', 'ParentCompanyID','CN_Company', 'LinkedInEmail',
+			'Title','Company', 'CompanyID','CN_Company', 'LinkedInEmail',
 			'LinkedInURL','LinkedInGroup','WordPressID',
 			'Website',
 			'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 
@@ -175,7 +175,7 @@ class Database extends BaseController {
 		
 
 	
-		$crud->setRelation('ParentCompanyID','company','{Name} (ID:{CompanyID} IsParent:{IsParent})',"(IsParent = '1' OR ParentID IS NULL)");	
+		$crud->setRelation('CompanyID','company','{Name} (ID:{CompanyID} StandardName:{StandardName})',"(StandardName = '1' OR StandardName IS NULL)");	
 		//GC V3 does not support ORDER BY Name ASC]);
 
 	
@@ -253,7 +253,7 @@ class Database extends BaseController {
 		
 		
 		
-		$crud->fields (['CompanyID','Name','CN_Name','ParentID','IsParent',
+		$crud->fields (['CompanyID','Name','CN_Name','ParentID','StandardName',
 			'URL', 'Stock_Market','Ticker_Symbol',
 			'Research','BiTS_DB','BiTS_Attend','BiTS_Expo','BiTS_Sponsor',
 			'BiTS_Outreach', 'BiTS_China', 'FEC_Client', 'Acquired',
@@ -281,7 +281,7 @@ class Database extends BaseController {
 		//$crud->fieldType('Updated','readonly');
 		$crud->readOnlyFields(['CompanyID','Added','Updated']);
 		
-		$crud->fieldType('IsParent','dropdown',['0' => 'No', '1'=>'Yes']);
+		$crud->fieldType('StandardName','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('Research','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('BiTS_DB','dropdown',['0' => 'No', '1'=>'Yes']);
 		$crud->fieldType('BiTS_Attend','dropdown',['0' => 'No', '1'=>'Yes']);
