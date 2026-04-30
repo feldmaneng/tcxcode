@@ -13,6 +13,7 @@ class CompanyModel extends Model
     protected $allowedFields    = [
         'Name', 'ParentID', 'CN_Name', 'URL',
         'Stock_Market', 'Ticker_Symbol', 'Research_link', 'Notes',
+        'StandardName',
         // Added / Updated are managed by MySQL defaults — do not write from PHP.
     ];
 }

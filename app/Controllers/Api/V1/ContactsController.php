@@ -29,7 +29,7 @@ class ContactsController extends BaseApiController
         'abbr'                => 'Abbr',
         'title'               => 'Title',
         'company_id'          => 'CompanyID',
-        'parent_company_id'   => 'ParentCompanyID',
+        // 'parent_company_id' removed — column no longer exists in contacts table.
         'company'             => 'Company',
         'cn_company'          => 'CN_Company',
         'address1'            => 'Address1',
@@ -266,7 +266,7 @@ class ContactsController extends BaseApiController
             'abbr'              => 'permit_empty|string|max_length[50]',
             'title'             => 'permit_empty|string|max_length[50]',
             'company_id'        => 'permit_empty|is_natural',
-            'parent_company_id' => 'permit_empty|is_natural',
+            // parent_company_id removed — no longer in DB.
             'company'           => 'permit_empty|string|max_length[100]',
             'cn_company'        => 'permit_empty|string|max_length[50]',
             'address1'          => 'permit_empty|string|max_length[255]',

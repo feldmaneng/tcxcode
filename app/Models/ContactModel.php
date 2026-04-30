@@ -21,7 +21,7 @@ class ContactModel extends Model
         'DBuser','Email','GivenName','FamilyName','Nickname','AddressAs','Active',
         'NativeLanguage','NativeName','Expo_mailing','Tech_mailing','China_mailing',
         'CorrespondenceType','Email_only','Record_type','Abbr','Title',
-        'CompanyID','ParentCompanyID','Company','CN_Company',
+        'CompanyID','Company','CN_Company',
         'Address1','Address2','City','State','Country','PCode','CN_Address',
         'Website','Phone','Fax','Mobile','Source','Origin','Solicitation',
         'LinkedInEmail','LinkedInURL','LinkedInGroup','WordPressID','Notes',

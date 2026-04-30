@@ -21,13 +21,14 @@ class CompaniesController extends BaseApiController
         'ticker_symbol'  => 'Ticker_Symbol',
         'research_link'  => 'Research_link',
         'notes'          => 'Notes',
+        'standard_name'  => 'StandardName',
         'added'          => 'Added',
         'stamp'          => 'Updated',
     ];
 
     private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'is_parent', 'active'];
 
-    private const FILTERABLE = ['parent_id', 'stock_market'];
+    private const FILTERABLE = ['parent_id', 'stock_market', 'standard_name'];
     private const SORTABLE   = ['id', 'name', 'added', 'stamp'];
 
     private function dbToApi(array $row): array
@@ -115,6 +116,15 @@ class CompaniesController extends BaseApiController
         $sort    = (string) ($req->getGet('sort') ?: 'name');
 
         $builder = (new CompanyModel())->builder();
+
+        // Hide deprecated names (StandardName=0) by default.
+        $includeDeprecated = (int) $req->getGet('include_deprecated') === 1;
+        if (!$includeDeprecated) {
+            $builder->groupStart()
+                ->where('StandardName', 1)
+                ->orWhere('StandardName IS NULL', null, false)
+                ->groupEnd();
+        }
 
         foreach (self::FILTERABLE as $apiCol) {
             $val = $req->getGet($apiCol);
@@ -222,7 +232,7 @@ class CompaniesController extends BaseApiController
             'name' => $k['Name'],
         ], $kids);
 
-        // Contacts at this company OR any descendant — matched on ParentCompanyID.
+        // Contacts at this company OR any descendant — matched on CompanyID.
         // Build the company id pool: self + all descendants, with display names.
         $descIds = $this->descendantIds((int) $id);
         $companyIds = array_values(array_unique(array_merge([(int) $id], $descIds)));
@@ -237,16 +247,16 @@ class CompaniesController extends BaseApiController
             }
         }
         $contacts = $db->table('contacts')
-            ->select('ContactID, GivenName, FamilyName, Email, Active, ParentCompanyID')
-            ->whereIn('ParentCompanyID', $companyIds)
+            ->select('ContactID, GivenName, FamilyName, Email, Active, CompanyID')
+            ->whereIn('CompanyID', $companyIds)
             ->orderBy('FamilyName', 'ASC')
             ->limit(2000)
             ->get()->getResultArray();
 
-        // Group by ParentCompanyID, preserving order: self first, then descendants by name.
+        // Group by CompanyID, preserving order: self first, then descendants by name.
         $groupsMap = [];
         foreach ($contacts as $c) {
-            $pcid = (int) $c['ParentCompanyID'];
+            $pcid = (int) $c['CompanyID'];
             if (!isset($groupsMap[$pcid])) $groupsMap[$pcid] = [];
             $groupsMap[$pcid][] = [
                 'id'          => (int) $c['ContactID'],
@@ -321,6 +331,8 @@ class CompaniesController extends BaseApiController
         }
         $marketIds = $this->extractMarketIds($payload);
         $dbRow = $this->apiToDb($payload);
+        // Default new rows to StandardName=1 unless explicitly provided.
+        if (!array_key_exists('StandardName', $dbRow)) $dbRow['StandardName'] = 1;
         // Added/Updated are managed by MySQL defaults (CURRENT_TIMESTAMP / ON UPDATE CURRENT_TIMESTAMP).
 
         $model = new CompanyModel();
@@ -390,7 +402,7 @@ class CompaniesController extends BaseApiController
         }
 
         $db = Database::connect();
-        $contactRefs = $db->table('contacts')->where('ParentCompanyID', (int) $id)->countAllResults();
+        $contactRefs = $db->table('contacts')->where('CompanyID', (int) $id)->countAllResults();
         if ($contactRefs > 0) {
             return $this->jsonError(409, 'has_contacts', [
                 'message' => 'Cannot delete a company referenced by contacts. Reassign those contacts first.',
@@ -451,6 +463,7 @@ class CompaniesController extends BaseApiController
             'ticker_symbol'  => 'permit_empty|string|max_length[10]',
             'research_link'  => 'permit_empty|max_length[200]',
             'notes'          => 'permit_empty|string',
+            'standard_name'  => 'permit_empty|in_list[0,1]',
         ];
     }
 }
