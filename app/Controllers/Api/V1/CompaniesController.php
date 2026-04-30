@@ -210,23 +210,8 @@ class CompaniesController extends BaseApiController
         $singleton = [&$api];
         $this->attachIsParentBulk($singleton);
 
-        // Embed contacts at this company (id, name, email, active)
-        $db = Database::connect();
-        $contacts = $db->table('contacts')
-            ->select('ContactID, GivenName, FamilyName, Email, Active')
-            ->where('CompanyID', (int) $id)
-            ->orderBy('FamilyName', 'ASC')
-            ->limit(500)
-            ->get()->getResultArray();
-        $api['contacts'] = array_map(fn($c) => [
-            'id'          => (int) $c['ContactID'],
-            'given_name'  => $c['GivenName'],
-            'family_name' => $c['FamilyName'],
-            'email'       => $c['Email'],
-            'active'      => (int) $c['Active'],
-        ], $contacts);
-
         // Embed direct children (id, name) for the General tab
+        $db = Database::connect();
         $kids = $db->table('company')
             ->select('CompanyID, Name')
             ->where('ParentID', (int) $id)
@@ -236,6 +221,64 @@ class CompaniesController extends BaseApiController
             'id'   => (int) $k['CompanyID'],
             'name' => $k['Name'],
         ], $kids);
+
+        // Contacts at this company OR any descendant — matched on ParentCompanyID.
+        // Build the company id pool: self + all descendants, with display names.
+        $descIds = $this->descendantIds((int) $id);
+        $companyIds = array_values(array_unique(array_merge([(int) $id], $descIds)));
+        $companyNames = [(int) $id => (string) ($row['Name'] ?? '')];
+        if (!empty($descIds)) {
+            $nameRows = $db->table('company')
+                ->select('CompanyID, Name')
+                ->whereIn('CompanyID', $descIds)
+                ->get()->getResultArray();
+            foreach ($nameRows as $nr) {
+                $companyNames[(int) $nr['CompanyID']] = (string) $nr['Name'];
+            }
+        }
+        $contacts = $db->table('contacts')
+            ->select('ContactID, GivenName, FamilyName, Email, Active, ParentCompanyID')
+            ->whereIn('ParentCompanyID', $companyIds)
+            ->orderBy('FamilyName', 'ASC')
+            ->limit(2000)
+            ->get()->getResultArray();
+
+        // Group by ParentCompanyID, preserving order: self first, then descendants by name.
+        $groupsMap = [];
+        foreach ($contacts as $c) {
+            $pcid = (int) $c['ParentCompanyID'];
+            if (!isset($groupsMap[$pcid])) $groupsMap[$pcid] = [];
+            $groupsMap[$pcid][] = [
+                'id'          => (int) $c['ContactID'],
+                'given_name'  => $c['GivenName'],
+                'family_name' => $c['FamilyName'],
+                'email'       => $c['Email'],
+                'active'      => (int) $c['Active'],
+            ];
+        }
+        // Build ordered group list: parent (self) first, then descendants alphabetically.
+        $orderedIds = [];
+        if (isset($groupsMap[(int) $id])) $orderedIds[] = (int) $id;
+        $descWithNames = [];
+        foreach ($descIds as $dId) {
+            if (isset($groupsMap[$dId])) $descWithNames[$dId] = $companyNames[$dId] ?? '';
+        }
+        asort($descWithNames, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach (array_keys($descWithNames) as $dId) $orderedIds[] = $dId;
+
+        $contactGroups = [];
+        $flatContacts = [];
+        foreach ($orderedIds as $cid) {
+            $contactGroups[] = [
+                'company_id'   => $cid,
+                'company_name' => $companyNames[$cid] ?? ('#' . $cid),
+                'is_self'      => $cid === (int) $id ? 1 : 0,
+                'contacts'     => $groupsMap[$cid],
+            ];
+            foreach ($groupsMap[$cid] as $ct) $flatContacts[] = $ct;
+        }
+        $api['contacts'] = $flatContacts;        // back-compat
+        $api['contact_groups'] = $contactGroups; // new grouped shape
 
         return $this->response->setJSON(['data' => $api]);
     }
@@ -347,6 +390,14 @@ class CompaniesController extends BaseApiController
         }
 
         $db = Database::connect();
+        $contactRefs = $db->table('contacts')->where('ParentCompanyID', (int) $id)->countAllResults();
+        if ($contactRefs > 0) {
+            return $this->jsonError(409, 'has_contacts', [
+                'message' => 'Cannot delete a company referenced by contacts. Reassign those contacts first.',
+                'contacts' => $contactRefs,
+            ]);
+        }
+
         $db->table('company_markets')->where('CompanyID', (int) $id)->delete();
         $model->delete((int) $id);
 
