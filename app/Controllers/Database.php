@@ -266,6 +266,8 @@ class Database extends BaseController {
 			
 		// Grocery Crud does not allow a set_relation back into the same table...
 		//$crud->setRelation('ParentID','company','Parent Name'); //'{Name}'); // {IsParent}',null,'Name ASC');
+	/* Moved to new market tag system
+	
 		$crud->setRelation('Market1','markets','{Market} - {ID}');
 		$crud->setRelation('Market2','markets','{Market} - {ID}');
 		$crud->setRelation('Market3','markets','{Market} - {ID}');
@@ -275,6 +277,7 @@ class Database extends BaseController {
 		$crud->setRelation('Market7','markets','{Market} - {ID}');
 		$crud->setRelation('Market8','markets','{Market} - {ID}');
 		$crud->setRelation('MarketTestConX','markets','{Market} - {ID}');
+	*/
 		
 		//$crud->fieldType('CompanyID','readonly');
 	//	$crud->fieldType('Added','readonly');
