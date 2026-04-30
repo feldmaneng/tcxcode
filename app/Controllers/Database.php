@@ -249,7 +249,7 @@ class Database extends BaseController {
         
         	
 		
-		$crud->columns (['CompanyID','Name','CN_Name','ParentID', 'IsParent']);
+		$crud->columns (['CompanyID','Name','CN_Name','ParentID', 'StandardName']);
 		
 		
 		
