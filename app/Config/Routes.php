@@ -611,6 +611,37 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',           'CompaniesController::options', ['filter' => 'cors']);
     });
 
+    // Attendance
+    $routes->group('attendance', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'AttendanceController::index');
+        $routes->get('(:num)',     'AttendanceController::show/$1');
+        $routes->post('/',         'AttendanceController::create');
+        $routes->put('(:num)',     'AttendanceController::update/$1');
+        $routes->delete('(:num)',  'AttendanceController::delete/$1');
+        $routes->options('(:any)', 'AttendanceController::options', ['filter' => 'cors']);
+    });
+
+    // Authors
+    $routes->group('authors', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'AuthorsController::index');
+        $routes->get('(:num)',     'AuthorsController::show/$1');
+        $routes->post('/',         'AuthorsController::create');
+        $routes->put('(:num)',     'AuthorsController::update/$1');
+        $routes->delete('(:num)',  'AuthorsController::delete/$1');
+        $routes->options('(:any)', 'AuthorsController::options', ['filter' => 'cors']);
+    });
+
+    // Presentations
+    $routes->group('presentations', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',                'PresentationsController::index');
+        $routes->get('(:num)',           'PresentationsController::show/$1');
+        $routes->get('(:num)/authors',   'AuthorsController::byPresentation/$1');
+        $routes->post('/',               'PresentationsController::create');
+        $routes->put('(:num)',           'PresentationsController::update/$1');
+        $routes->delete('(:num)',        'PresentationsController::delete/$1');
+        $routes->options('(:any)',       'PresentationsController::options', ['filter' => 'cors']);
+    });
+
     // Markets (hierarchical tags)
     $routes->group('markets', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',                       'MarketsController::index');
