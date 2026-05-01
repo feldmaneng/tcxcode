@@ -144,14 +144,39 @@ class ContactsController extends BaseApiController
             $builder->where(self::FIELD_MAP[$apiCol], $val);
         }
 
-        // Free-text search
+        // Free-text search. For multi-word queries like "Victor Hue", require
+        // every token to match at least one searchable column while also
+        // matching the full combined name. Build the SQL manually here because
+        // CI4's nested like/group builder was not reliably matching token pairs.
         if ($q !== '') {
-            $builder->groupStart()
-                ->like('GivenName', $q)
-                ->orLike('FamilyName', $q)
-                ->orLike('Company', $q)
-                ->orLike('Email', $q)
-                ->groupEnd();
+            $db = \Config\Database::connect();
+            $tokens = preg_split('/\s+/', $q, -1, PREG_SPLIT_NO_EMPTY);
+            $searchable = [
+                'GivenName',
+                'FamilyName',
+                'Nickname',
+                'Company',
+                'Email',
+                "TRIM(CONCAT_WS(' ', GivenName, FamilyName))",
+            ];
+
+            $buildClause = static function (array $fields, string $term) use ($db): string {
+                $pattern = $db->escape('%' . $db->escapeLikeString($term) . '%');
+                $parts = array_map(
+                    static fn (string $field): string => $field . ' LIKE ' . $pattern . " ESCAPE '!'",
+                    $fields,
+                );
+                return '(' . implode(' OR ', $parts) . ')';
+            };
+
+            $clauses = [$buildClause($searchable, $q)];
+            if (count($tokens) > 1) {
+                foreach ($tokens as $tok) {
+                    $clauses[] = $buildClause($searchable, $tok);
+                }
+            }
+
+            $builder->where(implode(' AND ', $clauses), null, false);
         }
 
         // Sort: comma-separated, prefix - for desc

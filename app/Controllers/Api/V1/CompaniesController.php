@@ -456,7 +456,7 @@ class CompaniesController extends BaseApiController
     {
         return [
             'name'           => ($isUpdate ? 'permit_empty' : 'required') . '|string|max_length[100]',
-            'parent_id'      => 'permit_empty|is_natural',
+            'parent_id'      => 'if_exist|permit_empty|is_natural',
             'cn_name'        => 'permit_empty|string|max_length[50]',
             'url'            => 'permit_empty|max_length[200]',
             'stock_market'   => 'permit_empty|string|max_length[10]',

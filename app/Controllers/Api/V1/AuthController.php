@@ -56,12 +56,18 @@ class AuthController extends ResourceController
             }
         }
 
+        // Block disabled users
+        if (isset($user['Active']) && (int) $user['Active'] === 0) {
+            return $this->failUnauthorized('Account disabled');
+        }
+
         return $this->respond([
             'user' => [
-                'id'           => (int) $user['UserID'],
-                'username'     => $user['UserName'],
-                'given_name'   => $user['GivenName'] ?? $user['UserName'],
-                'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
+                'id'                   => (int) $user['UserID'],
+                'username'             => $user['UserName'],
+                'given_name'           => $user['GivenName'] ?? $user['UserName'],
+                'totp_enabled'         => (bool) ($user['TOTPEnabled'] ?? false),
+                'must_change_password' => (bool) ($user['MustChangePassword'] ?? false),
             ],
         ]);
     }
