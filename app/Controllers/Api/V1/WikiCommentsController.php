@@ -39,24 +39,44 @@ class WikiCommentsController extends BaseApiController
         $ctx = $this->pageAndUser($pageId);
         if (!$ctx) return $this->response;
 
-        $rows = db_connect('control')->table('wiki_comments c')
-            ->select('c.*, u.UserName AS author_username, u.GivenName AS author_given_name')
-            ->join('users u', 'u.UserID = c.AuthorUserID', 'left')
-            ->where('c.PageID', $pageId)
-            ->where('c.DeletedAt', null)
-            ->orderBy('c.CreatedAt', 'ASC')
+        // wiki_comments lives in the `wiki` DB; users lives in `control`.
+        // Cross-database joins aren't safe to assume, so query separately
+        // and stitch the author fields in PHP.
+        $rows = db_connect('wiki')->table('wiki_comments')
+            ->where('PageID', $pageId)
+            ->where('DeletedAt', null)
+            ->orderBy('CreatedAt', 'ASC')
             ->get()->getResultArray();
 
-        return $this->respond(['data' => array_map(fn($r) => [
-            'id'                => (int) $r['CommentID'],
-            'parent_comment_id' => $r['ParentCommentID'] !== null ? (int) $r['ParentCommentID'] : null,
-            'body_markdown'     => $r['BodyMarkdown'],
-            'author_user_id'    => $r['AuthorUserID'] !== null ? (int) $r['AuthorUserID'] : null,
-            'author_username'   => $r['author_username'],
-            'author_given_name' => $r['author_given_name'],
-            'created_at'        => $r['CreatedAt'],
-            'updated_at'        => $r['UpdatedAt'],
-        ], $rows)]);
+        $userIds = array_values(array_unique(array_filter(array_map(
+            fn($r) => $r['AuthorUserID'] !== null ? (int) $r['AuthorUserID'] : null,
+            $rows,
+        ))));
+        $usersById = [];
+        if (!empty($userIds)) {
+            $userRows = db_connect('control')->table('users')
+                ->select('UserID, UserName, GivenName')
+                ->whereIn('UserID', $userIds)
+                ->get()->getResultArray();
+            foreach ($userRows as $u) {
+                $usersById[(int) $u['UserID']] = $u;
+            }
+        }
+
+        return $this->respond(['data' => array_map(function ($r) use ($usersById) {
+            $aid = $r['AuthorUserID'] !== null ? (int) $r['AuthorUserID'] : null;
+            $u   = $aid !== null ? ($usersById[$aid] ?? null) : null;
+            return [
+                'id'                => (int) $r['CommentID'],
+                'parent_comment_id' => $r['ParentCommentID'] !== null ? (int) $r['ParentCommentID'] : null,
+                'body_markdown'     => $r['BodyMarkdown'],
+                'author_user_id'    => $aid,
+                'author_username'   => $u['UserName']  ?? null,
+                'author_given_name' => $u['GivenName'] ?? null,
+                'created_at'        => $r['CreatedAt'],
+                'updated_at'        => $r['UpdatedAt'],
+            ];
+        }, $rows)]);
     }
 
     /** POST /api/v1/wiki-pages/(:num)/comments  Body: { body_markdown, parent_comment_id? } */

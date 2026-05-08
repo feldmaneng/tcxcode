@@ -6,12 +6,10 @@ namespace App\Libraries;
  *
  * Replaces the previous pattern of attaching `$request->apiAuth = [...]` directly
  * to the IncomingRequest object. PHP 8.2+ deprecates dynamic properties on classes
- * that don't declare them, which produced warnings like:
- *   "Creation of dynamic property CodeIgniter\HTTP\IncomingRequest::$apiAuth is deprecated"
+ * that don't declare them.
  *
- * Usage:
- *   ApiAuthContext::set(['type' => 'hmac', 'client_id' => 1, ...]);
- *   $auth = ApiAuthContext::get(); // null if not set
+ * Also stores the resolved end-user identity from the X-Acting-User header
+ * (parsed and verified by HmacAuthFilter).
  */
 final class ApiAuthContext
 {
@@ -33,5 +31,19 @@ final class ApiAuthContext
     public static function clear(): void
     {
         self::$auth = null;
+    }
+
+    /** Numeric user id from X-Acting-User, or null when absent. */
+    public static function actingUserId(): ?int
+    {
+        $v = self::$auth['acting_user_id'] ?? null;
+        return $v === null ? null : (int) $v;
+    }
+
+    /** Username from X-Acting-User, or null when absent. */
+    public static function actingUsername(): ?string
+    {
+        $v = self::$auth['acting_username'] ?? null;
+        return $v === null ? null : (string) $v;
     }
 }

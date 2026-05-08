@@ -31,9 +31,10 @@ class HmacAuthFilter implements FilterInterface
         $path  = '/' . ltrim($request->getUri()->getPath(), '/');
         $skew  = (int) env('app.HMAC_MAX_SKEW_SECONDS', 300);
 
-        // HMAC verification requires the raw shared secret (cannot use a one-way hash).
-        // The secret is stored encrypted at rest with CI4's Encrypter (app.encryption.key)
-        // and decrypted in-memory only for signature verification.
+        // X-Acting-User: "<UserID>:<UserName>" — included in the HMAC canonical
+        // string so a proxy cannot rewrite it. Empty when the call is service-to-service.
+        $actingHeader = $request->getHeaderLine('X-Acting-User');
+
         $encrypter = service('encrypter');
         try {
             $secret = $encrypter->decrypt(base64_decode($client['secret_encrypted']));
@@ -41,12 +42,33 @@ class HmacAuthFilter implements FilterInterface
             return service('response')->setStatusCode(500)->setJSON(['error' => 'secret_decrypt_failed']);
         }
 
-        [$ok, $reason] = HmacVerifier::verify($request->getMethod(), $path, $ts, $body, $sig, $secret, $skew);
+        [$ok, $reason] = HmacVerifier::verify(
+            $request->getMethod(), $path, $ts, $body, $sig, $secret, $skew, $actingHeader
+        );
         if (!$ok) {
             return service('response')->setStatusCode(401)->setJSON(['error' => 'hmac_' . $reason]);
         }
 
-        ApiAuthContext::set(['type' => 'hmac', 'client_id' => $client['id'], 'client_name' => $client['name']]);
+        $ctx = [
+            'type'        => 'hmac',
+            'client_id'   => $client['id'],
+            'client_name' => $client['name'],
+        ];
+
+        if ($actingHeader !== '') {
+            // Format "id:username". Username may itself contain a colon — split on the first only.
+            $colon = strpos($actingHeader, ':');
+            if ($colon !== false) {
+                $idPart   = substr($actingHeader, 0, $colon);
+                $namePart = substr($actingHeader, $colon + 1);
+                if (ctype_digit($idPart) && $namePart !== '') {
+                    $ctx['acting_user_id']  = (int) $idPart;
+                    $ctx['acting_username'] = $namePart;
+                }
+            }
+        }
+
+        ApiAuthContext::set($ctx);
     }
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
 }

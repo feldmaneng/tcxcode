@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class WikiAttachmentModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'wiki_attachments';
     protected $primaryKey    = 'AttachmentID';
     protected $returnType    = 'array';

@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class WikiPageModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'wiki_pages';
     protected $primaryKey    = 'PageID';
     protected $returnType    = 'array';

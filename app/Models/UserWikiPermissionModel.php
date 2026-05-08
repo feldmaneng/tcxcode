@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class UserWikiPermissionModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'user_wiki_permissions';
     protected $primaryKey    = 'UserID'; // composite; CI4 needs a single PK
     protected $returnType    = 'array';

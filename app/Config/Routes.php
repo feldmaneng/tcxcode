@@ -546,7 +546,8 @@ $routes->get('/test/testarray', 'test::testarray');
 $routes->post('/test/testarray', 'test::testarray');
 
 
-// Section for API routing
+// Merged CI4 routes — add these inside your existing app/Config/Routes.php
+// (do not replace the whole file).
 //
 // Combines:
 //  - Auth endpoints (HMAC service-key authenticated, used by the TanStack frontend
@@ -652,8 +653,75 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)',               'MarketsController::delete/$1');
         $routes->options('(:any)',              'MarketsController::options', ['filter' => 'cors']);
     });
-});
 
+    // ---------------------------------------------------------------------
+    // "Me" endpoints — modules + wikis the current user can access
+    // ---------------------------------------------------------------------
+    $routes->group('me', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->post('modules', 'MeController::modules');
+        $routes->post('wikis',   'MeController::wikis');
+        $routes->options('(:any)', 'MeController::options', ['filter' => 'cors']);
+    });
+
+    // ---------------------------------------------------------------------
+    // Wikis (read/write authority enforced inside controllers via
+    // user_wiki_permissions, using the X-Acting-User header)
+    // ---------------------------------------------------------------------
+    $routes->group('wikis', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',               'WikiPagesController::listAccessibleWikis');
+        $routes->get('([a-z0-9-]+)',         'WikiPagesController::showWiki/$1');
+        $routes->get('([a-z0-9-]+)/tree',    'WikiPagesController::tree/$1');
+        $routes->options('(:any)',      'WikiPagesController::options', ['filter' => 'cors']);
+    });
+
+    $routes->group('wiki-pages', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('(:num)',                  'WikiPagesController::show/$1');
+        $routes->post('/',                      'WikiPagesController::create');
+        $routes->put('(:num)',                  'WikiPagesController::update/$1');
+        $routes->delete('(:num)',               'WikiPagesController::delete/$1');
+        $routes->get('(:num)/revisions',        'WikiPagesController::revisions/$1');
+        $routes->get('(:num)/comments',         'WikiCommentsController::listForPage/$1');
+        $routes->post('(:num)/comments',        'WikiCommentsController::create/$1');
+        $routes->get('(:num)/attachments',      'WikiAttachmentsController::listForPage/$1');
+        $routes->options('(:any)',              'WikiPagesController::options', ['filter' => 'cors']);
+    });
+
+    $routes->group('wiki-revisions', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('(:num)',          'WikiPagesController::showRevision/$1');
+        $routes->post('(:num)/restore', 'WikiPagesController::restoreRevision/$1');
+        $routes->options('(:any)',      'WikiPagesController::options', ['filter' => 'cors']);
+    });
+
+    $routes->group('wiki-comments', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->put('(:num)',     'WikiCommentsController::update/$1');
+        $routes->delete('(:num)',  'WikiCommentsController::delete/$1');
+        $routes->options('(:any)', 'WikiCommentsController::options', ['filter' => 'cors']);
+    });
+
+    $routes->group('wiki-attachments', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->post('/',         'WikiAttachmentsController::create');
+        $routes->options('(:any)', 'WikiAttachmentsController::options', ['filter' => 'cors']);
+    });
+
+    // ---------------------------------------------------------------------
+    // Admin module — every endpoint enforces the X-Acting-User has the `admin` module.
+    // ---------------------------------------------------------------------
+    $routes->group('admin', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->post('users/list',                    'AdminUsersController::listUsers');
+        $routes->post('users/get',                     'AdminUsersController::getUser');
+        $routes->post('users/create',                  'AdminUsersController::createUser');
+        $routes->post('users/update',                  'AdminUsersController::updateUser');
+        $routes->post('users/set-modules',             'AdminUsersController::setModules');
+        $routes->post('users/set-wiki-permission',     'AdminUsersController::setWikiPermission');
+        $routes->post('users/reset-password',          'AdminUsersController::resetPassword');
+        $routes->post('users/remove-2fa',              'AdminUsersController::remove2fa');
+        $routes->post('users/invalidate-passkeys',     'AdminUsersController::invalidatePasskeys');
+        $routes->post('audit',                         'AdminUsersController::audit_list');
+        $routes->post('wikis/list',                    'AdminUsersController::listWikis');
+        $routes->post('wikis/create',                  'AdminUsersController::createWiki');
+        $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
+    });
+});
 
 /*
  * --------------------------------------------------------------------

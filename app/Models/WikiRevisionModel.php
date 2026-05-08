@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class WikiRevisionModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'wiki_revisions';
     protected $primaryKey    = 'RevisionID';
     protected $returnType    = 'array';

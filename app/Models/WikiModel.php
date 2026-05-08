@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class WikiModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'wikis';
     protected $primaryKey    = 'WikiID';
     protected $returnType    = 'array';

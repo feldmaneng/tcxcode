@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class WikiCommentModel extends Model
 {
-    protected $DBGroup       = 'control';
+    protected $DBGroup       = 'wiki';
     protected $table         = 'wiki_comments';
     protected $primaryKey    = 'CommentID';
     protected $returnType    = 'array';
