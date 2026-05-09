@@ -1,10 +1,13 @@
 <?php
 namespace App\Controllers\Api\V1;
 
-use CodeIgniter\RESTful\ResourceController;
+use CodeIgniter\Controller;
+use CodeIgniter\API\ResponseTrait;
 
-class BaseApiController extends ResourceController
+class BaseApiController extends Controller
 {
+    use ResponseTrait;
+
     protected $format = 'json';
 
     public function options()
