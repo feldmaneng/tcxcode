@@ -31,7 +31,7 @@ class UserWikiPermissionModel extends Model
             ->getResultArray();
     }
 
-    public function set(int $userId, int $wikiId, ?string $permission): void
+    public function setPermission(int $userId, int $wikiId, ?string $permission): void
     {
         $this->where(['UserID' => $userId, 'WikiID' => $wikiId])->delete();
         if ($permission !== null && in_array($permission, ['read_comment', 'write_edit'], true)) {

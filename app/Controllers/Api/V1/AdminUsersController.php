@@ -200,7 +200,7 @@ class AdminUsersController extends BaseApiController
             return $this->jsonError(400, 'invalid_permission');
         }
 
-        (new UserWikiPermissionModel())->set($userId, $wikiId, $perm);
+        (new UserWikiPermissionModel())->setPermission($userId, $wikiId, $perm);
         $this->audit($actorId, 'user.set_wiki_permission', 'user', (string) $userId, [
             'wiki_id' => $wikiId, 'permission' => $perm,
         ]);
