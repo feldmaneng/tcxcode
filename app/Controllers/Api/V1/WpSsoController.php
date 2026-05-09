@@ -1,0 +1,217 @@
+<?php
+
+namespace App\Controllers\Api\V1;
+
+use App\Models\AuthModel;
+use CodeIgniter\RESTful\ResourceController;
+use Config\Database;
+
+/**
+ * WpSsoController — verifies WordPress/s2Member SSO tokens and returns a user record.
+ *
+ * Token format (from WP plugin):
+ *   base64url(json_payload) + "." + hex(hmac_sha256(payload, WP_SSO_SHARED_SECRET))
+ *
+ * Payload fields: wp_user_id (int), username (str), email (str), display_name (str),
+ *                 roles (str[]), s2_level (int), s2_ccaps (str[]),
+ *                 iat (int, unix), exp (int, unix), nonce (32-hex), aud (str)
+ *
+ * Verification:
+ *   - HMAC matches with shared secret (constant-time compare)
+ *   - exp > now() (with ±60s skew)
+ *   - aud === expected audience (env WP_SSO_AUDIENCE)
+ *   - nonce hasn't been seen before (sso_used_nonces table)
+ *   - expected_nonce from caller matches token nonce (binds token to this browser session)
+ *
+ * On success: upsert local user keyed by wp_user_id (auto-provision), return same
+ * shape as POST /auth/login so the frontend reuses its session-establishment code.
+ *
+ * This endpoint sits behind the same HMAC service-key auth filter as /auth/login —
+ * only our TanStack server can call it.
+ */
+class WpSsoController extends ResourceController
+{
+    protected AuthModel $authModel;
+
+    public function __construct()
+    {
+        $this->authModel = new AuthModel();
+    }
+
+    /**
+     * POST /api/v1/auth/wp-sso/exchange
+     * Body: { token: string, expected_nonce: string }
+     */
+    public function exchange()
+    {
+        $token         = (string) $this->request->getJsonVar('token');
+        $expectedNonce = (string) $this->request->getJsonVar('expected_nonce');
+
+        if ($token === '' || $expectedNonce === '') {
+            return $this->failValidationErrors(['token' => 'token and expected_nonce required']);
+        }
+
+        $secret = (string) (env('WP_SSO_SHARED_SECRET') ?? getenv('WP_SSO_SHARED_SECRET'));
+        $audience = (string) (env('WP_SSO_AUDIENCE') ?? getenv('WP_SSO_AUDIENCE') ?: 'tcx-office');
+        if ($secret === '') {
+            log_message('error', '[WpSso] WP_SSO_SHARED_SECRET not configured');
+            return $this->failServerError('SSO not configured');
+        }
+
+        // ---- 1. Parse + verify HMAC ----
+        $parts = explode('.', $token, 2);
+        if (count($parts) !== 2) {
+            return $this->failUnauthorized('malformed_token');
+        }
+        [$payloadB64, $sigHex] = $parts;
+
+        $expectedSig = hash_hmac('sha256', $payloadB64, $secret);
+        if (!hash_equals($expectedSig, strtolower($sigHex))) {
+            log_message('warning', '[WpSso] bad_signature');
+            return $this->failUnauthorized('bad_signature');
+        }
+
+        // ---- 2. Decode payload ----
+        $payloadJson = $this->b64urlDecode($payloadB64);
+        $payload = $payloadJson ? json_decode($payloadJson, true) : null;
+        if (!is_array($payload)) {
+            return $this->failUnauthorized('bad_payload');
+        }
+
+        // ---- 3. Audience check ----
+        if (($payload['aud'] ?? '') !== $audience) {
+            log_message('warning', '[WpSso] aud_mismatch: ' . ($payload['aud'] ?? 'null'));
+            return $this->failUnauthorized('aud_mismatch');
+        }
+
+        // ---- 4. Expiry check (±60s skew) ----
+        $now = time();
+        $exp = (int) ($payload['exp'] ?? 0);
+        $iat = (int) ($payload['iat'] ?? 0);
+        if ($exp <= 0 || $exp < $now - 60) {
+            return $this->failUnauthorized('token_expired');
+        }
+        if ($iat > $now + 60) {
+            return $this->failUnauthorized('token_not_yet_valid');
+        }
+        if ($exp - $iat > 600) {
+            // Refuse tokens with more than 10 minute lifetime — WP plugin should issue ≤120s
+            return $this->failUnauthorized('token_lifetime_too_long');
+        }
+
+        // ---- 5. Nonce binding + replay protection ----
+        $tokenNonce = (string) ($payload['nonce'] ?? '');
+        if ($tokenNonce === '' || strlen($tokenNonce) !== 32 || !ctype_xdigit($tokenNonce)) {
+            return $this->failUnauthorized('bad_nonce_format');
+        }
+        if (!hash_equals($tokenNonce, $expectedNonce)) {
+            // Caller's expected nonce (from state cookie) doesn't match what WP signed.
+            // This blocks an attacker who steals only the URL token from completing login
+            // in a different browser.
+            return $this->failUnauthorized('nonce_mismatch');
+        }
+
+        $db = Database::connect('control');
+        // Lazy cleanup: drop nonces older than 1 hour
+        $db->query('DELETE FROM sso_used_nonces WHERE used_at < (NOW() - INTERVAL 1 HOUR)');
+
+        // Atomic claim
+        try {
+            $db->query('INSERT INTO sso_used_nonces (nonce) VALUES (?)', [$tokenNonce]);
+        } catch (\Throwable $e) {
+            // Duplicate key -> already used
+            log_message('warning', '[WpSso] nonce_replay: ' . $tokenNonce);
+            return $this->failUnauthorized('nonce_already_used');
+        }
+
+        // ---- 6. Required identity fields ----
+        $wpUserId = (int) ($payload['wp_user_id'] ?? 0);
+        $wpUsername = trim((string) ($payload['username'] ?? ''));
+        $wpEmail = trim((string) ($payload['email'] ?? ''));
+        $wpDisplayName = trim((string) ($payload['display_name'] ?? $wpUsername));
+
+        if ($wpUserId <= 0 || $wpUsername === '') {
+            return $this->failUnauthorized('missing_identity');
+        }
+
+        // ---- 7. Find or auto-provision local user ----
+        $userBuilder = $db->table('users');
+        $user = $userBuilder->where('wp_user_id', $wpUserId)->get()->getRowArray();
+
+        if (!$user) {
+            // Block silent merge with an existing local-only account that happens to share email/username
+            $conflict = null;
+            if ($wpEmail !== '') {
+                $conflict = $userBuilder->where('Email', $wpEmail)->where('auth_provider', 'local')->get()->getRowArray();
+            }
+            if (!$conflict) {
+                $conflict = $userBuilder->where('UserName', $wpUsername)->get()->getRowArray();
+            }
+            if ($conflict) {
+                log_message('warning', '[WpSso] account_collision wp_user_id=' . $wpUserId . ' username=' . $wpUsername);
+                return $this->failUnauthorized('account_collision');
+            }
+
+            // Auto-provision (per product decision: any WP user is allowed)
+            $given = $wpDisplayName !== '' ? $wpDisplayName : $wpUsername;
+            $family = '';
+            // Naive split on first space
+            if (strpos($wpDisplayName, ' ') !== false) {
+                [$given, $family] = explode(' ', $wpDisplayName, 2);
+            }
+
+            $db->table('users')->insert([
+                'UserName'      => $wpUsername,
+                'GivenName'     => $given,
+                'FamilyName'    => $family,
+                'Email'         => $wpEmail,
+                'PasswordHash'  => null,
+                'Active'        => 1,
+                'auth_provider' => 'wordpress',
+                'wp_user_id'    => $wpUserId,
+            ]);
+            $user = $userBuilder->where('wp_user_id', $wpUserId)->get()->getRowArray();
+        } else {
+            // Refresh email/display name on every login (WP is source of truth)
+            $updates = [];
+            if ($wpEmail !== '' && $wpEmail !== ($user['Email'] ?? '')) $updates['Email'] = $wpEmail;
+            if ($wpDisplayName !== '' && $wpDisplayName !== ($user['GivenName'] ?? '')) {
+                // only update if currently empty/looks stale
+            }
+            if (!empty($updates)) {
+                $userBuilder->where('UserID', $user['UserID'])->update($updates);
+                $user = array_merge($user, $updates);
+            }
+        }
+
+        if (!$user) {
+            return $this->failServerError('user_provision_failed');
+        }
+
+        if (isset($user['Active']) && (int) $user['Active'] === 0) {
+            return $this->failUnauthorized('account_disabled');
+        }
+
+        // ---- 8. Return same shape as /auth/login ----
+        return $this->respond([
+            'user' => [
+                'id'                   => (int) $user['UserID'],
+                'username'             => $user['UserName'],
+                'given_name'           => $user['GivenName'] ?? $user['UserName'],
+                'totp_enabled'         => (bool) ($user['TOTPEnabled'] ?? false),
+                'must_change_password' => false, // never force password change on WP-SSO users
+                'auth_provider'        => 'wordpress',
+                'wp_user_id'           => $wpUserId,
+            ],
+        ]);
+    }
+
+    private function b64urlDecode(string $s): string
+    {
+        $s = strtr($s, '-_', '+/');
+        $pad = strlen($s) % 4;
+        if ($pad) $s .= str_repeat('=', 4 - $pad);
+        $r = base64_decode($s, true);
+        return $r === false ? '' : $r;
+    }
+}

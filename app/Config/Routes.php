@@ -585,6 +585,9 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         // Account
         $routes->post('change-password',             'AuthController::changePassword');
         $routes->post('security-status',             'AuthController::securityStatus');
+        
+        // WordPress / s2Member SSO token exchange (called by TanStack server)
+        $routes->post('wp-sso/exchange',             'WpSsoController::exchange');
     });
 
     // ---------------------------------------------------------------------
