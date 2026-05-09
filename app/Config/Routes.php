@@ -719,6 +719,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('audit',                         'AdminUsersController::audit_list');
         $routes->post('wikis/list',                    'AdminUsersController::listWikis');
         $routes->post('wikis/create',                  'AdminUsersController::createWiki');
+        $routes->post('wiki-attachments/list',         'WikiAttachmentsAdminController::listAttachments');
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
     });
 });
