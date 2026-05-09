@@ -337,8 +337,11 @@ class AuthController extends ResourceController
             return $this->failUnauthorized('Current password is incorrect');
         }
 
-        $this->authModel->update($user['UserID'], [
-            'PasswordHash' => password_hash($newPassword, PASSWORD_BCRYPT),
+        $userModel = new \App\Models\UserModel();
+        $userModel->update($user['UserID'], [
+            'PasswordHash'         => password_hash($newPassword, PASSWORD_BCRYPT),
+            'MustChangePassword'   => 0,
+            'PasswordChangedAt'    => date('Y-m-d H:i:s'),
         ]);
 
         return $this->respond(['success' => true]);
