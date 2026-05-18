@@ -585,7 +585,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         // Account
         $routes->post('change-password',             'AuthController::changePassword');
         $routes->post('security-status',             'AuthController::securityStatus');
-        
+
         // WordPress / s2Member SSO token exchange (called by TanStack server)
         $routes->post('wp-sso/exchange',             'WpSsoController::exchange');
     });
@@ -644,6 +644,32 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->put('(:num)',           'PresentationsController::update/$1');
         $routes->delete('(:num)',        'PresentationsController::delete/$1');
         $routes->options('(:any)',       'PresentationsController::options', ['filter' => 'cors']);
+    });
+
+    // Events (Author Portal — admin-managed)
+    $routes->group('events', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'EventsController::index');
+        $routes->get('(:num)',     'EventsController::show/$1');
+        $routes->post('/',         'EventsController::create');
+        $routes->put('(:num)',     'EventsController::update/$1');
+        $routes->delete('(:num)',  'EventsController::delete/$1');
+        $routes->options('(:any)', 'EventsController::options', ['filter' => 'cors']);
+    });
+
+    // Sessions (Author Portal — admin-managed)
+    $routes->group('sessions', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'SessionsController::index');
+        $routes->get('(:num)',     'SessionsController::show/$1');
+        $routes->post('/',         'SessionsController::create');
+        $routes->put('(:num)',     'SessionsController::update/$1');
+        $routes->delete('(:num)',  'SessionsController::delete/$1');
+        $routes->options('(:any)', 'SessionsController::options', ['filter' => 'cors']);
+    });
+
+    // Author Portal — derived access scopes for the acting user
+    $routes->group('author-portal', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('access/me',  'AuthorPortalAccessController::me');
+        $routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
     });
 
     // Markets (hierarchical tags)
@@ -707,6 +733,18 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     });
 
     // ---------------------------------------------------------------------
+    // Public wiki share endpoints — read-only access via a share token.
+    // Still HMAC-protected so only the TanStack server can call them; the
+    // TanStack server in turn exposes /p/{token} routes to anonymous visitors.
+    // ---------------------------------------------------------------------
+    $routes->group('public/wiki', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('share/([A-Za-z0-9_-]+)',                          'PublicWikiController::getShare/$1');
+        $routes->get('share/([A-Za-z0-9_-]+)/page/(:num)',              'PublicWikiController::getSharePage/$1/$2');
+        $routes->get('share/([A-Za-z0-9_-]+)/attachment/(:num)',        'PublicWikiController::getShareAttachment/$1/$2');
+        $routes->options('(:any)',                                      'PublicWikiController::options', ['filter' => 'cors']);
+    });
+
+    // ---------------------------------------------------------------------
     // Admin module — every endpoint enforces the X-Acting-User has the `admin` module.
     // ---------------------------------------------------------------------
     $routes->group('admin', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
@@ -719,13 +757,20 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('users/reset-password',          'AdminUsersController::resetPassword');
         $routes->post('users/remove-2fa',              'AdminUsersController::remove2fa');
         $routes->post('users/invalidate-passkeys',     'AdminUsersController::invalidatePasskeys');
+        $routes->post('users/preprovision-from-contact',  'AdminUsersController::preprovisionFromContact');
+        $routes->post('users/check-contact-availability', 'AdminUsersController::checkContactAvailability');
         $routes->post('audit',                         'AdminUsersController::audit_list');
         $routes->post('wikis/list',                    'AdminUsersController::listWikis');
         $routes->post('wikis/create',                  'AdminUsersController::createWiki');
         $routes->post('wiki-attachments/list',         'WikiAttachmentsAdminController::listAttachments');
+        $routes->post('wiki-shares/list',              'WikiSharesController::listShares');
+        $routes->post('wiki-shares/create',            'WikiSharesController::createShare');
+        $routes->post('wiki-shares/update',            'WikiSharesController::updateShare');
+        $routes->post('wiki-shares/revoke',            'WikiSharesController::revokeShare');
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
     });
 });
+
 
 /*
  * --------------------------------------------------------------------
