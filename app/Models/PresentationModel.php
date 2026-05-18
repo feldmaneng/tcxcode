@@ -11,7 +11,7 @@ class PresentationModel extends Model
     protected $useAutoIncrement = true;
     protected $useTimestamps    = false;
     protected $allowedFields    = [
-        'Event', 'Year', 'Session', 'PresentationNumber',
+        'Event', 'Year', 'Session', 'SessionID', 'PresentationNumber',
         'Title', 'TitleChinese', 'TitleKorean',
         'Wrangler', 'Topic', 'Award', 'URL', 'BaseFileName',
         'PDFLockCode', 'VideoID', 'AbstractNumber',

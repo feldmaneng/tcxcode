@@ -12,6 +12,7 @@ class PresentationsController extends BaseApiController
         'event'                => 'Event',
         'year'                 => 'Year',
         'session'              => 'Session',
+        'session_id'           => 'SessionID',
         'presentation_number'  => 'PresentationNumber',
         'title'                => 'Title',
         'title_chinese'        => 'TitleChinese',
@@ -36,7 +37,7 @@ class PresentationsController extends BaseApiController
     ];
 
     private const READONLY_API_FIELDS = ['id'];
-    private const FILTERABLE = ['event', 'year', 'session', 'topic', 'award', 'wrangler_id'];
+    private const FILTERABLE = ['event', 'year', 'session', 'session_id', 'topic', 'award', 'wrangler_id'];
     private const SORTABLE   = ['id', 'year', 'event', 'session', 'presentation_number', 'title'];
 
     private function dbToApi(array $row): array
