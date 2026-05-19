@@ -19,6 +19,7 @@ class UserModel extends Model
         'PasswordHash', 'Active', 'MustChangePassword', 'PasswordChangedAt',
         'TOTPSecret', 'TOTPEnabled',
         'WebAuthnCredentialID', 'WebAuthnPublicKey', 'WebAuthnCounter', 'WebAuthnTransports',
+        'auth_provider', 'wp_user_id', 'ProvisionedFromContactID',
     ];
 
     public function searchPaginated(string $q, int $page, int $perPage): array
