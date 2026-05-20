@@ -382,6 +382,36 @@ class ContactsController extends BaseApiController
         ]);
     }
 
+    /**
+     * GET /api/v1/contacts/wp-duplicates?wp_user_id=N&exclude_id=M
+     * Returns other contacts pointing at the same WordPressID, so the UI can
+     * surface a soft warning when a WP account is already linked elsewhere.
+     */
+    public function wpDuplicates()
+    {
+        $wpUserId  = (int) $this->request->getGet('wp_user_id');
+        $excludeId = (int) $this->request->getGet('exclude_id');
+        if ($wpUserId <= 0) {
+            return $this->response->setJSON(['duplicates' => []]);
+        }
+        $model = new ContactModel();
+        $q = $model->select('ContactID, GivenName, FamilyName, Email, Company')
+            ->where('WordPressID', $wpUserId);
+        if ($excludeId > 0) $q = $q->where('ContactID !=', $excludeId);
+        $rows = $q->orderBy('ContactID', 'DESC')->limit(10)->find();
+        $out = [];
+        foreach ($rows as $r) {
+            $out[] = [
+                'id'          => (int) $r['ContactID'],
+                'given_name'  => (string) ($r['GivenName'] ?? ''),
+                'family_name' => (string) ($r['FamilyName'] ?? ''),
+                'email'       => (string) ($r['Email'] ?? ''),
+                'company'     => (string) ($r['Company'] ?? ''),
+            ];
+        }
+        return $this->response->setJSON(['duplicates' => $out]);
+    }
+
     private function shapeWpUser(array $u): array
     {
         return [

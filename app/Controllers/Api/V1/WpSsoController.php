@@ -259,17 +259,20 @@ class WpSsoController extends ResourceController
             }
             if (!empty($updates)) {
                 try {
-                    $userBuilder->where('UserID', $user['UserID'])->update($updates);
+                    $db->table('users')->where('UserID', $user['UserID'])->update($updates);
+                    log_message('info', '[WpSso] sync_user user_id=' . $user['UserID'] . ' fields=' . implode(',', array_keys($updates)) . ' wp_username=' . $wpUsername);
                     $user = array_merge($user, $updates);
                 } catch (\Throwable $e) {
                     // UserName unique collision — retry without rename so login still works.
                     log_message('warning', '[WpSso] sync_username_conflict user_id=' . $user['UserID'] . ' wp_username=' . $wpUsername . ' err=' . $e->getMessage());
                     unset($updates['UserName']);
                     if (!empty($updates)) {
-                        $userBuilder->where('UserID', $user['UserID'])->update($updates);
+                        $db->table('users')->where('UserID', $user['UserID'])->update($updates);
                         $user = array_merge($user, $updates);
                     }
                 }
+            } else {
+                log_message('debug', '[WpSso] sync_noop user_id=' . $user['UserID'] . ' current_username=' . ($user['UserName'] ?? '') . ' wp_username=' . $wpUsername);
             }
         }
 
