@@ -169,6 +169,12 @@ class WpSsoController extends ResourceController
                     'wp_user_id'    => $wpUserId,
                     'auth_provider' => 'wordpress',
                 ];
+                // Sync UserName from WP (source of truth). WP allows spaces;
+                // preserve them verbatim — UserName is only used as an identifier
+                // in JSON bodies and DB lookups, never in URLs or cache keys.
+                if ($wpUsername !== '' && $wpUsername !== ($claim['UserName'] ?? '')) {
+                    $claimUpdates['UserName'] = $wpUsername;
+                }
                 if ($wpEmail !== '' && $wpEmail !== ($claim['Email'] ?? '')) {
                     $claimUpdates['Email'] = $wpEmail;
                 }
@@ -180,7 +186,15 @@ class WpSsoController extends ResourceController
                     $claimUpdates['GivenName']  = $g;
                     $claimUpdates['FamilyName'] = $f;
                 }
-                $db->table('users')->where('UserID', $claim['UserID'])->update($claimUpdates);
+                try {
+                    $db->table('users')->where('UserID', $claim['UserID'])->update($claimUpdates);
+                } catch (\Throwable $e) {
+                    // UserName unique collision with another row — fall back to
+                    // claiming without renaming so login still succeeds.
+                    log_message('warning', '[WpSso] claim_username_conflict user_id=' . $claim['UserID'] . ' wp_username=' . $wpUsername . ' err=' . $e->getMessage());
+                    unset($claimUpdates['UserName']);
+                    $db->table('users')->where('UserID', $claim['UserID'])->update($claimUpdates);
+                }
                 $user = array_merge($claim, $claimUpdates);
                 log_message('info', '[WpSso] wp_claim user_id=' . $user['UserID'] . ' wp_user_id=' . $wpUserId);
             } else {
@@ -231,9 +245,12 @@ class WpSsoController extends ResourceController
                 log_message('warning', '[WpSso] admin_login_blocked user_id=' . $user['UserID'] . ' wp_user_id=' . $wpUserId);
                 return $this->failUnauthorized('admin_must_use_local_auth');
             }
-            // Refresh email + ensure auth_provider is marked 'wordpress' on every login
-            // (WP is source of truth for SSO-linked accounts).
+            // Refresh email + UserName + ensure auth_provider is marked 'wordpress'
+            // on every login (WP is source of truth for SSO-linked accounts).
             $updates = [];
+            if ($wpUsername !== '' && $wpUsername !== ($user['UserName'] ?? '')) {
+                $updates['UserName'] = $wpUsername;
+            }
             if ($wpEmail !== '' && $wpEmail !== ($user['Email'] ?? '')) {
                 $updates['Email'] = $wpEmail;
             }
@@ -241,8 +258,18 @@ class WpSsoController extends ResourceController
                 $updates['auth_provider'] = 'wordpress';
             }
             if (!empty($updates)) {
-                $userBuilder->where('UserID', $user['UserID'])->update($updates);
-                $user = array_merge($user, $updates);
+                try {
+                    $userBuilder->where('UserID', $user['UserID'])->update($updates);
+                    $user = array_merge($user, $updates);
+                } catch (\Throwable $e) {
+                    // UserName unique collision — retry without rename so login still works.
+                    log_message('warning', '[WpSso] sync_username_conflict user_id=' . $user['UserID'] . ' wp_username=' . $wpUsername . ' err=' . $e->getMessage());
+                    unset($updates['UserName']);
+                    if (!empty($updates)) {
+                        $userBuilder->where('UserID', $user['UserID'])->update($updates);
+                        $user = array_merge($user, $updates);
+                    }
+                }
             }
         }
 
