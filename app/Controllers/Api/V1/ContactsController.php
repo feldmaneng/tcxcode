@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers\Api\V1;
 
+use App\Libraries\WpLookupClient;
 use App\Models\ContactModel;
 
 class ContactsController extends BaseApiController
@@ -324,5 +325,73 @@ class ContactsController extends BaseApiController
             'wechat_id'         => 'permit_empty|string|max_length[20]',
         ];
         return $base;
+    }
+
+    /**
+     * GET /api/v1/contacts/wp-lookup?email=...&username=...&wp_user_id=...&q=...&limit=...
+     * Open to any authenticated CRM user (the contacts group already requires apiAuth).
+     * Always returns 200 with whatever was found — never leaks WP errors.
+     */
+    public function wpLookup()
+    {
+        $email    = trim((string) $this->request->getGet('email'));
+        $username = trim((string) $this->request->getGet('username'));
+        $q        = trim((string) $this->request->getGet('q'));
+        $wpUserId = (int) $this->request->getGet('wp_user_id');
+        $limit    = max(1, min(25, (int) ($this->request->getGet('limit') ?: 10)));
+
+        $client = new WpLookupClient();
+        if (!$client->isConfigured()) {
+            return $this->response->setJSON([
+                'wp_user'    => null,
+                'candidates' => [],
+                'status'     => 'unconfigured',
+            ]);
+        }
+
+        $wpUser = null;
+        $status = 'not_found';
+        if ($wpUserId > 0) {
+            $u = $client->lookupById($wpUserId);
+            if ($u) { $wpUser = $this->shapeWpUser($u); $status = 'found'; }
+        } elseif ($email !== '') {
+            if (method_exists($client, 'lookupByEmailWithStatus')) {
+                $r = $client->lookupByEmailWithStatus($email);
+                $status = $r['status'];
+                if ($r['user']) $wpUser = $this->shapeWpUser($r['user']);
+            } else {
+                $u = $client->lookupByEmail($email);
+                if ($u) { $wpUser = $this->shapeWpUser($u); $status = 'found'; }
+            }
+        } elseif ($username !== '') {
+            $u = $client->lookupByUsername($username);
+            if ($u) { $wpUser = $this->shapeWpUser($u); $status = 'found'; }
+        }
+
+        $candidates = [];
+        if ($q !== '') {
+            foreach ($client->search($q, $limit) as $u) {
+                $candidates[] = $this->shapeWpUser($u);
+            }
+        }
+
+        return $this->response->setJSON([
+            'wp_user'    => $wpUser,
+            'candidates' => $candidates,
+            'status'     => $status,
+        ]);
+    }
+
+    private function shapeWpUser(array $u): array
+    {
+        return [
+            'wp_user_id'   => (int) ($u['wp_user_id'] ?? 0),
+            'user_login'   => (string) ($u['user_login'] ?? $u['username'] ?? ''),
+            'user_email'   => (string) ($u['user_email'] ?? $u['email'] ?? ''),
+            'display_name' => (string) ($u['display_name'] ?? ''),
+            'first_name'   => (string) ($u['first_name'] ?? ''),
+            'last_name'    => (string) ($u['last_name'] ?? ''),
+            'roles'        => array_values((array) ($u['roles'] ?? [])),
+        ];
     }
 }

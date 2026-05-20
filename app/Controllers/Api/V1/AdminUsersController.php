@@ -2,6 +2,7 @@
 namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
+use App\Libraries\WpLookupClient;
 use App\Models\AdminAuditLogModel;
 use App\Models\ModuleModel;
 use App\Models\UserModel;
@@ -408,6 +409,33 @@ class AdminUsersController extends BaseApiController
             ];
         }
 
+        // Look up the WP user by contact email so the UI can show whether we already
+        // know which WP account to link, and surface "WP is offline" cleanly.
+        $wpClient = new WpLookupClient();
+        $wpMatch = null;
+        $wpStatus = 'unconfigured';
+        if ($email !== '') {
+            $r = $wpClient->lookupByEmailWithStatus($email);
+            $wpStatus = $r['status'];
+            if ($r['user']) {
+                $wpMatch = $this->shapeWpUser($r['user']);
+                // If this WP user is already linked to a different CI4 user, flag it as a match too.
+                $alreadyLinked = $userModel->where('wp_user_id', (int) $wpMatch['wp_user_id'])->first();
+                if ($alreadyLinked) {
+                    $matches[(int) $alreadyLinked['UserID']] = [
+                        'id'            => (int) $alreadyLinked['UserID'],
+                        'username'      => $alreadyLinked['UserName'],
+                        'email'         => $alreadyLinked['Email'],
+                        'auth_provider' => $alreadyLinked['auth_provider'] ?? 'local',
+                        'wp_user_id'    => $alreadyLinked['wp_user_id'] !== null ? (int) $alreadyLinked['wp_user_id'] : null,
+                        'reason'        => 'wp_user_id',
+                    ];
+                }
+            }
+        } elseif ($wpClient->isConfigured()) {
+            $wpStatus = 'not_found';
+        }
+
         return $this->respond([
             'contact' => [
                 'id'          => (int) $contact['ContactID'],
@@ -418,12 +446,80 @@ class AdminUsersController extends BaseApiController
             'suggested_username' => $suggestedUsername,
             'suggested_email'    => $email !== '' ? $email : null,
             'matches'            => array_values($matches),
+            'wp_match'           => $wpMatch,
+            'wp_lookup_status'   => $wpStatus,
         ]);
     }
 
     /**
+     * GET /api/v1/admin/users/wp-lookup?email=...&username=...&q=...&wp_user_id=...
+     * Server-to-server proxy to the WP plugin's signed lookup/search endpoints.
+     * Always returns 200 with whatever was found (or nulls) — never leaks WP errors.
+     */
+    public function wpLookup()
+    {
+        if (!($actorId = $this->requireAdminActor())) return $this->response;
+
+        $email    = trim((string) $this->request->getGet('email'));
+        $username = trim((string) $this->request->getGet('username'));
+        $q        = trim((string) $this->request->getGet('q'));
+        $wpUserId = (int) $this->request->getGet('wp_user_id');
+        $limit    = max(1, min(25, (int) ($this->request->getGet('limit') ?: 10)));
+
+        $client = new WpLookupClient();
+        if (!$client->isConfigured()) {
+            return $this->respond([
+                'wp_user'    => null,
+                'candidates' => [],
+                'status'     => 'unconfigured',
+            ]);
+        }
+
+        $wpUser = null;
+        $status = 'not_found';
+        if ($wpUserId > 0) {
+            $u = $client->lookupById($wpUserId);
+            if ($u) { $wpUser = $this->shapeWpUser($u); $status = 'found'; }
+        } elseif ($email !== '') {
+            $r = $client->lookupByEmailWithStatus($email);
+            $status = $r['status'];
+            if ($r['user']) $wpUser = $this->shapeWpUser($r['user']);
+        } elseif ($username !== '') {
+            $u = $client->lookupByUsername($username);
+            if ($u) { $wpUser = $this->shapeWpUser($u); $status = 'found'; }
+        }
+
+        $candidates = [];
+        if ($q !== '') {
+            foreach ($client->search($q, $limit) as $u) {
+                $candidates[] = $this->shapeWpUser($u);
+            }
+        }
+
+        return $this->respond([
+            'wp_user'    => $wpUser,
+            'candidates' => $candidates,
+            'status'     => $status,
+        ]);
+    }
+
+    /** Reduce the WP plugin payload to the fields the frontend needs. */
+    private function shapeWpUser(array $u): array
+    {
+        return [
+            'wp_user_id'   => (int) ($u['wp_user_id'] ?? 0),
+            'user_login'   => (string) ($u['user_login'] ?? $u['username'] ?? ''),
+            'user_email'   => (string) ($u['user_email'] ?? $u['email'] ?? ''),
+            'display_name' => (string) ($u['display_name'] ?? ''),
+            'first_name'   => (string) ($u['first_name'] ?? ''),
+            'last_name'    => (string) ($u['last_name'] ?? ''),
+            'roles'        => array_values((array) ($u['roles'] ?? [])),
+        ];
+    }
+
+    /**
      * POST /api/v1/admin/users/preprovision-from-contact
-     * Body: { contact_id, username, email, given_name, family_name, modules: string[] }
+     * Body: { contact_id, username, email, given_name, family_name, modules: string[], wp_user_id?: int|null }
      */
     public function preprovisionFromContact()
     {
@@ -435,6 +531,8 @@ class AdminUsersController extends BaseApiController
         $given     = trim((string) $this->request->getJsonVar('given_name'));
         $family    = trim((string) $this->request->getJsonVar('family_name'));
         $modules   = $this->request->getJsonVar('modules') ?: ['crm', 'wiki'];
+        $wpUserIdRaw = $this->request->getJsonVar('wp_user_id');
+        $wpUserId  = $wpUserIdRaw === null || $wpUserIdRaw === '' ? null : (int) $wpUserIdRaw;
 
         if ($contactId <= 0 || $username === '' || $email === '' || $given === '') {
             return $this->jsonError(400, 'validation', [
@@ -447,15 +545,34 @@ class AdminUsersController extends BaseApiController
         if (!$contact) return $this->jsonError(404, 'contact_not_found');
 
         $userModel = new UserModel();
-        if ($userModel->where('UserName', $username)->first()) {
+        if ($userModel->where('LOWER(UserName)', strtolower($username))->first()) {
             return $this->jsonError(409, 'username_taken');
         }
-        $existingByEmail = $userModel
-            ->where('Email', $email)
-            ->where('auth_provider', 'wordpress')
-            ->first();
-        if ($existingByEmail) {
-            return $this->jsonError(409, 'wp_account_exists_for_email');
+        if ($userModel->where('LOWER(Email)', strtolower($email))->first()) {
+            return $this->jsonError(409, 'email_taken');
+        }
+
+        // If a wp_user_id is supplied, verify it against WP and reject duplicates.
+        if ($wpUserId !== null && $wpUserId > 0) {
+            if ($userModel->where('wp_user_id', $wpUserId)->first()) {
+                return $this->jsonError(409, 'wp_user_already_linked');
+            }
+            $client = new WpLookupClient();
+            if ($client->isConfigured()) {
+                $wpUser = $client->lookupById($wpUserId);
+                if (!$wpUser) {
+                    return $this->jsonError(400, 'wp_user_not_found');
+                }
+                // Soft email-mismatch warning: log it but don't block — admin may be
+                // intentionally pointing the WP id at a different email (rename in flight).
+                $wpEmail = strtolower((string) ($wpUser['user_email'] ?? ''));
+                if ($wpEmail !== '' && $wpEmail !== strtolower($email)) {
+                    log_message('warning', '[Preprovision] wp_email_mismatch wp_user_id=' . $wpUserId
+                        . ' wp_email=' . $wpEmail . ' ci_email=' . strtolower($email));
+                }
+            }
+        } else {
+            $wpUserId = null;
         }
 
         $userId = $userModel->insert([
@@ -467,7 +584,7 @@ class AdminUsersController extends BaseApiController
             'Active'                   => 1,
             'MustChangePassword'       => 0,
             'auth_provider'            => 'wordpress',
-            'wp_user_id'               => null,
+            'wp_user_id'               => $wpUserId,
             'ProvisionedFromContactID' => $contactId,
         ], true);
 
@@ -478,6 +595,7 @@ class AdminUsersController extends BaseApiController
             'username'   => $username,
             'email'      => $email,
             'modules'    => $modules,
+            'wp_user_id' => $wpUserId,
         ]);
 
         return $this->respond(['user_id' => (int) $userId], 201);

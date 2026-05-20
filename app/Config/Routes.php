@@ -545,7 +545,6 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
-
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -596,6 +595,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // ---------------------------------------------------------------------
     $routes->group('contacts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',          'ContactsController::index');
+        $routes->get('wp-lookup',  'ContactsController::wpLookup');
         $routes->get('(:num)',     'ContactsController::show/$1');
         $routes->post('/',         'ContactsController::create');
         $routes->put('(:num)',     'ContactsController::update/$1');
@@ -759,6 +759,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('users/invalidate-passkeys',     'AdminUsersController::invalidatePasskeys');
         $routes->post('users/preprovision-from-contact',  'AdminUsersController::preprovisionFromContact');
         $routes->post('users/check-contact-availability', 'AdminUsersController::checkContactAvailability');
+        $routes->get('users/wp-lookup',                   'AdminUsersController::wpLookup');
         $routes->post('audit',                         'AdminUsersController::audit_list');
         $routes->post('wikis/list',                    'AdminUsersController::listWikis');
         $routes->post('wikis/create',                  'AdminUsersController::createWiki');

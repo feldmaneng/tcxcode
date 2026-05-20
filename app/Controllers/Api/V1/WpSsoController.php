@@ -139,44 +139,106 @@ class WpSsoController extends ResourceController
         $user = $userBuilder->where('wp_user_id', $wpUserId)->get()->getRowArray();
 
         if (!$user) {
-            // Block silent merge with an existing local-only account that happens to share email/username
-            $conflict = null;
-            if ($wpEmail !== '') {
-                $conflict = $userBuilder->where('Email', $wpEmail)->where('auth_provider', 'local')->get()->getRowArray();
+            // ---- 7a. Pre-provisioned (claim) lookup ----
+            // An admin may have created a placeholder row with
+            // auth_provider='wordpress' AND wp_user_id IS NULL. Claim it on
+            // first login by matching email (case-insensitive) or username.
+            // Also claim any unclaimed row regardless of auth_provider so that
+            // a previously-local row with the same email is linked rather than
+            // duplicated.
+            $wpEmailLc = strtolower($wpEmail);
+            $claimBuilder = $db->table('users');
+            $claimBuilder->where('wp_user_id', null)->groupStart();
+            if ($wpEmailLc !== '') {
+                $claimBuilder->where('LOWER(Email)', $wpEmailLc)
+                             ->orWhere('LOWER(UserName)', strtolower($wpUsername));
+            } else {
+                $claimBuilder->where('LOWER(UserName)', strtolower($wpUsername));
             }
-            if (!$conflict) {
-                $conflict = $userBuilder->where('UserName', $wpUsername)->get()->getRowArray();
-            }
-            if ($conflict) {
-                log_message('warning', '[WpSso] account_collision wp_user_id=' . $wpUserId . ' username=' . $wpUsername);
-                return $this->failUnauthorized('account_collision');
+            $claim = $claimBuilder->groupEnd()->get()->getRowArray();
+
+            // Refuse to claim accounts that have the Admin module — admins must
+            // authenticate locally (password + TOTP), never via WordPress SSO.
+            if ($claim && $this->userHasAdminModule($db, (int) $claim['UserID'])) {
+                log_message('warning', '[WpSso] admin_claim_blocked user_id=' . $claim['UserID'] . ' wp_user_id=' . $wpUserId);
+                return $this->failUnauthorized('admin_must_use_local_auth');
             }
 
-            // Auto-provision (per product decision: any WP user is allowed)
-            $given = $wpDisplayName !== '' ? $wpDisplayName : $wpUsername;
-            $family = '';
-            // Naive split on first space
-            if (strpos($wpDisplayName, ' ') !== false) {
-                [$given, $family] = explode(' ', $wpDisplayName, 2);
-            }
+            if ($claim) {
+                $claimUpdates = [
+                    'wp_user_id'    => $wpUserId,
+                    'auth_provider' => 'wordpress',
+                ];
+                if ($wpEmail !== '' && $wpEmail !== ($claim['Email'] ?? '')) {
+                    $claimUpdates['Email'] = $wpEmail;
+                }
+                if (empty($claim['GivenName']) && $wpDisplayName !== '') {
+                    $g = $wpDisplayName; $f = '';
+                    if (strpos($wpDisplayName, ' ') !== false) {
+                        [$g, $f] = explode(' ', $wpDisplayName, 2);
+                    }
+                    $claimUpdates['GivenName']  = $g;
+                    $claimUpdates['FamilyName'] = $f;
+                }
+                $db->table('users')->where('UserID', $claim['UserID'])->update($claimUpdates);
+                $user = array_merge($claim, $claimUpdates);
+                log_message('info', '[WpSso] wp_claim user_id=' . $user['UserID'] . ' wp_user_id=' . $wpUserId);
+            } else {
+                // Block silent merge with ANY existing account that shares email
+                // or username (case-insensitive) — prevents duplicate-user bug.
+                $conflict = null;
+                if ($wpEmailLc !== '') {
+                    $conflict = $db->table('users')->where('LOWER(Email)', $wpEmailLc)->get()->getRowArray();
+                }
+                if (!$conflict) {
+                    $conflict = $db->table('users')->where('LOWER(UserName)', strtolower($wpUsername))->get()->getRowArray();
+                }
+                if ($conflict) {
+                    log_message('warning', '[WpSso] account_collision wp_user_id=' . $wpUserId . ' username=' . $wpUsername . ' existing_user_id=' . ($conflict['UserID'] ?? '?'));
+                    return $this->failUnauthorized('account_collision');
+                }
 
-            $db->table('users')->insert([
-                'UserName'      => $wpUsername,
-                'GivenName'     => $given,
-                'FamilyName'    => $family,
-                'Email'         => $wpEmail,
-                'PasswordHash'  => null,
-                'Active'        => 1,
-                'auth_provider' => 'wordpress',
-                'wp_user_id'    => $wpUserId,
-            ]);
-            $user = $userBuilder->where('wp_user_id', $wpUserId)->get()->getRowArray();
+                // Auto-provision (per product decision: any WP user is allowed)
+                $given = $wpDisplayName !== '' ? $wpDisplayName : $wpUsername;
+                $family = '';
+                // Naive split on first space
+                if (strpos($wpDisplayName, ' ') !== false) {
+                    [$given, $family] = explode(' ', $wpDisplayName, 2);
+                }
+
+                try {
+                    $db->table('users')->insert([
+                        'UserName'      => $wpUsername,
+                        'GivenName'     => $given,
+                        'FamilyName'    => $family,
+                        'Email'         => $wpEmail,
+                        'PasswordHash'  => null,
+                        'Active'        => 1,
+                        'auth_provider' => 'wordpress',
+                        'wp_user_id'    => $wpUserId,
+                    ]);
+                } catch (\Throwable $e) {
+                    // UNIQUE constraint violation -> race condition, refuse rather than duplicate
+                    log_message('warning', '[WpSso] insert_failed_unique wp_user_id=' . $wpUserId . ' err=' . $e->getMessage());
+                    return $this->failUnauthorized('account_collision');
+                }
+                $user = $userBuilder->where('wp_user_id', $wpUserId)->get()->getRowArray();
+            }
         } else {
-            // Refresh email/display name on every login (WP is source of truth)
+            // Refuse login if a previously-linked WP user has since been granted
+            // the Admin module — admins must use local auth only.
+            if ($this->userHasAdminModule($db, (int) $user['UserID'])) {
+                log_message('warning', '[WpSso] admin_login_blocked user_id=' . $user['UserID'] . ' wp_user_id=' . $wpUserId);
+                return $this->failUnauthorized('admin_must_use_local_auth');
+            }
+            // Refresh email + ensure auth_provider is marked 'wordpress' on every login
+            // (WP is source of truth for SSO-linked accounts).
             $updates = [];
-            if ($wpEmail !== '' && $wpEmail !== ($user['Email'] ?? '')) $updates['Email'] = $wpEmail;
-            if ($wpDisplayName !== '' && $wpDisplayName !== ($user['GivenName'] ?? '')) {
-                // only update if currently empty/looks stale
+            if ($wpEmail !== '' && $wpEmail !== ($user['Email'] ?? '')) {
+                $updates['Email'] = $wpEmail;
+            }
+            if (($user['auth_provider'] ?? 'local') !== 'wordpress') {
+                $updates['auth_provider'] = 'wordpress';
             }
             if (!empty($updates)) {
                 $userBuilder->where('UserID', $user['UserID'])->update($updates);
@@ -204,6 +266,23 @@ class WpSsoController extends ResourceController
                 'wp_user_id'           => $wpUserId,
             ],
         ]);
+    }
+
+    /**
+     * Returns true if the given user has the 'admin' module assigned.
+     * Admins are required to authenticate locally (password + TOTP), never via WP SSO.
+     */
+    private function userHasAdminModule($db, int $userId): bool
+    {
+        $row = $db->table('user_modules um')
+            ->select('1', false)
+            ->join('modules m', 'm.ModuleID = um.ModuleID')
+            ->where('um.UserID', $userId)
+            ->where('m.Code', 'admin')
+            ->limit(1)
+            ->get()
+            ->getRowArray();
+        return $row !== null;
     }
 
     private function b64urlDecode(string $s): string

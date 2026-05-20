@@ -361,8 +361,10 @@ class AuthController extends ResourceController
         }
 
         return $this->respond([
-            'totp_enabled' => (bool) ($user['TOTPEnabled'] ?? false),
-            'has_passkey'  => !empty($user['WebAuthnCredentialID']),
+            'totp_enabled'  => (bool) ($user['TOTPEnabled'] ?? false),
+            'has_passkey'   => !empty($user['WebAuthnCredentialID']),
+            'auth_provider' => $user['auth_provider'] ?? 'local',
+            'email'         => $user['Email'] ?? null,
         ]);
     }
 
