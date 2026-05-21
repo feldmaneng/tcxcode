@@ -3,6 +3,7 @@ namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
 use App\Models\EventModel;
+use App\Models\PresentationModel;
 use App\Models\UserModel;
 use App\Models\UserModuleModel;
 use Config\Database;
@@ -63,28 +64,35 @@ class AuthorPortalAccessController extends BaseApiController
             ->groupEnd()
             ->get()->getResultArray();
 
-        // authoredPresentationIds
+        // authoredPresentationIds — only Status='active' are surfaced to authors.
         $authored = [];
         if ($contactId) {
             $authored = $db->table('authors')
-                ->select('PresentationID')
-                ->where('ContactID', $contactId)
-                ->groupBy('PresentationID')
+                ->select('authors.PresentationID')
+                ->join('presentations', 'presentations.PresentationID = authors.PresentationID', 'left')
+                ->where('authors.ContactID', $contactId)
+                ->groupStart()
+                    ->where('presentations.Status', 'active')
+                    ->orWhere('presentations.Status IS NULL', null, false)
+                ->groupEnd()
+                ->groupBy('authors.PresentationID')
                 ->get()->getResultArray();
         }
 
-        $lockedEventIds = (new EventModel())->lockedEventIds();
+        $lockedEventIds        = (new EventModel())->lockedEventIds();
+        $hiddenPresentationIds = (new PresentationModel())->hiddenPresentationIds();
 
         return $this->response->setJSON([
             'data' => [
-                'user_id'                  => $actorId,
-                'contact_id'               => $contactId,
-                'is_admin'                 => $isAdmin,
-                'managed_event_ids'        => array_map(fn($r) => (int) $r['EventID'], $managed),
-                'chaired_event_ids'        => array_map(fn($r) => (int) $r['EventID'], $chaired),
-                'coordinated_session_ids'  => array_map(fn($r) => (int) $r['SessionID'], $coordinated),
-                'authored_presentation_ids'=> array_map(fn($r) => (int) $r['PresentationID'], $authored),
-                'locked_event_ids'         => $lockedEventIds,
+                'user_id'                   => $actorId,
+                'contact_id'                => $contactId,
+                'is_admin'                  => $isAdmin,
+                'managed_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $managed),
+                'chaired_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $chaired),
+                'coordinated_session_ids'   => array_map(fn($r) => (int) $r['SessionID'], $coordinated),
+                'authored_presentation_ids' => array_map(fn($r) => (int) $r['PresentationID'], $authored),
+                'locked_event_ids'          => $lockedEventIds,
+                'hidden_presentation_ids'   => $hiddenPresentationIds,
             ],
         ]);
     }

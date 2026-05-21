@@ -34,11 +34,13 @@ class PresentationsController extends BaseApiController
         'bio_english'          => 'BioEnglish',
         'bio_chinese'          => 'BioChinese',
         'bio_korean'           => 'BioKorean',
+        'status'               => 'Status',
+        'status_changed_at'    => 'StatusChangedAt',
     ];
 
-    private const READONLY_API_FIELDS = ['id'];
-    private const FILTERABLE = ['event', 'year', 'session', 'session_id', 'topic', 'award', 'wrangler_id'];
-    private const SORTABLE   = ['id', 'year', 'event', 'session', 'presentation_number', 'title'];
+    private const READONLY_API_FIELDS = ['id', 'status_changed_at'];
+    private const FILTERABLE = ['event', 'year', 'session', 'session_id', 'topic', 'award', 'wrangler_id', 'status'];
+    private const SORTABLE   = ['id', 'year', 'event', 'session', 'presentation_number', 'title', 'status'];
 
     private function dbToApi(array $row): array
     {
@@ -154,11 +156,18 @@ class PresentationsController extends BaseApiController
     public function update($id = null)
     {
         $model = new PresentationModel();
-        if (!$model->find((int) $id)) return $this->jsonError(404, 'not_found');
+        $existing = $model->find((int) $id);
+        if (!$existing) return $this->jsonError(404, 'not_found');
         $payload = $this->request->getJSON(true) ?? [];
         $dbRow = $this->apiToDb($payload);
         $hasAuthors = array_key_exists('authors', $payload) && is_array($payload['authors']);
         if (empty($dbRow) && !$hasAuthors) return $this->jsonError(400, 'no_updatable_fields');
+
+        // Stamp StatusChangedAt whenever Status changes.
+        if (array_key_exists('Status', $dbRow) && $dbRow['Status'] !== ($existing['Status'] ?? null)) {
+            $dbRow['StatusChangedAt'] = date('Y-m-d H:i:s');
+        }
+
         if (!empty($dbRow)) {
             if (!$model->update((int) $id, $dbRow)) {
                 return $this->jsonError(500, 'update_failed', $model->errors());
