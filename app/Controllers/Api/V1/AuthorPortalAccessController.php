@@ -2,6 +2,7 @@
 namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
+use App\Models\EventModel;
 use App\Models\UserModel;
 use App\Models\UserModuleModel;
 use Config\Database;
@@ -72,6 +73,8 @@ class AuthorPortalAccessController extends BaseApiController
                 ->get()->getResultArray();
         }
 
+        $lockedEventIds = (new EventModel())->lockedEventIds();
+
         return $this->response->setJSON([
             'data' => [
                 'user_id'                  => $actorId,
@@ -81,6 +84,7 @@ class AuthorPortalAccessController extends BaseApiController
                 'chaired_event_ids'        => array_map(fn($r) => (int) $r['EventID'], $chaired),
                 'coordinated_session_ids'  => array_map(fn($r) => (int) $r['SessionID'], $coordinated),
                 'authored_presentation_ids'=> array_map(fn($r) => (int) $r['PresentationID'], $authored),
+                'locked_event_ids'         => $lockedEventIds,
             ],
         ]);
     }

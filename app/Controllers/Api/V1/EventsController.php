@@ -24,6 +24,8 @@ class EventsController extends BaseApiController
         'event_chair1_id'   => 'EventChair1ID',
         'event_chair2_id'   => 'EventChair2ID',
         'event_manager_id'  => 'EventManagerID',
+        'is_closed'         => 'IsClosed',
+        'closed_at'         => 'ClosedAt',
     ];
 
     private const READONLY_API_FIELDS = ['id'];
@@ -130,10 +132,27 @@ class EventsController extends BaseApiController
     public function update(int $id)
     {
         if (!$this->requireAdmin()) return $this->response;
-        $model = new EventModel();
-        if (!$model->find($id)) return $this->jsonError(404, 'not_found');
+        $model    = new EventModel();
+        $existing = $model->find($id);
+        if (!$existing) return $this->jsonError(404, 'not_found');
         $payload = (array) $this->request->getJSON(true);
         $row     = $this->apiToDb($payload);
+
+        // Stamp ClosedAt when transitioning into the closed state.
+        if (array_key_exists('IsClosed', $row)) {
+            $newClosed = $row['IsClosed'];
+            $wasClosed = (int) ($existing['IsClosed'] ?? 0) === 1;
+            $nowClosed = (int) $newClosed === 1;
+            if ($nowClosed && !$wasClosed && !array_key_exists('ClosedAt', $row)) {
+                $row['ClosedAt'] = date('Y-m-d H:i:s');
+            }
+            if (!$nowClosed && $wasClosed) {
+                $row['ClosedAt'] = null;
+            }
+            // Normalize NULL (auto), 0 (forced open), 1 (forced closed).
+            if ($newClosed === '' || $newClosed === 'auto') $row['IsClosed'] = null;
+        }
+
         if (!$model->update($id, $row)) return $this->jsonError(422, 'update_failed', $model->errors());
         return $this->response->setJSON(['data' => $this->dbToApi($model->find($id))]);
     }
