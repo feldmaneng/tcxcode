@@ -38,6 +38,15 @@ class EventsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
+        // Normalize IsClosed (TINYINT comes back as string from MySQL) to int|null
+        if (array_key_exists('is_closed', $out)) {
+            $v = $out['is_closed'];
+            $out['is_closed'] = ($v === null || $v === '') ? null : (int) $v;
+        }
+        // Coerce numeric id fields to int for strict-equality checks on the client
+        foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id'] as $k) {
+            if (array_key_exists($k, $out) && $out[$k] !== null) $out[$k] = (int) $out[$k];
+        }
         return $out;
     }
 
