@@ -545,7 +545,6 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
-
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -596,7 +595,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // ---------------------------------------------------------------------
     $routes->group('contacts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',          'ContactsController::index');
-        $routes->get('wp-lookup',  'ContactsController::wpLookup');
+        $routes->get('wp-lookup',     'ContactsController::wpLookup');
+        $routes->get('wp-duplicates', 'ContactsController::wpDuplicates');
         $routes->get('(:num)',     'ContactsController::show/$1');
         $routes->post('/',         'ContactsController::create');
         $routes->put('(:num)',     'ContactsController::update/$1');
@@ -649,12 +649,14 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     // Events (Author Portal — admin-managed)
     $routes->group('events', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
-        $routes->get('/',          'EventsController::index');
-        $routes->get('(:num)',     'EventsController::show/$1');
-        $routes->post('/',         'EventsController::create');
-        $routes->put('(:num)',     'EventsController::update/$1');
-        $routes->delete('(:num)',  'EventsController::delete/$1');
-        $routes->options('(:any)', 'EventsController::options', ['filter' => 'cors']);
+        $routes->get('/',                              'EventsController::index');
+        $routes->get('(:num)',                         'EventsController::show/$1');
+        $routes->get('(:num)/company-attendance',      'EventAggregatesController::companyAttendance/$1');
+        $routes->get('(:num)/location-attendance',     'EventAggregatesController::locationAttendance/$1');
+        $routes->post('/',                             'EventsController::create');
+        $routes->put('(:num)',                         'EventsController::update/$1');
+        $routes->delete('(:num)',                      'EventsController::delete/$1');
+        $routes->options('(:any)',                     'EventsController::options', ['filter' => 'cors']);
     });
 
     // Sessions (Author Portal — admin-managed)
