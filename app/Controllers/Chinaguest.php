@@ -54,7 +54,7 @@ public function company123()
 	$crud->where(['chinacompany.EventYear' => EventYear]);
    		
 	
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{GuestID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
@@ -534,7 +534,7 @@ public function guest_listtest()
 	// ask ira
 	$db3 = db_connect('registration');
 	//$builder3 = $db3->table('guests');
-	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$sql3 = 'SELECT * FROM guests Where GuestID = ?;';
 	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
 	
@@ -644,7 +644,7 @@ $builder->where('SecretKey', $secretKey);
 	// ask ira
 	$db3 = db_connect('registration');
 	$builder3 = $db3->table('guests');
-	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$sql3 = 'SELECT * FROM guests Where GuestID = ?;';
 	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
 	
@@ -793,14 +793,14 @@ $builder->where('SecretKey', $secretKey);
  
 	if($rowcount != 0)
 	{
-		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
+		$sql = 'SELECT GuestID FROM guests Where EventYear = ? AND Email = ?;';
 
 		$query2 =$db2->query($sql,[$_SESSION["EventYear"],$value]);
 		$row2 = $query2->getRow();
 		
-		$foundID =$row2->ContactID;
+		$foundID =$row2->GuestID;
 	
-			if($foundID != $fields['ContactID'])
+			if($foundID != $fields['GuestID'])
 			{
 			return false;
 			}
@@ -886,7 +886,7 @@ $builder->where('SecretKey', $secretKey);
 	$crud->displayAs('Mobile','Mobile Phone 手机'); */
 
 	
-	$crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('GuestID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
@@ -987,7 +987,7 @@ $builder2 = $db2->table('guests');
    // ask ira get where query
   if(!empty($id) && is_numeric($id))
   {
-   $email_old = $builder2->where("ContactId",$id)->get('guests')->row()->Email;
+   $email_old = $builder2->where("GuestId",$id)->get('guests')->row()->Email;
    $builder2->whereNotIn("Email",$email_old);
   }
       

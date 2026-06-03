@@ -744,7 +744,7 @@ class Mailinglist extends BaseController {
 	
 	
 	function findGuests()
-	// Reads the Guest database and checks that everyone has a MasterContactID
+	// Reads the Guest database and checks that everyone has a ContactID
 	// main BiTS database. IF not, it tries to find the person
 	
 	{
@@ -756,7 +756,7 @@ class Mailinglist extends BaseController {
 		$where_criteria = array (
 			'EventYear' => EventYear,
 			//'Type !=' => "Professional",
-			'MasterContactID is NULL' => NULL,
+			'ContactID is NULL' => NULL,
 			'Email is NOT NULL' => NULL
 		);					
 		
@@ -817,14 +817,14 @@ class Mailinglist extends BaseController {
 			$verbose= "Processing " . $field['Email'] . "\t;";
 			//this must be looking at attendance
 			$contactID = $mine->LookupPersonByEmail($field['Email'], FALSE);
-			if (( $field['MasterContactID'] > 0) && ($contactID !== $field['MasterContactID']) ){
+			if (( $field['ContactID'] > 0) && ($contactID !== $field['ContactID']) ){
 				if ($contactID <= 0) {
-					$verbose .= "*** Not found by email - MasterContactID " . $field['MasterContactID'] . "; ";	
+					$verbose .= "*** Not found by email - ContactID " . $field['ContactID'] . "; ";	
 				} else {
-					$verbose .= "*** MISMATCH between MasterContactID " . $field['MasterContactID'] . " and found by email " . $contactID ."; ";
+					$verbose .= "*** MISMATCH between ContactID " . $field['ContactID'] . " and found by email " . $contactID ."; ";
 				}
 				// Use the MasterID to override
-				$contactID = $field['MasterContactID'];
+				$contactID = $field['ContactID'];
 			} 
 					
 			$existing_person = FALSE;
@@ -994,7 +994,7 @@ class Mailinglist extends BaseController {
 				$invited="Paid";
 				$company="";
 			}
-			$regcode= $field['ContactID'] + 1000;
+			$regcode= $field['GuestID'] + 1000;
 			
 			echo $field['Email'] . ',' . $invited . ',"' . $company . '",'. $regcode . '<br>';
 		}
@@ -1032,7 +1032,7 @@ class Mailinglist extends BaseController {
 				$name = $field['GivenName'];
 			}
 			$name .= ' '.strtoupper($field['FamilyName']);
-			$code = 1000 + $field['ContactID'];
+			$code = 1000 + $field['GuestID'];
 			$aaaa = substr(strtolower($field['Email']),0,4);
 			
 			echo $chineseName . ',' . $name . ',"' . $company . '",' . $code . $aaaa . '<br>';
@@ -1517,10 +1517,10 @@ class Mailinglist extends BaseController {
 		
 		echo "Record\t;Email\t;ContactID\t;Payment<br>;";
 		foreach ($query->getResult() as $row) {
-			$status = $row->ContactID . "\t;" . $row->Email . "\t;";
+			$status = $row->GuestID . "\t;" . $row->Email . "\t;";
 			
-			if ($row->MasterContactID > 0) {
-				$contactID = $row->MasterContactID;
+			if ($row->ContactID > 0) {
+				$contactID = $row->ContactID;
 			} else {
 				// Use email to look them up
 				$contactID = $mine->LookupPersonByEmail($row->Email, FALSE);
@@ -1566,7 +1566,7 @@ class Mailinglist extends BaseController {
 					
 					$type = "Full Conference";
 					$invitedBy = $row->InvitedByCompanyID;
-					$regID = $row->ContactID;
+					$regID = $row->GuestID;
 				}
 				
 				$status .= $contactID . "\t;" . $payment . "\t;";
@@ -1578,7 +1578,7 @@ class Mailinglist extends BaseController {
 								
 				// Add new record
 				$SQLdata = array (
-					'ContactID' => $contactID,
+					'GuestID' => $contactID,
 					'Email' => $row->Email,	
 					'Year' => Year,
 					'Event' => Event,

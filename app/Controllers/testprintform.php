@@ -46,10 +46,10 @@ echo  $id;
 	
 	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	
-	$builder->where('ContactID', $id);
+	$builder->where('GuestID', $id);
 	
 	$builder->orderBy('FamilyName ASC, GivenName ASC');
 	
@@ -108,7 +108,7 @@ for($i=1; $i<=$people; $i++){
 		$FamilyName=$results[$n]["FamilyName"];
 		$EventYear=$results[$n]["EventYear"];
 		$Company=$results[$n]["Company"];
-		$ContactID=$results[$n]["ContactID"];
+		$ContactID=$results[$n]["GuestID"];
 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 		$HardCopy=$results[$n]["HardCopy"];
 		$Tutorial=$results[$n]["Tutorial"];

@@ -61,10 +61,10 @@ function TestConXsingle($graphics = TRUE)
 				
 				$db  = \Config\Database::connect('registration');
 				$builder = $db->table('guests');
-				$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+				$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 				InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,NativeName,Type');
 				
-				$builder->where('ContactID', $id);
+				$builder->where('GuestID', $id);
 				
 				$builder->orderBy('FamilyName ASC, GivenName ASC');
 				
@@ -138,7 +138,7 @@ function TestConXsingle($graphics = TRUE)
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
@@ -341,13 +341,13 @@ public function Guestcrudkorea()
 			
 			
 		
-		$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-		$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+		$crud->columns (['GuestID','ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+		$crud->fields(['EventYear','ContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 		$crud->setUniqueId('korea_2025_guest12');
 		
 		$crud->fieldType('Type', 'dropdown', ['EXPO' => 'EXPO', 'Professional' => 'Professional']);
 		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-					return site_url('/Guest/TestConXsingle/') . $row->ContactID;
+					return site_url('/Guest/TestConXsingle/') . $row->GuestID;
 			});
 
 	$output = $crud->render();
@@ -413,12 +413,12 @@ public function Guestcrudchina()
    		
 		
 	
-	$crud->columns (['ContactID','MasterContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->fields(['EventYear','MasterContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->columns (['GuestID','ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
+	$crud->fields(['EventYear','ContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 	$crud->setUniqueId('china_2025_guest12');
 	$crud->fieldType('Type', 'dropdown', ['EXPO' => 'EXPO', 'Professional' => 'Professional']);
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-    			return site_url('/Guest/TestConXsingle/') . $row->ContactID;
+    			return site_url('/Guest/TestConXsingle/') . $row->GuestID;
 		});
 
 	$output = $crud->render();
@@ -481,8 +481,8 @@ public function contact585442()
 	
    	$crud->where(['guests.EventYear' => EventYear]);
 	
-	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','ContactID']);
+	$crud->fields (['ContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
@@ -718,8 +718,8 @@ $pdf->Output('My-File-Name.pdf', 'I');
 function edit_master_contact_URL($primary_key, $row) 
 {
 	$url = '';
-	if ($row->MasterContactID > 0) {
-		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->MasterContactID;
+	if ($row->ContactID > 0) {
+		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->ContactID;
 	};
 	return $url;
 }
@@ -1135,7 +1135,7 @@ public function guest_listtest()
 	// ask ira
 	$db3 = db_connect('registration');
 	//$builder3 = $db3->table('guests');
-	$sql3 = 'SELECT * FROM guests Where ContactID = ?;';
+	$sql3 = 'SELECT * FROM guests Where GuestID = ?;';
 	$query3 =$db3->query($sql3, [$staffID]);
 	$row = $query3->getRow();
 	
@@ -1447,11 +1447,11 @@ $crud->callbackBeforeUpdate(function ($stateParameters) {
     // If email already exists in DB
     if ($rowcount != 0) {
         $row2 = $query2->getRow();
-        log_message('debug', "Existing record ContactID: {$row2->ContactID}");
+        log_message('debug', "Existing record GuestID: {$row2->GuestID}");
         log_message('debug', "Current primaryKeyValue: {$stateParameters->primaryKeyValue}");
 
         // Case 1: Email belongs to the same ContactID being updated → OK
-        if ($rowcount == 1 && $row2->ContactID == $stateParameters->primaryKeyValue) {
+        if ($rowcount == 1 && $row2->GuestID == $stateParameters->primaryKeyValue) {
             return $stateParameters;
         }
 
@@ -1656,7 +1656,7 @@ $builder2 = $db2->table('guests');
    // ask ira get where query
   if(!empty($id) && is_numeric($id))
   {
-   $email_old = $builder2->where("ContactId",$id)->get('guests')->row()->Email;
+   $email_old = $builder2->where("GuestId",$id)->get('guests')->row()->Email;
    $builder2->whereNotIn("Email",$email_old);
   }
       

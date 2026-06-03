@@ -55,7 +55,7 @@ public function company48392()
 	$crud->where(['chinacompany.EventYear' => EventYear]);
    		
 	
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{GuestID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
 	
 	$crud->fieldType('EventYear', 'hidden',);
 	
@@ -93,8 +93,8 @@ public function contact585442()
 	
    	$crud->where(['guests.EventYear' => EventYear]);
 	
-	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','ContactID']);
+	$crud->fields (['ContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
@@ -184,11 +184,11 @@ echo  $id;
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db = \Config\Database::connect();
 	$db->setDatabase('bits_registration');
-	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
+	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,InvitedByCompanyID');
 	$crud->from('guests');
 	
 	//$this->db->where('EventYear', $type); //'professional');
-	$crud->where('ContactID', $id);
+	$crud->where('GuestID', $id);
 	$crud->where('ToPrint', 'Yes');
 	
 	$crud->defaultOrdering(['FamilyName' => 'ASC', 'GivenName' => 'ASC', 'ChineseName' => 'ASC']);
@@ -239,7 +239,7 @@ $pdf->AddPage('P',$pageLayout);
 		$FamilyName=$results[$n]["FamilyName"];
 		$EventYear=$results[$n]["EventYear"];
 		$Company=$results[$n]["Company"];
-		$ContactID=$results[$n]["ContactID"];
+		$ContactID=$results[$n]["GuestID"];
 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 		$pdf->AddPage('P',$pageLayout);
 		
@@ -324,8 +324,8 @@ $pdf->Output('My-File-Name.pdf', 'I');
 function edit_master_contact_URL($primary_key, $row) 
 {
 	$url = '';
-	if ($row->MasterContactID > 0) {
-		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->MasterContactID;
+	if ($row->ContactID > 0) {
+		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->ContactID;
 	};
 	return $url;
 }
@@ -497,7 +497,7 @@ $builder = $db->table('chinacompany');
 	if ($staffID > 0) {
 	
 	$builder = $db->table('guests');
-	$sql = 'SELECT * FROM guests Where ContactID = ?;';
+	$sql = 'SELECT * FROM guests Where GuestID = ?;';
 	$query =$db->query($sql, [$staffID]);
 	$row = $query->getRow();
 	
@@ -530,7 +530,7 @@ $builder = $db->table('chinacompany');
 	'ChineseName',
 	'Company',
 	'CN_Company']); 
-	$crud->fields(['ContactID',
+	$crud->fields(['GuestID',
 	'Stamp',
 	'EventYear',
 	'Invited',
@@ -539,7 +539,7 @@ $builder = $db->table('chinacompany');
 	'OfficeNotes',
 	'NoShow',
 	'BusinessCard',
-	'MasterContactID',
+	'ContactID',
 	'Type',
 	'Tutorial',
 	'Control',
@@ -657,14 +657,14 @@ $builder = $db->table('chinacompany');
  
 	if($rowcount != 0)
 	{
-		$sql = 'SELECT ContactID FROM guests Where EventYear = ? AND Email = ?;';
+		$sql = 'SELECT GuestID FROM guests Where EventYear = ? AND Email = ?;';
 
 		$query2 =$db2->query($sql,[EventYear,$value]);
 		$row2 = $query2->getRow();
 		
-		$foundID =$row2->ContactID;
+		$foundID =$row2->GuestID;
 	
-			if($foundID != $fields['ContactID'])
+			if($foundID != $fields['GuestID'])
 			{
 			return false;
 			}
@@ -713,7 +713,7 @@ $builder = $db->table('chinacompany');
 	$crud->displayAs('Mobile','Mobile Phone');
 
 	
-	$crud->fieldType('ContactID', 'hidden');
+	$crud->fieldType('GuestID', 'hidden');
 	$crud->fieldType('InvitedByCompanyID','hidden');
 	$crud->fieldType('EventYear','hidden');
 	$crud->fieldType('BanquetCompanyID','hidden');
@@ -812,7 +812,7 @@ $builder2 = $db2->table('guests');
    // ask ira get where query
   if(!empty($id) && is_numeric($id))
   {
-   $email_old = $builder2->where("ContactId",$id)->get('guests')->row()->Email;
+   $email_old = $builder2->where("GuestID",$id)->get('guests')->row()->Email;
    $builder2->whereNotIn("Email",$email_old);
   }
       

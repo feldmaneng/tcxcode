@@ -52,7 +52,7 @@ public function company4667227()
 	$crud->where('guests.EventYear',EventYear);
    		
 	//$this->grocery_crud->set_relation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',array('guests.EventYear' => EventYear),'ContactID ASC');
-	$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
+	$crud->setRelation('StaffID','guests','{GuestID} - {GivenName} {FamilyName}',['guests.EventYear' => EventYear]);
 	//$this->grocery_crud->field_type('EventYear', 'hidden', EventYear);
 	$crud->fieldType('EventYear', 'hidden',);
 	
@@ -91,8 +91,8 @@ public function contact585442()
 	
    	$crud->where('guests.EventYear', EventYear); 
 	
-	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','ContactID']);
+	$crud->fields (['ContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
@@ -191,11 +191,11 @@ echo  $id;
 
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db->setDatabase('RegistrationDataBase');
-	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID');
+	$crud->select('NameOnBadge,ChineseName,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,InvitedByCompanyID');
 	$crud->from('guests');
 	
 	//$this->db->where('EventYear', $type); //'professional');
-	$crud->where('ContactID', $id);
+	$crud->where('GuestID', $id);
 	$crud->where('ToPrint', 'Yes');
 	
 	$crud->defaultOrdering(['FamilyName' => 'ASC', 'GivenName' => 'ASC', 'ChineseName' => 'ASC']);
@@ -246,7 +246,7 @@ $pdf->AddPage('P',$pageLayout);
 		$FamilyName=$results[$n]["FamilyName"];
 		$EventYear=$results[$n]["EventYear"];
 		$Company=$results[$n]["Company"];
-		$ContactID=$results[$n]["ContactID"];
+		$ContactID=$results[$n]["GuestID"];
 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 		$pdf->AddPage('P',$pageLayout);
 		
@@ -331,8 +331,8 @@ $pdf->Output('My-File-Name.pdf', 'I');
 function edit_master_contact_URL($primary_key, $row) 
 {
 	$url = '';
-	if ($row->MasterContactID > 0) {
-		$url = 'https://www.testconx.org/tools/secure.php/database/contacts/edit/'. $row->MasterContactID;
+	if ($row->ContactID > 0) {
+		$url = 'https://www.testconx.org/tools/secure.php/database/contacts/edit/'. $row->ContactID;
 	};
 	return $url;
 }
@@ -639,7 +639,7 @@ public function uniqueEmail($str)
     
   if(!empty($id) && is_numeric($id))
   {
-   $email_old = $db2->where("ContactId",$id)->get('guests')->row()->Email;
+   $email_old = $db2->where("GuestId",$id)->get('guests')->row()->Email;
    $db2->where("Email !=",$email_old);
   }
       

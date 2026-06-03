@@ -137,13 +137,13 @@ class Badgemesa extends BaseController {
 		//$crud->setActionButton('Print Badge', 'fa fa-user', site_url('/badgemesa/TestConXsingle/'));
 
 		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
-    			return site_url('/badgemesa/TestConXsingle/') . $row->ContactID;
+    			return site_url('/badgemesa/TestConXsingle/') . $row->GuestID;
 		});
 
 		// Try restricting fields...
 		//$crud->fields(['Email','GivenName']);
 		
-		$crud->fields(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner','Message','MasterContactID','NoShow']);
+		$crud->fields(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Company','Email','Type','Tutorial','Dinner','Message','ContactID','NoShow']);
 		$crud ->fieldtype('Type','enum',['Professional','EXPO','Exhibitor','Summit','Symposium','EXPOtiny']);
 		$crud ->fieldtype('ToPrint','enum',['Yes','No']);
 		$crud ->fieldtype('Dinner','enum',['1','0']);
@@ -237,10 +237,10 @@ echo  $id;
 	
 	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	
-	$builder->where('ContactID', $id);
+	$builder->where('GuestID', $id);
 	
 	$builder->orderBy('FamilyName ASC, GivenName ASC');
 	
@@ -284,7 +284,7 @@ echo  $id;
 			'PrintTime' => $time,
 			];
 
-			$builder->where('ContactID', $results[$n]["ContactID"]);
+			$builder->where('GuestID', $results[$n]["GuestID"]);
 			$builder->update($data);
 			
 				// Define what special labels go on the badges
@@ -310,7 +310,7 @@ echo  $id;
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
@@ -544,7 +544,7 @@ function Testbadge($convention = "testconx",$event = "test2022", $graphics = FAL
 	
 	$db      = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
 	$builder->where('ToPrint', 'Yes');
 	$builder->where('Type', $type);
@@ -596,7 +596,7 @@ for($i=1; $i<=$people; $i++){
 		$FamilyName=$results[$n]["FamilyName"];
 		$EventYear=$results[$n]["EventYear"];
 		$Company=$results[$n]["Company"];
-		$ContactID=$results[$n]["ContactID"];
+		$ContactID=$results[$n]["GuestID"];
 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 		$HardCopy=$results[$n]["HardCopy"];
 		$Tutorial=$results[$n]["Tutorial"];
@@ -957,7 +957,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 	
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,ChineseName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,ChineseName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			
@@ -989,7 +989,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 			'PrintTime' => $time,
 			];
 
-					$builder->where('ContactID', $results[0]["ContactID"]);
+					$builder->where('GuestID', $results[0]["GuestID"]);
 					$builder->update($data);
 			}
 			else{
@@ -1035,7 +1035,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 			'PrintTime' => $time,
 			];
 
-					$builder->where('ContactID', $results[$n]["ContactID"]);
+					$builder->where('GuestID', $results[$n]["GuestID"]);
 					$builder->update($data);
 			}
 				// Define what special labels go on the badges
@@ -1065,7 +1065,7 @@ function Relatedbadge($convention = "testconx",$event = "test2022", $graphics = 
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
@@ -1240,7 +1240,7 @@ function Blankbadge2($convention = 'testconx', $event = 'Mesa2025', $graphics = 
 
 	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
 	$builder->where('ToPrint', 'Yes');
@@ -1300,7 +1300,7 @@ for($i=1; $i<=$people; $i++){
 		$FamilyName=$results[$n]["FamilyName"];
 		$EventYear=$results[$n]["EventYear"];
 		$Company=$results[$n]["Company"];
-		$ContactID=$results[$n]["ContactID"];
+		$ContactID=$results[$n]["GuestID"];
 		$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 		$HardCopy=$results[$n]["HardCopy"];
 		$Tutorial=$results[$n]["Tutorial"];
@@ -1636,7 +1636,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 
 	$db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
-	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+	$builder->select('NameOnBadge,GivenName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner');
 	$builder->where('EventYear', $event);
 	$builder->where('ToPrint', 'Yes');
@@ -1694,7 +1694,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 			'PrintTime' => $time,
 			];
 
-			$builder->where('ContactID', $results[$n]["ContactID"]);
+			$builder->where('GuestID', $results[$n]["GuestID"]);
 			$builder->update($data);
 			
 				// Define what special labels go on the badges
@@ -1720,7 +1720,7 @@ function Blankbadge($convention = 'testconx', $event = 'Mesa2025', $graphics = F
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
@@ -1882,7 +1882,7 @@ exit();
 			
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime,Type');
 			
 			
@@ -2076,7 +2076,7 @@ exit();
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
@@ -2274,7 +2274,7 @@ exit();
 			
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			
@@ -2390,7 +2390,7 @@ exit();
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];

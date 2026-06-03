@@ -98,14 +98,14 @@ class PrintBadge extends BaseController
 			
 			$db = \Config\Database::connect('registration');
 			$builder = $db->table('guests');
-			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,ContactID,
+			$builder->select('NameOnBadge,GivenName,NativeName,CN_Company,Company,Email,EventYear,FamilyName,GuestID,
 	InvitedByCompanyID,Control,HardCopy,Tutorial,Type,Message,Dinner,PrintTime');
 			
 			//$builder->where('Email', $id);
 			//$builder->where('EventYear', $eventYear);
 			//$builder->orwhere('ContactID',$id);
 			//$builder->where('EventYear', $eventYear);
-			$builder->where('ContactID',$id);
+			$builder->where('GuestID',$id);
 			$query = $builder->get();
 			$people = $query->getNumRows();
 			$results = $query->getResultArray();
@@ -129,7 +129,7 @@ class PrintBadge extends BaseController
 			'PrintTime' => $time,
 			];
 
-					$builder->where('ContactID', $results[0]["ContactID"]);
+					$builder->where('GuestID', $results[0]["GuestID"]);
 					$builder->update($data);
 			}
 			else{
@@ -195,7 +195,7 @@ class PrintBadge extends BaseController
 				$FamilyName=$results[$n]["FamilyName"];
 				$EventYear=$results[$n]["EventYear"];
 				$Company=$results[$n]["Company"];
-				$ContactID=$results[$n]["ContactID"];
+				$ContactID=$results[$n]["GuestID"];
 				$InvitedByCompanyID=$results[$n]["InvitedByCompanyID"];
 				$HardCopy=$results[$n]["HardCopy"];
 				$Tutorial=$results[$n]["Tutorial"];
