@@ -94,8 +94,8 @@ public function contact585442()
 	
    	$crud->where(['guests.EventYear' => EventYear]);
 	
-	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','MasterContactID']);
-	$crud->fields (['MasterContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
+	$crud->columns (['InvitedByCompanyID','Email','GivenName','FamilyName','ChineseName','NameOnBadge','Company','CN_Company','ContactID']);
+	$crud->fields (['ContactID','InvitedByCompanyID', 'BanquetCompanyID','Email','GivenName','FamilyName', 
 		'ChineseName','NameOnBadge','Title','Company','CN_Company',
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile',
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
@@ -331,8 +331,8 @@ $pdf->Output('My-File-Name.pdf', 'I');
 function edit_master_contact_URL($primary_key, $row) 
 {
 	$url = '';
-	if ($row->MasterContactID > 0) {
-		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->MasterContactID;
+	if ($row->ContactID > 0) {
+		$url = 'https://www.testconx.org/tools/menu.php/database/contacts/edit/'. $row->ContactID;
 	};
 	return $url;
 }
