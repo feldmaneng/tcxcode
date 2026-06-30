@@ -14,9 +14,9 @@ use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
-define ("BiTSEvent", "TestConX China 2025"); // What is displayed
-define("EventYearChina", "China2025");// For selecting records only for this year's event.Remove later replace with session variable
-define("EventYearKorea", "Korea2025");// For selecting records only for this year's event.Remove later replace with session variable
+define ("BiTSEvent", "TestConX China 2026"); // What is displayed
+define("EventYearChina", "China2026");// For selecting records only for this year's event.Remove later replace with session variable
+define("EventYearKorea", "Korea2026");// For selecting records only for this year's event.Remove later replace with session variable
 $session = session(); 
 
 class Guest extends BaseController {
@@ -343,7 +343,7 @@ public function Guestcrudkorea()
 		
 		$crud->columns (['GuestID','ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 		$crud->fields(['EventYear','ContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-		$crud->setUniqueId('korea_2025_guest12');
+		$crud->setUniqueId('korea_2026_guest12');
 		
 		$crud->fieldType('Type', 'dropdown', ['EXPO' => 'EXPO', 'Professional' => 'Professional']);
 		$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
@@ -415,7 +415,7 @@ public function Guestcrudchina()
 	
 	$crud->columns (['GuestID','ContactID','InvitedByCompanyID','Email','GivenName','FamilyName','NameOnBadge','NativeName','Type','Company','CN_Company','PrintTime','NoShow','OfficeNotes','BusinessCard']);
 	$crud->fields(['GuestID','EventYear','ContactID','Email','GivenName','FamilyName','NativeName','NameOnBadge','Type','Tutorial','InvitedByCompanyID','Title','Company','CN_Company','Address1','Address2','City','State','Country','Phone','Mobile','ToPrint','PrintTime','NoShow','OfficeNotes','BusinessCard']);
-	$crud->setUniqueId('china_2025_guest13');
+	$crud->setUniqueId('china_2026_guest13');
 	$crud->fieldType('Type', 'dropdown', ['EXPO' => 'EXPO', 'Professional' => 'Professional']);
 	$crud->setActionButton('Print Badge', 'fa fa-user', function ($row) {
     			return site_url('/Guest/TestConXsingle/') . $row->GuestID;
@@ -1285,12 +1285,12 @@ $builder->where('SecretKey', $secretKey);
 	$crud->where(['InvitedByCompanyID'=>$companyID,
 					'EventYear'=> $_SESSION["EventYear"]]); 
 					
-	if( $_SESSION["EventYear"] == 'China2025'){
-		$testconxevent = 'TestConX China 2025';
+	if( $_SESSION["EventYear"] == 'China2026'){
+		$testconxevent = 'TestConX China 2026';
 		$crud->setSubject('Guest 来宾', 'Guests 来宾');
 	}
-	if( $_SESSION["EventYear"] == 'Korea2025'){
-		$testconxevent = 'TestConX Korea 2025';
+	if( $_SESSION["EventYear"] == 'Korea2026'){
+		$testconxevent = 'TestConX Korea 2026';
 		$crud->setSubject('Guest', 'Guests');
 	}
 	//$crud->setSubject('Guest 来宾', 'Guests 来宾');
@@ -1513,8 +1513,8 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
 
 	$crud->setRule('Phone','requiredWithout','Mobile');
 	$crud->setRule('Mobile','requiredWithout','Phone');
-	if( $_SESSION["EventYear"] == 'China2025'){
-		$testconxevent = 'TestConX China 2025';
+	if( $_SESSION["EventYear"] == 'China2026'){
+		$testconxevent = 'TestConX China 2026';
 		$crud->displayAs('Email','Email Address 电邮地址');
 		$crud->displayAs('Related','Guest or Staff');
 		$crud->displayAs('GivenName','Given (First) Name 名（英文）');
@@ -1533,8 +1533,8 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
 		$crud->displayAs('Phone','Work Phone 单位电话');
 		$crud->displayAs('Mobile','Mobile Phone 手机');
 	}
-	if( $_SESSION["EventYear"] == 'Korea2025'){
-		$testconxevent = 'TestConX Korea 2025';
+	if( $_SESSION["EventYear"] == 'Korea2026'){
+		$testconxevent = 'TestConX Korea 2026';
 		$crud->displayAs('Email','Email Address');
 		$crud->displayAs('Related','Guest or Staff');
 		$crud->displayAs('GivenName','Given (First) Name');
@@ -1592,11 +1592,11 @@ $crud->callbackBeforeInsert(function ($stateParameters) {
    	 	return $redirectResponse->setUrl('https://www.testconx.org/forms.php/Guest/guest_list/?id='.$_SESSION["SecretKey"]);
 	});
 	
-	if( $_SESSION["EventYear"] == 'China2025'){
-		$testconxevent = 'TestConX China 2025';
+	if( $_SESSION["EventYear"] == 'China2026'){
+		$testconxevent = 'TestConX China 2026';
 	}
-	if( $_SESSION["EventYear"] == 'Korea2025'){
-		$testconxevent = 'TestConX Korea 2025';
+	if( $_SESSION["EventYear"] == 'Korea2026'){
+		$testconxevent = 'TestConX Korea 2026';
 	}
 	$crud->unsetPrint();
 	$crud->unsetExport();
