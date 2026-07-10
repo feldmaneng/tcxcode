@@ -9,6 +9,8 @@ use CodeIgniter\Database\Migration;
  */
 class CreateCompanyMarkets extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $this->forge->addField([

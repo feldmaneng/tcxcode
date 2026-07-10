@@ -13,6 +13,8 @@ use Config\Database;
  */
 class AddEventClosedFlags extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $forge = $this->forge;

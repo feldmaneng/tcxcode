@@ -27,6 +27,8 @@ use Config\Database;
  */
 class AuthorPortalSchema extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $forge = $this->forge;

@@ -11,6 +11,8 @@ use Config\Database;
  */
 class AuthorPortalModuleSeed extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $db = Database::connect('control');

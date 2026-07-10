@@ -12,6 +12,8 @@ use Config\Database;
  */
 class GuestsModuleSeed extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $db = Database::connect('control');
