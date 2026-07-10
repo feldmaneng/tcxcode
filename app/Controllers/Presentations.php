@@ -155,7 +155,7 @@ public function general()
 
 public function china()
 		{
-	$year=2025;
+	$year=2026;
     
     $year2=$year+1;
 	
@@ -180,7 +180,7 @@ $crud->setUniqueId('china_2025');
 
 public function korea()
 		{
-	$year=2025;
+	$year=2026;
     
     $year2=$year+1;
 	
