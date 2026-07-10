@@ -2,14 +2,24 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use Config\Database;
 
 /**
  * Guest-list managers per companyguestlists row.
- * Up to 4 managers per row is enforced in application code (CompanyGuestListsManagersController).
- * Users live in a different DB group (control.users), so we don't add a FK to users.
+ * Lives in the 'registration' DB group alongside companyguestlists and guests.
+ * Users live in the 'control' DB group, so no FK to users.
  */
 class CreateCompanyGuestListsManagers extends Migration
 {
+    protected $DBGroup = 'registration';
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->db    = Database::connect($this->DBGroup);
+        $this->forge = Database::forge($this->DBGroup);
+    }
+
     public function up()
     {
         $this->forge->addField([

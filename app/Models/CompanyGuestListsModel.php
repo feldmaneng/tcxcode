@@ -5,6 +5,7 @@ use CodeIgniter\Model;
 
 class CompanyGuestListsModel extends Model
 {
+    protected $DBGroup          = 'registration';
     protected $table            = 'companyguestlists';
     protected $primaryKey       = 'CompanyID';
     protected $returnType       = 'array';

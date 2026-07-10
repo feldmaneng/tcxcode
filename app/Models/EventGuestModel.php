@@ -14,6 +14,7 @@ use CodeIgniter\Model;
  */
 class EventGuestModel extends Model
 {
+    protected $DBGroup          = 'registration';
     protected $table            = 'guests';
     protected $primaryKey       = 'GuestID';
     protected $returnType       = 'array';
