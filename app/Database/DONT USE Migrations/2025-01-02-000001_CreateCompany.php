@@ -10,6 +10,8 @@ use CodeIgniter\Database\Migration;
  */
 class CreateCompany extends Migration
 {
+    protected $DBGroup = 'control';
+
     public function up()
     {
         $this->forge->addField([
