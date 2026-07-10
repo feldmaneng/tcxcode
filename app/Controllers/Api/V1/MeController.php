@@ -40,6 +40,21 @@ class MeController extends BaseApiController
                 ->where('um.UserID', $userId)
                 ->orderBy('m.SortOrder', 'ASC')
                 ->get()->getResultArray();
+
+            // Auto-grant `guests` module if the user is assigned as a
+            // guest-list manager on at least one companyguestlists row.
+            $hasGuests = false;
+            foreach ($rows as $r) { if (($r['code'] ?? '') === 'guests') { $hasGuests = true; break; } }
+            if (!$hasGuests) {
+                $mgrCount = db_connect()->table('companyguestlists_managers')
+                    ->where('UserID', $userId)->countAllResults();
+                if ($mgrCount > 0) {
+                    $mod = $ctrl->table('modules')
+                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
+                        ->where('Code', 'guests')->get()->getRowArray();
+                    if ($mod) $rows[] = $mod;
+                }
+            }
         }
 
         return $this->respond([

@@ -628,12 +628,13 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     // Authors
     $routes->group('authors', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
-        $routes->get('/',          'AuthorsController::index');
-        $routes->get('(:num)',     'AuthorsController::show/$1');
-        $routes->post('/',         'AuthorsController::create');
-        $routes->put('(:num)',     'AuthorsController::update/$1');
-        $routes->delete('(:num)',  'AuthorsController::delete/$1');
-        $routes->options('(:any)', 'AuthorsController::options', ['filter' => 'cors']);
+        $routes->get('/',                'AuthorsController::index');
+        $routes->post('wordpress-status','AuthorsController::wordpressStatus');
+        $routes->get('(:num)',           'AuthorsController::show/$1');
+        $routes->post('/',               'AuthorsController::create');
+        $routes->put('(:num)',           'AuthorsController::update/$1');
+        $routes->delete('(:num)',        'AuthorsController::delete/$1');
+        $routes->options('(:any)',       'AuthorsController::options', ['filter' => 'cors']);
     });
 
     // Presentations
@@ -667,6 +668,29 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->put('(:num)',     'SessionsController::update/$1');
         $routes->delete('(:num)',  'SessionsController::delete/$1');
         $routes->options('(:any)', 'SessionsController::options', ['filter' => 'cors']);
+    });
+
+    // Company Guest Lists (guest-list limits per event/company) + managers + guests
+    $routes->group('company-guest-lists', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',                       'CompanyGuestListsController::index');
+        $routes->get('(:num)',                  'CompanyGuestListsController::show/$1');
+        $routes->post('/',                      'CompanyGuestListsController::create');
+        $routes->put('(:num)',                  'CompanyGuestListsController::update/$1');
+        $routes->delete('(:num)',               'CompanyGuestListsController::delete/$1');
+
+        $routes->get('(:num)/managers',         'CompanyGuestListsManagersController::index/$1');
+        $routes->post('(:num)/managers',        'CompanyGuestListsManagersController::add/$1');
+        $routes->delete('(:num)/managers/(:num)', 'CompanyGuestListsManagersController::remove/$1/$2');
+
+        $routes->get('(:num)/guests',           'EventGuestsController::index/$1');
+        $routes->post('(:num)/guests',          'EventGuestsController::create/$1');
+
+        $routes->options('(:any)',              'CompanyGuestListsController::options', ['filter' => 'cors']);
+    });
+    $routes->group('guests', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->put('(:num)',     'EventGuestsController::update/$1');
+        $routes->delete('(:num)',  'EventGuestsController::delete/$1');
+        $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
 
     // Author Portal — derived access scopes for the acting user
@@ -756,6 +780,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('users/create',                  'AdminUsersController::createUser');
         $routes->post('users/update',                  'AdminUsersController::updateUser');
         $routes->post('users/set-modules',             'AdminUsersController::setModules');
+        $routes->post('users/set-contact',             'AdminUsersController::setContact');
         $routes->post('users/set-wiki-permission',     'AdminUsersController::setWikiPermission');
         $routes->post('users/reset-password',          'AdminUsersController::resetPassword');
         $routes->post('users/remove-2fa',              'AdminUsersController::remove2fa');
