@@ -45,10 +45,10 @@ public function company4667227()
 	$db->setDatabase('RegistrationDataBase');
    		
 	//$this->grocery_crud->set_theme('datatables');
-	//$this->grocery_crud->set_table('chinacompany');
+	//$this->grocery_crud->set_table('companyguestlists');
 	
-	$crud->setTable('chinacompany');
-   	//$this->grocery_crud->where('chinacompany.EventYear', EventYear);  //Full specify table.field since same field in Guest table
+	$crud->setTable('companyguestlists');
+   	//$this->grocery_crud->where('companyguestlists.EventYear', EventYear);  //Full specify table.field since same field in Guest table
 	$crud->where('guests.EventYear',EventYear);
    		
 	//$this->grocery_crud->set_relation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',array('guests.EventYear' => EventYear),'ContactID ASC');
@@ -98,8 +98,8 @@ public function contact585442()
 		'Invited', 'EventYear','ToPrint','Message','OfficeNotes','NoShow','BusinessCard']);
 
 	// Since these fields are to be hidden don't set the relationship
-	$crud->setRelation('InvitedByCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
-	$crud->setRelation('BanquetCompanyID','chinacompany','Company',['chinacompany.EventYear' => EventYear]);
+	$crud->setRelation('InvitedByCompanyID','companyguestlists','Company',['companyguestlists.EventYear' => EventYear]);
+	$crud->setRelation('BanquetCompanyID','companyguestlists','Company',['companyguestlists.EventYear' => EventYear]);
 
 	$this->grocery_crud->set_rules('Email','Email Address 电邮地址','required|valid_email|callback_uniqueEmail[Email]'); //unique[Contacts.Email,Email]');
 	$this->grocery_crud->set_rules('Company', 'Company Name 公司名称（英文）', 'callback_companyVerify[CN_Company]');
@@ -342,8 +342,8 @@ public function stats397927( $raw = FALSE )
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db->setDatabase('RegistrationDataBase');
-	$crud->setTable('chinacompany');
-	$crud->defaultOrdering('chinacompany.Company', 'ASC');
+	$crud->setTable('companyguestlists');
+	$crud->defaultOrdering('companyguestlists.Company', 'ASC');
 	$query = $crud->getWhere(['EventYear'=> EventYear]);
 	
 	$inviteStats = array();
@@ -478,7 +478,7 @@ public function guest_list()
 	$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$this->db->select('*');
    	$this->db->where('SecretKey', $secretKey);
-   	$query = $this->db->get('chinacompany',1);
+   	$query = $this->db->get('companyguestlists',1);
 	$row = $query->row();
 	
 	if ($query->num_rows() != 1) {
@@ -545,8 +545,8 @@ public function guest_list()
 		'Address1', 'Address2', 'City', 'State', 'PCode', 'Country', 'Phone', 'Mobile','ToPrint');
 
 	// Since these fields are to be hidden don't set the relationship
-	//$this->grocery_crud->set_relation('InvitedByCompanyID','chinacompany','{CompanyId} {Company}',null,'CompanyID ASC');
-	//$this->grocery_crud->set_relation('BanquetCompanyID','chinacompany','{CompanyId} {Company}',null,'CompanyID ASC');
+	//$this->grocery_crud->set_relation('InvitedByCompanyID','companyguestlists','{CompanyId} {Company}',null,'CompanyID ASC');
+	//$this->grocery_crud->set_relation('BanquetCompanyID','companyguestlists','{CompanyId} {Company}',null,'CompanyID ASC');
 
 	//$this->grocery_crud->required_fields('Email');
 	$this->grocery_crud->set_rules('Email','Email Address 电邮地址','required|valid_email|callback_uniqueEmail[Email]');

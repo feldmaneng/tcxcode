@@ -50,9 +50,9 @@ public function company48392()
 	
 
 	
-	$crud->setTable('chinacompany');
+	$crud->setTable('companyguestlists');
    
-	$crud->where(['chinacompany.EventYear' => EventYear]);
+	$crud->where(['companyguestlists.EventYear' => EventYear]);
    		
 	
 	$crud->setRelation('StaffID','guests','{GuestID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
@@ -335,8 +335,8 @@ public function stats397927( $raw = FALSE )
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db->setDatabase('bits_registration');
-	$crud->setTable('chinacompany');
-	$crud->defaultOrdering('chinacompany.Company', 'ASC');
+	$crud->setTable('companyguestlists');
+	$crud->defaultOrdering('companyguestlists.Company', 'ASC');
 	$query = $crud->getWhere(['EventYear'=> EventYear]);
 	
 	$inviteStats = array();
@@ -467,12 +467,12 @@ public function guest_list()
 	}
 
 $db = db_connect('registration');
-$builder = $db->table('chinacompany');
+$builder = $db->table('companyguestlists');
 
 	$crud = $this->_getGroceryCrudEnterprise('registration');
 	
 	$builder->where('SecretKey', $secretKey);
-	$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	$sql = 'SELECT * FROM companyguestlists Where SecretKey = ? LIMIT 1;';
 	$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	

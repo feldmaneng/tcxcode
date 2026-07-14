@@ -49,9 +49,9 @@ public function company123()
 	
 
 	
-	$crud->setTable('chinacompany');
+	$crud->setTable('companyguestlists');
    
-	$crud->where(['chinacompany.EventYear' => EventYear]);
+	$crud->where(['companyguestlists.EventYear' => EventYear]);
    		
 	
 	$crud->setRelation('StaffID','guests','{GuestID} - {GivenName} {FamilyName}',['EventYear' => EventYear]);
@@ -342,8 +342,8 @@ public function stats397927( $raw = FALSE )
 	
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db->setDatabase('bits_registration');
-	$crud->setTable('chinacompany');
-	$crud->defaultOrdering('chinacompany.Company', 'ASC');
+	$crud->setTable('companyguestlists');
+	$crud->defaultOrdering('companyguestlists.Company', 'ASC');
 	$query = $crud->getWhere(['EventYear'=> EventYear]);
 	
 	$inviteStats = array();
@@ -494,7 +494,7 @@ public function guest_listtest()
 	//echo "secretkey = ".$secretKey."\n <br>";
 	
 	$db = db_connect('registration');
-	$builder = $db->table('chinacompany');
+	$builder = $db->table('companyguestlists');
 	$builder->where('SecretKey', $secretKey);
 	
 	if ($builder->countAllResults(false) != 1) {
@@ -507,7 +507,7 @@ public function guest_listtest()
 		die();
 	}
 	$query = $builder->get();
-	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$sql = 'SELECT * FROM companyguestlists Where SecretKey = ? LIMIT 1;';
 	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//ask ira
@@ -610,7 +610,7 @@ $db = \Config\Database::connect();
 			$query = $builder->get(); */
 			
 $db = db_connect('registration');
-$builder = $db->table('chinacompany');
+$builder = $db->table('companyguestlists');
 $builder->where('SecretKey', $secretKey);
 
 
@@ -626,7 +626,7 @@ $builder->where('SecretKey', $secretKey);
 		die();
 	}
 	$query = $builder->get();
-	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$sql = 'SELECT * FROM companyguestlists Where SecretKey = ? LIMIT 1;';
 	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//ask ira

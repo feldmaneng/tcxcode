@@ -303,9 +303,9 @@ public function companychina34556672()
 	
 
 	
-	$crud->setTable('chinacompany');
+	$crud->setTable('companyguestlists');
    
-	$crud->where(['chinacompany.EventYear' => EventYearChina]);
+	$crud->where(['companyguestlists.EventYear' => EventYearChina]);
    		
 	
 	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYearChina]);
@@ -436,9 +436,9 @@ public function companykorea2346878438()
 	
 
 	
-	$crud->setTable('chinacompany');
+	$crud->setTable('companyguestlists');
    
-	$crud->where(['chinacompany.EventYear' => EventYearKorea]);
+	$crud->where(['companyguestlists.EventYear' => EventYearKorea]);
    		
 	
 	//$crud->setRelation('StaffID','guests','{ContactID} - {GivenName} {FamilyName}',['EventYear' => EventYearKorea]);
@@ -729,7 +729,7 @@ public function stats397927( $raw = FALSE )
 	$session = session(); 
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db = \Config\Database::connect('registration');
-			$builder = $db->table('chinacompany');
+			$builder = $db->table('companyguestlists');
 			$builder->select('*');
 			$builder->where('EventYear',EventYearChina);
 			$builder->orderBy('Company', 'ASC');
@@ -896,7 +896,7 @@ public function statsk397927( $raw = FALSE )
 	$session = session(); 
 	//$this->db = $this->load->database('RegistrationDataBase', TRUE);
 	$db = \Config\Database::connect('registration');
-			$builder = $db->table('chinacompany');
+			$builder = $db->table('companyguestlists');
 			$builder->select('*');
 			$builder->where('EventYear',EventYearKorea);
 			$builder->orderBy('Company', 'ASC');
@@ -1095,7 +1095,7 @@ public function guest_listtest()
 	//echo "secretkey = ".$secretKey."\n <br>";
 	
 	$db = db_connect('registration');
-	$builder = $db->table('chinacompany');
+	$builder = $db->table('companyguestlists');
 	$builder->where('SecretKey', $secretKey);
 	
 	if ($builder->countAllResults(false) != 1) {
@@ -1108,7 +1108,7 @@ public function guest_listtest()
 		die();
 	}
 	$query = $builder->get();
-	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$sql = 'SELECT * FROM companyguestlists Where SecretKey = ? LIMIT 1;';
 	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//ask ira
@@ -1213,7 +1213,7 @@ $db = \Config\Database::connect();
 			$query = $builder->get(); */
 			
 $db = db_connect('registration');
-$builder = $db->table('chinacompany');
+$builder = $db->table('companyguestlists');
 $builder->where('SecretKey', $secretKey);
 
 
@@ -1229,7 +1229,7 @@ $builder->where('SecretKey', $secretKey);
 		die();
 	}
 	$query = $builder->get();
-	//$sql = 'SELECT * FROM chinacompany Where SecretKey = ? LIMIT 1;';
+	//$sql = 'SELECT * FROM companyguestlists Where SecretKey = ? LIMIT 1;';
 	//$query =$db->query($sql, [$secretKey]);
 	$row = $query->getRow();
 	//ask ira
@@ -1392,7 +1392,7 @@ $builder->where('SecretKey', $secretKey);
 //comment 8/27 test passing variable to view with TotalGuestCount
 /* $crud->callbackBeforeUpdate(function () {
 	$db9 = db_connect('registration');
-	$builder9 = $db9->table('chinacompany');
+	$builder9 = $db9->table('companyguestlists');
 	$builder9->where('SecretKey', $secretKey);
 	$query9 = $builder9->get();
 	$row9 = $query9->getRow();
@@ -1403,7 +1403,7 @@ $builder->where('SecretKey', $secretKey);
 		'EmployeeCount' => $employeecount,
 			];
 	$db0 = db_connect('registration');
-	$builder0 = $db0->table('chinacompany');
+	$builder0 = $db0->table('companyguestlists');
 	$builder0->where('SecretKey', $secretKey);	
 	$builder0->update($updatecount);
     }
