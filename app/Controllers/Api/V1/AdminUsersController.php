@@ -63,20 +63,48 @@ class AdminUsersController extends BaseApiController
             foreach ($rows as $r) $modulesByUser[(int) $r['UserID']][] = $r['Code'];
         }
 
+        // Hydrate joined contact labels in one query so the list can show
+        // "Linked CRM contact" without N+1 round-trips.
+        $contactIds = array_values(array_filter(array_map(
+            fn($r) => isset($r['ContactID']) && $r['ContactID'] !== null ? (int) $r['ContactID'] : null,
+            $res['data']
+        )));
+        $contactsById = [];
+        if ($contactIds) {
+            $rows = (new \App\Models\ContactModel())
+                ->select('ContactID, GivenName, FamilyName, Email')
+                ->whereIn('ContactID', array_unique($contactIds))
+                ->findAll();
+            foreach ($rows as $r) {
+                $contactsById[(int) $r['ContactID']] = $r;
+            }
+        }
+
         return $this->respond([
-            'data'     => array_map(fn($u) => [
-                'id'                   => (int) $u['UserID'],
-                'username'             => $u['UserName'],
-                'given_name'           => $u['GivenName'],
-                'family_name'          => $u['FamilyName'],
-                'email'                => $u['Email'],
-                'active'               => (bool) $u['Active'],
-                'totp_enabled'         => (bool) $u['TOTPEnabled'],
-                'must_change_password' => (bool) $u['MustChangePassword'],
-                'modules'              => $modulesByUser[(int) $u['UserID']] ?? [],
-                'auth_provider'        => $u['auth_provider'] ?? 'local',
-                'wp_user_id'           => isset($u['wp_user_id']) && $u['wp_user_id'] !== null ? (int) $u['wp_user_id'] : null,
-            ], $res['data']),
+            'data'     => array_map(function($u) use ($modulesByUser, $contactsById) {
+                $cid = isset($u['ContactID']) && $u['ContactID'] !== null ? (int) $u['ContactID'] : null;
+                $c   = $cid && isset($contactsById[$cid]) ? $contactsById[$cid] : null;
+                $cLabel = $c
+                    ? trim(($c['GivenName'] ?? '') . ' ' . ($c['FamilyName'] ?? ''))
+                    : null;
+                return [
+                    'id'                   => (int) $u['UserID'],
+                    'username'             => $u['UserName'],
+                    'given_name'           => $u['GivenName'],
+                    'family_name'          => $u['FamilyName'],
+                    'email'                => $u['Email'],
+                    'active'               => (bool) $u['Active'],
+                    'totp_enabled'         => (bool) $u['TOTPEnabled'],
+                    'must_change_password' => (bool) $u['MustChangePassword'],
+                    'modules'              => $modulesByUser[(int) $u['UserID']] ?? [],
+                    'auth_provider'        => $u['auth_provider'] ?? 'local',
+                    'wp_user_id'           => isset($u['wp_user_id']) && $u['wp_user_id'] !== null ? (int) $u['wp_user_id'] : null,
+                    'contact_id'           => $cid,
+                    'contact_label'        => $cLabel !== null && $cLabel !== ''
+                        ? ($cLabel . ($c['Email'] ? ' <' . $c['Email'] . '>' : ''))
+                        : null,
+                ];
+            }, $res['data']),
             'total'    => $res['total'],
             'page'     => $page,
             'per_page' => $perPage,
@@ -95,6 +123,24 @@ class AdminUsersController extends BaseApiController
         $wikis   = (new UserWikiPermissionModel())->wikisForUser($userId);
         $passkeyCount = !empty($u['WebAuthnCredentialID']) ? 1 : 0;
 
+        // Resolve linked CRM contact (live ContactID).
+        $contact = null;
+        $contactId = isset($u['ContactID']) && $u['ContactID'] !== null ? (int) $u['ContactID'] : null;
+        if ($contactId) {
+            $c = (new \App\Models\ContactModel())
+                ->select('ContactID, GivenName, FamilyName, Email, Company')
+                ->find($contactId);
+            if ($c) {
+                $contact = [
+                    'id'          => (int) $c['ContactID'],
+                    'given_name'  => (string) ($c['GivenName'] ?? ''),
+                    'family_name' => (string) ($c['FamilyName'] ?? ''),
+                    'email'       => $c['Email'] ?: null,
+                    'company'     => $c['Company'] ?: null,
+                ];
+            }
+        }
+
         return $this->respond([
             'user' => [
                 'id'                   => (int) $u['UserID'],
@@ -106,6 +152,8 @@ class AdminUsersController extends BaseApiController
                 'totp_enabled'         => (bool) $u['TOTPEnabled'],
                 'passkey_count'        => $passkeyCount,
                 'must_change_password' => (bool) $u['MustChangePassword'],
+                'contact_id'           => $contactId,
+                'contact'              => $contact,
             ],
             'modules' => $modules,
             'wikis'   => array_map(fn($r) => [
@@ -115,6 +163,54 @@ class AdminUsersController extends BaseApiController
                 'permission' => $r['Permission'],
             ], $wikis),
         ]);
+    }
+
+    /**
+     * POST /api/v1/admin/users/set-contact
+     * Body: { user_id, contact_id: int | null }
+     * Links/unlinks the live CRM contact on this user.
+     */
+    public function setContact()
+    {
+        if (!($actorId = $this->requireAdminActor())) return $this->response;
+
+        $userId    = (int) $this->request->getJsonVar('user_id');
+        $contactRaw = $this->request->getJsonVar('contact_id');
+        $contactId = ($contactRaw === null || $contactRaw === '' ) ? null : (int) $contactRaw;
+
+        $userModel = new UserModel();
+        $u = $userModel->find($userId);
+        if (!$u) return $this->jsonError(404, 'user_not_found');
+
+        if ($contactId !== null) {
+            if ($contactId <= 0) return $this->jsonError(400, 'invalid_contact_id');
+            $c = (new \App\Models\ContactModel())->find($contactId);
+            if (!$c) return $this->jsonError(404, 'contact_not_found');
+
+            // Enforce uniqueness manually so we can return a friendly error
+            // (the column also has a UNIQUE constraint as a safety net).
+            // Use a *separate* model instance so any lingering builder state
+            // (WHERE clauses) does not leak into the update() below — in CI4
+            // the model's builder is shared across calls.
+            $lookupModel = new UserModel();
+            $already = $lookupModel->where('ContactID', $contactId)
+                ->where('UserID !=', $userId)
+                ->first();
+            if ($already) {
+                return $this->jsonError(409, 'contact_already_linked', [
+                    'linked_user_id'       => (int) $already['UserID'],
+                    'linked_user_username' => $already['UserName'],
+                ]);
+            }
+        }
+
+        $userModel->update($userId, ['ContactID' => $contactId]);
+        $this->audit($actorId, 'user.set_contact', 'user', (string) $userId, [
+            'contact_id' => $contactId,
+            'previous'   => isset($u['ContactID']) && $u['ContactID'] !== null ? (int) $u['ContactID'] : null,
+        ]);
+
+        return $this->respond(['ok' => true, 'contact_id' => $contactId]);
     }
 
     /** POST /api/v1/admin/users/create  Body: { username, given_name, family_name, email?, modules?: string[] } */
@@ -329,8 +425,20 @@ class AdminUsersController extends BaseApiController
             'CreatedBy' => $actorId,
         ], true);
 
+        // Grant write_edit to all admin users by default (including the creator).
+        $adminRows = db_connect('control')->table('user_modules um')
+            ->select('um.UserID')
+            ->join('modules m', 'm.ModuleID = um.ModuleID')
+            ->where('m.Code', 'admin')
+            ->get()->getResultArray();
+        $perms = new UserWikiPermissionModel();
+        foreach ($adminRows as $r) {
+            $perms->setPermission((int) $r['UserID'], (int) $id, 'write_edit');
+        }
+
         $this->audit($actorId, 'wiki.create', 'wiki', (string) $id, ['slug' => $slug, 'name' => $name]);
         return $this->respond(['id' => (int) $id], 201);
+
     }
 
     // ===================================================================
@@ -586,6 +694,7 @@ class AdminUsersController extends BaseApiController
             'auth_provider'            => 'wordpress',
             'wp_user_id'               => $wpUserId,
             'ProvisionedFromContactID' => $contactId,
+            'ContactID'                => $contactId,
         ], true);
 
         (new UserModuleModel())->setUserModules((int) $userId, $modules);
