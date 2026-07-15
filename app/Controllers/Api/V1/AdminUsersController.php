@@ -174,9 +174,39 @@ class AdminUsersController extends BaseApiController
     {
         if (!($actorId = $this->requireAdminActor())) return $this->response;
 
-        $userId    = (int) $this->request->getJsonVar('user_id');
-        $contactRaw = $this->request->getJsonVar('contact_id');
-        $contactId = ($contactRaw === null || $contactRaw === '' ) ? null : (int) $contactRaw;
+        $payload = $this->request->getJSON(true);
+        if (!is_array($payload)) {
+            return $this->jsonError(400, 'invalid_json_body');
+        }
+
+        $userId = isset($payload['user_id']) ? (int) $payload['user_id'] : 0;
+        if ($userId <= 0) {
+            return $this->jsonError(400, 'invalid_user_id');
+        }
+
+        // Important: malformed/missing contact ids must NOT be interpreted as
+        // NULL. Clearing the link now requires an explicit clear=true flag.
+        $hasContactId = array_key_exists('contact_id', $payload);
+        if (!$hasContactId && array_key_exists('contactId', $payload)) {
+            // Backward-compatible tolerance for camelCase callers, but keep the
+            // canonical API contract as contact_id.
+            $payload['contact_id'] = $payload['contactId'];
+            $hasContactId = true;
+        }
+        if (!$hasContactId) {
+            return $this->jsonError(400, 'contact_id_required');
+        }
+
+        $contactRaw = $payload['contact_id'];
+        $clear = array_key_exists('clear', $payload) && filter_var($payload['clear'], FILTER_VALIDATE_BOOLEAN);
+        if ($contactRaw === null || $contactRaw === '') {
+            if (!$clear) {
+                return $this->jsonError(400, 'contact_id_required_for_link');
+            }
+            $contactId = null;
+        } else {
+            $contactId = (int) $contactRaw;
+        }
 
         $userModel = new UserModel();
         $u = $userModel->find($userId);
