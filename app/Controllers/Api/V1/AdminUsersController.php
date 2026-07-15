@@ -204,13 +204,39 @@ class AdminUsersController extends BaseApiController
             }
         }
 
-        $userModel->update($userId, ['ContactID' => $contactId]);
+        // Use the control DB builder directly for this one-field write. In
+        // production this has proven more reliable than reusing the model
+        // instance after reads/lookups, and lets us verify the persisted value
+        // before returning success to the UI.
+        $db = db_connect('control');
+        $updated = $db->table('users')
+            ->where('UserID', $userId)
+            ->update(['ContactID' => $contactId]);
+
+        if ($updated === false) {
+            return $this->jsonError(500, 'contact_update_failed', [
+                'db_error' => $db->error(),
+            ]);
+        }
+
+        $fresh = (new UserModel())->select('UserID, ContactID')->find($userId);
+        $savedContactId = isset($fresh['ContactID']) && $fresh['ContactID'] !== null
+            ? (int) $fresh['ContactID']
+            : null;
+        if ($savedContactId !== $contactId) {
+            return $this->jsonError(500, 'contact_update_not_persisted', [
+                'requested_contact_id' => $contactId,
+                'saved_contact_id'     => $savedContactId,
+                'db_error'             => $db->error(),
+            ]);
+        }
+
         $this->audit($actorId, 'user.set_contact', 'user', (string) $userId, [
             'contact_id' => $contactId,
             'previous'   => isset($u['ContactID']) && $u['ContactID'] !== null ? (int) $u['ContactID'] : null,
         ]);
 
-        return $this->respond(['ok' => true, 'contact_id' => $contactId]);
+        return $this->respond(['ok' => true, 'contact_id' => $savedContactId]);
     }
 
     /** POST /api/v1/admin/users/create  Body: { username, given_name, family_name, email?, modules?: string[] } */
