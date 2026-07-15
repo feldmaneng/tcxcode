@@ -55,6 +55,60 @@ class MeController extends BaseApiController
                     if ($mod) $rows[] = $mod;
                 }
             }
+
+            // Auto-grant `author-portal` module if the user has any author-portal
+            // role: event manager, event chair, session coordinator, or author on
+            // an active presentation (Authors = CRM contacts, matched via ContactID).
+            $hasAuthorPortal = false;
+            foreach ($rows as $r) { if (($r['code'] ?? '') === 'author-portal') { $hasAuthorPortal = true; break; } }
+            if (!$hasAuthorPortal) {
+                $appDb    = db_connect();
+                $isCandidate = false;
+
+                // Event manager / chair
+                $eventCount = $appDb->table('events')
+                    ->groupStart()
+                        ->where('EventManagerID', $userId)
+                        ->orWhere('EventChair1ID', $userId)
+                        ->orWhere('EventChair2ID', $userId)
+                    ->groupEnd()
+                    ->countAllResults();
+                if ($eventCount > 0) $isCandidate = true;
+
+                // Session coordinator
+                if (!$isCandidate) {
+                    $sessionCount = $appDb->table('sessions')
+                        ->groupStart()
+                            ->where('Coordinator1ID', $userId)
+                            ->orWhere('Coordinator2ID', $userId)
+                        ->groupEnd()
+                        ->countAllResults();
+                    if ($sessionCount > 0) $isCandidate = true;
+                }
+
+                // Author on an active presentation (via ContactID)
+                if (!$isCandidate) {
+                    $contactId = isset($user['ContactID']) ? (int) $user['ContactID'] : 0;
+                    if ($contactId > 0) {
+                        $authorCount = $appDb->table('authors')
+                            ->join('presentations', 'presentations.PresentationID = authors.PresentationID', 'left')
+                            ->where('authors.ContactID', $contactId)
+                            ->groupStart()
+                                ->where('presentations.Status', 'active')
+                                ->orWhere('presentations.Status IS NULL', null, false)
+                            ->groupEnd()
+                            ->countAllResults();
+                        if ($authorCount > 0) $isCandidate = true;
+                    }
+                }
+
+                if ($isCandidate) {
+                    $mod = $ctrl->table('modules')
+                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
+                        ->where('Code', 'author-portal')->get()->getRowArray();
+                    if ($mod) $rows[] = $mod;
+                }
+            }
         }
 
         return $this->respond([
