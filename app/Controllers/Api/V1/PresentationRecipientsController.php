@@ -32,7 +32,8 @@ class PresentationRecipientsController extends BaseApiController
         $inclGc = ((string) $req->getGet('include_general_chair')) === '1';
         $actor  = (int) ($req->getGet('actor_user_id') ?? 0) ?: null;
 
-        $db = Database::connect();
+        $db  = Database::connect();          // default: events/sessions/presentations/authors/contacts
+        $dbC = Database::connect('control');  // control: users
 
         // Resolve presentation -> session -> event
         $pres = $db->table('presentations')
@@ -51,9 +52,10 @@ class PresentationRecipientsController extends BaseApiController
 
         $collected = []; // key = lowercased email
 
-        $addUser = function (?int $userId) use (&$collected, $db, $actor) {
+        $addUser = function (?int $userId) use (&$collected, $dbC, $actor) {
             if (!$userId || $userId === $actor) return;
-            $u = $db->table('users')
+            $u = $dbC->table('users')
+
                 ->select('UserID, UserName, GivenName, FamilyName, Email')
                 ->where('UserID', $userId)->get()->getRowArray();
             if (!$u || !$u['Email']) return;
@@ -83,7 +85,7 @@ class PresentationRecipientsController extends BaseApiController
                 if (empty($r['Email'])) continue;
                 // exclude actor if actor's user has this contact_id
                 if ($actor) {
-                    $u = $db->table('users')->select('ContactID')->where('UserID', $actor)->get()->getRowArray();
+                    $u = $dbC->table('users')->select('ContactID')->where('UserID', $actor)->get()->getRowArray();
                     if ($u && (int) $u['ContactID'] === (int) $r['ContactID']) continue;
                 }
                 $key = strtolower(trim((string) $r['Email']));
@@ -139,8 +141,10 @@ class PresentationRecipientsController extends BaseApiController
         $pid   = (int) ($body['presentation_id'] ?? 0);
         if ($email === '' || $pid <= 0) return $this->jsonError(422, 'validation_failed');
 
-        $db = Database::connect();
-        $user = $db->table('users')
+        $db  = Database::connect();
+        $dbC = Database::connect('control');
+        $user = $dbC->table('users')
+
             ->select('UserID, UserName, ContactID, Email, GivenName, FamilyName')
             ->where('LOWER(Email)', strtolower($email))
             ->where('Active', 1)
