@@ -12,24 +12,25 @@ use App\Models\UserModuleModel;
 class EventsController extends BaseApiController
 {
     private const FIELD_MAP = [
-        'id'                => 'EventID',
-        'year'              => 'Year',
-        'name'              => 'Name',
-        'full_name'         => 'FullName',
-        'start_date'        => 'StartDate',
-        'end_date'          => 'EndDate',
-        'city'              => 'City',
-        'facility'          => 'Facility',
-        'facility_address'  => 'FacilityAddress',
-        'event_chair1_id'   => 'EventChair1ID',
-        'event_chair2_id'   => 'EventChair2ID',
-        'event_manager_id'  => 'EventManagerID',
-        'is_closed'         => 'IsClosed',
-        'closed_at'         => 'ClosedAt',
+        'id'                    => 'EventID',
+        'year'                  => 'Year',
+        'name'                  => 'Name',
+        'full_name'             => 'FullName',
+        'start_date'            => 'StartDate',
+        'end_date'              => 'EndDate',
+        'city'                  => 'City',
+        'facility'              => 'Facility',
+        'facility_address'      => 'FacilityAddress',
+        'event_chair1_id'       => 'EventChair1ID',
+        'event_chair2_id'       => 'EventChair2ID',
+        'event_manager_id'      => 'EventManagerID',
+        'general_chair_user_id' => 'GeneralChairID',
+        'is_closed'             => 'IsClosed',
+        'closed_at'             => 'ClosedAt',
     ];
 
     private const READONLY_API_FIELDS = ['id'];
-    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id'];
+    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id', 'general_chair_user_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'start_date'];
 
     private function dbToApi(array $row): array
@@ -44,7 +45,7 @@ class EventsController extends BaseApiController
             $out['is_closed'] = ($v === null || $v === '') ? null : (int) $v;
         }
         // Coerce numeric id fields to int for strict-equality checks on the client
-        foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id'] as $k) {
+        foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id', 'general_chair_user_id'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null) $out[$k] = (int) $out[$k];
         }
         return $out;

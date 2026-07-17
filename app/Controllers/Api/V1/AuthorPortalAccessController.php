@@ -64,6 +64,12 @@ class AuthorPortalAccessController extends BaseApiController
             ->groupEnd()
             ->get()->getResultArray();
 
+        // generalChairEventIds
+        $generalChair = $db->table('events')
+            ->select('EventID')
+            ->where('GeneralChairID', $actorId)
+            ->get()->getResultArray();
+
         // authoredPresentationIds — only Status='active' are surfaced to authors.
         $authored = [];
         if ($contactId) {
@@ -90,6 +96,7 @@ class AuthorPortalAccessController extends BaseApiController
                 'managed_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $managed),
                 'chaired_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $chaired),
                 'coordinated_session_ids'   => array_map(fn($r) => (int) $r['SessionID'], $coordinated),
+                'general_chair_event_ids'   => array_map(fn($r) => (int) $r['EventID'], $generalChair),
                 'authored_presentation_ids' => array_map(fn($r) => (int) $r['PresentationID'], $authored),
                 'locked_event_ids'          => $lockedEventIds,
                 'hidden_presentation_ids'   => $hiddenPresentationIds,

@@ -696,6 +696,9 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // Author Portal — derived access scopes for the acting user
     $routes->group('author-portal', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('access/me',  'AuthorPortalAccessController::me');
+        // Notification / inbound-email helpers (service-key only; no acting user)
+        $routes->get('presentations/(:num)/recipients', 'PresentationRecipientsController::recipients/$1');
+        $routes->post('inbound/resolve',                'PresentationRecipientsController::resolveInbound');
         $routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
     });
 

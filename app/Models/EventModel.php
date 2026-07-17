@@ -15,6 +15,7 @@ class EventModel extends Model
         'StartDate', 'EndDate',
         'City', 'Facility', 'FacilityAddress',
         'EventChair1ID', 'EventChair2ID', 'EventManagerID',
+        'GeneralChairID',
         'IsClosed', 'ClosedAt',
     ];
 
