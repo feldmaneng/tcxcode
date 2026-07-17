@@ -208,4 +208,89 @@ class PresentationRecipientsController extends BaseApiController
             ],
         ]);
     }
+
+    /**
+     * GET /api/v1/author-portal/presentations/{id}/roles/{userId}
+     *
+     * Returns the list of role labels the given user has relative to the
+     * presentation / its session / its event. Labels are stable strings:
+     *   "Author", "Presenter", "Session Coordinator",
+     *   "Event Chair", "Event Planner", "General Chair", "Admin"
+     *
+     * "Admin" is only returned when the user has NO other role for this
+     * presentation. Callers can render each label as a flag/badge.
+     */
+    public function userRoles(int $presentationId, int $userId)
+    {
+        $db  = Database::connect();
+        $dbC = Database::connect('control');
+
+        $user = $dbC->table('users')
+            ->select('UserID, ContactID')
+            ->where('UserID', $userId)->get()->getRowArray();
+        if (!$user) return $this->jsonError(404, 'user_not_found');
+
+        $contactId = $user['ContactID'] ? (int) $user['ContactID'] : null;
+
+        $pres = $db->table('presentations')->select('PresentationID, SessionID')
+            ->where('PresentationID', $presentationId)->get()->getRowArray();
+        if (!$pres) return $this->jsonError(404, 'presentation_not_found');
+
+        $roles = [];
+
+        // Author / Presenter (via CRM contact link)
+        if ($contactId) {
+            $a = $db->table('authors')->select('Presenter')
+                ->where('PresentationID', $presentationId)
+                ->where('ContactID', $contactId)->get()->getRowArray();
+            if ($a) {
+                $roles[] = 'Author';
+                if (!empty($a['Presenter'])) $roles[] = 'Presenter';
+            }
+        }
+
+        // Session Coordinator
+        $eventId = null;
+        if ($pres['SessionID']) {
+            $sess = $db->table('sessions')
+                ->select('EventID, Coordinator1ID, Coordinator2ID')
+                ->where('SessionID', (int) $pres['SessionID'])->get()->getRowArray();
+            if ($sess) {
+                $eventId = (int) $sess['EventID'];
+                if ((int) ($sess['Coordinator1ID'] ?? 0) === $userId
+                    || (int) ($sess['Coordinator2ID'] ?? 0) === $userId) {
+                    $roles[] = 'Session Coordinator';
+                }
+            }
+        }
+
+        // Event Chair / Event Planner (Manager) / General Chair
+        if ($eventId) {
+            $ev = $db->table('events')
+                ->select('EventChair1ID, EventChair2ID, EventManagerID, GeneralChairID')
+                ->where('EventID', $eventId)->get()->getRowArray();
+            if ($ev) {
+                if ((int) ($ev['EventChair1ID'] ?? 0) === $userId
+                    || (int) ($ev['EventChair2ID'] ?? 0) === $userId) {
+                    $roles[] = 'Event Chair';
+                }
+                if ((int) ($ev['EventManagerID'] ?? 0) === $userId) {
+                    $roles[] = 'Event Planner';
+                }
+                if ((int) ($ev['GeneralChairID'] ?? 0) === $userId) {
+                    $roles[] = 'General Chair';
+                }
+            }
+        }
+
+        // Admin — only when user has none of the above roles for this presentation.
+        if (empty($roles)) {
+            $isAdmin = (new UserModuleModel())->userHasModule($userId, 'admin');
+            if ($isAdmin) $roles[] = 'Admin';
+        }
+
+        return $this->response->setJSON([
+            'data' => ['user_id' => $userId, 'roles' => $roles],
+        ]);
+    }
 }

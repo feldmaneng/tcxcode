@@ -698,6 +698,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('access/me',  'AuthorPortalAccessController::me');
         // Notification / inbound-email helpers (service-key only; no acting user)
         $routes->get('presentations/(:num)/recipients', 'PresentationRecipientsController::recipients/$1');
+        $routes->get('presentations/(:num)/roles/(:num)', 'PresentationRecipientsController::userRoles/$1/$2');
         $routes->post('inbound/resolve',                'PresentationRecipientsController::resolveInbound');
         $routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
     });
