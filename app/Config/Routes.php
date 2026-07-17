@@ -759,6 +759,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     $routes->group('wiki-attachments', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
         $routes->post('/',         'WikiAttachmentsController::create');
+        $routes->post('find',      'WikiAttachmentsController::find');
         $routes->options('(:any)', 'WikiAttachmentsController::options', ['filter' => 'cors']);
     });
 

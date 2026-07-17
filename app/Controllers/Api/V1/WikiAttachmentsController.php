@@ -66,4 +66,26 @@ class WikiAttachmentsController extends BaseApiController
         $rows = (new WikiAttachmentModel())->where('PageID', $pageId)->findAll();
         return $this->respond(['data' => $rows]);
     }
+
+    /** POST /api/v1/wiki-attachments/find  Body: { storage_key } */
+    public function find()
+    {
+        $key = (string) $this->request->getJsonVar('storage_key');
+        if ($key === '') return $this->jsonError(400, 'storage_key_required');
+        $userId = ApiAuthContext::actingUserId();
+        if (!$userId) return $this->jsonError(401, 'acting_user_required');
+        $row = (new WikiAttachmentModel())->where('StorageKey', $key)->first();
+        if (!$row) return $this->jsonError(404, 'attachment_not_found');
+        $wikiId = (int) $row['WikiID'];
+        if ((new UserWikiPermissionModel())->permissionFor($userId, $wikiId) === null) {
+            return $this->jsonError(403, 'no_wiki_access');
+        }
+        return $this->respond([
+            'wiki_id'        => $wikiId,
+            'page_id'        => $row['PageID'] !== null ? (int) $row['PageID'] : null,
+            'storage_bucket' => $row['StorageBucket'],
+            'storage_key'    => $row['StorageKey'],
+        ]);
+    }
 }
+
