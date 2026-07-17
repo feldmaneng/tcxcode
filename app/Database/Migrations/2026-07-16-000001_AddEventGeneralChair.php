@@ -11,12 +11,13 @@ use Config\Database;
  */
 class AddEventGeneralChair extends Migration
 {
-    protected $DBGroup = 'control';
+    // events table lives in the default DB group (bitswork_contac2), not control.
+    protected $DBGroup = 'default';
 
     public function up()
     {
-        $forge = $this->forge;
-        $db    = Database::connect();
+        $db    = Database::connect('default');
+        $forge = \Config\Database::forge('default');
 
         try {
             $forge->addColumn('events', [
@@ -33,6 +34,6 @@ class AddEventGeneralChair extends Migration
 
     public function down()
     {
-        try { $this->forge->dropColumn('events', ['GeneralChairID']); } catch (\Throwable $e) {}
+        try { \Config\Database::forge('default')->dropColumn('events', ['GeneralChairID']); } catch (\Throwable $e) {}
     }
 }
