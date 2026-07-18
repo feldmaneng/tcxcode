@@ -155,11 +155,11 @@ class Mailinglist extends BaseController {
 		if ( $companyID > 0 ) {
 			
 			$db = \Config\Database::conect();
-			$builder = $db->table('chinacompany');
+			$builder = $db->table('companyguestlists');
 			$builder->where('CompanyID',$companyID);
 			
 			/* $ChinaDB->select('*');
-			$ChinaDB->table('chinacompany');
+			$ChinaDB->table('companyguestlists');
 		
 			$ChinaDB->where('CompanyID',$companyID); */
 			
@@ -979,7 +979,7 @@ class Mailinglist extends BaseController {
 		);					
 		*/
 		//$ChinaDB->where($where_criteria);
-		echo "Email,ChinaControl,ChinaCompany,RegCode<br>";
+		echo "Email,ChinaControl,companyguestlists,RegCode<br>";
 		
 		
 		

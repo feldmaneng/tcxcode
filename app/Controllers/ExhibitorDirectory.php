@@ -54,7 +54,7 @@ helper('html');
 			error_log("Pulling up exhibitor directory with secret key:".$secretKey."\n",0);
 			$db  = \Config\Database::connect('registration');
 			//$db = db_connect('registration');
-			//$builder = $db->table('chinacompany');
+			//$builder = $db->table('companyguestlists');
 			$builder = $db->table('expodirectory');
 			
 			$builder->where('SecretKey', $secretKey);

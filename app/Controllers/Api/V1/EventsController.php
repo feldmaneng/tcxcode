@@ -27,6 +27,7 @@ class EventsController extends BaseApiController
         'general_chair_user_id' => 'GeneralChairID',
         'is_closed'             => 'IsClosed',
         'closed_at'             => 'ClosedAt',
+        'guest_list_enabled'    => 'GuestListEnabled',
     ];
 
     private const READONLY_API_FIELDS = ['id'];
@@ -43,6 +44,10 @@ class EventsController extends BaseApiController
         if (array_key_exists('is_closed', $out)) {
             $v = $out['is_closed'];
             $out['is_closed'] = ($v === null || $v === '') ? null : (int) $v;
+        }
+        if (array_key_exists('guest_list_enabled', $out)) {
+            $v = $out['guest_list_enabled'];
+            $out['guest_list_enabled'] = ($v === null || $v === '') ? 0 : (int) $v;
         }
         // Coerce numeric id fields to int for strict-equality checks on the client
         foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id', 'general_chair_user_id'] as $k) {

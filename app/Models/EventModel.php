@@ -17,6 +17,7 @@ class EventModel extends Model
         'EventChair1ID', 'EventChair2ID', 'EventManagerID',
         'GeneralChairID',
         'IsClosed', 'ClosedAt',
+        'GuestListEnabled',
     ];
 
     /**
