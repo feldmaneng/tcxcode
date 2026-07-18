@@ -157,12 +157,25 @@ class CompanyGuestListsController extends BaseApiController
         if (empty($row['Year']) || empty($row['Name'])) {
             return $this->jsonError(422, 'validation_failed', ['required' => ['year', 'name']]);
         }
+        // Legacy table has NOT NULL columns w/o defaults — fill sensible defaults.
+        if (empty($row['EventYear']))     $row['EventYear']     = (string) $row['Year'];
+        if (empty($row['SecretKey']))     $row['SecretKey']     = substr(bin2hex(random_bytes(8)), 0, 10);
+        foreach (['InviteCount', 'EmployeeCount', 'BanquetCount'] as $c) {
+            if (!isset($row[$c]) || $row[$c] === '' || $row[$c] === null) $row[$c] = 0;
+        }
         if (!array_key_exists('StaffID', $row)) $row['StaffID'] = 0;
+
         $model = new CompanyGuestListsModel();
-        $id    = $model->insert($row, true);
+        try {
+            $id = $model->insert($row, true);
+        } catch (\Throwable $e) {
+            log_message('error', 'companyguestlists insert failed: ' . $e->getMessage());
+            return $this->jsonError(422, 'db_insert_failed', ['message' => $e->getMessage()]);
+        }
         if (!$id) return $this->jsonError(422, 'insert_failed', $model->errors());
         return $this->response->setStatusCode(201)->setJSON(['data' => $this->dbToApi($model->find($id))]);
     }
+
 
     public function update(int $id)
     {
