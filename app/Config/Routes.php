@@ -640,6 +640,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // Presentations
     $routes->group('presentations', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',                'PresentationsController::index');
+        $routes->get('awards',           'PresentationsController::awards');
         $routes->get('(:num)',           'PresentationsController::show/$1');
         $routes->get('(:num)/authors',   'AuthorsController::byPresentation/$1');
         $routes->post('/',               'PresentationsController::create');
@@ -647,6 +648,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)',        'PresentationsController::delete/$1');
         $routes->options('(:any)',       'PresentationsController::options', ['filter' => 'cors']);
     });
+
 
     // Events (Author Portal — admin-managed)
     $routes->group('events', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {

@@ -140,18 +140,59 @@ class PresentationsController extends BaseApiController
         return $this->response->setJSON(['data' => $api]);
     }
 
+    /**
+     * GET /api/v1/presentations/awards
+     * Returns distinct non-null, non-blank Award values sorted alphabetically.
+     */
+    public function awards()
+    {
+        $rows = (new PresentationModel())->builder()
+            ->select('Award')
+            ->distinct()
+            ->where('Award IS NOT NULL', null, false)
+            ->where("TRIM(Award) <> ''", null, false)
+            ->orderBy('Award', 'ASC')
+            ->get()->getResultArray();
+        $data = array_values(array_map(fn($r) => (string) $r['Award'], $rows));
+        return $this->response->setJSON(['data' => $data]);
+    }
+
     public function create()
     {
         $payload = $this->request->getJSON(true) ?? [];
         $dbRow = $this->apiToDb($payload);
         $model = new PresentationModel();
+        $db = Database::connect();
+
+        // Auto-assign PresentationNumber when caller omitted it: next number
+        // per (Event, Year). Wrap in a transaction with row-level lock so
+        // concurrent inserts don't collide.
+        $needsAutoNumber = !array_key_exists('PresentationNumber', $dbRow)
+            || $dbRow['PresentationNumber'] === null
+            || $dbRow['PresentationNumber'] === '';
+        $db->transStart();
+        if ($needsAutoNumber && !empty($dbRow['Event']) && !empty($dbRow['Year'])) {
+            $q = $db->query(
+                'SELECT COALESCE(MAX(PresentationNumber), 0) + 1 AS next
+                 FROM presentations WHERE Event = ? AND Year = ? FOR UPDATE',
+                [$dbRow['Event'], (int) $dbRow['Year']]
+            );
+            $next = (int) ($q->getRowArray()['next'] ?? 1);
+            $dbRow['PresentationNumber'] = $next;
+        }
+
         $id = $model->insert($dbRow, true);
-        if (!$id) return $this->jsonError(500, 'insert_failed', $model->errors());
+        if (!$id) {
+            $db->transRollback();
+            return $this->jsonError(500, 'insert_failed', $model->errors());
+        }
         if (isset($payload['authors']) && is_array($payload['authors'])) {
             $this->replaceAuthors((int) $id, $payload['authors']);
         }
+        $db->transComplete();
         return $this->show((int) $id)->setStatusCode(201);
     }
+
 
     public function update($id = null)
     {
