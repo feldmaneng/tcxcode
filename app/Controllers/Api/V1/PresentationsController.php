@@ -165,19 +165,32 @@ class PresentationsController extends BaseApiController
         $db = Database::connect();
 
         // Auto-assign PresentationNumber when caller omitted it: next number
-        // per (Event, Year). Wrap in a transaction with row-level lock so
-        // concurrent inserts don't collide.
+        // within the same Session. Prefer SessionID scoping; fall back to
+        // (Event, Year, Session) when SessionID is missing. Row-level lock
+        // prevents concurrent inserts from colliding.
         $needsAutoNumber = !array_key_exists('PresentationNumber', $dbRow)
             || $dbRow['PresentationNumber'] === null
             || $dbRow['PresentationNumber'] === '';
         $db->transStart();
-        if ($needsAutoNumber && !empty($dbRow['Event']) && !empty($dbRow['Year'])) {
-            $q = $db->query(
-                'SELECT COALESCE(MAX(PresentationNumber), 0) + 1 AS next
-                 FROM presentations WHERE Event = ? AND Year = ? FOR UPDATE',
-                [$dbRow['Event'], (int) $dbRow['Year']]
-            );
-            $next = (int) ($q->getRowArray()['next'] ?? 1);
+        if ($needsAutoNumber) {
+            $next = 1;
+            if (!empty($dbRow['SessionID'])) {
+                $q = $db->query(
+                    'SELECT COALESCE(MAX(PresentationNumber), 0) + 1 AS next
+                     FROM presentations WHERE SessionID = ? FOR UPDATE',
+                    [(int) $dbRow['SessionID']]
+                );
+                $next = (int) ($q->getRowArray()['next'] ?? 1);
+            } elseif (!empty($dbRow['Event']) && !empty($dbRow['Year'])) {
+                $q = $db->query(
+                    'SELECT COALESCE(MAX(PresentationNumber), 0) + 1 AS next
+                     FROM presentations
+                     WHERE Event = ? AND Year = ?
+                       AND (Session <=> ?) FOR UPDATE',
+                    [$dbRow['Event'], (int) $dbRow['Year'], $dbRow['Session'] ?? null]
+                );
+                $next = (int) ($q->getRowArray()['next'] ?? 1);
+            }
             $dbRow['PresentationNumber'] = $next;
         }
 
