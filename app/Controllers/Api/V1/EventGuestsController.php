@@ -61,6 +61,108 @@ class EventGuestsController extends BaseApiController
         return $out;
     }
 
+    private function normalizeGuestText($value): string
+    {
+        $value = strtolower(trim((string) $value));
+        return preg_replace('/\s+/', ' ', $value) ?? $value;
+    }
+
+    private function guestEmailKey(array $row): string
+    {
+        return $this->normalizeGuestText($row['Email'] ?? '');
+    }
+
+    private function guestNameKey(array $row): string
+    {
+        $given = $this->normalizeGuestText($row['GivenName'] ?? '');
+        $family = $this->normalizeGuestText($row['FamilyName'] ?? '');
+        if ($given === '' && $family === '') return '';
+        return $given . '|' . $family;
+    }
+
+    /**
+     * Prefer email when present; otherwise use normalized given/family name.
+     * Used to collapse legacy duplicate rows in the displayed guest list.
+     */
+    private function guestIdentityKey(array $row): string
+    {
+        $email = $this->guestEmailKey($row);
+        if ($email !== '') return 'email:' . $email;
+        $name = $this->guestNameKey($row);
+        return $name !== '' ? 'name:' . $name : 'row:' . (string) ($row['GuestID'] ?? spl_object_id((object) $row));
+    }
+
+    /**
+     * Collapse duplicate legacy rows, keeping the highest GuestID as the visible/latest row.
+     */
+    private function dedupeGuestRows(array $rows): array
+    {
+        $byKey = [];
+        foreach ($rows as $row) {
+            $key = $this->guestIdentityKey($row);
+            $currentId = (int) ($row['GuestID'] ?? 0);
+            $existingId = isset($byKey[$key]) ? (int) ($byKey[$key]['GuestID'] ?? 0) : -1;
+            if (!isset($byKey[$key]) || $currentId >= $existingId) {
+                $byKey[$key] = $row;
+            }
+        }
+
+        $deduped = array_values($byKey);
+        usort($deduped, function (array $a, array $b): int {
+            $family = strcasecmp((string) ($a['FamilyName'] ?? ''), (string) ($b['FamilyName'] ?? ''));
+            if ($family !== 0) return $family;
+            $given = strcasecmp((string) ($a['GivenName'] ?? ''), (string) ($b['GivenName'] ?? ''));
+            if ($given !== 0) return $given;
+            return ((int) ($a['GuestID'] ?? 0)) <=> ((int) ($b['GuestID'] ?? 0));
+        });
+
+        return $deduped;
+    }
+
+    /** @return array{expo:int,professional:int,banquet:int} */
+    private function countsForRows(array $rows): array
+    {
+        $counts = ['expo' => 0, 'professional' => 0, 'banquet' => 0];
+        foreach ($this->dedupeGuestRows($rows) as $row) {
+            if (($row['Type'] ?? 'EXPO') === 'PROFESSIONAL') $counts['professional']++;
+            else $counts['expo']++;
+            if (!empty($row['BanquetCompanyID'])) $counts['banquet']++;
+        }
+        return $counts;
+    }
+
+    private function duplicateExists(array $row, int $companyGuestListsId, ?int $excludeGuestId = null): bool
+    {
+        $eventYear = (string) ($row['EventYear'] ?? '');
+        $emailNorm = $this->guestEmailKey($row);
+        $nameKey = $emailNorm === '' ? $this->guestNameKey($row) : '';
+
+        if ($emailNorm === '' && $nameKey === '') return false;
+
+        $q = (new EventGuestModel())->builder();
+        if ($eventYear !== '') $q->where('EventYear', $eventYear);
+        else $q->where('InvitedByCompanyID', $companyGuestListsId);
+        if ($excludeGuestId !== null) $q->where('GuestID !=', $excludeGuestId);
+
+        $q->groupStart();
+        $hasCondition = false;
+        if ($emailNorm !== '') {
+            $q->where('LOWER(TRIM(Email))', $emailNorm);
+            $hasCondition = true;
+        }
+        if ($nameKey !== '') {
+            [$given, $family] = explode('|', $nameKey, 2);
+            if ($hasCondition) $q->orGroupStart();
+            else $q->groupStart();
+            $q->where('LOWER(TRIM(GivenName))', $given)
+                ->where('LOWER(TRIM(FamilyName))', $family)
+                ->groupEnd();
+        }
+        $q->groupEnd();
+
+        return $q->limit(1)->get()->getRowArray() !== null;
+    }
+
     /** @return array{ok:bool,actorId?:int,isAdmin?:bool,company?:array,eventLocked?:bool}|null */
     private function loadContext(int $companyGuestListsId)
     {
@@ -91,10 +193,12 @@ class EventGuestsController extends BaseApiController
             ->where('InvitedByCompanyID', $companyGuestListsId)
             ->orderBy('FamilyName', 'ASC')->orderBy('GivenName', 'ASC')
             ->findAll();
-        $counts = (new EventGuestModel())->countsForCompany($companyGuestListsId);
+        $visibleRows = $this->dedupeGuestRows($rows);
+        $counts = $this->countsForRows($visibleRows);
         return $this->response->setJSON([
-            'data'   => array_map(fn($r) => $this->dbToApi($r), $rows),
+            'data'   => array_map(fn($r) => $this->dbToApi($r), $visibleRows),
             'counts' => $counts,
+            'duplicate_count' => max(0, count($rows) - count($visibleRows)),
             'limits' => [
                 'invite_count'   => $ctx['company']['InviteCount'] !== null ? (int) $ctx['company']['InviteCount'] : null,
                 'employee_count' => $ctx['company']['EmployeeCount'] !== null ? (int) $ctx['company']['EmployeeCount'] : null,
@@ -130,6 +234,12 @@ class EventGuestsController extends BaseApiController
         $row['Type'] = $type;
         // Email is NOT NULL on guests; default to empty string when omitted.
         if (!array_key_exists('Email', $row) || $row['Email'] === null) $row['Email'] = '';
+        $row['Email'] = $this->guestEmailKey($row);
+
+        // Prevent duplicate guests within the same event (across all company guest lists).
+        if ($this->duplicateExists($row, $companyGuestListsId, null)) {
+            return $this->jsonError(409, 'already_attending', ['message' => 'Guest is already attending this event']);
+        }
 
         $banquet = isset($payload['banquet']) && (int) $payload['banquet'] === 1;
         $row['BanquetCompanyID'] = $banquet ? $companyGuestListsId : null;
@@ -138,6 +248,7 @@ class EventGuestsController extends BaseApiController
 
         $check = $this->checkLimits($companyGuestListsId, $ctx['company'], $row, null);
         if ($check !== null) return $check;
+
 
         $model = new EventGuestModel();
         $id    = $model->insert($row, true);
@@ -167,7 +278,15 @@ class EventGuestsController extends BaseApiController
         }
         $row['UpdatedBy'] = (int) $ctx['actorId'];
 
-        $simulated = array_merge($existing, $row);
+        if (array_key_exists('Email', $row)) {
+            $row['Email'] = $this->guestEmailKey($row);
+        }
+        $candidate = array_merge($existing, $row);
+        if ($this->duplicateExists($candidate, $companyId, $guestId)) {
+            return $this->jsonError(409, 'already_attending', ['message' => 'Guest is already attending this event']);
+        }
+
+        $simulated = $candidate;
         $check = $this->checkLimits($companyId, $ctx['company'], $simulated, $guestId);
         if ($check !== null) return $check;
 
@@ -194,24 +313,31 @@ class EventGuestsController extends BaseApiController
      */
     private function checkLimits(int $companyGuestListsId, array $company, array $simulatedRow, ?int $excludeId)
     {
-        $counts  = (new EventGuestModel())->countsForCompany($companyGuestListsId, $excludeId);
+        $model = new EventGuestModel();
+        $rows = $model->where('InvitedByCompanyID', $companyGuestListsId)->findAll();
+        if ($excludeId !== null) {
+            $rows = array_values(array_filter($rows, fn($row) => (int) ($row['GuestID'] ?? 0) !== $excludeId));
+        }
+        $simulatedRow['GuestID'] = $excludeId ?? PHP_INT_MAX;
+        $rows[] = $simulatedRow;
+        $counts  = $this->countsForRows($rows);
         $type    = $simulatedRow['Type'] ?? 'EXPO';
         $banquet = !empty($simulatedRow['BanquetCompanyID']);
 
         if ($type === 'EXPO') {
             $limit = $company['InviteCount'];
-            if ($limit !== null && ($counts['expo'] + 1) > (int) $limit) {
+            if ($limit !== null && $counts['expo'] > (int) $limit) {
                 return $this->jsonError(422, 'invite_limit_reached', ['limit' => (int) $limit, 'current' => $counts['expo']]);
             }
         } else {
             $limit = $company['EmployeeCount'];
-            if ($limit !== null && ($counts['professional'] + 1) > (int) $limit) {
+            if ($limit !== null && $counts['professional'] > (int) $limit) {
                 return $this->jsonError(422, 'employee_limit_reached', ['limit' => (int) $limit, 'current' => $counts['professional']]);
             }
         }
         if ($banquet) {
             $limit = $company['BanquetCount'];
-            if ($limit !== null && ($counts['banquet'] + 1) > (int) $limit) {
+            if ($limit !== null && $counts['banquet'] > (int) $limit) {
                 return $this->jsonError(422, 'banquet_limit_reached', ['limit' => (int) $limit, 'current' => $counts['banquet']]);
             }
         }
