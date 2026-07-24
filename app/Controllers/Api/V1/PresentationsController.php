@@ -65,13 +65,21 @@ class PresentationsController extends BaseApiController
 
     private function attachAuthors(array &$row): void
     {
-        $rows = (new AuthorModel())->builder()
-            ->where('PresentationID', (int) $row['id'])
-            ->orderBy('AuthorNumber', 'ASC')
-            ->orderBy('AuthorID', 'ASC')
+        $db = \Config\Database::connect();
+        $rows = $db->table('authors')
+            ->select('authors.*, contacts.Email AS ContactEmail')
+            ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
+            ->where('authors.PresentationID', (int) $row['id'])
+            ->orderBy('authors.AuthorNumber', 'ASC')
+            ->orderBy('authors.AuthorID', 'ASC')
             ->get()->getResultArray();
-        $row['authors'] = array_map(fn($r) => AuthorsController::dbToApi($r), $rows);
+        $row['authors'] = array_map(function ($r) {
+            $api = AuthorsController::dbToApi($r);
+            if (array_key_exists('ContactEmail', $r)) $api['email'] = $r['ContactEmail'];
+            return $api;
+        }, $rows);
     }
+
 
     public function index()
     {

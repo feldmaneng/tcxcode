@@ -293,4 +293,87 @@ class PresentationRecipientsController extends BaseApiController
             'data' => ['user_id' => $userId, 'roles' => $roles],
         ]);
     }
+
+    /**
+     * GET /api/v1/author-portal/presentations/{id}/contacts
+     *
+     * Returns display info + email for people the author should be able to
+     * reach for this presentation: session coordinator(s), event chair(s)
+     * (aka Technical Program Chairs), and the event manager.
+     *
+     *   { data: {
+     *       event_id: int|null,
+     *       session_id: int|null,
+     *       session_coordinators: [ { user_id, given_name, family_name, email } ],
+     *       program_chairs:       [ { ... } ],
+     *       event_manager:        { ... } | null,
+     *   } }
+     */
+    public function contacts(int $presentationId)
+    {
+        $db  = Database::connect();
+        $dbC = Database::connect('control');
+
+        $pres = $db->table('presentations')
+            ->select('PresentationID, SessionID')
+            ->where('PresentationID', $presentationId)
+            ->get()->getRowArray();
+        if (!$pres) return $this->jsonError(404, 'presentation_not_found');
+
+        $sessionId = $pres['SessionID'] ? (int) $pres['SessionID'] : null;
+        $eventId = null;
+        $sess = null;
+        if ($sessionId) {
+            $sess = $db->table('sessions')
+                ->select('EventID, Coordinator1ID, Coordinator2ID')
+                ->where('SessionID', $sessionId)->get()->getRowArray();
+            if ($sess) $eventId = (int) $sess['EventID'];
+        }
+
+        $event = $eventId ? $db->table('events')
+            ->select('EventID, EventChair1ID, EventChair2ID, EventManagerID')
+            ->where('EventID', $eventId)->get()->getRowArray() : null;
+
+        $lookup = function (?int $uid) use ($dbC): ?array {
+            if (!$uid) return null;
+            $u = $dbC->table('users')
+                ->select('UserID, UserName, GivenName, FamilyName, Email')
+                ->where('UserID', $uid)->get()->getRowArray();
+            if (!$u) return null;
+            return [
+                'user_id'     => (int) $u['UserID'],
+                'username'    => $u['UserName'] ?? '',
+                'given_name'  => $u['GivenName'] ?? '',
+                'family_name' => $u['FamilyName'] ?? '',
+                'email'       => $u['Email'] ?? '',
+            ];
+        };
+
+        $coords = [];
+        if ($sess) {
+            foreach ([$sess['Coordinator1ID'] ?? null, $sess['Coordinator2ID'] ?? null] as $cid) {
+                $row = $lookup($cid ? (int) $cid : null);
+                if ($row) $coords[] = $row;
+            }
+        }
+        $chairs = [];
+        if ($event) {
+            foreach ([$event['EventChair1ID'] ?? null, $event['EventChair2ID'] ?? null] as $cid) {
+                $row = $lookup($cid ? (int) $cid : null);
+                if ($row) $chairs[] = $row;
+            }
+        }
+        $manager = $event ? $lookup(isset($event['EventManagerID']) ? (int) $event['EventManagerID'] : null) : null;
+
+        return $this->response->setJSON([
+            'data' => [
+                'event_id'             => $eventId,
+                'session_id'           => $sessionId,
+                'session_coordinators' => $coords,
+                'program_chairs'       => $chairs,
+                'event_manager'        => $manager,
+            ],
+        ]);
+    }
 }
+
