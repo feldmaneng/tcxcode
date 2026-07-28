@@ -14,9 +14,9 @@ use CodeIgniter\Database\RawSql;
 use CodeIgniter\Database\BaseBuilder;
 
 // Some variables for each year
-define ("BiTSEvent", "TestConX China 2026"); // What is displayed
-define("EventYearChina", "China2026");// For selecting records only for this year's event.Remove later replace with session variable
-define("EventYearKorea", "Korea2026");// For selecting records only for this year's event.Remove later replace with session variable
+define ("BiTSEvent", "TestConX China 2025"); // What is displayed
+define("EventYearChina", "China2025");// For selecting records only for this year's event.Remove later replace with session variable
+define("EventYearKorea", "Korea2025");// For selecting records only for this year's event.Remove later replace with session variable
 $session = session(); 
 
 class Guest extends BaseController {
