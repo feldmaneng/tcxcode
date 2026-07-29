@@ -5,6 +5,7 @@ use App\Libraries\ApiAuthContext;
 use App\Models\CompanyGuestListsModel;
 use App\Models\CompanyGuestListsManagerModel;
 use App\Models\UserModuleModel;
+use App\Models\EventModel;
 
 /**
  * Per-event, per-company invite limits + primary contact assignment.
@@ -27,8 +28,11 @@ class CompanyGuestListsController extends BaseApiController
         'employee_count' => 'EmployeeCount',
         'banquet_count'  => 'BanquetCount',
         'staff_id'       => 'StaffID',
+        'full_conf_token'  => 'FullConfToken',
+        'exhibitor_token'  => 'ExhibitorToken',
+        'cc_primary_on_registration' => 'CcPrimaryOnRegistration',
     ];
-    private const READONLY_API_FIELDS = ['id'];
+    private const READONLY_API_FIELDS = ['id', 'full_conf_token', 'exhibitor_token'];
     private const FILTERABLE = ['year', 'staff_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'company'];
 
@@ -38,13 +42,14 @@ class CompanyGuestListsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
-        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'staff_id'] as $k) {
+        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'staff_id', 'cc_primary_on_registration'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
         }
         return $out;
     }
+
 
     private function apiToDb(array $payload): array
     {
@@ -139,15 +144,53 @@ class CompanyGuestListsController extends BaseApiController
     {
         $actorId = $this->requireActor();
         if (!$actorId) return $this->response;
-        $row = (new CompanyGuestListsModel())->find($id);
+        $model = new CompanyGuestListsModel();
+        $row = $model->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
         if (!$this->isAdmin($actorId)) {
             if (!(new CompanyGuestListsManagerModel())->userManages($actorId, $id)) {
                 return $this->jsonError(403, 'forbidden');
             }
         }
+        $row = $this->ensureTokens($model, $row);
         return $this->response->setJSON(['data' => $this->dbToApi($row)]);
     }
+
+    /** Lazily backfills public registration tokens for legacy rows. */
+    private function ensureTokens(CompanyGuestListsModel $model, array $row): array
+    {
+        $patch = [];
+        if (empty($row['FullConfToken']))  $patch['FullConfToken']  = CompanyGuestListsModel::newToken();
+        if (empty($row['ExhibitorToken'])) $patch['ExhibitorToken'] = CompanyGuestListsModel::newToken();
+        if ($patch === []) return $row;
+        $model->update((int) $row['CompanyID'], $patch);
+        return array_merge($row, $patch);
+    }
+
+    /**
+     * POST /api/v1/company-guest-lists/{id}/rotate-token  body: { kind: 'full_conf'|'exhibitor' }
+     * Invalidates the old public registration link. Admin / event manager only.
+     */
+    public function rotateToken(int $id)
+    {
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
+        $model = new CompanyGuestListsModel();
+        $row = $model->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+
+        $year = (int) ($row['Year'] ?? 0);
+        $privileged = $this->isAdmin($actorId)
+            || ($year > 0 && (new EventModel())->isEventManagerForYear((int) $actorId, $year));
+        if (!$privileged) return $this->jsonError(403, 'admin_required');
+
+        $body = (array) $this->request->getJSON(true);
+        $kind = (string) ($body['kind'] ?? '');
+        $col  = $kind === 'exhibitor' ? 'ExhibitorToken' : 'FullConfToken';
+        $model->update($id, [$col => CompanyGuestListsModel::newToken()]);
+        return $this->response->setJSON(['data' => $this->dbToApi($model->find($id))]);
+    }
+
 
     public function create()
     {

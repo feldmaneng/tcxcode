@@ -679,6 +679,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('/',                      'CompanyGuestListsController::create');
         $routes->put('(:num)',                  'CompanyGuestListsController::update/$1');
         $routes->delete('(:num)',               'CompanyGuestListsController::delete/$1');
+        $routes->post('(:num)/rotate-token',    'CompanyGuestListsController::rotateToken/$1');
 
         $routes->get('(:num)/managers',         'CompanyGuestListsManagersController::index/$1');
         $routes->post('(:num)/managers',        'CompanyGuestListsManagersController::add/$1');
@@ -690,10 +691,14 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',              'CompanyGuestListsController::options', ['filter' => 'cors']);
     });
     $routes->group('guests', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
-        $routes->put('(:num)',     'EventGuestsController::update/$1');
-        $routes->delete('(:num)',  'EventGuestsController::delete/$1');
+        $routes->put('(:num)',            'EventGuestsController::update/$1');
+        $routes->delete('(:num)',         'EventGuestsController::delete/$1');
+        $routes->post('(:num)/restore',   'EventGuestsController::restore/$1');
+        $routes->post('(:num)/banquet',   'EventGuestsController::banquet/$1');
+        $routes->post('mark-bounced',      'EventGuestsController::markBounced');
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
+
 
     // Author Portal — derived access scopes for the acting user
     $routes->group('author-portal', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
@@ -780,6 +785,16 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     });
 
     // ---------------------------------------------------------------------
+    // Public guest registration — token-scoped, no acting user, no JWT.
+    // HMAC-protected so only the TanStack server can call them.
+    // ---------------------------------------------------------------------
+    $routes->group('public/guest-reg', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('([A-Za-z-]+)/([A-Za-z0-9_-]+)',  'PublicGuestRegistrationController::getForm/$1/$2');
+        $routes->post('([A-Za-z-]+)/([A-Za-z0-9_-]+)', 'PublicGuestRegistrationController::register/$1/$2');
+        $routes->options('(:any)',                      'PublicGuestRegistrationController::options', ['filter' => 'cors']);
+    });
+
+    // ---------------------------------------------------------------------
     // Admin module — every endpoint enforces the X-Acting-User has the `admin` module.
     // ---------------------------------------------------------------------
     $routes->group('admin', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
@@ -807,6 +822,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
     });
 });
+
 
 
 /*

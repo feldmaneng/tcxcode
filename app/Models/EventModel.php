@@ -18,6 +18,7 @@ class EventModel extends Model
         'GeneralChairID',
         'IsClosed', 'ClosedAt',
         'GuestListEnabled',
+        'GuestFormChinese', 'GuestFormKorean',
     ];
 
     /**
@@ -59,4 +60,25 @@ class EventModel extends Model
             ->get()->getResultArray();
         return array_map(fn($r) => (int) $r['EventID'], $rows);
     }
+
+    /**
+     * Event Manager for a given event year (events.EventManagerID).
+     * Used to gate guest-list admin actions (token rotation, Related edits,
+     * restoring soft-deleted guests, viewing removed rows).
+     */
+    public function managerUserIdForYear(int $year): ?int
+    {
+        if ($year <= 0) return null;
+        $row = $this->select('EventManagerID')->where('Year', $year)->first();
+        $id  = (int) ($row['EventManagerID'] ?? 0);
+        return $id > 0 ? $id : null;
+    }
+
+    /** True when $userId is the event manager for $year. */
+    public function isEventManagerForYear(int $userId, int $year): bool
+    {
+        $managerId = $this->managerUserIdForYear($year);
+        return $managerId !== null && $managerId === $userId;
+    }
 }
+
