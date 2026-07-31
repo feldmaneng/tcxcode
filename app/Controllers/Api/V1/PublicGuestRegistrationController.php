@@ -125,7 +125,7 @@ class PublicGuestRegistrationController extends BaseApiController
     {
         if ($kind === self::KIND_FULL_CONF) {
             $limit = $company['InviteCount'];
-            if ($limit !== null && $limit !== '' && $counts['professional'] >= (int) $limit * 1.5) {
+            if ($limit !== null && $limit !== '' && $counts['professional'] >= (int) ceil((int) $limit * 1.5)) {
                 return ['status' => 'paused', 'message' => 'Registration for ' . ($company['Company'] ?? $company['Name']) . ' has been temporarily paused. Please contact Office@testconx.org for assistance.'];
             }
         } else {

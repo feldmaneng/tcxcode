@@ -531,9 +531,13 @@ class EventGuestsController extends BaseApiController
         $banquet = !empty($simulatedRow['BanquetCompanyID']);
 
         if ($type === EventGuestModel::TYPE_PROFESSIONAL) {
+            // Invite (Full Conference/EXPO) allows up to 150% of InviteCount, rounded up.
             $limit = $company['InviteCount'];
-            if ($limit !== null && $counts['professional'] > (int) $limit) {
-                return $this->jsonError(422, 'invite_limit_reached', ['limit' => (int) $limit, 'current' => $counts['professional']]);
+            if ($limit !== null && $limit !== '') {
+                $hardCap = (int) ceil((int) $limit * 1.5);
+                if ($counts['professional'] > $hardCap) {
+                    return $this->jsonError(422, 'invite_limit_reached', ['limit' => $hardCap, 'current' => $counts['professional']]);
+                }
             }
         } else {
             $limit = $company['EmployeeCount'];
