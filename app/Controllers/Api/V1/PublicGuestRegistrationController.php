@@ -201,6 +201,7 @@ class PublicGuestRegistrationController extends BaseApiController
             'company_name' => $company['Company'] ?? $company['Name'] ?? '',
             'event'        => $this->shapeEvent($event),
             'manager'      => $manager,
+            'cc_primary'   => (int) ($company['CcPrimaryOnRegistration'] ?? 0),
             'counts'       => [
                 'professional' => $counts['professional'],
                 'exhibitor'    => $counts['exhibitor'],
