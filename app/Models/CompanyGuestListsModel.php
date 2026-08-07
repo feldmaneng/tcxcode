@@ -15,7 +15,9 @@ class CompanyGuestListsModel extends Model
         'EventYear', 'Year', 'Name', 'SecretKey', 'Company',
         'InviteCount', 'EmployeeCount', 'BanquetCount', 'StaffID',
         'FullConfToken', 'ExhibitorToken', 'CcPrimaryOnRegistration',
+        'EventID',
     ];
+
 
     public static function newToken(): string
     {

@@ -28,11 +28,13 @@ class CompanyGuestListsController extends BaseApiController
         'employee_count' => 'EmployeeCount',
         'banquet_count'  => 'BanquetCount',
         'staff_id'       => 'StaffID',
+        'event_id'       => 'EventID',
         'full_conf_token'  => 'FullConfToken',
         'exhibitor_token'  => 'ExhibitorToken',
         'cc_primary_on_registration' => 'CcPrimaryOnRegistration',
     ];
     private const READONLY_API_FIELDS = ['id', 'full_conf_token', 'exhibitor_token'];
+
     private const FILTERABLE = ['year', 'staff_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'company'];
 
@@ -42,11 +44,12 @@ class CompanyGuestListsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
-        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'staff_id', 'cc_primary_on_registration'] as $k) {
+        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'staff_id', 'event_id', 'cc_primary_on_registration'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
         }
+
         return $out;
     }
 
@@ -153,8 +156,25 @@ class CompanyGuestListsController extends BaseApiController
             }
         }
         $row = $this->ensureTokens($model, $row);
+        $row = $this->bindEventId($model, $row);
         return $this->response->setJSON(['data' => $this->dbToApi($row)]);
     }
+
+    /**
+     * Records which event this guest list belongs to, using the ?event_id= the
+     * internal guest-list page always sends. Public registration links then
+     * resolve the correct event (and its language toggles) even when the link
+     * itself carries no event hint.
+     */
+    private function bindEventId(CompanyGuestListsModel $model, array $row): array
+    {
+        $eventId = (int) $this->request->getGet('event_id');
+        if ($eventId <= 0 || (int) ($row['EventID'] ?? 0) === $eventId) return $row;
+        $model->update((int) $row['CompanyID'], ['EventID' => $eventId]);
+        $row['EventID'] = $eventId;
+        return $row;
+    }
+
 
     /** Lazily backfills public registration tokens for legacy rows. */
     private function ensureTokens(CompanyGuestListsModel $model, array $row): array

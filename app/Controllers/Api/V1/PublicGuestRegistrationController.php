@@ -110,10 +110,43 @@ class PublicGuestRegistrationController extends BaseApiController
         return $row ?: null;
     }
 
-    private function loadEvent(int $year): ?array
+    /**
+     * Resolves the event behind a public registration token.
+     *
+     * Several events can share the same Year (e.g. Mesa / China / Korea 2026),
+     * so a bare Year lookup can return the wrong row and, with it, the wrong
+     * guest-form language toggles. Order of preference:
+     *   1. explicit event_id from the caller (link generated with ?e=)
+     *   2. companyguestlists.EventID recorded by the internal guest-list page
+     *   3. the year's guest-list-enabled event, then the first match
+     */
+    private function loadEvent(int $year, ?int $eventId = null, ?array $company = null): ?array
     {
+        $model = new EventModel();
+
+        foreach ([$eventId, isset($company['EventID']) ? (int) $company['EventID'] : 0] as $candidate) {
+            $candidate = (int) $candidate;
+            if ($candidate <= 0) continue;
+            $row = $model->where('EventID', $candidate)->first();
+            // Year is only a sanity check; a recorded EventID wins when it matches.
+            if ($row && ($year <= 0 || (int) ($row['Year'] ?? 0) === $year)) return $row;
+        }
+
         if ($year <= 0) return null;
-        return (new EventModel())->where('Year', $year)->first() ?: null;
+
+        $row = $model->where('Year', $year)->where('GuestListEnabled', 1)->first();
+        if ($row) return $row;
+
+        return $model->where('Year', $year)->first() ?: null;
+    }
+
+
+    /** Optional ?event_id= disambiguator sent by the public registration page. */
+    private function requestedEventId(): ?int
+    {
+        $raw = $this->request->getGet('event_id');
+        $id  = (int) $raw;
+        return $id > 0 ? $id : null;
     }
 
     private function liveCounts(int $companyGuestListsId): array
@@ -188,7 +221,7 @@ class PublicGuestRegistrationController extends BaseApiController
         $company = $this->loadCompany($token, $kind);
         if (!$company) return $this->jsonError(404, 'not_found');
 
-        $event = $this->loadEvent((int) ($company['Year'] ?? 0));
+        $event = $this->loadEvent((int) ($company["Year"] ?? 0), $this->requestedEventId(), $company);
         if (!$event) return $this->jsonError(404, 'event_not_found');
 
         $manager = $this->primaryManager((int) $company['CompanyID']);
@@ -225,7 +258,7 @@ class PublicGuestRegistrationController extends BaseApiController
         if (!$company) return $this->jsonError(404, 'not_found');
         $companyId = (int) $company['CompanyID'];
 
-        $event = $this->loadEvent((int) ($company['Year'] ?? 0));
+        $event = $this->loadEvent((int) ($company["Year"] ?? 0), $this->requestedEventId(), $company);
         if (!$event) return $this->jsonError(404, 'event_not_found');
 
         $manager = $this->primaryManager($companyId);
