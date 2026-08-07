@@ -81,6 +81,39 @@ class PresentationsController extends BaseApiController
     }
 
 
+    /**
+     * Lightweight author summaries keyed by presentation id, for list views.
+     * Returns only the fields needed to render names under a title.
+     */
+    private function authorSummaries(array $presentationIds): array
+    {
+        if (!$presentationIds) return [];
+        $db   = \Config\Database::connect();
+        $rows = $db->table('authors')
+            ->select('AuthorID, PresentationID, AuthorNumber, Presenter, ContactID, GivenName, FamilyName, Company')
+            ->whereIn('PresentationID', $presentationIds)
+            ->orderBy('AuthorNumber', 'ASC')
+            ->orderBy('AuthorID', 'ASC')
+            ->get()->getResultArray();
+
+        $out = [];
+        foreach ($rows as $r) {
+            $pid = (int) $r['PresentationID'];
+            $out[$pid][] = [
+                'id'            => (int) $r['AuthorID'],
+                'author_number' => $r['AuthorNumber'] !== null ? (int) $r['AuthorNumber'] : null,
+                'presenter'     => $r['Presenter'] !== null ? (int) $r['Presenter'] : null,
+                'contact_id'    => $r['ContactID'] !== null ? (int) $r['ContactID'] : null,
+                'given_name'    => $r['GivenName'],
+                'family_name'   => $r['FamilyName'],
+                'company'       => $r['Company'],
+                'company_id'    => null,
+                'presentation_id' => $pid,
+            ];
+        }
+        return $out;
+    }
+
     public function index()
     {
         $req     = $this->request;
@@ -90,6 +123,23 @@ class PresentationsController extends BaseApiController
         $sort    = (string) ($req->getGet('sort') ?: '-year');
 
         $builder = (new PresentationModel())->builder();
+
+        // Optional: only presentations where a given contact is an author.
+        $contactId = (int) ($req->getGet('contact_id') ?: 0);
+        if ($contactId > 0) {
+            $db  = \Config\Database::connect();
+            $ids = $db->table('authors')->select('PresentationID')
+                ->where('ContactID', $contactId)->distinct()->get()->getResultArray();
+            $ids = array_values(array_unique(array_map(fn($r) => (int) $r['PresentationID'], $ids)));
+            if (!$ids) {
+                return $this->response->setJSON([
+                    'data' => [],
+                    'pagination' => ['page' => $page, 'per_page' => $perPage, 'total' => 0, 'total_pages' => 0],
+                ]);
+            }
+            $builder->whereIn('PresentationID', $ids);
+        }
+
         foreach (self::FILTERABLE as $apiCol) {
             $val = $req->getGet($apiCol);
             if ($val === null || $val === '') continue;
@@ -122,11 +172,13 @@ class PresentationsController extends BaseApiController
         $rows  = $builder->limit($perPage, ($page - 1) * $perPage)->get()->getResultArray();
 
         $data = [];
+        $pageIds = array_map(fn($r) => (int) $r['PresentationID'], $rows);
+        $authorsByPresentation = $this->authorSummaries($pageIds);
         foreach ($rows as $r) {
             $api = $this->dbToApi($r);
-            // Add lightweight author count for list view
-            $api['author_count'] = (int) (new AuthorModel())->builder()
-                ->where('PresentationID', (int) $api['id'])->countAllResults();
+            $pid = (int) $api['id'];
+            $api['authors']      = $authorsByPresentation[$pid] ?? [];
+            $api['author_count'] = count($api['authors']);
             $data[] = $api;
         }
 

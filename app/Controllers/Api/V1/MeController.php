@@ -132,7 +132,8 @@ class MeController extends BaseApiController
         $userId = ApiAuthContext::actingUserId();
         if (!$userId) return $this->jsonError(401, 'acting_user_required');
 
-        $rows = (new UserWikiPermissionModel())->wikisForUser($userId);
+        $isAdmin = (new UserModuleModel())->userHasModule($userId, 'admin');
+        $rows = (new UserWikiPermissionModel())->wikisForUser($userId, $isAdmin);
 
         return $this->respond([
             'wikis' => array_map(fn($r) => [
@@ -141,6 +142,7 @@ class MeController extends BaseApiController
                 'name'        => $r['Name'],
                 'description' => $r['Description'] ?? null,
                 'permission'  => $r['Permission'],
+                'closed'      => !empty($r['ClosedAt']),
             ], $rows),
         ]);
     }

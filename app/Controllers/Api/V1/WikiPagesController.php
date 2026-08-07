@@ -2,10 +2,12 @@
 namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
+use App\Models\UserModuleModel;
 use App\Models\UserWikiPermissionModel;
 use App\Models\WikiModel;
 use App\Models\WikiPageModel;
 use App\Models\WikiRevisionModel;
+use App\Models\WikiShareModel;
 
 /**
  * WikiPagesController — wiki pages, revisions, hierarchy.
@@ -21,6 +23,12 @@ class WikiPagesController extends BaseApiController
         $userId = ApiAuthContext::actingUserId();
         if (!$userId) {
             $this->response->setStatusCode(401)->setJSON(['error' => 'acting_user_required']);
+            return null;
+        }
+        // Closed wikis are only reachable by admins; permissions stay intact.
+        if ((new WikiModel())->isClosed($wikiId)
+            && !(new UserModuleModel())->userHasModule($userId, 'admin')) {
+            $this->response->setStatusCode(403)->setJSON(['error' => 'wiki_closed']);
             return null;
         }
         $perm = (new UserWikiPermissionModel())->permissionFor($userId, $wikiId);
@@ -41,13 +49,15 @@ class WikiPagesController extends BaseApiController
         $userId = ApiAuthContext::actingUserId();
         if (!$userId) return $this->jsonError(401, 'acting_user_required');
 
-        $rows = (new UserWikiPermissionModel())->wikisForUser($userId);
+        $isAdmin = (new UserModuleModel())->userHasModule($userId, 'admin');
+        $rows = (new UserWikiPermissionModel())->wikisForUser($userId, $isAdmin);
         return $this->respond(['data' => array_map(fn($r) => [
             'id'          => (int) $r['WikiID'],
             'slug'        => $r['Slug'],
             'name'        => $r['Name'],
             'description' => $r['Description'] ?? null,
             'permission'  => $r['Permission'],
+            'closed'      => !empty($r['ClosedAt']),
         ], $rows)]);
     }
 
@@ -94,6 +104,16 @@ class WikiPagesController extends BaseApiController
             ? (new WikiRevisionModel())->find((int) $page['CurrentRevisionID'])
             : null;
 
+        // Public-share metadata: any active share whose root is this page OR
+        // an ancestor (when IncludeChildren is set) covers this page.
+        $share = (new WikiShareModel())->findCoveringShare((int) $page['PageID']);
+        $shareInfo = $share ? [
+            'token'            => $share['Token'],
+            'include_children' => (int) $share['IncludeChildren'] === 1,
+            'expires_at'       => $share['ExpiresAt'],
+            'root_page_id'     => (int) $share['PageID'],
+        ] : null;
+
         return $this->respond(['page' => [
             'id'                  => (int) $page['PageID'],
             'wiki_id'             => (int) $page['WikiID'],
@@ -105,6 +125,7 @@ class WikiPagesController extends BaseApiController
             'body_markdown'       => $rev['BodyMarkdown'] ?? '',
             'body_html'           => $rev['BodyHtml'] ?? '',
             'updated_at'          => $page['UpdatedAt'],
+            'share_info'          => $shareInfo,
         ]]);
     }
 

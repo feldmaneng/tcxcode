@@ -19,16 +19,18 @@ class UserWikiPermissionModel extends Model
         return $row['Permission'] ?? null;
     }
 
-    /** Returns array of [WikiID, Slug, Name, Permission] for the user. */
-    public function wikisForUser(int $userId): array
+    /**
+     * Returns array of [WikiID, Slug, Name, Permission] for the user.
+     * Closed wikis are hidden unless $includeClosed is true (admins).
+     */
+    public function wikisForUser(int $userId, bool $includeClosed = false): array
     {
-        return $this->db->table('user_wiki_permissions p')
-            ->select('w.WikiID, w.Slug, w.Name, w.Description, p.Permission')
+        $b = $this->db->table('user_wiki_permissions p')
+            ->select('w.WikiID, w.Slug, w.Name, w.Description, w.ClosedAt, p.Permission')
             ->join('wikis w', 'w.WikiID = p.WikiID')
-            ->where('p.UserID', $userId)
-            ->orderBy('w.Name', 'ASC')
-            ->get()
-            ->getResultArray();
+            ->where('p.UserID', $userId);
+        if (!$includeClosed) $b->where('w.ClosedAt IS NULL', null, false);
+        return $b->orderBy('w.Name', 'ASC')->get()->getResultArray();
     }
 
     public function setPermission(int $userId, int $wikiId, ?string $permission): void

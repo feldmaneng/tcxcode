@@ -10,5 +10,12 @@ class WikiModel extends Model
     protected $primaryKey    = 'WikiID';
     protected $returnType    = 'array';
     protected $useTimestamps = false;
-    protected $allowedFields = ['Slug', 'Name', 'Description', 'CreatedBy'];
+    protected $allowedFields = ['Slug', 'Name', 'Description', 'CreatedBy', 'ClosedAt'];
+
+    /** True when the wiki exists and is closed. */
+    public function isClosed(int $wikiId): bool
+    {
+        $row = $this->where('WikiID', $wikiId)->first();
+        return $row !== null && !empty($row['ClosedAt']);
+    }
 }

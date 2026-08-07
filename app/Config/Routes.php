@@ -814,6 +814,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('audit',                         'AdminUsersController::audit_list');
         $routes->post('wikis/list',                    'AdminUsersController::listWikis');
         $routes->post('wikis/create',                  'AdminUsersController::createWiki');
+        $routes->post('wikis/update',                  'AdminUsersController::updateWiki');
+        $routes->post('wikis/set-closed',              'AdminUsersController::setWikiClosed');
         $routes->post('wiki-attachments/list',         'WikiAttachmentsAdminController::listAttachments');
         $routes->post('wiki-shares/list',              'WikiSharesController::listShares');
         $routes->post('wiki-shares/create',            'WikiSharesController::createShare');

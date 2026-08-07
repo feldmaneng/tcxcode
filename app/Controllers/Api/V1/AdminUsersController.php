@@ -464,7 +464,63 @@ class AdminUsersController extends BaseApiController
             'name'        => $w['Name'],
             'description' => $w['Description'],
             'created_at'  => $w['CreatedAt'],
+            'closed_at'   => $w['ClosedAt'] ?? null,
         ], $rows)]);
+    }
+
+    /** POST /api/v1/admin/wikis/update  Body: { id, slug?, name?, description? } */
+    public function updateWiki()
+    {
+        if (!($actorId = $this->requireAdminActor())) return $this->response;
+        $id = (int) $this->request->getJsonVar('id');
+        if ($id <= 0) return $this->jsonError(400, 'validation');
+
+        $model = new WikiModel();
+        $wiki  = $model->find($id);
+        if (!$wiki) return $this->jsonError(404, 'wiki_not_found');
+
+        $patch = [];
+        $slug = $this->request->getJsonVar('slug');
+        if ($slug !== null) {
+            $slug = strtolower(trim((string) $slug));
+            $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+            $slug = trim((string) $slug, '-');
+            if ($slug === '') return $this->jsonError(400, 'invalid_slug');
+            $dupe = $model->where('Slug', $slug)->where('WikiID !=', $id)->first();
+            if ($dupe) return $this->jsonError(409, 'slug_taken');
+            $patch['Slug'] = $slug;
+        }
+        $name = $this->request->getJsonVar('name');
+        if ($name !== null) {
+            $name = trim((string) $name);
+            if ($name === '') return $this->jsonError(400, 'validation');
+            $patch['Name'] = $name;
+        }
+        if ($this->request->getJsonVar('description') !== null) {
+            $desc = trim((string) $this->request->getJsonVar('description'));
+            $patch['Description'] = $desc === '' ? null : $desc;
+        }
+        if (!$patch) return $this->respond(['ok' => true]);
+
+        $model->update($id, $patch);
+        $this->audit($actorId, 'wiki.update', 'wiki', (string) $id, $patch);
+        return $this->respond(['ok' => true]);
+    }
+
+    /** POST /api/v1/admin/wikis/set-closed  Body: { id, closed: bool } */
+    public function setWikiClosed()
+    {
+        if (!($actorId = $this->requireAdminActor())) return $this->response;
+        $id     = (int) $this->request->getJsonVar('id');
+        $closed = (bool) $this->request->getJsonVar('closed');
+        if ($id <= 0) return $this->jsonError(400, 'validation');
+
+        $model = new WikiModel();
+        if (!$model->find($id)) return $this->jsonError(404, 'wiki_not_found');
+
+        $model->update($id, ['ClosedAt' => $closed ? date('Y-m-d H:i:s') : null]);
+        $this->audit($actorId, $closed ? 'wiki.close' : 'wiki.reopen', 'wiki', (string) $id, null);
+        return $this->respond(['ok' => true, 'closed' => $closed]);
     }
 
     /** POST /api/v1/admin/wikis/create  Body: { slug, name, description? } */
