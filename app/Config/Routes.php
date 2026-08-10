@@ -545,7 +545,6 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
-
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -827,7 +826,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
     });
 });
-
 
 
 /*
