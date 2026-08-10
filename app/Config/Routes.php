@@ -545,6 +545,7 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
+
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -598,6 +599,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('wp-lookup',     'ContactsController::wpLookup');
         $routes->get('wp-duplicates', 'ContactsController::wpDuplicates');
         $routes->post('merge',        'ContactsController::merge');
+        $routes->get('(:num)/relations', 'ContactsController::relations/$1');
         $routes->get('(:num)',     'ContactsController::show/$1');
         $routes->post('/',         'ContactsController::create');
         $routes->put('(:num)',     'ContactsController::update/$1');
@@ -825,7 +827,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
     });
 });
-
 
 
 

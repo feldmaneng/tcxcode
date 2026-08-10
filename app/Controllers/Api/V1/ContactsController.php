@@ -167,7 +167,64 @@ class ContactsController extends BaseApiController
 		}
 	}
 	
-    /** GET /api/v1/contacts */
+	/**
+	 * Tables that hold a contact's attendance / author history.
+	 */
+	private const RELATION_TABLES = [
+		'attendance'            => ['table' => 'attendance',            'column' => 'ContactID'],
+		'authors'               => ['table' => 'authors',               'column' => 'ContactID'],
+		'presentation_authors'  => ['table' => 'presentation_authors',  'column' => 'ContactID'],
+	];
+
+	private function countRelation(string $table, string $column, int $id): int
+	{
+		$db = \Config\Database::connect();
+		try {
+			if (!$db->tableExists($table)) return 0;
+			if (!in_array($column, $db->getFieldNames($table), true)) return 0;
+			return (int) $db->table($table)->where($column, $id)->countAllResults();
+		} catch (\Throwable $e) {
+			return 0;
+		}
+	}
+
+	/** GET /api/v1/contacts/{id}/relations — attendance / author record counts */
+	public function relations($id = null)
+	{
+		$id = (int) $id;
+		if ($id <= 0) return $this->jsonError(422, 'invalid_contact_id');
+
+		$attendance = $this->countRelation('attendance', 'ContactID', $id);
+		$authors    = $this->countRelation('authors', 'ContactID', $id)
+			+ $this->countRelation('presentation_authors', 'ContactID', $id);
+
+		return $this->response->setJSON(['data' => [
+			'attendance' => $attendance,
+			'authors'    => $authors,
+			'total'      => $attendance + $authors,
+		]]);
+	}
+
+	/**
+	 * Re-point attendance / author rows from the loser contact to the winner.
+	 * Returns an error detail array on failure, null on success.
+	 */
+	private function reassignContactReferences(int $fromId, int $toId): ?array
+	{
+		$db = \Config\Database::connect();
+		foreach (self::RELATION_TABLES as $ref) {
+			try {
+				if (!$db->tableExists($ref['table'])) continue;
+				if (!in_array($ref['column'], $db->getFieldNames($ref['table']), true)) continue;
+				$db->table($ref['table'])->where($ref['column'], $fromId)->update([$ref['column'] => $toId]);
+			} catch (\Throwable $e) {
+				return ['error' => 'reassign_failed', 'table' => $ref['table'], 'message' => $e->getMessage()];
+			}
+		}
+		return null;
+	}
+
+	/** GET /api/v1/contacts */
     public function index()
     {
         $req = $this->request;
@@ -301,6 +358,7 @@ class ContactsController extends BaseApiController
         $winnerId = (int) ($payload['winner_id'] ?? 0);
         $loserId  = (int) ($payload['loser_id'] ?? 0);
         $patch    = is_array($payload['patch'] ?? null) ? $payload['patch'] : [];
+        $reassign = !empty($payload['reassign_related']);
 
         if ($winnerId <= 0 || $loserId <= 0 || $winnerId === $loserId) {
             return $this->jsonError(422, 'invalid_merge_contacts');
@@ -347,6 +405,13 @@ class ContactsController extends BaseApiController
                 $errors = $model->errors();
                 $db->transRollback();
                 return $this->jsonError(500, 'merge_failed', $errors);
+            }
+            if ($reassign) {
+                $reassignErr = $this->reassignContactReferences($loserId, $winnerId);
+                if ($reassignErr) {
+                    $db->transRollback();
+                    return $this->jsonError(500, 'reassign_failed', $reassignErr);
+                }
             }
             $this->releaseContactReferences($loserId);
             if (!$model->delete($loserId)) {
