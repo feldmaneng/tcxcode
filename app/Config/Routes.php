@@ -544,7 +544,7 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
-<?php
+
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
