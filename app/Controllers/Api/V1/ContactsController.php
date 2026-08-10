@@ -99,31 +99,72 @@ class ContactsController extends BaseApiController
         return $out;
     }
 
+	/**
+	 * Copy the current contact row into contacts_archive.
+	 * Returns null on success, or an error detail array on failure — never a Response,
+	 * so callers can decide what to do (archiving must not silently abort a delete).
+	 */
 	private function write_archive ($id = null, $delete = FALSE) {
 		$db = \Config\Database::connect();
-		
-		// Grab the existing record
-        $old_row = (new ContactModel())->find((int) $id);
-        if (!$old_row) return $this->jsonError(404, 'Old row not_found');
 
-		// We've also assumed only one record got returend since primary_key is unique
-		//If we have more than 1 row, for some reason, only the first row will be written to the archive
+		// Grab the existing record
+		$old_row = (new ContactModel())->find((int) $id);
+		if (!$old_row) return ['error' => 'old_row_not_found', 'id' => (int) $id];
+
 		$archive_row = $old_row;
-		
-		//Save the ContactID since the ForeignKey relationship will set the ContactID to NULL when the 
+
+		//Save the ContactID since the ForeignKey relationship will set the ContactID to NULL when the
 		//record is deleted from Contacts
 		$archive_row['OriginalContactID'] = $old_row['ContactID'];
-		
-		// Modify the notes field to indicate who deleted this record
-		// Unfortunately we don't have the user info handy $this->determine_user()
-		if ( $delete ) {
-			$archive_row['Notes'] = "DELETED " . date("Y-m-d h:i:sa") . " by API ". $archive_row['Notes'];
+
+		// Only keep columns that actually exist in contacts_archive
+		try {
+			$archiveCols = $db->getFieldNames('contacts_archive');
+			if (!empty($archiveCols)) {
+				$archive_row = array_intersect_key($archive_row, array_flip($archiveCols));
+			}
+		} catch (\Throwable $e) {
+			return ['error' => 'archive_table_unavailable', 'message' => $e->getMessage()];
 		}
-	
-		$ok = $db->table('contacts_archive')->insert($archive_row); 
-		if (!$ok) return $this->jsonError(500, 'write_archive_failed', $db->errors());
-		return;
-	
+
+		// Modify the notes field to indicate who deleted this record
+		if ( $delete && array_key_exists('Notes', $archive_row) ) {
+			$archive_row['Notes'] = "DELETED " . date("Y-m-d h:i:sa") . " by API " . (string) $archive_row['Notes'];
+		}
+
+		try {
+			$ok = $db->table('contacts_archive')->insert($archive_row);
+		} catch (\Throwable $e) {
+			return ['error' => 'write_archive_failed', 'message' => $e->getMessage()];
+		}
+		if (!$ok) return ['error' => 'write_archive_failed', 'message' => $db->error()['message'] ?? ''];
+		return null;
+	}
+
+	/**
+	 * Rows in other tables that point at a contact, cleared before a hard delete so
+	 * FK constraints cannot turn the delete into an opaque 500.
+	 */
+	private function releaseContactReferences(int $id): void
+	{
+		$db = \Config\Database::connect();
+		$nullable = [
+			['table' => 'contacts_archive',   'column' => 'ContactID'],
+			['table' => 'presentation_authors','column' => 'ContactID'],
+			['table' => 'authors',            'column' => 'ContactID'],
+			['table' => 'attendance',         'column' => 'ContactID'],
+			['table' => 'eventguests',        'column' => 'ContactID'],
+			['table' => 'users',              'column' => 'ContactID'],
+		];
+		foreach ($nullable as $ref) {
+			try {
+				if (!$db->tableExists($ref['table'])) continue;
+				if (!in_array($ref['column'], $db->getFieldNames($ref['table']), true)) continue;
+				$db->table($ref['table'])->where($ref['column'], $id)->update([$ref['column'] => null]);
+			} catch (\Throwable $e) {
+				// Non-fatal: NOT NULL columns stay as-is and surface in the delete error below.
+			}
+		}
 	}
 	
     /** GET /api/v1/contacts */
@@ -253,21 +294,105 @@ class ContactsController extends BaseApiController
         return $this->response->setJSON(['data' => $this->dbToApi($model->find((int) $id))]);
     }
 
+    /** POST /api/v1/contacts/merge — atomically update winner and delete loser. */
+    public function merge()
+    {
+        $payload  = $this->request->getJSON(true) ?? [];
+        $winnerId = (int) ($payload['winner_id'] ?? 0);
+        $loserId  = (int) ($payload['loser_id'] ?? 0);
+        $patch    = is_array($payload['patch'] ?? null) ? $payload['patch'] : [];
+
+        if ($winnerId <= 0 || $loserId <= 0 || $winnerId === $loserId) {
+            return $this->jsonError(422, 'invalid_merge_contacts');
+        }
+
+        $model  = new ContactModel();
+        $winner = $model->find($winnerId);
+        $loser  = $model->find($loserId);
+        if (!$winner || !$loser) return $this->jsonError(404, 'not_found');
+
+        $db = db_connect();
+        $db->transBegin();
+
+        $mergedEmail = strtolower(trim((string) ($patch['email'] ?? '')));
+        $loserEmail  = strtolower(trim((string) ($loser['Email'] ?? '')));
+        if ($mergedEmail !== '' && $mergedEmail === $loserEmail) {
+            $placeholder = sprintf('merged-%d-%s@testconx.org', $loserId, bin2hex(random_bytes(6)));
+            if (!$db->table('contacts')->where('ContactID', $loserId)->update(['Email' => $placeholder])) {
+                $db->transRollback();
+                return $this->jsonError(500, 'email_release_failed');
+            }
+        }
+
+        $rules = $this->validationRules(true, $winnerId);
+        if (!$this->validateData($patch, $rules)) {
+            $errors = $this->validator->getErrors();
+            $db->transRollback();
+            return $this->jsonError(422, 'validation_failed', $errors);
+        }
+
+        $dbRow = $this->apiToDb($patch, true);
+        if (empty($dbRow)) {
+            $db->transRollback();
+            return $this->jsonError(400, 'no_updatable_fields');
+        }
+
+        $archiveErr = $this->write_archive($winnerId);
+        if ($archiveErr) { $db->transRollback(); return $this->jsonError(500, 'archive_failed', $archiveErr); }
+        $archiveErr = $this->write_archive($loserId, true);
+        if ($archiveErr) { $db->transRollback(); return $this->jsonError(500, 'archive_failed', $archiveErr); }
+
+        try {
+            if (!$model->update($winnerId, $dbRow)) {
+                $errors = $model->errors();
+                $db->transRollback();
+                return $this->jsonError(500, 'merge_failed', $errors);
+            }
+            $this->releaseContactReferences($loserId);
+            if (!$model->delete($loserId)) {
+                $errors = $model->errors();
+                $db->transRollback();
+                return $this->jsonError(500, 'merge_failed', $errors);
+            }
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            return $this->jsonError(500, 'merge_failed', ['message' => $e->getMessage()]);
+        }
+
+        $db->transCommit();
+        return $this->response->setJSON([
+            'data' => $this->dbToApi($model->find($winnerId)),
+            'deleted_id' => $loserId,
+        ]);
+    }
+
     /** DELETE /api/v1/contacts/{id} — hard delete */
     public function delete($id = null)
     {
         $model = new ContactModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
-        
-		// Archive old copy
-		$ok = $this->write_archive ($id, TRUE);
-		
-        // $model->update((int) $id, ['Active' => 0, 'EmailPermission' => 0]);
-        $ok = $model->delete((int) $id);
-        if (!$ok) return $this->jsonError(500, 'delete_failed', $model->errors());
-        
-        // maybe fix the return 
+
+        // Archive old copy — failure here must be reported, not swallowed.
+        $archiveErr = $this->write_archive($id, TRUE);
+        if ($archiveErr) return $this->jsonError(500, 'archive_failed', $archiveErr);
+
+        // Clear FK references so the hard delete cannot fail with an opaque constraint error.
+        $this->releaseContactReferences((int) $id);
+
+        try {
+            $ok = $model->delete((int) $id);
+        } catch (\Throwable $e) {
+            return $this->jsonError(500, 'delete_failed', ['message' => $e->getMessage()]);
+        }
+        if (!$ok) {
+            $db = \Config\Database::connect();
+            return $this->jsonError(500, 'delete_failed', [
+                'model'    => $model->errors(),
+                'database' => $db->error(),
+            ]);
+        }
+
         return $this->response->setStatusCode(200)->setJSON(['data' => ['id' => (int) $id, 'active' => 0, 'soft_deleted' => true]]);
     }
 
