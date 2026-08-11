@@ -750,7 +750,9 @@ class AdminUsersController extends BaseApiController
         $email     = trim((string) $this->request->getJsonVar('email'));
         $given     = trim((string) $this->request->getJsonVar('given_name'));
         $family    = trim((string) $this->request->getJsonVar('family_name'));
-        $modules   = $this->request->getJsonVar('modules') ?: ['crm', 'wiki'];
+        $modulesRaw = $this->request->getJsonVar('modules');
+        // An empty array is meaningful: guest-list managers need no module rows.
+        $modules   = $modulesRaw === null ? ['crm', 'wiki'] : $modulesRaw;
         $wpUserIdRaw = $this->request->getJsonVar('wp_user_id');
         $wpUserId  = $wpUserIdRaw === null || $wpUserIdRaw === '' ? null : (int) $wpUserIdRaw;
 

@@ -244,12 +244,83 @@ class CompanyGuestListsController extends BaseApiController
     {
         if (!$this->requireAdmin()) return $this->response;
         $model = new CompanyGuestListsModel();
-        if (!$model->find($id)) return $this->jsonError(404, 'not_found');
+        $existing = $model->find($id);
+        if (!$existing) return $this->jsonError(404, 'not_found');
         $payload = (array) $this->request->getJSON(true);
         $row     = $this->apiToDb($payload);
+
+        // Primary contact must have an email: they are cc'd on registration
+        // emails and pre-provisioned into a user account by email.
+        $newStaffId = array_key_exists('StaffID', $row) ? (int) $row['StaffID'] : null;
+        $staffChanged = $newStaffId !== null && $newStaffId !== (int) ($existing['StaffID'] ?? 0);
+        $contact = null;
+        if ($staffChanged && $newStaffId > 0) {
+            $provisioner = new \App\Libraries\ContactUserProvisioner();
+            $contact = $provisioner->contact($newStaffId);
+            if (!$contact) return $this->jsonError(404, 'contact_not_found');
+            if (trim((string) ($contact['Email'] ?? '')) === '') {
+                return $this->jsonError(422, 'primary_contact_email_required');
+            }
+        }
+
         if (!$model->update($id, $row)) return $this->jsonError(422, 'update_failed', $model->errors());
-        return $this->response->setJSON(['data' => $this->dbToApi($model->find($id))]);
+
+        $managerStatus = null;
+        if ($contact) {
+            $managerStatus = $this->ensurePrimaryContactManager($id, $contact);
+        }
+
+        $out = ['data' => $this->dbToApi($model->find($id))];
+        if ($managerStatus !== null) $out['primary_contact_manager'] = $managerStatus;
+        return $this->response->setJSON($out);
     }
+
+    /**
+     * Adds the primary contact as a guest-list manager, pre-provisioning a user
+     * account when the contact has none. Never fails the StaffID save.
+     *
+     * @return string one of: added | created_and_added | already | limit_reached | failed
+     */
+    private function ensurePrimaryContactManager(int $companyGuestListsId, array $contact): string
+    {
+        try {
+            $provisioner = new \App\Libraries\ContactUserProvisioner();
+            $user   = $provisioner->findUserForContact($contact);
+            $status = 'added';
+            if ($user) {
+                $userId = (int) $user['UserID'];
+            } else {
+                $userId = $provisioner->createUserForContact($contact, []);
+                $status = 'created_and_added';
+            }
+            if ($userId <= 0) return 'failed';
+
+            $mgrs    = new CompanyGuestListsManagerModel();
+            $current = $mgrs->userIdsForCompany($companyGuestListsId);
+            if (in_array($userId, $current, true)) return 'already';
+            if (count($current) >= 4) return 'limit_reached';
+
+            $mgrs->insert([
+                'CompanyGuestListsID' => $companyGuestListsId,
+                'UserID'              => $userId,
+                'AddedBy'             => $this->actorId(),
+            ]);
+
+            (new \App\Models\AdminAuditLogModel())->log(
+                (int) $this->actorId(),
+                'guestlist.primary_contact_manager_added',
+                'companyguestlists',
+                (string) $companyGuestListsId,
+                ['user_id' => $userId, 'contact_id' => (int) ($contact['ContactID'] ?? 0), 'created' => $status === 'created_and_added'],
+                $this->request->getIPAddress()
+            );
+            return $status;
+        } catch (\Throwable $e) {
+            log_message('error', '[CompanyGuestLists] primary contact manager failed: ' . $e->getMessage());
+            return 'failed';
+        }
+    }
+
 
     public function delete(int $id)
     {
