@@ -24,6 +24,7 @@ class MarketsController extends BaseApiController
     /** GET /api/v1/markets[?tree=1][&parent_id=ID][&include_inactive=1] */
     public function index()
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $req = $this->request;
         $tree = (int) $req->getGet('tree') === 1;
         $parentId = $req->getGet('parent_id');
@@ -71,6 +72,7 @@ class MarketsController extends BaseApiController
     /** GET /api/v1/markets/{id} */
     public function show($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $row = (new MarketModel())->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
         return $this->response->setJSON(['data' => $this->row($row)]);
@@ -79,6 +81,7 @@ class MarketsController extends BaseApiController
     /** GET /api/v1/markets/{id}/descendants */
     public function descendants($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $ids = MarketTree::subtreeIds((int) $id);
         return $this->response->setJSON(['data' => ['ids' => $ids]]);
     }
@@ -86,6 +89,7 @@ class MarketsController extends BaseApiController
     /** POST /api/v1/markets */
     public function create()
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload = $this->request->getJSON(true) ?? [];
         $rules = [
             'name'      => 'required|string|max_length[80]',
@@ -132,6 +136,7 @@ class MarketsController extends BaseApiController
     /** PUT /api/v1/markets/{id} */
     public function update($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new MarketModel();
         $existing = $model->find((int) $id);
         if (!$existing) return $this->jsonError(404, 'not_found');
@@ -184,6 +189,7 @@ class MarketsController extends BaseApiController
     /** DELETE /api/v1/markets/{id} — soft delete; blocked if active children or used by companies */
     public function delete($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new MarketModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');

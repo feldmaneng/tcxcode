@@ -45,6 +45,7 @@ class AttendanceController extends BaseApiController
 
     public function index()
     {
+        if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
         $req     = $this->request;
         $page    = max(1, (int) $req->getGet('page') ?: 1);
         $perPage = max(1, min(100, (int) ($req->getGet('per_page') ?: 25)));
@@ -95,6 +96,7 @@ class AttendanceController extends BaseApiController
 
     public function show($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
         $row = (new AttendanceModel())->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
         return $this->response->setJSON(['data' => $this->dbToApi($row)]);
@@ -102,6 +104,7 @@ class AttendanceController extends BaseApiController
 
     public function create()
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload = $this->request->getJSON(true) ?? [];
         $dbRow = $this->apiToDb($payload);
         if (empty($dbRow)) return $this->jsonError(400, 'no_fields');
@@ -122,6 +125,7 @@ class AttendanceController extends BaseApiController
 
     public function update($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new AttendanceModel();
         $existing = $model->find((int) $id);
         if (!$existing) return $this->jsonError(404, 'not_found');
@@ -137,6 +141,7 @@ class AttendanceController extends BaseApiController
 
     public function delete($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new AttendanceModel();
         if (!$model->find((int) $id)) return $this->jsonError(404, 'not_found');
         if (!$model->delete((int) $id)) return $this->jsonError(500, 'delete_failed', $model->errors());

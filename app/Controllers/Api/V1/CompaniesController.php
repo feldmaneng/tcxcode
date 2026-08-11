@@ -109,6 +109,7 @@ class CompaniesController extends BaseApiController
     /** GET /api/v1/companies */
     public function index()
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $req = $this->request;
         $page    = max(1, (int) $req->getGet('page') ?: 1);
         $perPage = max(1, min(100, (int) ($req->getGet('per_page') ?: 25)));
@@ -212,6 +213,7 @@ class CompaniesController extends BaseApiController
     /** GET /api/v1/companies/{id} */
     public function show($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $row = (new CompanyModel())->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
         $api = $this->dbToApi($row);
@@ -296,6 +298,7 @@ class CompaniesController extends BaseApiController
     /** GET /api/v1/companies/{id}/descendants — flat list of descendant ids (BFS) */
     public function descendants($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $rootId = (int) $id;
         if ($rootId <= 0) return $this->jsonError(400, 'invalid_id');
         return $this->response->setJSON(['data' => $this->descendantIds($rootId)]);
@@ -304,6 +307,7 @@ class CompaniesController extends BaseApiController
     /** GET /api/v1/companies/{id}/contacts */
     public function contacts($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $db = Database::connect();
         $rows = $db->table('contacts')
             ->select('ContactID, GivenName, FamilyName, Email, Active, Title')
@@ -325,6 +329,7 @@ class CompaniesController extends BaseApiController
     /** POST /api/v1/companies */
     public function create()
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload = $this->request->getJSON(true) ?? [];
         if (!$this->validateData($payload, $this->validationRules(false))) {
             return $this->jsonError(422, 'validation_failed', $this->validator->getErrors());
@@ -347,6 +352,7 @@ class CompaniesController extends BaseApiController
     /** PUT /api/v1/companies/{id} */
     public function update($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new CompanyModel();
         $existing = $model->find((int) $id);
         if (!$existing) return $this->jsonError(404, 'not_found');
@@ -389,6 +395,7 @@ class CompaniesController extends BaseApiController
      *  Blocked when the company has children; clean up the junction table first. */
     public function delete($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new CompanyModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');

@@ -191,6 +191,7 @@ class ContactsController extends BaseApiController
 	/** GET /api/v1/contacts/{id}/relations — attendance / author record counts */
 	public function relations($id = null)
 	{
+	    if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
 		$id = (int) $id;
 		if ($id <= 0) return $this->jsonError(422, 'invalid_contact_id');
 
@@ -227,6 +228,7 @@ class ContactsController extends BaseApiController
 	/** GET /api/v1/contacts */
     public function index()
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $req = $this->request;
         $page    = max(1, (int) $req->getGet('page') ?: 1);
         $perPage = (int) ($req->getGet('per_page') ?: 25);
@@ -306,6 +308,7 @@ class ContactsController extends BaseApiController
     /** GET /api/v1/contacts/{id} */
     public function show($id = null)
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $row = (new ContactModel())->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
         return $this->response->setJSON(['data' => $this->dbToApi($row)]);
@@ -314,6 +317,7 @@ class ContactsController extends BaseApiController
     /** POST /api/v1/contacts */
     public function create()
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload = $this->request->getJSON(true) ?? [];
         $rules = $this->validationRules(false);
         if (!$this->validateData($payload, $rules)) {
@@ -331,6 +335,7 @@ class ContactsController extends BaseApiController
     /** PUT /api/v1/contacts/{id} */
     public function update($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new ContactModel();
         $existing = $model->find((int) $id);
         if (!$existing) return $this->jsonError(404, 'not_found');
@@ -354,6 +359,7 @@ class ContactsController extends BaseApiController
     /** POST /api/v1/contacts/merge — atomically update winner and delete loser. */
     public function merge()
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload  = $this->request->getJSON(true) ?? [];
         $winnerId = (int) ($payload['winner_id'] ?? 0);
         $loserId  = (int) ($payload['loser_id'] ?? 0);
@@ -434,6 +440,7 @@ class ContactsController extends BaseApiController
     /** DELETE /api/v1/contacts/{id} — hard delete */
     public function delete($id = null)
     {
+        if ($deny = $this->requireModule(['crm'])) return $deny;
         $model = new ContactModel();
         $row = $model->find((int) $id);
         if (!$row) return $this->jsonError(404, 'not_found');
@@ -524,6 +531,7 @@ class ContactsController extends BaseApiController
      */
     public function wpLookup()
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $email    = trim((string) $this->request->getGet('email'));
         $username = trim((string) $this->request->getGet('username'));
         $q        = trim((string) $this->request->getGet('q'));
@@ -579,6 +587,7 @@ class ContactsController extends BaseApiController
      */
     public function wpDuplicates()
     {
+        if ($deny = $this->requireModule(['crm', 'guests', 'author-portal'])) return $deny;
         $wpUserId  = (int) $this->request->getGet('wp_user_id');
         $excludeId = (int) $this->request->getGet('exclude_id');
         if ($wpUserId <= 0) {
