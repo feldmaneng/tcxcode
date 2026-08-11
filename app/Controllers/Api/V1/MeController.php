@@ -46,8 +46,15 @@ class MeController extends BaseApiController
             $hasGuests = false;
             foreach ($rows as $r) { if (($r['code'] ?? '') === 'guests') { $hasGuests = true; break; } }
             if (!$hasGuests) {
-                $mgrCount = db_connect()->table('companyguestlists_managers')
-                    ->where('UserID', $userId)->countAllResults();
+                // companyguestlists_managers lives in the 'registration' DB group,
+                // not the default connection.
+                $mgrCount = 0;
+                try {
+                    $mgrCount = db_connect('registration')->table('companyguestlists_managers')
+                        ->where('UserID', $userId)->countAllResults();
+                } catch (\Throwable $e) {
+                    log_message('error', '[me/modules] guest-list manager lookup failed: ' . $e->getMessage());
+                }
                 if ($mgrCount > 0) {
                     $mod = $ctrl->table('modules')
                         ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
@@ -55,6 +62,7 @@ class MeController extends BaseApiController
                     if ($mod) $rows[] = $mod;
                 }
             }
+
 
             // Auto-grant `author-portal` module if the user has any author-portal
             // role: event manager, event chair, session coordinator, or author on
