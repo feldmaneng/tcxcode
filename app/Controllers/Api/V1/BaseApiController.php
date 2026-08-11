@@ -38,12 +38,15 @@ class BaseApiController extends Controller
         $userId = \App\Libraries\ApiAuthContext::actingUserId();
         if ($userId === null) return null; // trusted service call
 
-        $model = new \App\Models\UserModuleModel();
-        $held  = $model->codesForUser($userId);
+        // Effective modules = explicit user_modules rows + implicit grants
+        // (guest-list manager => guests, author/chair/coordinator => author-portal),
+        // matching what MeController::modules() reports to the app.
+        $held = \App\Libraries\ModuleAccess::codesForUser($userId);
         if (in_array('admin', $held, true)) return null;
         foreach ($codes as $c) {
             if (in_array($c, $held, true)) return null;
         }
         return $this->jsonError(403, 'forbidden', ['required_modules' => array_values($codes)]);
     }
+
 }
