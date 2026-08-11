@@ -97,34 +97,48 @@ class WikiPagesController extends BaseApiController
     public function show(int $pageId)
     {
         $page = (new WikiPageModel())->find($pageId);
-        if (!$page || $page['DeletedAt']) return $this->jsonError(404, 'not_found');
+        if (!$page || !empty($page['DeletedAt'])) return $this->jsonError(404, 'not_found');
         if (!$this->checkAccess((int) $page['WikiID'], false)) return $this->response;
 
-        $rev = $page['CurrentRevisionID']
-            ? (new WikiRevisionModel())->find((int) $page['CurrentRevisionID'])
-            : null;
+        $rev = null;
+        if (!empty($page['CurrentRevisionID'])) {
+            try {
+                $rev = (new WikiRevisionModel())->find((int) $page['CurrentRevisionID']);
+            } catch (\Throwable $e) {
+                log_message('error', '[wiki] revision load failed for page {0}: {1}', [$pageId, $e->getMessage()]);
+            }
+        }
 
         // Public-share metadata: any active share whose root is this page OR
         // an ancestor (when IncludeChildren is set) covers this page.
-        $share = (new WikiShareModel())->findCoveringShare((int) $page['PageID']);
-        $shareInfo = $share ? [
-            'token'            => $share['Token'],
-            'include_children' => (int) $share['IncludeChildren'] === 1,
-            'expires_at'       => $share['ExpiresAt'],
-            'root_page_id'     => (int) $share['PageID'],
-        ] : null;
+        // Never let a missing/partial share table break page rendering.
+        $shareInfo = null;
+        try {
+            $share = (new WikiShareModel())->findCoveringShare((int) $page['PageID']);
+            if ($share) {
+                $shareInfo = [
+                    'token'            => $share['Token'] ?? null,
+                    'include_children' => (int) ($share['IncludeChildren'] ?? 0) === 1,
+                    'expires_at'       => $share['ExpiresAt'] ?? null,
+                    'root_page_id'     => (int) ($share['PageID'] ?? $page['PageID']),
+                ];
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[wiki] share lookup failed for page {0}: {1}', [$pageId, $e->getMessage()]);
+        }
 
         return $this->respond(['page' => [
             'id'                  => (int) $page['PageID'],
             'wiki_id'             => (int) $page['WikiID'],
-            'parent_id'           => $page['ParentID'] !== null ? (int) $page['ParentID'] : null,
-            'slug'                => $page['Slug'],
-            'title'               => $page['Title'],
-            'sort_order'          => (int) $page['SortOrder'],
-            'current_revision_id' => $page['CurrentRevisionID'] !== null ? (int) $page['CurrentRevisionID'] : null,
+            'parent_id'           => isset($page['ParentID']) && $page['ParentID'] !== null ? (int) $page['ParentID'] : null,
+            'slug'                => $page['Slug'] ?? '',
+            'title'               => $page['Title'] ?? '',
+            'sort_order'          => (int) ($page['SortOrder'] ?? 0),
+            'current_revision_id' => isset($page['CurrentRevisionID']) && $page['CurrentRevisionID'] !== null ? (int) $page['CurrentRevisionID'] : null,
             'body_markdown'       => $rev['BodyMarkdown'] ?? '',
             'body_html'           => $rev['BodyHtml'] ?? '',
-            'updated_at'          => $page['UpdatedAt'],
+            'updated_at'          => $page['UpdatedAt'] ?? ($page['CreatedAt'] ?? null),
+
             'share_info'          => $shareInfo,
         ]]);
     }
