@@ -19,6 +19,7 @@ class EventModel extends Model
         'IsClosed', 'ClosedAt',
         'GuestListEnabled',
         'GuestFormChinese', 'GuestFormKorean',
+        'LogoID',
     ];
 
     /**
