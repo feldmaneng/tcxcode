@@ -29,6 +29,7 @@ class EventGuestModel extends Model
         'OfficeNotes', 'ContactID', 'Type',
         'AddedBy', 'UpdatedBy', 'AddedIP', 'UpdatedIP',
         'DeletedAt', 'DeletedBy', 'DeletedIP',
+        'BouncedAt', 'BounceReason', 'ComplainedAt', 'EmailSuppressed',
     ];
 
     /** Guest type constants (stored verbatim in `guests`.`Type`). */
@@ -46,11 +47,66 @@ class EventGuestModel extends Model
             : self::TYPE_PROFESSIONAL;
     }
 
+    /**
+     * Lossless cleanup applied before an email is stored.
+     * Trims, collapses whitespace, unwraps "Name <addr@host>" and lowercases.
+     * Deliberately does NOT strip +tags or dots: those are real, deliverable
+     * addresses and rewriting them can misdirect mail.
+     */
+    public static function normalizeEmail($raw): string
+    {
+        $s = trim((string) $raw);
+        if ($s === '') return '';
+        if (preg_match('/<([^<>\s]+@[^<>\s]+)>/', $s, $m)) $s = $m[1];
+        $s = preg_replace('/\s+/', '', $s) ?? $s;
+        return strtolower(trim($s));
+    }
+
+    /** Rows for one event scope (EventYear), falling back to one company list. */
+    private function eventScopeBuilder(string $eventYear, ?int $fallbackCompanyId)
+    {
+        $q = $this->builder();
+        if ($eventYear !== '') $q->where('EventYear', $eventYear);
+        elseif ($fallbackCompanyId) $q->where('InvitedByCompanyID', $fallbackCompanyId);
+        return $q;
+    }
+
+    /**
+     * A person is unique per event by email. Returns the live row already using
+     * this email anywhere in the event, or null.
+     */
+    public function liveByEmailInEvent(string $eventYear, string $email, ?int $excludeGuestId = null, ?int $fallbackCompanyId = null): ?array
+    {
+        $email = self::normalizeEmail($email);
+        if ($email === '') return null;
+        $q = $this->eventScopeBuilder($eventYear, $fallbackCompanyId)
+            ->where('DeletedAt', null)
+            ->where('LOWER(TRIM(Email))', $email);
+        if ($excludeGuestId !== null) $q->where('GuestID !=', $excludeGuestId);
+        return $q->orderBy('GuestID', 'DESC')->limit(1)->get()->getRowArray() ?: null;
+    }
+
+    /**
+     * Most recent soft-deleted row for this email in the event, so a re-add can
+     * restore the person's history instead of creating a second row.
+     */
+    public function deletedByEmailInEvent(string $eventYear, string $email, ?int $fallbackCompanyId = null): ?array
+    {
+        $email = self::normalizeEmail($email);
+        if ($email === '') return null;
+        return $this->eventScopeBuilder($eventYear, $fallbackCompanyId)
+            ->where('DeletedAt IS NOT NULL', null, false)
+            ->where('LOWER(TRIM(Email))', $email)
+            ->orderBy('GuestID', 'DESC')
+            ->limit(1)->get()->getRowArray() ?: null;
+    }
+
     /** Base builder that excludes soft-deleted rows. */
     public function live()
     {
         return $this->where('DeletedAt', null);
     }
+
 
     /**
      * Returns counts by category for a given companyguestlists row.

@@ -46,11 +46,16 @@ class EventGuestsController extends BaseApiController
         'updated_by'             => 'UpdatedBy',
         'deleted_at'             => 'DeletedAt',
         'deleted_by'             => 'DeletedBy',
+        'bounced_at'             => 'BouncedAt',
+        'bounce_reason'          => 'BounceReason',
+        'complained_at'          => 'ComplainedAt',
+        'email_suppressed'       => 'EmailSuppressed',
         'updated'                => 'Stamp',
     ];
     private const READONLY_API_FIELDS = [
         'id', 'company_guest_lists_id', 'event_year',
         'added_by', 'updated_by', 'deleted_at', 'deleted_by', 'updated',
+        'bounced_at', 'bounce_reason', 'complained_at', 'email_suppressed',
     ];
     /** Only admins / event managers may set these on update. */
     private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type'];
@@ -70,7 +75,7 @@ class EventGuestsController extends BaseApiController
             $out['banquet'] = ((int) $row['BanquetCompanyID']) > 0 ? 1 : 0;
         }
         $out['deleted'] = !empty($row['DeletedAt']) ? 1 : 0;
-        foreach (['id', 'company_guest_lists_id', 'banquet', 'added_by', 'updated_by', 'deleted_by', 'related'] as $k) {
+        foreach (['id', 'company_guest_lists_id', 'banquet', 'added_by', 'updated_by', 'deleted_by', 'related', 'email_suppressed'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
@@ -165,42 +170,8 @@ class EventGuestsController extends BaseApiController
         return $counts;
     }
 
-    /**
-     * Duplicate check across the whole event year (all company guest lists).
-     * Soft-deleted rows do not block a re-add.
-     */
-    private function duplicateExists(array $row, int $companyGuestListsId, ?int $excludeGuestId = null): bool
-    {
-        $eventYear = (string) ($row['EventYear'] ?? '');
-        $emailNorm = $this->guestEmailKey($row);
-        $nameKey = $emailNorm === '' ? $this->guestNameKey($row) : '';
 
-        if ($emailNorm === '' && $nameKey === '') return false;
 
-        $q = (new EventGuestModel())->builder();
-        $q->where('DeletedAt', null);
-        if ($eventYear !== '') $q->where('EventYear', $eventYear);
-        else $q->where('InvitedByCompanyID', $companyGuestListsId);
-        if ($excludeGuestId !== null) $q->where('GuestID !=', $excludeGuestId);
-
-        $q->groupStart();
-        $hasCondition = false;
-        if ($emailNorm !== '') {
-            $q->where('LOWER(TRIM(Email))', $emailNorm);
-            $hasCondition = true;
-        }
-        if ($nameKey !== '') {
-            [$given, $family] = explode('|', $nameKey, 2);
-            if ($hasCondition) $q->orGroupStart();
-            else $q->groupStart();
-            $q->where('LOWER(TRIM(GivenName))', $given)
-                ->where('LOWER(TRIM(FamilyName))', $family)
-                ->groupEnd();
-        }
-        $q->groupEnd();
-
-        return $q->limit(1)->get()->getRowArray() !== null;
-    }
 
     /** @return array{ok:bool,actorId:int,isAdmin:bool,isPrivileged:bool,company:array,eventLocked:bool}|null */
     private function loadContext(int $companyGuestListsId)
@@ -237,6 +208,29 @@ class EventGuestsController extends BaseApiController
     }
 
     /**
+     * Audit line recorded on OfficeNotes when a removed guest is re-added under
+     * a different company list. Returns null when nothing needs noting.
+     */
+    private function restoreNote(array $deletedRow, int $newCompanyId): ?string
+    {
+        $orig = (int) ($deletedRow['InvitedByCompanyID'] ?? 0);
+        if ($orig === $newCompanyId || $orig <= 0) return null;
+        $when = trim((string) ($deletedRow['DeletedAt'] ?? '')) ?: 'an unknown date';
+        $by   = (int) ($deletedRow['DeletedBy'] ?? 0);
+        $who  = $by > 0 ? 'UserID ' . $by : 'the public form';
+        return 'Originally registered to InvitedByCompanyID ' . $orig
+            . ' but was deleted on ' . $when . ' by ' . $who . '.';
+    }
+
+    private function appendNote(?string $notes, string $line): string
+    {
+        $existing = trim((string) $notes);
+        $stamped  = '[' . date('Y-m-d H:i:s') . '] ' . $line;
+        return $existing === '' ? $stamped : $existing . "\n" . $stamped;
+    }
+
+    /**
+
      * Validates required fields on the merged row.
      * @return array<string,string> field => message (empty when valid)
      */
@@ -245,7 +239,10 @@ class EventGuestsController extends BaseApiController
         $errors = [];
         $val = fn(string $k) => trim((string) ($row[$k] ?? ''));
 
-        if ($val('Email') === '') $errors['email'] = 'Email is required';
+        $email = EventGuestModel::normalizeEmail($val('Email'));
+        if ($email === '') $errors['email'] = 'Email is required';
+        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Email is not a valid address';
+
         if ($val('Title') === '') $errors['title'] = 'Job title is required';
         if ($val('Mobile') === '') $errors['mobile'] = 'Mobile phone is required';
         if ($val('Company') === '' && $val('CN_Company') === '') {
@@ -320,13 +317,17 @@ class EventGuestsController extends BaseApiController
         $row['Related'] = $row['Type'] === EventGuestModel::TYPE_EXHIBITOR ? 1 : 0;
 
         if (!array_key_exists('Email', $row) || $row['Email'] === null) $row['Email'] = '';
-        $row['Email'] = $this->guestEmailKey($row);
+        $row['Email'] = EventGuestModel::normalizeEmail($row['Email']);
 
         $errors = $this->validateRequired($row);
         if ($errors !== []) return $this->jsonError(422, 'validation_failed', $errors);
 
-        if ($this->duplicateExists($row, $companyGuestListsId, null)) {
-            return $this->jsonError(409, 'already_attending', ['message' => 'Guest is already attending this event']);
+        $model     = new EventGuestModel();
+        $eventYear = (string) $row['EventYear'];
+
+        // One person (by email) per event, across every company list.
+        if ($model->liveByEmailInEvent($eventYear, $row['Email'], null, $companyGuestListsId)) {
+            return $this->jsonError(409, 'already_attending', ['message' => 'This email is already registered for this event']);
         }
 
         $banquet = isset($payload['banquet']) && (int) $payload['banquet'] === 1;
@@ -340,7 +341,28 @@ class EventGuestsController extends BaseApiController
         $check = $this->checkLimits($companyGuestListsId, $ctx['company'], $row, null);
         if ($check !== null) return $check;
 
-        $model = new EventGuestModel();
+        // Re-adding a previously removed person restores their row instead of
+        // creating a second one, keeping history and bounce state intact.
+        $deleted = $model->deletedByEmailInEvent($eventYear, $row['Email'], $companyGuestListsId);
+        if ($deleted) {
+            $guestId  = (int) $deleted['GuestID'];
+            $note     = $this->restoreNote($deleted, $companyGuestListsId);
+            $update   = $row;
+            unset($update['AddedBy'], $update['AddedIP']);
+            $update['InvitedByCompanyID'] = $companyGuestListsId;
+            $update['DeletedAt'] = null;
+            $update['DeletedBy'] = null;
+            $update['DeletedIP'] = null;
+            if ($note !== null) {
+                $update['OfficeNotes'] = $this->appendNote($deleted['OfficeNotes'] ?? null, $note);
+            }
+            if (!$model->update($guestId, $update)) {
+                return $this->jsonError(422, 'restore_failed', $model->errors());
+            }
+            return $this->response->setStatusCode(200)
+                ->setJSON(['data' => $this->dbToApi($model->find($guestId), $ctx['isPrivileged']), 'restored' => 1]);
+        }
+
         try {
             $id = $model->insert($row, true);
         } catch (\Throwable $e) {
@@ -350,6 +372,7 @@ class EventGuestsController extends BaseApiController
         if (!$id) return $this->jsonError(422, 'insert_failed', $model->errors());
         return $this->response->setStatusCode(201)
             ->setJSON(['data' => $this->dbToApi($model->find($id), $ctx['isPrivileged'])]);
+
     }
 
     /** PUT /api/v1/guests/{id} */
@@ -390,7 +413,7 @@ class EventGuestsController extends BaseApiController
             $row['BanquetCompanyID'] = ((int) $payload['banquet']) === 1 ? $companyId : null;
         }
         if (array_key_exists('Email', $row)) {
-            $row['Email'] = $this->guestEmailKey($row);
+            $row['Email'] = EventGuestModel::normalizeEmail($row['Email']);
         }
 
         $row['UpdatedBy'] = $ctx['actorId'];
@@ -401,9 +424,16 @@ class EventGuestsController extends BaseApiController
         $errors = $this->validateRequired($candidate);
         if ($errors !== []) return $this->jsonError(422, 'validation_failed', $errors);
 
-        if ($this->duplicateExists($candidate, $companyId, $guestId)) {
-            return $this->jsonError(409, 'already_attending', ['message' => 'Guest is already attending this event']);
+        $clash = $model->liveByEmailInEvent(
+            (string) ($candidate['EventYear'] ?? ''),
+            (string) $candidate['Email'],
+            $guestId,
+            $companyId
+        );
+        if ($clash) {
+            return $this->jsonError(409, 'already_attending', ['message' => 'This email is already registered for this event']);
         }
+
 
         $check = $this->checkLimits($companyId, $ctx['company'], $candidate, $guestId);
         if ($check !== null) return $check;
@@ -474,9 +504,10 @@ class EventGuestsController extends BaseApiController
 
         $candidate = $existing;
         $candidate['DeletedAt'] = null;
-        if ($this->duplicateExists($candidate, $companyId, $guestId)) {
-            return $this->jsonError(409, 'already_attending', ['message' => 'Guest is already attending this event']);
+        if ($model->liveByEmailInEvent((string) ($candidate['EventYear'] ?? ''), (string) ($candidate['Email'] ?? ''), $guestId, $companyId)) {
+            return $this->jsonError(409, 'already_attending', ['message' => 'This email is already registered for this event']);
         }
+
         $check = $this->checkLimits($companyId, $ctx['company'], $candidate, $guestId);
         if ($check !== null) return $check;
 
@@ -490,12 +521,22 @@ class EventGuestsController extends BaseApiController
         return $this->response->setJSON(['data' => $this->dbToApi($model->find($guestId), true)]);
     }
 
-    /** POST /api/v1/guests/mark-bounced  body: { email, message_id } — service-only HMAC */
+    /**
+     * POST /api/v1/guests/mark-bounced — service-only HMAC.
+     * body: { email, message_id, event?: 'bounced'|'complained'|'unsubscribed',
+     *         reason?: string, permanent?: bool }
+     * Records the delivery state and returns the guest's list managers so the
+     * caller can send them a notice.
+     */
     public function markBounced()
     {
         $payload = (array) $this->request->getJSON(true);
         $email = strtolower(trim((string) ($payload['email'] ?? '')));
         if ($email === '') return $this->jsonError(400, 'email_required');
+
+        $eventName = strtolower(trim((string) ($payload['event'] ?? 'bounced')));
+        $reason    = substr(trim((string) ($payload['reason'] ?? '')), 0, 255);
+        $permanent = !empty($payload['permanent']);
 
         $model = new EventGuestModel();
         $row = $model->where('LOWER(TRIM(Email))', $email)
@@ -507,9 +548,64 @@ class EventGuestsController extends BaseApiController
             return $this->response->setJSON(['ok' => true, 'marked' => false]);
         }
 
-        $model->update((int) $row['GuestID'], ['BouncedAt' => date('Y-m-d H:i:s')]);
-        log_message('info', 'markBounced: GuestID ' . $row['GuestID'] . ' for ' . $email);
-        return $this->response->setJSON(['ok' => true, 'marked' => true, 'guest_id' => (int) $row['GuestID']]);
+        $now = date('Y-m-d H:i:s');
+        $update = [];
+        if ($eventName === 'complained') {
+            $update['ComplainedAt'] = $now;
+            $update['EmailSuppressed'] = 1;
+            $update['BounceReason'] = $reason ?: 'Recipient marked the message as spam';
+        } elseif ($eventName === 'unsubscribed') {
+            $update['EmailSuppressed'] = 1;
+            $update['BounceReason'] = $reason ?: 'Recipient unsubscribed';
+        } else {
+            $update['BouncedAt'] = $now;
+            $update['BounceReason'] = $reason ?: 'Delivery failed';
+            if ($permanent) $update['EmailSuppressed'] = 1;
+        }
+        $model->update((int) $row['GuestID'], $update);
+        log_message('info', 'markBounced: GuestID ' . $row['GuestID'] . ' (' . $eventName . ') for ' . $email);
+
+        $companyListId = (int) ($row['InvitedByCompanyID'] ?? 0);
+        return $this->response->setJSON([
+            'ok'        => true,
+            'marked'    => true,
+            'guest_id'  => (int) $row['GuestID'],
+            'suppressed' => !empty($update['EmailSuppressed']) ? 1 : 0,
+            'guest'     => [
+                'given_name'  => $row['GivenName'] ?? null,
+                'family_name' => $row['FamilyName'] ?? null,
+                'native_name' => $row['NativeName'] ?? null,
+                'email'       => $row['Email'] ?? null,
+                'company'     => $row['Company'] ?? null,
+            ],
+            'company_guest_lists_id' => $companyListId ?: null,
+            'company_name' => $companyListId ? $this->companyListName($companyListId) : null,
+            'managers'  => $companyListId ? $this->managerContacts($companyListId) : [],
+        ]);
+    }
+
+    /** @return array<int, array{name:string,email:string}> */
+    private function managerContacts(int $companyGuestListsId): array
+    {
+        $userIds = (new \App\Models\CompanyGuestListsManagerModel())->userIdsForCompany($companyGuestListsId);
+        if (!$userIds) return [];
+        $rows = (new \App\Models\UserModel())->whereIn('UserID', $userIds)->findAll();
+        $out = [];
+        foreach ($rows as $u) {
+            $email = trim((string) ($u['Email'] ?? ''));
+            if ($email === '') continue;
+            $name = trim(((string) ($u['GivenName'] ?? '')) . ' ' . ((string) ($u['FamilyName'] ?? '')));
+            $out[] = ['name' => $name !== '' ? $name : $email, 'email' => $email];
+        }
+        return $out;
+    }
+
+    private function companyListName(int $companyGuestListsId): ?string
+    {
+        $row = (new \App\Models\CompanyGuestListsModel())->find($companyGuestListsId);
+        if (!$row) return null;
+        $name = $row['Company'] ?? $row['Name'] ?? null;
+        return $name !== null && trim((string) $name) !== '' ? (string) $name : null;
     }
 
     /**

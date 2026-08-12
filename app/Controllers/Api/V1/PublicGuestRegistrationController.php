@@ -305,16 +305,17 @@ class PublicGuestRegistrationController extends BaseApiController
         $row['UpdatedIP'] = $row['AddedIP'];
         $row['DeletedAt'] = null;
 
-        if (array_key_exists('Email', $row)) {
-            $row['Email'] = $this->normalizeEmail((string) ($row['Email'] ?? ''));
-        }
+        $row['Email'] = EventGuestModel::normalizeEmail($row['Email'] ?? '');
 
         // Validation
         $errors = $this->validateRequired($row);
         if ($errors !== []) return $this->jsonError(422, 'validation_failed', $errors);
 
-        // Duplicate check across the event year
-        if ($this->duplicateExists($row, $companyId)) {
+        $model     = new EventGuestModel();
+        $eventYear = (string) $row['EventYear'];
+
+        // One person (by email) per event, across every company list.
+        if ($model->liveByEmailInEvent($eventYear, $row['Email'], null, $companyId)) {
             return $this->jsonError(409, 'already_attending', ['message' => 'You are already registered for this event.']);
         }
 
@@ -322,7 +323,27 @@ class PublicGuestRegistrationController extends BaseApiController
         $contactId = $this->matchContactByEmail($row['Email'] ?? '');
         if ($contactId !== null) $row['ContactID'] = $contactId;
 
-        $model = new EventGuestModel();
+        // A previously removed registration is restored rather than duplicated.
+        $deleted = $model->deletedByEmailInEvent($eventYear, $row['Email'], $companyId);
+        if ($deleted) {
+            $guestId = (int) $deleted['GuestID'];
+            $update  = $row;
+            unset($update['AddedBy'], $update['AddedIP']);
+            $update['InvitedByCompanyID'] = $companyId;
+            $update['DeletedAt'] = null;
+            $update['DeletedBy'] = null;
+            $update['DeletedIP'] = null;
+            $note = $this->restoreNote($deleted, $companyId);
+            if ($note !== null) {
+                $update['OfficeNotes'] = $this->appendNote($deleted['OfficeNotes'] ?? null, $note);
+            }
+            if (!$model->update($guestId, $update)) {
+                return $this->jsonError(422, 'restore_failed', $model->errors());
+            }
+            return $this->response->setStatusCode(201)
+                ->setJSON(['data' => $this->guestDbToApi($model->find($guestId))]);
+        }
+
         try {
             $id = $model->insert($row, true);
         } catch (\Throwable $e) {
@@ -333,6 +354,7 @@ class PublicGuestRegistrationController extends BaseApiController
 
         return $this->response->setStatusCode(201)
             ->setJSON(['data' => $this->guestDbToApi($model->find($id))]);
+
     }
 
     private function validateRequired(array $row): array
@@ -351,44 +373,25 @@ class PublicGuestRegistrationController extends BaseApiController
         return $errors;
     }
 
-    private function duplicateExists(array $row, int $companyGuestListsId): bool
+    /** Audit line when a removed guest re-registers under a different company. */
+    private function restoreNote(array $deletedRow, int $newCompanyId): ?string
     {
-        $eventYear = (string) ($row['EventYear'] ?? '');
-        $emailNorm = $this->normalizeGuestText($row['Email'] ?? '');
-        $nameKey = $emailNorm === '' ? $this->guestNameKey($row) : '';
-        if ($emailNorm === '' && $nameKey === '') return false;
-
-        $q = (new EventGuestModel())->builder();
-        $q->where('DeletedAt', null);
-        if ($eventYear !== '') $q->where('EventYear', $eventYear);
-        else $q->where('InvitedByCompanyID', $companyGuestListsId);
-
-        $q->groupStart();
-        $hasCondition = false;
-        if ($emailNorm !== '') {
-            $q->where('LOWER(TRIM(Email))', $emailNorm);
-            $hasCondition = true;
-        }
-        if ($nameKey !== '') {
-            [$given, $family] = explode('|', $nameKey, 2);
-            if ($hasCondition) $q->orGroupStart();
-            else $q->groupStart();
-            $q->where('LOWER(TRIM(GivenName))', $given)
-                ->where('LOWER(TRIM(FamilyName))', $family)
-                ->groupEnd();
-        }
-        $q->groupEnd();
-
-        return $q->limit(1)->get()->getRowArray() !== null;
+        $orig = (int) ($deletedRow['InvitedByCompanyID'] ?? 0);
+        if ($orig === $newCompanyId || $orig <= 0) return null;
+        $when = trim((string) ($deletedRow['DeletedAt'] ?? '')) ?: 'an unknown date';
+        $by   = (int) ($deletedRow['DeletedBy'] ?? 0);
+        $who  = $by > 0 ? 'UserID ' . $by : 'the public form';
+        return 'Originally registered to InvitedByCompanyID ' . $orig
+            . ' but was deleted on ' . $when . ' by ' . $who . '.';
     }
 
-    private function guestNameKey(array $row): string
+    private function appendNote(?string $notes, string $line): string
     {
-        $given = $this->normalizeGuestText($row['GivenName'] ?? '');
-        $family = $this->normalizeGuestText($row['FamilyName'] ?? '');
-        if ($given === '' && $family === '') return '';
-        return $given . '|' . $family;
+        $existing = trim((string) $notes);
+        $stamped  = '[' . date('Y-m-d H:i:s') . '] ' . $line;
+        return $existing === '' ? $stamped : $existing . "\n" . $stamped;
     }
+
 
     private function matchContactByEmail(string $email): ?int
     {
