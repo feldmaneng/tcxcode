@@ -24,6 +24,10 @@ class LogoModel extends Model
     /** Clear any existing default flag. */
     public function clearDefault(): void
     {
-        $this->set('IsDefault', 0)->update();
+        // Use the query builder directly: Model::update() without an ID
+        // requires a WHERE clause or CI4 throws a DatabaseException.
+        $this->builder()
+            ->where('IsDefault', 1)
+            ->update(['IsDefault' => 0]);
     }
 }
