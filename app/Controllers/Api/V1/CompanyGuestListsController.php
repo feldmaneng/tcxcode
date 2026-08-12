@@ -111,12 +111,30 @@ class CompanyGuestListsController extends BaseApiController
             if ($val === null || $val === '') continue;
             $builder->where(self::FIELD_MAP[$apiCol], $val);
         }
+        // Several events can share a Year, so scope by EventID when given.
+        // Legacy rows with no EventID still match on the event's Year until
+        // they are backfilled.
+        $eventId = (int) $req->getGet('event_id');
+        if ($eventId > 0) {
+            $event     = (new EventModel())->where('EventID', $eventId)->first();
+            $eventYear = (int) ($event['Year'] ?? 0);
+            $builder->groupStart()
+                ->where('EventID', $eventId);
+            if ($eventYear > 0) {
+                $builder->orGroupStart()
+                    ->groupStart()->where('EventID IS NULL', null, false)->orWhere('EventID', 0)->groupEnd()
+                    ->where('Year', $eventYear)
+                    ->groupEnd();
+            }
+            $builder->groupEnd();
+        }
         if ($q !== '') {
             $builder->groupStart()
                 ->like('Company', $q)
                 ->orLike('Name', $q)
                 ->groupEnd();
         }
+
         if (!$isAdmin) {
             $ids = (new CompanyGuestListsManagerModel())->companyIdsForUser($actorId);
             if (!$ids) {
