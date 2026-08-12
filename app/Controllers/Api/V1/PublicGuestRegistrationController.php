@@ -69,8 +69,11 @@ class PublicGuestRegistrationController extends BaseApiController
         if (array_key_exists('BanquetCompanyID', $row)) {
             $out['banquet'] = ((int) $row['BanquetCompanyID']) > 0 ? 1 : 0;
         }
+        if (array_key_exists('GolfCompanyID', $row)) {
+            $out['golf'] = ((int) $row['GolfCompanyID']) > 0 ? 1 : 0;
+        }
         $out['deleted'] = !empty($row['DeletedAt']) ? 1 : 0;
-        foreach (['id', 'company_guest_lists_id', 'banquet', 'added_by', 'updated_by', 'deleted_by', 'related'] as $k) {
+        foreach (['id', 'company_guest_lists_id', 'banquet', 'golf', 'added_by', 'updated_by', 'deleted_by', 'related'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
@@ -299,6 +302,8 @@ class PublicGuestRegistrationController extends BaseApiController
         $row['SignupType'] = 'URL';
         $row['Related'] = $kind === self::KIND_EXHIBITOR ? 1 : 0;
         $row['BanquetCompanyID'] = null;
+        // Golf invites are manager/admin-only; never set from the public form.
+        $row['GolfCompanyID'] = null;
         $row['AddedBy'] = 0;
         $row['UpdatedBy'] = 0;
         $row['AddedIP'] = $this->clientIp();

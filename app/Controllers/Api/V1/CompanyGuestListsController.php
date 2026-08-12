@@ -27,6 +27,7 @@ class CompanyGuestListsController extends BaseApiController
         'invite_count'   => 'InviteCount',
         'employee_count' => 'EmployeeCount',
         'banquet_count'  => 'BanquetCount',
+        'golf_count'     => 'GolfCount',
         'staff_id'       => 'StaffID',
         'event_id'       => 'EventID',
         'full_conf_token'  => 'FullConfToken',
@@ -44,7 +45,7 @@ class CompanyGuestListsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
-        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'staff_id', 'event_id', 'cc_primary_on_registration'] as $k) {
+        foreach (['id', 'year', 'invite_count', 'employee_count', 'banquet_count', 'golf_count', 'staff_id', 'event_id', 'cc_primary_on_registration'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
@@ -269,7 +270,7 @@ class CompanyGuestListsController extends BaseApiController
             );
         }
         if (empty($row['SecretKey']))     $row['SecretKey']     = substr(bin2hex(random_bytes(8)), 0, 10);
-        foreach (['InviteCount', 'EmployeeCount', 'BanquetCount'] as $c) {
+        foreach (['InviteCount', 'EmployeeCount', 'BanquetCount', 'GolfCount'] as $c) {
             if (!isset($row[$c]) || $row[$c] === '' || $row[$c] === null) $row[$c] = 0;
         }
         if (!array_key_exists('StaffID', $row)) $row['StaffID'] = 0;

@@ -13,7 +13,7 @@ class CompanyGuestListsModel extends Model
     protected $useTimestamps    = false;
     protected $allowedFields    = [
         'EventYear', 'Year', 'Name', 'SecretKey', 'Company',
-        'InviteCount', 'EmployeeCount', 'BanquetCount', 'StaffID',
+        'InviteCount', 'EmployeeCount', 'BanquetCount', 'GolfCount', 'StaffID',
         'FullConfToken', 'ExhibitorToken', 'CcPrimaryOnRegistration',
         'EventID',
     ];

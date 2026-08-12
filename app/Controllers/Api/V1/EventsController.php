@@ -28,6 +28,7 @@ class EventsController extends BaseApiController
         'is_closed'             => 'IsClosed',
         'closed_at'             => 'ClosedAt',
         'guest_list_enabled'    => 'GuestListEnabled',
+        'golf_enabled'          => 'GolfEnabled',
         'guest_form_chinese'    => 'GuestFormChinese',
         'guest_form_korean'     => 'GuestFormKorean',
         'logo_id'               => 'LogoID',
@@ -50,9 +51,15 @@ class EventsController extends BaseApiController
             $v = $out['is_closed'];
             $out['is_closed'] = ($v === null || $v === '') ? null : (int) $v;
         }
-        if (array_key_exists('guest_list_enabled', $out)) {
-            $v = $out['guest_list_enabled'];
-            $out['guest_list_enabled'] = ($v === null || $v === '') ? 0 : (int) $v;
+        foreach (['guest_list_enabled', 'golf_enabled'] as $k) {
+            if (array_key_exists($k, $out)) {
+                $v = $out[$k];
+                $out[$k] = ($v === null || $v === '') ? 0 : (int) $v;
+            }
+        }
+        // Golf only exists while the guest list is enabled.
+        if (($out['guest_list_enabled'] ?? 0) !== 1) {
+            if (array_key_exists('golf_enabled', $out)) $out['golf_enabled'] = 0;
         }
         foreach (['guest_form_chinese', 'guest_form_korean'] as $k) {
             if (array_key_exists($k, $out)) {
@@ -99,6 +106,23 @@ class EventsController extends BaseApiController
             $out[self::FIELD_MAP[$k]] = $v;
         }
         return $out;
+    }
+
+    /**
+     * GolfEnabled may only be 1 while GuestListEnabled is 1. Turning the guest
+     * list off in the same request (or having it off already) clears golf.
+     */
+    private function enforceGolfDependency(array $row, array $existing): array
+    {
+        $guestList = array_key_exists('GuestListEnabled', $row)
+            ? (int) $row['GuestListEnabled']
+            : (int) ($existing['GuestListEnabled'] ?? 0);
+        if ($guestList !== 1) {
+            $row['GolfEnabled'] = 0;
+        } elseif (array_key_exists('GolfEnabled', $row)) {
+            $row['GolfEnabled'] = ((int) $row['GolfEnabled']) === 1 ? 1 : 0;
+        }
+        return $row;
     }
 
     private function requireAdmin(): bool
@@ -172,6 +196,7 @@ class EventsController extends BaseApiController
         if (empty($row['Year']) || empty($row['Name'])) {
             return $this->jsonError(422, 'validation_failed', ['required' => ['year', 'name']]);
         }
+        $row = $this->enforceGolfDependency($row, []);
         $model = new EventModel();
         $id    = $model->insert($row, true);
         if (!$id) return $this->jsonError(422, 'insert_failed', $model->errors());
@@ -202,6 +227,7 @@ class EventsController extends BaseApiController
             if ($newClosed === '' || $newClosed === 'auto') $row['IsClosed'] = null;
         }
 
+        $row = $this->enforceGolfDependency($row, $existing);
         if (!$model->update($id, $row)) return $this->jsonError(422, 'update_failed', $model->errors());
         return $this->response->setJSON(['data' => $this->dbToApi($model->find($id))]);
     }

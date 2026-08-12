@@ -697,6 +697,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)',         'EventGuestsController::delete/$1');
         $routes->post('(:num)/restore',   'EventGuestsController::restore/$1');
         $routes->post('(:num)/banquet',   'EventGuestsController::banquet/$1');
+        $routes->post('(:num)/golf',      'EventGuestsController::golf/$1');
         $routes->post('mark-bounced',      'EventGuestsController::markBounced');
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
@@ -857,7 +858,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
-
 
 /*
  * --------------------------------------------------------------------
