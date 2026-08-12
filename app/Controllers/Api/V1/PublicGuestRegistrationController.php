@@ -6,7 +6,9 @@ use App\Models\CompanyGuestListsModel;
 use App\Models\ContactModel;
 use App\Models\EventGuestModel;
 use App\Models\EventModel;
+use App\Models\LogoModel;
 use App\Models\UserModel;
+
 
 /**
  * Public guest registration — accessed via a unique token, no acting user.
@@ -194,6 +196,22 @@ class PublicGuestRegistrationController extends BaseApiController
         ] : null;
     }
 
+    /** Resolves logo URL from a selected logo, then falls back to the default logo. */
+    private function resolveLogoUrl(?int $logoId): ?string
+    {
+        if ($logoId && $logoId > 0) {
+            $logo = (new LogoModel())->find($logoId);
+            if ($logo && !empty($logo['Url'])) {
+                return $logo['Url'];
+            }
+        }
+        $default = (new LogoModel())
+            ->where('IsDefault', 1)
+            ->where('IsActive', 1)
+            ->first();
+        return $default['Url'] ?? null;
+    }
+
     /** Shapes event info for the public page. */
     private function shapeEvent(array $event): array
     {
@@ -207,8 +225,10 @@ class PublicGuestRegistrationController extends BaseApiController
             'facility_address' => $event['FacilityAddress'] ?? null,
             'guest_form_chinese' => (int) ($event['GuestFormChinese'] ?? 0),
             'guest_form_korean'  => (int) ($event['GuestFormKorean'] ?? 0),
+            'logo_url'         => $this->resolveLogoUrl(isset($event['LogoID']) ? (int) $event['LogoID'] : null),
         ];
     }
+
 
     /**
      * GET /api/v1/public/guest-reg/(:kind)/(:token)

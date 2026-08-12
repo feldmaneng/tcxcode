@@ -814,6 +814,16 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('users/check-contact-availability', 'AdminUsersController::checkContactAvailability');
         $routes->get('users/wp-lookup',                   'AdminUsersController::wpLookup');
         $routes->post('audit',                         'AdminUsersController::audit_list');
+
+        $routes->group('logos', function ($routes) {
+            $routes->get('',                 'LogosController::index');
+            $routes->post('',                'LogosController::create');
+            $routes->put('(:num)',           'LogosController::update/$1');
+            $routes->delete('(:num)',        'LogosController::delete/$1');
+            $routes->post('(:num)/default', 'LogosController::setDefault/$1');
+            $routes->options('(:any)',      'LogosController::options', ['filter' => 'cors']);
+        });
+
         $routes->post('wikis/list',                    'AdminUsersController::listWikis');
         $routes->post('wikis/create',                  'AdminUsersController::createWiki');
         $routes->post('wikis/update',                  'AdminUsersController::updateWiki');
@@ -824,9 +834,9 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('wiki-shares/update',            'WikiSharesController::updateShare');
         $routes->post('wiki-shares/revoke',            'WikiSharesController::revokeShare');
         $routes->options('(:any)',                     'AdminUsersController::options', ['filter' => 'cors']);
+
     });
 });
-
 
 /*
  * --------------------------------------------------------------------

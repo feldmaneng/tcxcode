@@ -30,17 +30,20 @@ class EventsController extends BaseApiController
         'guest_list_enabled'    => 'GuestListEnabled',
         'guest_form_chinese'    => 'GuestFormChinese',
         'guest_form_korean'     => 'GuestFormKorean',
+        'logo_id'               => 'LogoID',
     ];
 
     private const READONLY_API_FIELDS = ['id'];
-    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id', 'general_chair_user_id'];
+    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id', 'general_chair_user_id', 'logo_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'start_date'];
 
     private function dbToApi(array $row): array
     {
         $out = [];
         foreach (self::FIELD_MAP as $api => $db) {
-            if (array_key_exists($db, $row)) $out[$api] = $row[$db];
+            if (array_key_exists($db, $row)) {
+                $out[$api] = $row[$db];
+            }
         }
         // Normalize IsClosed (TINYINT comes back as string from MySQL) to int|null
         if (array_key_exists('is_closed', $out)) {
@@ -57,12 +60,35 @@ class EventsController extends BaseApiController
                 $out[$k] = ($v === null || $v === '') ? 0 : (int) $v;
             }
         }
+        if (array_key_exists('logo_id', $out)) {
+            $out['logo_id'] = ($out['logo_id'] === null || $out['logo_id'] === '') ? null : (int) $out['logo_id'];
+        }
+        // Resolve logo URL for the selected or default logo.
+        $out['logo_url'] = $this->resolveLogoUrl($out['logo_id'] ?? null);
         // Coerce numeric id fields to int for strict-equality checks on the client
-        foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id', 'general_chair_user_id'] as $k) {
-            if (array_key_exists($k, $out) && $out[$k] !== null) $out[$k] = (int) $out[$k];
+        foreach (['id', 'year', 'event_chair1_id', 'event_chair2_id', 'event_manager_id', 'general_chair_user_id', 'logo_id'] as $k) {
+            if (array_key_exists($k, $out) && $out[$k] !== null) {
+                $out[$k] = (int) $out[$k];
+            }
         }
         return $out;
     }
+
+    private function resolveLogoUrl(?int $logoId): ?string
+    {
+        if ($logoId && $logoId > 0) {
+            $logo = (new \App\Models\LogoModel())->find($logoId);
+            if ($logo && !empty($logo['Url'])) {
+                return $logo['Url'];
+            }
+        }
+        $default = (new \App\Models\LogoModel())
+            ->where('IsDefault', 1)
+            ->where('IsActive', 1)
+            ->first();
+        return $default['Url'] ?? null;
+    }
+
 
     private function apiToDb(array $payload): array
     {
