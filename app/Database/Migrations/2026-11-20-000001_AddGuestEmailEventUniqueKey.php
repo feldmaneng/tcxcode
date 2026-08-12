@@ -18,7 +18,8 @@ use CodeIgniter\Database\Migration;
  */
 class AddGuestEmailEventUniqueKey extends Migration
 {
-    protected $DBGroup = 'default';
+    // guests lives in the registration database (bitswork_registration)
+    protected $DBGroup = 'registration';
 
     public function up()
     {
