@@ -64,6 +64,31 @@ class MeController extends BaseApiController
             }
 
 
+            // Auto-grant `expo` module when the user is an exhibitor coordinator.
+            // expodirectory_coordinators lives in the 'registration' DB group
+            // (bitswork_registration); the contact link lives in 'control'.
+            $hasExpo = false;
+            foreach ($rows as $r) { if (($r['code'] ?? '') === 'expo') { $hasExpo = true; break; } }
+            if (!$hasExpo) {
+                $coordCount = 0;
+                $contactId  = isset($user['ContactID']) ? (int) $user['ContactID'] : 0;
+                if ($contactId > 0) {
+                    try {
+                        $coordCount = db_connect('registration')->table('expodirectory_coordinators')
+                            ->where('ContactID', $contactId)->countAllResults();
+                    } catch (\Throwable $e) {
+                        log_message('error', '[me/modules] expo coordinator lookup failed: ' . $e->getMessage());
+                    }
+                }
+                if ($coordCount > 0) {
+                    $mod = $ctrl->table('modules')
+                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
+                        ->where('Code', 'expo')->get()->getRowArray();
+                    if ($mod) $rows[] = $mod;
+                }
+            }
+
+
             // Auto-grant `author-portal` module if the user has any author-portal
             // role: event manager, event chair, session coordinator, or author on
             // an active presentation (Authors = CRM contacts, matched via ContactID).

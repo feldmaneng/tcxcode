@@ -701,6 +701,26 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
 
+    // Exhibitor Portal — expodirectory lives in the `registration` database
+    // (bitswork_registration); coordinators get implicit access to their rows.
+    $routes->group('expo-directory', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('prior-entries',                'ExpoDirectoryController::priorEntries');
+        $routes->get('/',                            'ExpoDirectoryController::index');
+        $routes->get('(:num)',                       'ExpoDirectoryController::show/$1');
+        $routes->post('/',                           'ExpoDirectoryController::create');
+        $routes->put('(:num)',                       'ExpoDirectoryController::update/$1');
+        $routes->delete('(:num)',                    'ExpoDirectoryController::delete/$1');
+
+        $routes->get('(:num)/coordinators',          'ExpoDirectoryController::coordinators/$1');
+        $routes->post('(:num)/coordinators',         'ExpoDirectoryController::addCoordinator/$1');
+        $routes->post('(:num)/coordinators/(:num)/primary', 'ExpoDirectoryController::setPrimaryCoordinator/$1/$2');
+        $routes->delete('(:num)/coordinators/(:num)', 'ExpoDirectoryController::removeCoordinator/$1/$2');
+
+        $routes->options('(:any)', 'ExpoDirectoryController::options', ['filter' => 'cors']);
+    });
+
+
+
 
     // Author Portal — derived access scopes for the acting user
     $routes->group('author-portal', ['filter' => ['cors', 'apiAuth', 'audit']], function ($routes) {
@@ -837,6 +857,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
+
 
 /*
  * --------------------------------------------------------------------
