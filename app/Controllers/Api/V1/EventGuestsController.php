@@ -316,8 +316,8 @@ class EventGuestsController extends BaseApiController
         }
         $row['SignupType'] = $signup;
 
-        // Related is chosen at creation by whoever adds the guest.
-        $row['Related'] = isset($payload['related']) && (int) $payload['related'] === 1 ? 1 : 0;
+        // Related is derived from Type: Exhibitor Staff => 1, Professional => 0.
+        $row['Related'] = $row['Type'] === EventGuestModel::TYPE_EXHIBITOR ? 1 : 0;
 
         if (!array_key_exists('Email', $row) || $row['Email'] === null) $row['Email'] = '';
         $row['Email'] = $this->guestEmailKey($row);
@@ -380,8 +380,11 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('SignupType', $row) && !in_array((string) $row['SignupType'], self::SIGNUP_TYPES, true)) {
             unset($row['SignupType']);
         }
-        if (array_key_exists('Related', $row)) {
-            $row['Related'] = (int) $row['Related'] === 1 ? 1 : 0;
+        // Related is derived from Type, never taken from the payload.
+        if (array_key_exists('Type', $row)) {
+            $row['Related'] = $row['Type'] === EventGuestModel::TYPE_EXHIBITOR ? 1 : 0;
+        } else {
+            unset($row['Related']);
         }
         if (array_key_exists('banquet', $payload)) {
             $row['BanquetCompanyID'] = ((int) $payload['banquet']) === 1 ? $companyId : null;

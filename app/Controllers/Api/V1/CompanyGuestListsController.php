@@ -212,6 +212,27 @@ class CompanyGuestListsController extends BaseApiController
     }
 
 
+    /**
+     * Legacy EventYear format: event short name + 4-digit year, e.g. "TestConX2026".
+     * Falls back to the bare year when no matching event row is found.
+     */
+    private function buildEventYear(int $eventId, int $year): string
+    {
+        $events = new EventModel();
+        $event  = null;
+        if ($eventId > 0) {
+            $event = $events->where('EventID', $eventId)->first();
+        }
+        if (!$event && $year > 0) {
+            $event = $events->where('Year', $year)->where('GuestListEnabled', 1)->first()
+                ?: $events->where('Year', $year)->first();
+        }
+        $name = trim((string) ($event['Name'] ?? ''));
+        $yr   = (int) ($event['Year'] ?? $year);
+        if ($name === '' || $yr <= 0) return (string) $year;
+        return $name . $yr;
+    }
+
     public function create()
     {
         if (!$this->requireAdmin()) return $this->response;
@@ -221,7 +242,14 @@ class CompanyGuestListsController extends BaseApiController
             return $this->jsonError(422, 'validation_failed', ['required' => ['year', 'name']]);
         }
         // Legacy table has NOT NULL columns w/o defaults — fill sensible defaults.
-        if (empty($row['EventYear']))     $row['EventYear']     = (string) $row['Year'];
+        // EventYear is the event short name concatenated with the 4-digit year
+        // (e.g. TestConX2026); fall back to the bare year only if no event matches.
+        if (empty($row['EventYear'])) {
+            $row['EventYear'] = $this->buildEventYear(
+                isset($row['EventID']) ? (int) $row['EventID'] : 0,
+                (int) $row['Year']
+            );
+        }
         if (empty($row['SecretKey']))     $row['SecretKey']     = substr(bin2hex(random_bytes(8)), 0, 10);
         foreach (['InviteCount', 'EmployeeCount', 'BanquetCount'] as $c) {
             if (!isset($row[$c]) || $row[$c] === '' || $row[$c] === null) $row[$c] = 0;
