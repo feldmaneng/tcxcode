@@ -18,12 +18,15 @@ class AuthorsController extends BaseApiController
         'contact_id'      => 'ContactID',
         'given_name'      => 'GivenName',
         'family_name'     => 'FamilyName',
+        // Read-only: resolved from the linked contact (contacts is the source
+        // of truth for names/nicknames; the author row is only a snapshot).
+        'nickname'        => 'Nickname',
         'company'         => 'Company',
         'company_id'      => 'CompanyID',
         'presentation_id' => 'PresentationID',
     ];
 
-    private const READONLY_API_FIELDS = ['id'];
+    private const READONLY_API_FIELDS = ['id', 'nickname'];
     private const FILTERABLE = ['presentation_id', 'contact_id', 'company_id', 'presenter'];
     private const SORTABLE   = ['id', 'author_number', 'family_name'];
 
@@ -95,11 +98,21 @@ class AuthorsController extends BaseApiController
     {
         if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
         $rows = (new AuthorModel())->builder()
-            ->where('PresentationID', (int) $pid)
-            ->orderBy('AuthorNumber', 'ASC')
-            ->orderBy('AuthorID', 'ASC')
+            ->select('authors.*, contacts.GivenName AS ContactGivenName, contacts.FamilyName AS ContactFamilyName, contacts.Nickname AS Nickname')
+            ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
+            ->where('authors.PresentationID', (int) $pid)
+            ->orderBy('authors.AuthorNumber', 'ASC')
+            ->orderBy('authors.AuthorID', 'ASC')
             ->get()->getResultArray();
-        return $this->response->setJSON(['data' => array_map(fn($r) => self::dbToApi($r), $rows)]);
+        return $this->response->setJSON(['data' => array_map(function ($r) {
+            // contacts wins over the author row's snapshot name columns.
+            if (($r['ContactGivenName'] ?? null) !== null)  $r['GivenName']  = $r['ContactGivenName'];
+            if (($r['ContactFamilyName'] ?? null) !== null) $r['FamilyName'] = $r['ContactFamilyName'];
+            $api = self::dbToApi($r);
+            $nick = trim((string) ($api['nickname'] ?? ''));
+            $api['nickname'] = $nick !== '' ? $nick : null;
+            return $api;
+        }, $rows)]);
     }
 
     public function create()

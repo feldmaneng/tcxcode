@@ -13,6 +13,38 @@ use Config\Database;
 class PresentationRecipientsController extends BaseApiController
 {
     /**
+     * Display name in the canonical form:  Given "Nickname" Family
+     * (falls back to Given Family when there is no nickname).
+     */
+    public static function formatName(?string $given, ?string $nickname, ?string $family): string
+    {
+        $parts = [];
+        $given    = trim((string) $given);
+        $nickname = trim((string) $nickname);
+        $family   = trim((string) $family);
+        if ($given !== '')    $parts[] = $given;
+        if ($nickname !== '') $parts[] = '"' . $nickname . '"';
+        if ($family !== '')   $parts[] = $family;
+        return trim(implode(' ', $parts));
+    }
+
+    /**
+     * `contacts` lives in the default DB while `users` lives in `control`,
+     * so the nickname is resolved by ContactID rather than a cross-DB join.
+     * contacts is the single source of truth for nicknames.
+     */
+    public static function nicknameForContact(?int $contactId): ?string
+    {
+        if (!$contactId) return null;
+        $row = Database::connect()->table('contacts')
+            ->select('Nickname')
+            ->where('ContactID', $contactId)
+            ->get()->getRowArray();
+        $nick = trim((string) ($row['Nickname'] ?? ''));
+        return $nick !== '' ? $nick : null;
+    }
+
+    /**
      * GET /api/v1/author-portal/presentations/{id}/recipients
      *   ?scope=public|internal
      *   &include_general_chair=0|1
@@ -56,12 +88,13 @@ class PresentationRecipientsController extends BaseApiController
             if (!$userId || $userId === $actor) return;
             $u = $dbC->table('users')
 
-                ->select('UserID, UserName, GivenName, FamilyName, Email')
+                ->select('UserID, UserName, ContactID, GivenName, FamilyName, Email')
                 ->where('UserID', $userId)->get()->getRowArray();
             if (!$u || !$u['Email']) return;
             $key = strtolower(trim((string) $u['Email']));
             if (!$key || isset($collected[$key])) return;
-            $display = trim(trim(($u['GivenName'] ?? '') . ' ' . ($u['FamilyName'] ?? ''))) ?: ($u['UserName'] ?? '');
+            $nick = self::nicknameForContact(isset($u['ContactID']) ? (int) $u['ContactID'] : null);
+            $display = self::formatName($u['GivenName'] ?? '', $nick, $u['FamilyName'] ?? '') ?: ($u['UserName'] ?? '');
             $collected[$key] = [
                 'email'   => $u['Email'],
                 'display' => $display,
@@ -77,7 +110,7 @@ class PresentationRecipientsController extends BaseApiController
         if ($scope === 'public') {
             // Authors (contacts.Email) + session coordinators
             $rows = $db->table('authors')
-                ->select('authors.ContactID, contacts.Email, contacts.GivenName, contacts.FamilyName')
+                ->select('authors.ContactID, contacts.Email, contacts.GivenName, contacts.FamilyName, contacts.Nickname')
                 ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
                 ->where('authors.PresentationID', $presentationId)
                 ->get()->getResultArray();
@@ -90,7 +123,7 @@ class PresentationRecipientsController extends BaseApiController
                 }
                 $key = strtolower(trim((string) $r['Email']));
                 if (!$key || isset($collected[$key])) continue;
-                $display = trim(trim(($r['GivenName'] ?? '') . ' ' . ($r['FamilyName'] ?? ''))) ?: $r['Email'];
+                $display = self::formatName($r['GivenName'] ?? '', $r['Nickname'] ?? '', $r['FamilyName'] ?? '') ?: $r['Email'];
                 $collected[$key] = [
                     'email'      => $r['Email'],
                     'display'    => $display,
@@ -197,7 +230,11 @@ class PresentationRecipientsController extends BaseApiController
         $hasAccess = $isAdmin || $isChair || $isManager || $isCoord || $isGeneralChair || $isAuthor;
         if (!$hasAccess) return $this->jsonError(403, 'no_access');
 
-        $display = trim(trim(($user['GivenName'] ?? '') . ' ' . ($user['FamilyName'] ?? ''))) ?: ($user['UserName'] ?? '');
+        $display = self::formatName(
+            $user['GivenName'] ?? '',
+            self::nicknameForContact($contactId),
+            $user['FamilyName'] ?? ''
+        ) ?: ($user['UserName'] ?? '');
 
         return $this->response->setJSON([
             'data' => [
@@ -337,7 +374,7 @@ class PresentationRecipientsController extends BaseApiController
         $lookup = function (?int $uid) use ($dbC): ?array {
             if (!$uid) return null;
             $u = $dbC->table('users')
-                ->select('UserID, UserName, GivenName, FamilyName, Email')
+                ->select('UserID, UserName, ContactID, GivenName, FamilyName, Email')
                 ->where('UserID', $uid)->get()->getRowArray();
             if (!$u) return null;
             return [
@@ -345,6 +382,7 @@ class PresentationRecipientsController extends BaseApiController
                 'username'    => $u['UserName'] ?? '',
                 'given_name'  => $u['GivenName'] ?? '',
                 'family_name' => $u['FamilyName'] ?? '',
+                'nickname'    => self::nicknameForContact(isset($u['ContactID']) ? (int) $u['ContactID'] : null),
                 'email'       => $u['Email'] ?? '',
             ];
         };

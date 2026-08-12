@@ -119,12 +119,19 @@ class MeController extends BaseApiController
             }
         }
 
+        // contacts (default DB) is the source of truth for nicknames; users
+        // (control DB) links to it via ContactID.
+        $nickname = PresentationRecipientsController::nicknameForContact(
+            isset($user['ContactID']) ? (int) $user['ContactID'] : null
+        );
+
         return $this->respond([
             'user' => [
                 'id'                    => (int) $user['UserID'],
                 'username'              => $user['UserName'],
                 'given_name'            => $user['GivenName'] ?? $user['UserName'],
                 'family_name'           => $user['FamilyName'] ?? '',
+                'nickname'              => $nickname,
                 'email'                 => $user['Email'] ?? null,
                 'auth_provider'         => $user['auth_provider'] ?? 'local',
                 'must_change_password'  => (bool) ($user['MustChangePassword'] ?? false),

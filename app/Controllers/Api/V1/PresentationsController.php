@@ -67,7 +67,7 @@ class PresentationsController extends BaseApiController
     {
         $db = \Config\Database::connect();
         $rows = $db->table('authors')
-            ->select('authors.*, contacts.Email AS ContactEmail')
+            ->select('authors.*, contacts.Email AS ContactEmail, contacts.GivenName AS ContactGivenName, contacts.FamilyName AS ContactFamilyName, contacts.Nickname AS ContactNickname')
             ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
             ->where('authors.PresentationID', (int) $row['id'])
             ->orderBy('authors.AuthorNumber', 'ASC')
@@ -76,6 +76,14 @@ class PresentationsController extends BaseApiController
         $row['authors'] = array_map(function ($r) {
             $api = AuthorsController::dbToApi($r);
             if (array_key_exists('ContactEmail', $r)) $api['email'] = $r['ContactEmail'];
+            // contacts is the source of truth for names; the author row's
+            // GivenName/FamilyName are only a fallback snapshot.
+            if (($r['ContactGivenName'] ?? null) !== null || ($r['ContactFamilyName'] ?? null) !== null) {
+                $api['given_name']  = $r['ContactGivenName'] ?? $api['given_name'] ?? null;
+                $api['family_name'] = $r['ContactFamilyName'] ?? $api['family_name'] ?? null;
+            }
+            $nick = trim((string) ($r['ContactNickname'] ?? ''));
+            $api['nickname'] = $nick !== '' ? $nick : null;
             return $api;
         }, $rows);
     }
@@ -90,22 +98,25 @@ class PresentationsController extends BaseApiController
         if (!$presentationIds) return [];
         $db   = \Config\Database::connect();
         $rows = $db->table('authors')
-            ->select('AuthorID, PresentationID, AuthorNumber, Presenter, ContactID, GivenName, FamilyName, Company')
-            ->whereIn('PresentationID', $presentationIds)
-            ->orderBy('AuthorNumber', 'ASC')
-            ->orderBy('AuthorID', 'ASC')
+            ->select('authors.AuthorID, authors.PresentationID, authors.AuthorNumber, authors.Presenter, authors.ContactID, authors.GivenName, authors.FamilyName, authors.Company, contacts.GivenName AS ContactGivenName, contacts.FamilyName AS ContactFamilyName, contacts.Nickname AS ContactNickname')
+            ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
+            ->whereIn('authors.PresentationID', $presentationIds)
+            ->orderBy('authors.AuthorNumber', 'ASC')
+            ->orderBy('authors.AuthorID', 'ASC')
             ->get()->getResultArray();
 
         $out = [];
         foreach ($rows as $r) {
             $pid = (int) $r['PresentationID'];
+            $nick = trim((string) ($r['ContactNickname'] ?? ''));
             $out[$pid][] = [
                 'id'            => (int) $r['AuthorID'],
                 'author_number' => $r['AuthorNumber'] !== null ? (int) $r['AuthorNumber'] : null,
                 'presenter'     => $r['Presenter'] !== null ? (int) $r['Presenter'] : null,
                 'contact_id'    => $r['ContactID'] !== null ? (int) $r['ContactID'] : null,
-                'given_name'    => $r['GivenName'],
-                'family_name'   => $r['FamilyName'],
+                'given_name'    => $r['ContactGivenName'] ?? $r['GivenName'],
+                'family_name'   => $r['ContactFamilyName'] ?? $r['FamilyName'],
+                'nickname'      => $nick !== '' ? $nick : null,
                 'company'       => $r['Company'],
                 'company_id'    => null,
                 'presentation_id' => $pid,
@@ -113,6 +124,7 @@ class PresentationsController extends BaseApiController
         }
         return $out;
     }
+
 
     public function index()
     {
