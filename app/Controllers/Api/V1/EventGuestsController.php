@@ -198,13 +198,20 @@ class EventGuestsController extends BaseApiController
 
         $eventLocked = false;
         $golfEnabled = false;
-        if ($year > 0) {
+        // Several events can share a Year, so prefer the list's EventID and only
+        // fall back to Year for legacy rows that never got one.
+        $listEventId = (int) ($company['EventID'] ?? 0);
+        $event = null;
+        if ($listEventId > 0) {
+            $event = $eventModel->find($listEventId);
+        }
+        if (!$event && $year > 0) {
             $event = $eventModel->where('Year', $year)->first();
-            if ($event) {
-                $eventLocked = $eventModel->isLocked((int) $event['EventID']);
-                $golfEnabled = (int) ($event['GuestListEnabled'] ?? 0) === 1
-                    && (int) ($event['GolfEnabled'] ?? 0) === 1;
-            }
+        }
+        if ($event) {
+            $eventLocked = $eventModel->isLocked((int) $event['EventID']);
+            $golfEnabled = (int) ($event['GuestListEnabled'] ?? 0) === 1
+                && (int) ($event['GolfEnabled'] ?? 0) === 1;
         }
         return [
             'ok' => true,
