@@ -709,6 +709,13 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // (bitswork_registration); coordinators get implicit access to their rows.
     $routes->group('expo-directory', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('prior-entries',                'ExpoDirectoryController::priorEntries');
+
+        // Exhibitor artwork file manager (/public_html/EXPOdirectory) — admin
+        // and event managers only. Declared before the (:num) routes.
+        $routes->get('files',                        'ExpoDirectoryFilesController::index');
+        $routes->post('files/upload',                'ExpoDirectoryFilesController::upload');
+        $routes->post('files/mkdir',                 'ExpoDirectoryFilesController::mkdir');
+
         $routes->get('/',                            'ExpoDirectoryController::index');
         $routes->get('(:num)',                       'ExpoDirectoryController::show/$1');
         $routes->post('/',                           'ExpoDirectoryController::create');
