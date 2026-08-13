@@ -721,6 +721,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('/',                           'ExpoDirectoryController::create');
         $routes->put('(:num)',                       'ExpoDirectoryController::update/$1');
         $routes->delete('(:num)',                    'ExpoDirectoryController::delete/$1');
+        $routes->post('(:num)/restore',              'ExpoDirectoryController::restore/$1');
 
         $routes->get('(:num)/guest-list',            'ExpoDirectoryController::guestList/$1');
         $routes->post('(:num)/guest-list',           'ExpoDirectoryController::createGuestList/$1');
@@ -871,6 +872,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
+
 
 
 

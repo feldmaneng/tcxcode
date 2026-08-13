@@ -65,10 +65,11 @@ class ExpoDirectoryController extends BaseApiController
         'cc_email'            => 'CCEmail',
         'notes'               => 'Notes',
         'company_guest_lists_id' => 'CompanyGuestListsID',
+        'deleted_at'          => 'DeletedAt',
     ];
 
     /** Never writable through the API. */
-    private const READONLY_API_FIELDS = ['id', 'secret_key'];
+    private const READONLY_API_FIELDS = ['id', 'secret_key', 'deleted_at'];
 
     /** Only admins / expo-module users may change these. */
     private const PRIVILEGED_API_FIELDS = ['status', 'notes', 'booth_number', 'booth_type', 'staff_quantity', 'staff_reg_code', 'attendee_code', 'event_id', 'year', 'event', 'company_guest_lists_id'];
@@ -89,6 +90,7 @@ class ExpoDirectoryController extends BaseApiController
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') $out[$k] = (int) $out[$k];
         }
         if (array_key_exists('Updated', $row)) $out['updated'] = $row['Updated'];
+        $out['deleted'] = !empty($row['DeletedAt']) ? 1 : 0;
         return $out;
     }
 
@@ -273,6 +275,11 @@ class ExpoDirectoryController extends BaseApiController
 
         if ($ownIds !== null) $builder->whereIn('EntryID', $ownIds);
 
+        // Removed entries are hidden unless a privileged caller asks for them.
+        $includeDeleted = $privileged
+            && in_array((string) ($this->request->getGet('include_deleted') ?? ''), ['1', 'true'], true);
+        if (!$includeDeleted) $builder->where('DeletedAt', null);
+
         $eventId = (int) ($this->request->getGet('event_id') ?? 0);
         if ($eventId > 0) $builder->where('EventID', $eventId);
 
@@ -314,7 +321,8 @@ class ExpoDirectoryController extends BaseApiController
 
         $q = trim((string) ($this->request->getGet('q') ?? ''));
         $builder = (new ExpoDirectoryModel())->builder()
-            ->select('EntryID, Year, Event, EventID, CompanyName, DirectoryName, BoothNumber, BoothType, Description, Status');
+            ->select('EntryID, Year, Event, EventID, CompanyName, DirectoryName, BoothNumber, BoothType, Description, Status')
+            ->where('DeletedAt', null);
         if ($q !== '') {
             $builder->groupStart()->like('CompanyName', $q)->orLike('DirectoryName', $q)->groupEnd();
         }
@@ -348,6 +356,7 @@ class ExpoDirectoryController extends BaseApiController
         [$userId, $privileged, $contactId] = $this->actorContext();
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt']) && !$privileged) return $this->jsonError(409, 'entry_removed');
 
         $canWrite = $privileged;
         if ($userId !== null && !$privileged) {
@@ -390,6 +399,20 @@ class ExpoDirectoryController extends BaseApiController
             'Status'    => 'Draft',
             'SecretKey' => null,
         ];
+
+        // A removed entry for the same company in this event is restored
+        // rather than silently duplicated.
+        $wantedName = trim((string) ($payload['company_name'] ?? ''));
+        if ($wantedName !== '') {
+            $removed = $this->findRemovedEntry($eventId, $wantedName);
+            if ($removed) {
+                return $this->jsonError(409, 'removed_entry_exists', [
+                    'entry_id'     => (int) $removed['EntryID'],
+                    'company_name' => $removed['CompanyName'],
+                    'deleted_at'   => $removed['DeletedAt'],
+                ]);
+            }
+        }
 
         $copyFrom = (int) ($payload['copy_from_entry_id'] ?? 0);
         $source   = null;
@@ -438,6 +461,27 @@ class ExpoDirectoryController extends BaseApiController
         return $this->response->setStatusCode(201)->setJSON(['data' => $data]);
     }
 
+    /** A soft-deleted entry for this event + company name, if any. */
+    private function findRemovedEntry(int $eventId, string $companyName): ?array
+    {
+        if ($eventId <= 0 || trim($companyName) === '') return null;
+        try {
+            $model = new ExpoDirectoryModel();
+            $lower = $model->db->escape(mb_strtolower(trim($companyName)));
+            $row = $model->builder()
+                ->where('EventID', $eventId)
+                ->where('DeletedAt IS NOT NULL', null, false)
+                ->groupStart()
+                    ->where('LOWER(CompanyName) = ' . $lower, null, false)
+                    ->orWhere('LOWER(DirectoryName) = ' . $lower, null, false)
+                ->groupEnd()
+                ->get()->getRowArray();
+            return $row ?: null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
     /** PUT /api/v1/expo-directory/{id} */
     public function update(int $id)
     {
@@ -445,6 +489,7 @@ class ExpoDirectoryController extends BaseApiController
         $model = new ExpoDirectoryModel();
         $row   = $model->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
 
         if ($userId !== null && !$privileged) {
             if (!(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
@@ -483,14 +528,49 @@ class ExpoDirectoryController extends BaseApiController
         return $this->response->setJSON(['data' => $data]);
     }
 
-    /** DELETE /api/v1/expo-directory/{id} */
+    /**
+     * DELETE /api/v1/expo-directory/{id}
+     * Soft delete: the row (and its coordinator links) are kept so an admin
+     * can restore the entry later.
+     */
     public function delete(int $id)
     {
         [$userId, $privileged] = $this->actorContext();
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
-        (new ExpoDirectoryCoordinatorModel())->where('EntryID', $id)->delete();
-        (new ExpoDirectoryModel())->delete($id);
+
+        $model = new ExpoDirectoryModel();
+        $row   = $model->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt'])) return $this->response->setStatusCode(204);
+
+        $model->update($id, $this->filterExisting([
+            'DeletedAt' => date('Y-m-d H:i:s'),
+            'DeletedBy' => $userId,
+            'DeletedIP' => $this->request->getIPAddress(),
+        ], 'expodirectory'));
+
         return $this->response->setStatusCode(204);
+    }
+
+    /** POST /api/v1/expo-directory/{id}/restore */
+    public function restore(int $id)
+    {
+        [$userId, $privileged] = $this->actorContext();
+        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+
+        $model = new ExpoDirectoryModel();
+        $row   = $model->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+
+        if (!empty($row['DeletedAt'])) {
+            $model->update($id, $this->filterExisting([
+                'DeletedAt' => null, 'DeletedBy' => null, 'DeletedIP' => null,
+            ], 'expodirectory'));
+            $row = $model->find($id);
+        }
+
+        $data = $this->hydrate([$this->dbToApi($row)])[0];
+        return $this->response->setJSON(['data' => $data]);
     }
 
     // ---------------------------------------------------------- coordinators
@@ -505,6 +585,7 @@ class ExpoDirectoryController extends BaseApiController
         }
         $entry = (new ExpoDirectoryModel())->find($id);
         if (!$entry) return $this->jsonError(404, 'not_found');
+        if (!empty($entry['DeletedAt']) && !$privileged) return $this->jsonError(409, 'entry_removed');
         $data = $this->hydrate([$this->dbToApi($entry)])[0];
         return $this->response->setJSON(['data' => $data['coordinators']]);
     }
@@ -521,6 +602,7 @@ class ExpoDirectoryController extends BaseApiController
         $model = new ExpoDirectoryModel();
         $entry = $model->find($id);
         if (!$entry) return $this->jsonError(404, 'not_found');
+        if (!empty($entry['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
 
         $payload   = (array) $this->request->getJSON(true);
         $contactId = (int) ($payload['contact_id'] ?? 0);
@@ -723,6 +805,7 @@ class ExpoDirectoryController extends BaseApiController
         [$userId, $privileged, $contactId] = $this->actorContext();
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
         if ($userId !== null && !$privileged
             && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
             return $this->jsonError(403, 'forbidden');
@@ -742,6 +825,7 @@ class ExpoDirectoryController extends BaseApiController
 
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
 
         $existing = $this->resolveGuestList($row);
         if ($existing) {

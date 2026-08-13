@@ -49,14 +49,24 @@ class ExpoDirectoryCoordinatorModel extends Model
         return $out;
     }
 
-    /** @return int[] expodirectory entry ids this contact coordinates */
+    /**
+     * @return int[] expodirectory entry ids this contact coordinates.
+     * Soft-deleted entries are excluded (same DB group, so a join is safe).
+     */
     public function entryIdsForContact(int $contactId): array
     {
         if ($contactId <= 0) return [];
-        $rows = $this->builder()
-            ->select('EntryID')
-            ->where('ContactID', $contactId)
-            ->get()->getResultArray();
+        $builder = $this->builder()
+            ->select('expodirectory_coordinators.EntryID')
+            ->where('expodirectory_coordinators.ContactID', $contactId);
+        try {
+            $rows = (clone $builder)
+                ->join('expodirectory', 'expodirectory.EntryID = expodirectory_coordinators.EntryID', 'inner')
+                ->where('expodirectory.DeletedAt', null)
+                ->get()->getResultArray();
+        } catch (\Throwable $e) {
+            $rows = $builder->get()->getResultArray();
+        }
         return array_map(fn($r) => (int) $r['EntryID'], $rows);
     }
 
@@ -65,4 +75,5 @@ class ExpoDirectoryCoordinatorModel extends Model
         if ($contactId <= 0) return false;
         return $this->where('ContactID', $contactId)->where('EntryID', $entryId)->countAllResults() > 0;
     }
+
 }
