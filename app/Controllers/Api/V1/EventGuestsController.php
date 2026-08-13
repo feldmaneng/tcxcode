@@ -74,8 +74,11 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('BanquetCompanyID', $row)) {
             $out['banquet'] = ((int) $row['BanquetCompanyID']) > 0 ? 1 : 0;
         }
+        if (array_key_exists('GolfCompanyID', $row)) {
+            $out['golf'] = ((int) $row['GolfCompanyID']) > 0 ? 1 : 0;
+        }
         $out['deleted'] = !empty($row['DeletedAt']) ? 1 : 0;
-        foreach (['id', 'company_guest_lists_id', 'banquet', 'added_by', 'updated_by', 'deleted_by', 'related', 'email_suppressed'] as $k) {
+        foreach (['id', 'company_guest_lists_id', 'banquet', 'golf', 'added_by', 'updated_by', 'deleted_by', 'related', 'email_suppressed'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
                 $out[$k] = (int) $out[$k];
             }
@@ -154,10 +157,10 @@ class EventGuestsController extends BaseApiController
         return $deduped;
     }
 
-    /** @return array{professional:int,exhibitor:int,banquet:int} */
+    /** @return array{professional:int,exhibitor:int,banquet:int,golf:int} */
     private function countsForRows(array $rows): array
     {
-        $counts = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0];
+        $counts = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0, 'golf' => 0];
         foreach ($this->dedupeGuestRows($rows) as $row) {
             if (!empty($row['DeletedAt'])) continue;
             if (EventGuestModel::normalizeType($row['Type'] ?? '') === EventGuestModel::TYPE_EXHIBITOR) {
@@ -166,6 +169,7 @@ class EventGuestsController extends BaseApiController
                 $counts['professional']++;
             }
             if (!empty($row['BanquetCompanyID'])) $counts['banquet']++;
+            if (!empty($row['GolfCompanyID'])) $counts['golf']++;
         }
         return $counts;
     }
@@ -193,9 +197,14 @@ class EventGuestsController extends BaseApiController
         }
 
         $eventLocked = false;
+        $golfEnabled = false;
         if ($year > 0) {
             $event = $eventModel->where('Year', $year)->first();
-            if ($event) $eventLocked = $eventModel->isLocked((int) $event['EventID']);
+            if ($event) {
+                $eventLocked = $eventModel->isLocked((int) $event['EventID']);
+                $golfEnabled = (int) ($event['GuestListEnabled'] ?? 0) === 1
+                    && (int) ($event['GolfEnabled'] ?? 0) === 1;
+            }
         }
         return [
             'ok' => true,
@@ -204,6 +213,7 @@ class EventGuestsController extends BaseApiController
             'isPrivileged' => $isPrivileged,
             'company' => $company,
             'eventLocked' => $eventLocked,
+            'golfEnabled' => $golfEnabled,
         ];
     }
 
@@ -283,7 +293,9 @@ class EventGuestsController extends BaseApiController
                 'invite_count'   => $ctx['company']['InviteCount'] !== null ? (int) $ctx['company']['InviteCount'] : null,
                 'employee_count' => $ctx['company']['EmployeeCount'] !== null ? (int) $ctx['company']['EmployeeCount'] : null,
                 'banquet_count'  => $ctx['company']['BanquetCount'] !== null ? (int) $ctx['company']['BanquetCount'] : null,
+                'golf_count'     => ($ctx['company']['GolfCount'] ?? null) !== null ? (int) $ctx['company']['GolfCount'] : null,
             ],
+            'golf_enabled' => $ctx['golfEnabled'] ? 1 : 0,
             'event_locked' => $ctx['eventLocked'],
             'is_privileged' => $ctx['isPrivileged'] ? 1 : 0,
         ]);
@@ -332,6 +344,8 @@ class EventGuestsController extends BaseApiController
 
         $banquet = isset($payload['banquet']) && (int) $payload['banquet'] === 1;
         $row['BanquetCompanyID'] = $banquet ? $companyGuestListsId : null;
+        $golf = $ctx['golfEnabled'] && isset($payload['golf']) && (int) $payload['golf'] === 1;
+        $row['GolfCompanyID'] = $golf ? $companyGuestListsId : null;
         $row['AddedBy']   = $ctx['actorId'];
         $row['UpdatedBy'] = $ctx['actorId'];
         $row['AddedIP']   = $this->clientIp();
@@ -412,6 +426,9 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('banquet', $payload)) {
             $row['BanquetCompanyID'] = ((int) $payload['banquet']) === 1 ? $companyId : null;
         }
+        if (array_key_exists('golf', $payload)) {
+            $row['GolfCompanyID'] = ($ctx['golfEnabled'] && ((int) $payload['golf']) === 1) ? $companyId : null;
+        }
         if (array_key_exists('Email', $row)) {
             $row['Email'] = EventGuestModel::normalizeEmail($row['Email']);
         }
@@ -466,6 +483,35 @@ class EventGuestsController extends BaseApiController
             'BanquetCompanyID' => $on ? $companyId : null,
             'UpdatedBy'        => $ctx['actorId'],
             'UpdatedIP'        => $this->clientIp(),
+        ]);
+        return $this->response->setJSON(['data' => $this->dbToApi($model->find($guestId), $ctx['isPrivileged'])]);
+    }
+
+    /** POST /api/v1/guests/{id}/golf  body: { golf: 0|1 } */
+    public function golf(int $guestId)
+    {
+        $model = new EventGuestModel();
+        $existing = $model->find($guestId);
+        if (!$existing) return $this->jsonError(404, 'not_found');
+        $companyId = (int) ($existing['InvitedByCompanyID'] ?? 0);
+        $ctx = $this->loadContext($companyId);
+        if (!$ctx) return $this->response;
+        if (!$ctx['golfEnabled']) return $this->jsonError(422, 'golf_disabled');
+        if ($ctx['eventLocked'] && !$ctx['isPrivileged']) return $this->jsonError(423, 'event_locked');
+        if (!empty($existing['DeletedAt'])) return $this->jsonError(409, 'guest_removed');
+
+        $payload = (array) $this->request->getJSON(true);
+        $on = (int) ($payload['golf'] ?? 0) === 1;
+
+        $candidate = $existing;
+        $candidate['GolfCompanyID'] = $on ? $companyId : null;
+        $check = $this->checkLimits($companyId, $ctx['company'], $candidate, $guestId);
+        if ($check !== null) return $check;
+
+        $model->update($guestId, [
+            'GolfCompanyID' => $on ? $companyId : null,
+            'UpdatedBy'     => $ctx['actorId'],
+            'UpdatedIP'     => $this->clientIp(),
         ]);
         return $this->response->setJSON(['data' => $this->dbToApi($model->find($guestId), $ctx['isPrivileged'])]);
     }
@@ -628,6 +674,7 @@ class EventGuestsController extends BaseApiController
         $counts  = $this->countsForRows($rows);
         $type    = EventGuestModel::normalizeType($simulatedRow['Type'] ?? '');
         $banquet = !empty($simulatedRow['BanquetCompanyID']);
+        $golf    = !empty($simulatedRow['GolfCompanyID']);
 
         if ($type === EventGuestModel::TYPE_PROFESSIONAL) {
             // Invite (Full Conference/EXPO) allows up to 150% of InviteCount, rounded up.
@@ -648,6 +695,12 @@ class EventGuestsController extends BaseApiController
             $limit = $company['BanquetCount'];
             if ($limit !== null && $counts['banquet'] > (int) $limit) {
                 return $this->jsonError(422, 'banquet_limit_reached', ['limit' => (int) $limit, 'current' => $counts['banquet']]);
+            }
+        }
+        if ($golf) {
+            $limit = $company['GolfCount'] ?? null;
+            if ($limit !== null && $limit !== '' && $counts['golf'] > (int) $limit) {
+                return $this->jsonError(422, 'golf_limit_reached', ['limit' => (int) $limit, 'current' => $counts['golf']]);
             }
         }
         return null;

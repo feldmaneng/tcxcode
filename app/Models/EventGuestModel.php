@@ -23,7 +23,7 @@ class EventGuestModel extends Model
     protected $useAutoIncrement = true;
     protected $useTimestamps    = false;
     protected $allowedFields    = [
-        'EventYear', 'Email', 'InvitedByCompanyID', 'BanquetCompanyID',
+        'EventYear', 'Email', 'InvitedByCompanyID', 'BanquetCompanyID', 'GolfCompanyID',
         'GivenName', 'FamilyName', 'NativeName', 'Company', 'CN_Company',
         'Title', 'Mobile', 'WeChatID', 'KakaoID', 'Related', 'SignupType',
         'OfficeNotes', 'ContactID', 'Type',
@@ -111,7 +111,7 @@ class EventGuestModel extends Model
     /**
      * Returns counts by category for a given companyguestlists row.
      * Soft-deleted rows are excluded.
-     * @return array{professional:int,exhibitor:int,banquet:int}
+     * @return array{professional:int,exhibitor:int,banquet:int,golf:int}
      */
     public function countsForCompany(int $companyGuestListsId, ?int $excludeGuestId = null): array
     {
@@ -119,12 +119,13 @@ class EventGuestModel extends Model
             ->where('DeletedAt', null)
             ->findAll();
 
-        $counts = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0];
+        $counts = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0, 'golf' => 0];
         foreach ($rows as $row) {
             if ($excludeGuestId !== null && (int) $row['GuestID'] === $excludeGuestId) continue;
             if (self::normalizeType($row['Type'] ?? '') === self::TYPE_EXHIBITOR) $counts['exhibitor']++;
             else $counts['professional']++;
             if (!empty($row['BanquetCompanyID'])) $counts['banquet']++;
+            if (!empty($row['GolfCompanyID'])) $counts['golf']++;
         }
         return $counts;
     }
