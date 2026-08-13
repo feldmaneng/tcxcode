@@ -64,15 +64,16 @@ class ExpoDirectoryController extends BaseApiController
         'contact_email'       => 'ContactEmail',
         'cc_email'            => 'CCEmail',
         'notes'               => 'Notes',
+        'company_guest_lists_id' => 'CompanyGuestListsID',
     ];
 
     /** Never writable through the API. */
     private const READONLY_API_FIELDS = ['id', 'secret_key'];
 
     /** Only admins / expo-module users may change these. */
-    private const PRIVILEGED_API_FIELDS = ['status', 'notes', 'booth_number', 'booth_type', 'staff_quantity', 'staff_reg_code', 'attendee_code', 'event_id', 'year', 'event'];
+    private const PRIVILEGED_API_FIELDS = ['status', 'notes', 'booth_number', 'booth_type', 'staff_quantity', 'staff_reg_code', 'attendee_code', 'event_id', 'year', 'event', 'company_guest_lists_id'];
 
-    private const INT_FIELDS = ['id', 'year', 'event_id', 'company_id', 'staff_quantity', 'contact_id'];
+    private const INT_FIELDS = ['id', 'year', 'event_id', 'company_id', 'staff_quantity', 'contact_id', 'company_guest_lists_id'];
 
     private const SORTABLE = ['company_name', 'directory_name', 'status', 'booth_number', 'year'];
 
@@ -229,11 +230,19 @@ class ExpoDirectoryController extends BaseApiController
         if (!$ids) return [];
         try {
             $rows = db_connect()->table('events')
-                ->select('EventID, Year, Name, IsClosed, EndDate')
+                ->select('EventID, Year, Name, IsClosed, EndDate, GuestListEnabled')
                 ->whereIn('EventID', $ids)->get()->getResultArray();
         } catch (\Throwable $e) {
-            return [];
+            // Older schemas may not have GuestListEnabled.
+            try {
+                $rows = db_connect()->table('events')
+                    ->select('EventID, Year, Name, IsClosed, EndDate')
+                    ->whereIn('EventID', $ids)->get()->getResultArray();
+            } catch (\Throwable $e2) {
+                return [];
+            }
         }
+
         $out = [];
         foreach ($rows as $r) $out[(int) $r['EventID']] = $r;
         return $out;
@@ -353,6 +362,7 @@ class ExpoDirectoryController extends BaseApiController
             'can_write'     => $canWrite ? 1 : 0,
             'is_privileged' => $privileged ? 1 : 0,
             'event_locked'  => $this->eventIsOpen($row['EventID'] === null ? null : (int) $row['EventID']) ? false : true,
+            'guest_list_info' => $this->guestListPayload($row),
         ]);
     }
 
@@ -562,6 +572,18 @@ class ExpoDirectoryController extends BaseApiController
 
         if ($makePrimary) $this->syncLegacyContactColumns($id, $contactId);
 
+        // Coordinators are guest-list managers by default when this exhibitor
+        // is linked to a guest list.
+        try {
+            $gl = $this->resolveGuestList((new ExpoDirectoryModel())->find($id));
+            if ($gl) {
+                (new \App\Libraries\GuestListManagerSync())
+                    ->ensureContactIsManager((int) $gl['CompanyID'], $contact, $userId);
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] manager sync on coordinator add failed: ' . $e->getMessage());
+        }
+
         return $this->response->setStatusCode(201)->setJSON([
             'data' => ['contact_id' => $contactId, 'is_primary' => $makePrimary ? 1 : 0, 'provisioned' => $provisioned],
         ]);
@@ -608,6 +630,181 @@ class ExpoDirectoryController extends BaseApiController
         }
         return $this->response->setStatusCode(204);
     }
+
+    // ------------------------------------------------------------ guest list
+
+    /**
+     * Resolves the guest list for an exhibitor entry.
+     *   1. explicit CompanyGuestListsID (must still exist)
+     *   2. case-insensitive match on companyguestlists.Company / .Name within
+     *      the same EventID
+     * When matched by name, the link is persisted and coordinators are synced
+     * as managers.
+     */
+    private function resolveGuestList(array $row, bool $persist = true): ?array
+    {
+        $model   = new \App\Models\CompanyGuestListsModel();
+        $entryId = (int) ($row['EntryID'] ?? 0);
+        $eventId = ($row['EventID'] ?? null) === null ? 0 : (int) $row['EventID'];
+
+        $explicit = (int) ($row['CompanyGuestListsID'] ?? 0);
+        if ($explicit > 0) {
+            $gl = $model->find($explicit);
+            if ($gl) return $gl;
+        }
+
+        $name = trim((string) ($row['CompanyName'] ?? ''));
+        if ($name === '' || $eventId <= 0) return null;
+
+        try {
+            $db    = $model->db;
+            $lower = $db->escape(mb_strtolower($name));
+            $gl    = $model->builder()
+                ->where('EventID', $eventId)
+                ->groupStart()
+                    ->where('LOWER(Company) = ' . $lower, null, false)
+                    ->orWhere('LOWER(Name) = ' . $lower, null, false)
+                ->groupEnd()
+                ->get()->getRowArray();
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] guest list resolution failed: ' . $e->getMessage());
+            return null;
+        }
+        if (!$gl) return null;
+
+        if ($persist && $entryId > 0) {
+            $this->linkGuestList($entryId, (int) $gl['CompanyID']);
+        }
+        return $gl;
+    }
+
+    /** Persists the link and syncs coordinators as guest-list managers. */
+    private function linkGuestList(int $entryId, int $companyGuestListsId): void
+    {
+        try {
+            (new ExpoDirectoryModel())->update($entryId, ['CompanyGuestListsID' => $companyGuestListsId]);
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] guest list link failed: ' . $e->getMessage());
+            return;
+        }
+        try {
+            $contactIds = array_map(
+                fn($c) => (int) $c['ContactID'],
+                (new ExpoDirectoryCoordinatorModel())->forEntry($entryId)
+            );
+            if ($contactIds) {
+                (new \App\Libraries\GuestListManagerSync())
+                    ->syncContacts($companyGuestListsId, $contactIds, $this->actorId());
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] coordinator manager sync failed: ' . $e->getMessage());
+        }
+    }
+
+    private function guestListPayload(array $row): array
+    {
+        $eventId = ($row['EventID'] ?? null) === null ? 0 : (int) $row['EventID'];
+        $event   = $eventId > 0 ? ($this->eventsById([$eventId])[$eventId] ?? null) : null;
+        $gl      = $this->resolveGuestList($row);
+        return [
+            'guest_list_enabled' => (int) ($event['GuestListEnabled'] ?? 0) === 1,
+            'event_id'           => $eventId ?: null,
+            'guest_list'         => $gl ? [
+                'id'      => (int) $gl['CompanyID'],
+                'name'    => $gl['Name'] ?? null,
+                'company' => $gl['Company'] ?? null,
+            ] : null,
+        ];
+    }
+
+    /** GET /api/v1/expo-directory/{id}/guest-list */
+    public function guestList(int $id)
+    {
+        [$userId, $privileged, $contactId] = $this->actorContext();
+        $row = (new ExpoDirectoryModel())->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if ($userId !== null && !$privileged
+            && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+        return $this->response->setJSON(['data' => $this->guestListPayload($row)]);
+    }
+
+    /**
+     * POST /api/v1/expo-directory/{id}/guest-list
+     * Creates a guest list for this exhibitor's company/event (admin or expo
+     * module only) and syncs the coordinators as managers.
+     */
+    public function createGuestList(int $id)
+    {
+        [$userId, $privileged] = $this->actorContext();
+        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+
+        $row = (new ExpoDirectoryModel())->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+
+        $existing = $this->resolveGuestList($row);
+        if ($existing) {
+            return $this->response->setJSON(['data' => $this->guestListPayload((new ExpoDirectoryModel())->find($id))]);
+        }
+
+        $eventId = ($row['EventID'] ?? null) === null ? 0 : (int) $row['EventID'];
+        if ($eventId <= 0) return $this->jsonError(422, 'entry_has_no_event');
+        $event = $this->eventsById([$eventId])[$eventId] ?? null;
+        if (!$event) return $this->jsonError(422, 'unknown_event');
+        if ((int) ($event['GuestListEnabled'] ?? 0) !== 1) return $this->jsonError(422, 'guest_lists_disabled');
+
+        $companyName = trim((string) ($row['CompanyName'] ?? ''));
+        if ($companyName === '') return $this->jsonError(422, 'company_name_required');
+
+        $model = new \App\Models\CompanyGuestListsModel();
+        $insert = [
+            'EventID'       => $eventId,
+            'Year'          => (int) $event['Year'],
+            'EventYear'     => trim((string) ($event['Name'] ?? '')) . (int) $event['Year'],
+            'Name'          => $this->uniqueGuestListCode($companyName, $eventId),
+            'Company'       => mb_substr($companyName, 0, 50),
+            'SecretKey'     => substr(bin2hex(random_bytes(8)), 0, 10),
+            'InviteCount'   => 0,
+            'EmployeeCount' => (int) ($row['StaffQuantity'] ?? 0),
+            'BanquetCount'  => 0,
+            'GolfCount'     => 0,
+            'StaffID'       => (int) ($row['ContactID'] ?? 0),
+            'FullConfToken'  => \App\Models\CompanyGuestListsModel::newToken(),
+            'ExhibitorToken' => \App\Models\CompanyGuestListsModel::newToken(),
+        ];
+        try {
+            $newId = (int) $model->insert($insert, true);
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] guest list create failed: ' . $e->getMessage());
+            return $this->jsonError(422, 'db_insert_failed', ['message' => $e->getMessage()]);
+        }
+        if ($newId <= 0) return $this->jsonError(422, 'insert_failed');
+
+        $this->linkGuestList($id, $newId);
+
+        return $this->response->setStatusCode(201)->setJSON([
+            'data' => $this->guestListPayload((new ExpoDirectoryModel())->find($id)),
+        ]);
+    }
+
+    /** Short legacy code for companyguestlists.Name, unique within the event. */
+    private function uniqueGuestListCode(string $companyName, int $eventId): string
+    {
+        $base = strtoupper(preg_replace('/[^A-Za-z0-9]+/', '', $companyName) ?? '');
+        if ($base === '') $base = 'EXPO';
+        $base = substr($base, 0, 12);
+        $model = new \App\Models\CompanyGuestListsModel();
+        $candidate = $base;
+        $n = 1;
+        while ($model->where('EventID', $eventId)->where('Name', $candidate)->first()) {
+            $n++;
+            $candidate = substr($base, 0, 10) . $n;
+            if ($n > 50) { $candidate = substr($base, 0, 8) . strtoupper(bin2hex(random_bytes(2))); break; }
+        }
+        return $candidate;
+    }
+
 
     /** Mirrors the primary coordinator into the legacy Contact* columns. */
     private function syncLegacyContactColumns(int $entryId, int $contactId): void

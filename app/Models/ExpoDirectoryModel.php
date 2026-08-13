@@ -25,7 +25,7 @@ class ExpoDirectoryModel extends Model
         'Description', 'Upload', 'EXPOApplication', 'RegistrationDate',
         'BoothNumber', 'BoothType', 'StaffQuantity', 'StaffRegCode', 'AttendeeCode',
         'ContactID', 'ContactGivenName', 'ContactFamilyName', 'ContactEmail', 'CCEmail',
-        'Notes', 'URL', 'LogoFile', 'DirectoryName',
+        'Notes', 'URL', 'LogoFile', 'DirectoryName', 'CompanyGuestListsID',
     ];
 
     public const STATUSES    = ['Draft', 'Approved', 'Final', 'Canceled'];
