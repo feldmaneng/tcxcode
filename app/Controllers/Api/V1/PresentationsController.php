@@ -1,8 +1,13 @@
 <?php
 namespace App\Controllers\Api\V1;
 
+use App\Libraries\ApiAuthContext;
+use App\Libraries\ProgramAccess;
+use App\Models\AdminAuditLogModel;
+use App\Models\EventModel;
 use App\Models\PresentationModel;
 use App\Models\AuthorModel;
+use App\Models\UserModuleModel;
 use Config\Database;
 
 class PresentationsController extends BaseApiController
@@ -36,6 +41,9 @@ class PresentationsController extends BaseApiController
         'bio_korean'           => 'BioKorean',
         'status'               => 'Status',
         'status_changed_at'    => 'StatusChangedAt',
+        'coordinator1_id'      => 'Coordinator1ID',
+        'coordinator2_id'      => 'Coordinator2ID',
+        'coordinators_pinned'  => 'CoordinatorsPinned',
     ];
 
     private const READONLY_API_FIELDS = ['id', 'status_changed_at'];
@@ -320,6 +328,266 @@ class PresentationsController extends BaseApiController
         if (!$model->delete((int) $id)) return $this->jsonError(500, 'delete_failed', $model->errors());
         return $this->response->setJSON(['data' => ['id' => (int) $id, 'deleted' => true]]);
     }
+
+    /**
+     * GET /api/v1/presentations/{id}/move-options?session_id=X
+     *
+     * Returns the coordinators currently attached to the presentation and the
+     * ones belonging to the prospective target session, with display names, so
+     * the move dialog can offer "keep original" vs "use target session".
+     */
+    public function moveOptions($id = null)
+    {
+        if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
+        $actorId = ApiAuthContext::actingUserId();
+        if (!$actorId) return $this->jsonError(401, 'acting_user_required');
+
+        $db   = Database::connect();
+        $pres = $db->table('presentations')
+            ->select('PresentationID, SessionID')
+            ->where('PresentationID', (int) $id)->get()->getRowArray();
+        if (!$pres) return $this->jsonError(404, 'not_found');
+
+        $sourceEventId = ProgramAccess::eventIdForSession($pres['SessionID'] ? (int) $pres['SessionID'] : null);
+        if (!ProgramAccess::canManageProgram($actorId, $sourceEventId)) return $this->jsonError(403, 'forbidden');
+
+        $targetSid  = (int) ($this->request->getGet('session_id') ?? 0);
+        $targetIds  = [];
+        if ($targetSid > 0) {
+            $t = $db->table('sessions')->select('Coordinator1ID, Coordinator2ID')
+                ->where('SessionID', $targetSid)->get()->getRowArray();
+            foreach (['Coordinator1ID', 'Coordinator2ID'] as $c) {
+                $v = (int) ($t[$c] ?? 0);
+                if ($v > 0) $targetIds[] = $v;
+            }
+        }
+
+        $dbC    = Database::connect('control');
+        $lookup = function (int $uid) use ($dbC): array {
+            $u = $dbC->table('users')->select('UserID, UserName, GivenName, FamilyName, Email')
+                ->where('UserID', $uid)->get()->getRowArray();
+            $name = trim(($u['GivenName'] ?? '') . ' ' . ($u['FamilyName'] ?? ''));
+            return [
+                'user_id' => $uid,
+                'name'    => $name !== '' ? $name : ($u['UserName'] ?? ('User #' . $uid)),
+                'email'   => $u['Email'] ?? '',
+            ];
+        };
+
+        return $this->response->setJSON([
+            'data' => [
+                'current'   => array_map($lookup, ProgramAccess::presentationCoordinatorIds((int) $id)),
+                'target'    => array_map($lookup, array_values(array_unique($targetIds))),
+                'source_session_id' => $pres['SessionID'] ? (int) $pres['SessionID'] : null,
+            ],
+        ]);
+    }
+
+    /**
+     * POST /api/v1/presentations/{id}/move
+     *   body: {
+     *     session_id: int,                 target session
+     *     position?: int,                  1-based slot in the target session
+     *     coordinator_ids?: int[],         who keeps/gains review access
+     *     pin?: bool                       force per-presentation coordinators
+     *   }
+     *
+     * Allowed for admins, the event manager and the event's chairs / general
+     * chair — for BOTH the source and the target event.
+     */
+    public function move($id = null)
+    {
+        if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
+        $actorId = ApiAuthContext::actingUserId();
+        if (!$actorId) return $this->jsonError(401, 'acting_user_required');
+
+        $model = new PresentationModel();
+        $pres  = $model->find((int) $id);
+        if (!$pres) return $this->jsonError(404, 'not_found');
+
+        $body      = (array) ($this->request->getJSON(true) ?? []);
+        $targetSid = (int) ($body['session_id'] ?? 0);
+        if ($targetSid <= 0) return $this->jsonError(422, 'validation_failed', ['required' => ['session_id']]);
+
+        $db     = Database::connect();
+        $target = $db->table('sessions')
+            ->select('SessionID, EventID, SessionNumber, Coordinator1ID, Coordinator2ID')
+            ->where('SessionID', $targetSid)->get()->getRowArray();
+        if (!$target) return $this->jsonError(404, 'session_not_found');
+
+        $sourceSid     = !empty($pres['SessionID']) ? (int) $pres['SessionID'] : null;
+        $sourceEventId = ProgramAccess::eventIdForSession($sourceSid);
+        $targetEventId = (int) $target['EventID'];
+
+        if (!ProgramAccess::canManageProgram($actorId, $sourceEventId)
+            || !ProgramAccess::canManageProgram($actorId, $targetEventId)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+        if ($deny = $this->denyWhenLocked($actorId, [$sourceEventId, $targetEventId])) return $deny;
+
+        // --- coordinators -------------------------------------------------
+        $sourceCoords = ProgramAccess::presentationCoordinatorIds((int) $id);
+        $targetCoords = [];
+        foreach (['Coordinator1ID', 'Coordinator2ID'] as $c) {
+            $v = (int) ($target[$c] ?? 0);
+            if ($v > 0) $targetCoords[] = $v;
+        }
+        $requested = array_values(array_unique(array_filter(array_map(
+            'intval',
+            is_array($body['coordinator_ids'] ?? null) ? $body['coordinator_ids'] : $targetCoords
+        ))));
+        $allowed = array_merge($sourceCoords, $targetCoords);
+        foreach ($requested as $uid) {
+            if (!in_array($uid, $allowed, true)) {
+                return $this->jsonError(422, 'coordinator_not_allowed', ['user_id' => $uid]);
+            }
+        }
+        if (count($requested) > 2) return $this->jsonError(422, 'too_many_coordinators');
+
+        // No override needed when the kept set is exactly the target session's.
+        $sameAsTarget = !array_diff($requested, $targetCoords) && !array_diff($targetCoords, $requested);
+        $pin = !empty($body['pin']) || !$sameAsTarget;
+
+        $update = [
+            'SessionID' => $targetSid,
+            'Session'   => $target['SessionNumber'],
+        ];
+        $ev = $db->table('events')->select('Name, Year')->where('EventID', $targetEventId)->get()->getRowArray();
+        if ($ev) {
+            $update['Event'] = $ev['Name'];
+            $update['Year']  = (int) $ev['Year'];
+        }
+        if (ProgramAccess::hasCoordinatorColumns()) {
+            $update['Coordinator1ID']     = $pin ? ($requested[0] ?? null) : null;
+            $update['Coordinator2ID']     = $pin ? ($requested[1] ?? null) : null;
+            $update['CoordinatorsPinned'] = $pin ? 1 : 0;
+        }
+
+        $position = isset($body['position']) ? max(1, (int) $body['position']) : null;
+
+        $db->transStart();
+        if (!$model->update((int) $id, $update)) {
+            $db->transRollback();
+            return $this->jsonError(500, 'update_failed', $model->errors());
+        }
+        $this->resequenceSession($targetSid, (int) $id, $position);
+        if ($sourceSid && $sourceSid !== $targetSid) {
+            $this->resequenceSession($sourceSid, null, null);
+        }
+        $db->transComplete();
+
+        (new AdminAuditLogModel())->log(
+            $actorId,
+            'presentation.move',
+            'presentation',
+            (string) $id,
+            [
+                'from_session_id' => $sourceSid,
+                'to_session_id'   => $targetSid,
+                'position'        => $position,
+                'coordinators'    => $requested,
+                'pinned'          => $pin ? 1 : 0,
+            ],
+            $this->request->getIPAddress()
+        );
+
+        return $this->show((int) $id);
+    }
+
+    /**
+     * POST /api/v1/sessions/{id}/presentation-order
+     *   body: { presentation_ids: int[] }
+     *
+     * Renumbers a session's presentations 1..n in the given order. Coordinators
+     * are never touched. Same roles as move().
+     */
+    public function reorder($sessionId = null)
+    {
+        if ($deny = $this->requireModule(['crm', 'author-portal'])) return $deny;
+        $actorId = ApiAuthContext::actingUserId();
+        if (!$actorId) return $this->jsonError(401, 'acting_user_required');
+
+        $sid = (int) $sessionId;
+        $db  = Database::connect();
+        if (!$db->table('sessions')->where('SessionID', $sid)->countAllResults()) {
+            return $this->jsonError(404, 'session_not_found');
+        }
+        $eventId = ProgramAccess::eventIdForSession($sid);
+        if (!ProgramAccess::canManageProgram($actorId, $eventId)) return $this->jsonError(403, 'forbidden');
+        if ($deny = $this->denyWhenLocked($actorId, [$eventId])) return $deny;
+
+        $body  = (array) ($this->request->getJSON(true) ?? []);
+        $order = array_values(array_unique(array_map('intval', (array) ($body['presentation_ids'] ?? []))));
+        if (!$order) return $this->jsonError(422, 'validation_failed', ['required' => ['presentation_ids']]);
+
+        $existing = array_map(
+            fn($r) => (int) $r['PresentationID'],
+            $db->table('presentations')->select('PresentationID')->where('SessionID', $sid)->get()->getResultArray()
+        );
+        sort($existing);
+        $check = $order; sort($check);
+        if ($existing !== $check) return $this->jsonError(422, 'order_mismatch');
+
+        $db->transStart();
+        $n = 1;
+        foreach ($order as $pid) {
+            $db->table('presentations')->where('PresentationID', $pid)->update(['PresentationNumber' => $n++]);
+        }
+        $db->transComplete();
+
+        (new AdminAuditLogModel())->log(
+            $actorId,
+            'session.reorder',
+            'session',
+            (string) $sid,
+            ['presentation_ids' => $order],
+            $this->request->getIPAddress()
+        );
+
+        return $this->response->setJSON(['data' => ['session_id' => $sid, 'presentation_ids' => $order]]);
+    }
+
+    /** 423 when any of the events is closed and the actor is not an admin. */
+    private function denyWhenLocked(int $actorId, array $eventIds)
+    {
+        if ((new UserModuleModel())->userHasModule($actorId, 'admin')) return null;
+        $locked = (new EventModel())->lockedEventIds();
+        foreach (array_filter($eventIds) as $eid) {
+            if (in_array((int) $eid, $locked, true)) {
+                return $this->jsonError(423, 'event_locked');
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Renumber a session's presentations 1..n by their current order, optionally
+     * forcing $moveId into 1-based slot $position. Must run inside a transaction.
+     */
+    private function resequenceSession(int $sessionId, ?int $moveId, ?int $position): void
+    {
+        $db = Database::connect();
+        $db->query('SELECT PresentationID FROM presentations WHERE SessionID = ? FOR UPDATE', [$sessionId]);
+        $rows = $db->table('presentations')
+            ->select('PresentationID')
+            ->where('SessionID', $sessionId)
+            ->orderBy('PresentationNumber', 'ASC')
+            ->orderBy('PresentationID', 'ASC')
+            ->get()->getResultArray();
+        $ids = array_map(fn($r) => (int) $r['PresentationID'], $rows);
+
+        if ($moveId !== null && $position !== null) {
+            $ids = array_values(array_filter($ids, fn($i) => $i !== $moveId));
+            $slot = max(0, min(count($ids), $position - 1));
+            array_splice($ids, $slot, 0, [$moveId]);
+        }
+
+        $n = 1;
+        foreach ($ids as $pid) {
+            $db->table('presentations')->where('PresentationID', $pid)->update(['PresentationNumber' => $n++]);
+        }
+    }
+
 
     /**
      * Replace the author set for a presentation. Each entry in $authors should be

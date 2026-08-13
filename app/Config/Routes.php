@@ -647,6 +647,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('(:num)/authors',   'AuthorsController::byPresentation/$1');
         $routes->post('/',               'PresentationsController::create');
         $routes->put('(:num)',           'PresentationsController::update/$1');
+        $routes->get('(:num)/move-options', 'PresentationsController::moveOptions/$1');
+        $routes->post('(:num)/move',     'PresentationsController::move/$1');
         $routes->delete('(:num)',        'PresentationsController::delete/$1');
         $routes->options('(:any)',       'PresentationsController::options', ['filter' => 'cors']);
     });
@@ -670,6 +672,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('(:num)',     'SessionsController::show/$1');
         $routes->post('/',         'SessionsController::create');
         $routes->put('(:num)',     'SessionsController::update/$1');
+        $routes->post('(:num)/presentation-order', 'PresentationsController::reorder/$1');
         $routes->delete('(:num)',  'SessionsController::delete/$1');
         $routes->options('(:any)', 'SessionsController::options', ['filter' => 'cors']);
     });

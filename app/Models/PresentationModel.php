@@ -19,6 +19,7 @@ class PresentationModel extends Model
         'AbstractEnglish', 'AbstractChinese', 'AbstractKorean',
         'BioEnglish', 'BioChinese', 'BioKorean',
         'Status', 'StatusChangedAt',
+        'Coordinator1ID', 'Coordinator2ID', 'CoordinatorsPinned',
     ];
 
     public const STATUS_ACTIVE       = 'active';

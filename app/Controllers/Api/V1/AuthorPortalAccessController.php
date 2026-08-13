@@ -85,6 +85,31 @@ class AuthorPortalAccessController extends BaseApiController
                 ->get()->getResultArray();
         }
 
+        // Per-presentation coordinators (set when a presentation was moved to
+        // another session but kept its original reviewer(s)).
+        //   coordinatedPresentationIds — actor is named on the presentation row
+        //   pinnedAwayPresentationIds  — presentation ignores its session's
+        //                                coordinators and does not name the actor
+        $coordinatedPresentations = [];
+        $pinnedAway               = [];
+        if (\App\Libraries\ProgramAccess::hasCoordinatorColumns()) {
+            $rows = $db->table('presentations')
+                ->select('PresentationID, Coordinator1ID, Coordinator2ID, CoordinatorsPinned')
+                ->groupStart()
+                    ->where('Coordinator1ID IS NOT NULL', null, false)
+                    ->orWhere('Coordinator2ID IS NOT NULL', null, false)
+                    ->orWhere('CoordinatorsPinned', 1)
+                ->groupEnd()
+                ->get()->getResultArray();
+            foreach ($rows as $r) {
+                $pid  = (int) $r['PresentationID'];
+                $mine = (int) ($r['Coordinator1ID'] ?? 0) === $actorId
+                     || (int) ($r['Coordinator2ID'] ?? 0) === $actorId;
+                if ($mine) $coordinatedPresentations[] = $pid;
+                if (!empty($r['CoordinatorsPinned']) && !$mine) $pinnedAway[] = $pid;
+            }
+        }
+
         $lockedEventIds        = (new EventModel())->lockedEventIds();
         $hiddenPresentationIds = (new PresentationModel())->hiddenPresentationIds();
 
@@ -96,6 +121,8 @@ class AuthorPortalAccessController extends BaseApiController
                 'managed_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $managed),
                 'chaired_event_ids'         => array_map(fn($r) => (int) $r['EventID'], $chaired),
                 'coordinated_session_ids'   => array_map(fn($r) => (int) $r['SessionID'], $coordinated),
+                'coordinated_presentation_ids' => $coordinatedPresentations,
+                'pinned_away_presentation_ids' => $pinnedAway,
                 'general_chair_event_ids'   => array_map(fn($r) => (int) $r['EventID'], $generalChair),
                 'authored_presentation_ids' => array_map(fn($r) => (int) $r['PresentationID'], $authored),
                 'locked_event_ids'          => $lockedEventIds,
