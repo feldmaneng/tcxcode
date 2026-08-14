@@ -27,11 +27,12 @@ class ExpoDirectoryModel extends Model
         'ContactID', 'ContactGivenName', 'ContactFamilyName', 'ContactEmail', 'CCEmail',
         'Notes', 'URL', 'LogoFile', 'DirectoryName', 'CompanyGuestListsID',
         'DeletedAt', 'DeletedBy', 'DeletedIP',
+        'ApprovedBy', 'ApprovedAt',
 
     ];
 
     public const STATUSES    = ['Draft', 'Approved', 'Final', 'Canceled'];
-    public const BOOTH_TYPES = ['8', '10', '2x8', '2x10', '8+10'];
+    public const BOOTH_TYPES = ['8', '10', '2x8', '2x10', '8+10', 'single', 'double'];
 
     /** Fields copied forward when cloning a prior-year entry. */
     public const COPY_FIELDS = [

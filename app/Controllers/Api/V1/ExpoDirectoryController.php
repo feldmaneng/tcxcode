@@ -66,15 +66,23 @@ class ExpoDirectoryController extends BaseApiController
         'notes'               => 'Notes',
         'company_guest_lists_id' => 'CompanyGuestListsID',
         'deleted_at'          => 'DeletedAt',
+        'approved_by'         => 'ApprovedBy',
+        'approved_at'         => 'ApprovedAt',
     ];
 
     /** Never writable through the API. */
-    private const READONLY_API_FIELDS = ['id', 'secret_key', 'deleted_at'];
+    private const READONLY_API_FIELDS = ['id', 'secret_key', 'deleted_at', 'approved_by', 'approved_at'];
 
     /** Only admins / expo-module users may change these. */
     private const PRIVILEGED_API_FIELDS = ['status', 'notes', 'booth_number', 'booth_type', 'staff_quantity', 'staff_reg_code', 'attendee_code', 'event_id', 'year', 'event', 'company_guest_lists_id'];
 
-    private const INT_FIELDS = ['id', 'year', 'event_id', 'company_id', 'staff_quantity', 'contact_id', 'company_guest_lists_id'];
+    /** Listing fields a coordinator may only edit while the listing is a Draft. */
+    private const LISTING_API_FIELDS = [
+        'company_name', 'directory_name', 'sample_entry', 'description', 'url', 'logo_file',
+        'line1', 'line2', 'line3', 'line4', 'line5', 'line6',
+    ];
+
+    private const INT_FIELDS = ['id', 'year', 'event_id', 'company_id', 'staff_quantity', 'contact_id', 'company_guest_lists_id', 'approved_by'];
 
     private const SORTABLE = ['company_name', 'directory_name', 'status', 'booth_number', 'year'];
 
@@ -177,6 +185,10 @@ class ExpoDirectoryController extends BaseApiController
         foreach ($rows as $r) { if (!empty($r['event_id'])) $eventIds[(int) $r['event_id']] = true; }
         $events = $this->eventsById(array_keys($eventIds));
 
+        $approverIds = [];
+        foreach ($rows as $r) { if (!empty($r['approved_by'])) $approverIds[(int) $r['approved_by']] = true; }
+        $approvers = $this->userNamesById(array_keys($approverIds));
+
         foreach ($rows as &$r) {
             $id = (int) ($r['id'] ?? 0);
             $r['coordinators'] = array_values(array_map(function (array $c) use ($contacts) {
@@ -192,12 +204,34 @@ class ExpoDirectoryController extends BaseApiController
                 ];
             }, $coordsByEntry[$id] ?? []));
 
+            $r['approved_by_name'] = $approvers[(int) ($r['approved_by'] ?? 0)] ?? null;
+
             $ev = $events[(int) ($r['event_id'] ?? 0)] ?? null;
             $r['event_name'] = $ev['Name'] ?? null;
             $r['event_year'] = isset($ev['Year']) ? (int) $ev['Year'] : null;
         }
         unset($r);
         return $rows;
+    }
+
+    /** Display names for control-DB users. @param int[] $ids @return array<int,string> */
+    private function userNamesById(array $ids): array
+    {
+        $ids = array_values(array_filter(array_map('intval', $ids)));
+        if (!$ids) return [];
+        $out = [];
+        try {
+            $rows = db_connect('control')->table('users')
+                ->select('UserID, GivenName, FamilyName, UserName')
+                ->whereIn('UserID', $ids)->get()->getResultArray();
+            foreach ($rows as $u) {
+                $name = trim(((string) ($u['GivenName'] ?? '')) . ' ' . ((string) ($u['FamilyName'] ?? '')));
+                $out[(int) $u['UserID']] = $name !== '' ? $name : (string) ($u['UserName'] ?? '');
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] approver hydration failed: ' . $e->getMessage());
+        }
+        return $out;
     }
 
     /** @param int[] $ids @return array<int,array> keyed by ContactID */
@@ -503,8 +537,41 @@ class ExpoDirectoryController extends BaseApiController
         $payload = (array) $this->request->getJSON(true);
         $patch   = $this->apiToDb($payload, $privileged);
 
+        $currentStatus = (string) ($row['Status'] ?? 'Draft');
+
+        if (!$privileged && $userId !== null) {
+            // A coordinator may only edit their listing while it is a Draft.
+            if ($currentStatus !== 'Draft') {
+                foreach (self::LISTING_API_FIELDS as $f) {
+                    if (array_key_exists($f, $payload)) return $this->jsonError(409, 'listing_locked');
+                }
+            }
+            // The single status change a coordinator can make: Draft → Approved.
+            if (array_key_exists('status', $payload)) {
+                $wanted = (string) $payload['status'];
+                if ($wanted !== $currentStatus) {
+                    if ($currentStatus !== 'Draft' || $wanted !== 'Approved') {
+                        return $this->jsonError(403, 'status_change_forbidden');
+                    }
+                    $patch['Status']     = 'Approved';
+                    $patch['ApprovedBy'] = $userId;
+                    $patch['ApprovedAt'] = date('Y-m-d H:i:s');
+                }
+            }
+        }
+
         if (isset($patch['Status']) && !in_array($patch['Status'], ExpoDirectoryModel::STATUSES, true)) {
             return $this->jsonError(422, 'validation_failed', ['status' => 'invalid']);
+        }
+        if ($privileged && isset($patch['Status']) && $patch['Status'] !== $currentStatus) {
+            if ($patch['Status'] === 'Draft') {
+                // Reopening the listing clears the approval stamp.
+                $patch['ApprovedBy'] = null;
+                $patch['ApprovedAt'] = null;
+            } elseif ($patch['Status'] === 'Approved' && empty($row['ApprovedAt'])) {
+                $patch['ApprovedBy'] = $userId;
+                $patch['ApprovedAt'] = date('Y-m-d H:i:s');
+            }
         }
         // Keep the legacy Year/Event strings in sync when the event changes.
         if (isset($patch['EventID'])) {
