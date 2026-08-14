@@ -709,6 +709,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // (bitswork_registration); coordinators get implicit access to their rows.
     $routes->group('expo-directory', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('prior-entries',                'ExpoDirectoryController::priorEntries');
+        $routes->get('company-search',               'ExpoDirectoryController::companySearch');
 
         // Exhibitor artwork file manager (/public_html/EXPOdirectory) — admin
         // and event managers only. Declared before the (:num) routes.
@@ -724,6 +725,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)',                    'ExpoDirectoryController::delete/$1');
         $routes->post('(:num)/restore',              'ExpoDirectoryController::restore/$1');
 
+        $routes->put('(:num)/tags',                  'ExpoDirectoryController::setTags/$1');
+
         $routes->get('(:num)/guest-list',            'ExpoDirectoryController::guestList/$1');
         $routes->post('(:num)/guest-list',           'ExpoDirectoryController::createGuestList/$1');
 
@@ -733,6 +736,15 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->delete('(:num)/coordinators/(:num)', 'ExpoDirectoryController::removeCoordinator/$1/$2');
 
         $routes->options('(:any)', 'ExpoDirectoryController::options', ['filter' => 'cors']);
+    });
+
+    // Global exhibitor tags (sponsorship levels / advertising packages)
+    $routes->group('expo-tags', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('/',          'ExpoTagsController::index');
+        $routes->post('/',         'ExpoTagsController::create');
+        $routes->put('(:num)',     'ExpoTagsController::update/$1');
+        $routes->delete('(:num)',  'ExpoTagsController::delete/$1');
+        $routes->options('(:any)', 'ExpoTagsController::options', ['filter' => 'cors']);
     });
 
 
@@ -873,6 +885,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
+
 
 
 

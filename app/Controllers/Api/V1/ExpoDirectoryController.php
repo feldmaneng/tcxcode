@@ -7,6 +7,8 @@ use App\Libraries\ModuleAccess;
 use App\Models\EventModel;
 use App\Models\ExpoDirectoryCoordinatorModel;
 use App\Models\ExpoDirectoryModel;
+use App\Models\ExpoDirectoryTagModel;
+use App\Models\ExpoTagModel;
 use App\Models\UserModuleModel;
 
 /**
@@ -186,6 +188,18 @@ class ExpoDirectoryController extends BaseApiController
         foreach ($rows as $r) { if (!empty($r['event_id'])) $eventIds[(int) $r['event_id']] = true; }
         $events = $this->eventsById(array_keys($eventIds));
 
+        $tagIdsByEntry = (new ExpoDirectoryTagModel())->tagIdsForEntries($entryIds);
+        $tagsById = [];
+        foreach ((new ExpoTagModel())->allSorted(false) as $t) {
+            $tagsById[(int) $t['TagID']] = [
+                'id'       => (int) $t['TagID'],
+                'name'     => (string) $t['Name'],
+                'category' => (string) ($t['Category'] ?? 'sponsorship'),
+                'sort'     => (int) ($t['Sort'] ?? 0),
+                'active'   => (int) ($t['Active'] ?? 1),
+            ];
+        }
+
         $approverIds = [];
         foreach ($rows as $r) { if (!empty($r['approved_by'])) $approverIds[(int) $r['approved_by']] = true; }
         $approvers = $this->userNamesById(array_keys($approverIds));
@@ -204,6 +218,11 @@ class ExpoDirectoryController extends BaseApiController
                     'is_primary'  => (int) ($c['IsPrimary'] ?? 0),
                 ];
             }, $coordsByEntry[$id] ?? []));
+
+            $r['tags'] = array_values(array_filter(array_map(
+                fn(int $tid) => $tagsById[$tid] ?? null,
+                $tagIdsByEntry[$id] ?? []
+            )));
 
             $r['approved_by_name'] = $approvers[(int) ($r['approved_by'] ?? 0)] ?? null;
 
@@ -468,6 +487,23 @@ class ExpoDirectoryController extends BaseApiController
         if (trim((string) ($insert['CompanyName'] ?? '')) === '') {
             return $this->jsonError(422, 'validation_failed', ['required' => ['company_name']]);
         }
+
+        // Link the exhibitor to the CRM company record. An explicit company_id
+        // wins; otherwise resolve by exact name, and create a name-only company
+        // when the caller asked for it (admins / event managers only).
+        $companyId = (int) ($payload['company_id'] ?? 0);
+        if ($companyId <= 0) {
+            $name    = (string) $insert['CompanyName'];
+            $matched = $this->findCompanyByName($name);
+            if ($matched) {
+                $companyId = (int) $matched['CompanyID'];
+            } elseif (!empty($payload['create_company'])) {
+                $companyId = $this->createCompanyByName($name);
+                if ($companyId <= 0) return $this->jsonError(422, 'company_create_failed');
+            }
+        }
+        if ($companyId > 0) $insert['CompanyID'] = $companyId;
+
         // Booth / registration data never carries forward.
         foreach (['BoothNumber', 'BoothType', 'StaffQuantity', 'StaffRegCode', 'AttendeeCode', 'RegistrationDate', 'EXPOApplication', 'Upload', 'Notes'] as $f) {
             $insert[$f] = null;
@@ -494,6 +530,95 @@ class ExpoDirectoryController extends BaseApiController
         $row  = $model->find($newId);
         $data = $this->hydrate([$this->dbToApi($row)])[0];
         return $this->response->setStatusCode(201)->setJSON(['data' => $data]);
+    }
+
+    // --------------------------------------------------------------- company
+
+    /** Exact (case-insensitive) company match in the conference DB. */
+    private function findCompanyByName(string $name): ?array
+    {
+        $name = trim($name);
+        if ($name === '') return null;
+        try {
+            $db  = db_connect();
+            $row = $db->table('company')->select('CompanyID, Name')
+                ->where('LOWER(Name) = ' . $db->escape(mb_strtolower($name)), null, false)
+                ->get()->getRowArray();
+            return $row ?: null;
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] company lookup failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /** Creates a name-only company row; returns its id (0 on failure). */
+    private function createCompanyByName(string $name): int
+    {
+        $name = trim($name);
+        if ($name === '') return 0;
+        try {
+            $db = db_connect();
+            $db->table('company')->insert(['Name' => mb_substr($name, 0, 100)]);
+            return (int) $db->insertID();
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] company create failed: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * GET /api/v1/expo-directory/company-search?q=
+     * Name lookup for the "add exhibitor" dialog. Admin / event managers only,
+     * so event managers do not need CRM rights to link a company.
+     */
+    public function companySearch()
+    {
+        [$userId, $privileged] = $this->actorContext();
+        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+
+        $q = trim((string) ($this->request->getGet('q') ?? ''));
+        try {
+            $builder = db_connect()->table('company')->select('CompanyID, Name, StandardName');
+            if ($q !== '') $builder->like('Name', $q);
+            $rows = $builder->orderBy('Name', 'ASC')->limit(20)->get()->getResultArray();
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] company search failed: ' . $e->getMessage());
+            $rows = [];
+        }
+
+        return $this->response->setJSON([
+            'data' => array_map(fn($r) => [
+                'id'            => (int) $r['CompanyID'],
+                'name'          => (string) $r['Name'],
+                'standard_name' => isset($r['StandardName']) ? (int) $r['StandardName'] : null,
+            ], $rows),
+        ]);
+    }
+
+    // ------------------------------------------------------------------ tags
+
+    /** PUT /api/v1/expo-directory/{id}/tags  { tag_ids: number[] } */
+    public function setTags(int $id)
+    {
+        [$userId, $privileged] = $this->actorContext();
+        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+
+        $model = new ExpoDirectoryModel();
+        $row   = $model->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
+
+        $payload = (array) $this->request->getJSON(true);
+        $tagIds  = array_values(array_filter(array_map('intval', (array) ($payload['tag_ids'] ?? []))));
+
+        if ($tagIds) {
+            $known = array_map(fn($t) => (int) $t['TagID'], (new ExpoTagModel())->allSorted(false));
+            $tagIds = array_values(array_intersect($tagIds, $known));
+        }
+        (new ExpoDirectoryTagModel())->setForEntry($id, $tagIds, $userId);
+
+        $data = $this->hydrate([$this->dbToApi($model->find($id))])[0];
+        return $this->response->setJSON(['data' => $data]);
     }
 
     /** A soft-deleted entry for this event + company name, if any. */
