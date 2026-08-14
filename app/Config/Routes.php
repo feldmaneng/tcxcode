@@ -712,6 +712,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
         // Exhibitor artwork file manager (/public_html/EXPOdirectory) — admin
         // and event managers only. Declared before the (:num) routes.
+        $routes->get('files/diag',                   'ExpoDirectoryFilesController::diag');
         $routes->get('files',                        'ExpoDirectoryFilesController::index');
         $routes->post('files/upload',                'ExpoDirectoryFilesController::upload');
         $routes->post('files/mkdir',                 'ExpoDirectoryFilesController::mkdir');
@@ -872,7 +873,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
-
 
 
 

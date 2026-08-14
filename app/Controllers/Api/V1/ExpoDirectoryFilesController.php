@@ -93,6 +93,85 @@ class ExpoDirectoryFilesController extends BaseApiController
         return (bool) preg_match('/\.(png|jpe?g)$/i', $name);
     }
 
+    /** Who PHP is, what it sees on this path, and every parent's mode. */
+    private function fsDiag(string $abs): array
+    {
+        $userName = static function ($uid) {
+            if ($uid === false || $uid === null) return null;
+            if (function_exists('posix_getpwuid')) {
+                $p = @posix_getpwuid((int) $uid);
+                if (is_array($p) && isset($p['name'])) return $p['name'] . ' (' . $uid . ')';
+            }
+            return (string) $uid;
+        };
+        $groupName = static function ($gid) {
+            if ($gid === false || $gid === null) return null;
+            if (function_exists('posix_getgrgid')) {
+                $g = @posix_getgrgid((int) $gid);
+                if (is_array($g) && isset($g['name'])) return $g['name'] . ' (' . $gid . ')';
+            }
+            return (string) $gid;
+        };
+
+        $chain = [];
+        $p     = $abs;
+        for ($i = 0; $i < 8; $i++) {
+            $chain[] = [
+                'path'  => $p,
+                'perms' => substr(sprintf('%o', @fileperms($p) ?: 0), -4),
+                'owner' => $userName(@fileowner($p)),
+                'group' => $groupName(@filegroup($p)),
+                'writable' => is_writable($p),
+            ];
+            $up = dirname($p);
+            if ($up === $p || $up === '/' || $up === '.') break;
+            $p = $up;
+        }
+
+        $phpGroups = null;
+        if (function_exists('posix_getgroups')) {
+            $phpGroups = array_values(array_filter(array_map($groupName, @posix_getgroups() ?: [])));
+        }
+
+        return [
+            'dir'            => $abs,
+            'php_user'       => function_exists('posix_geteuid') ? $userName(@posix_geteuid()) : (get_current_user() ?: null),
+            'php_group'      => function_exists('posix_getegid') ? $groupName(@posix_getegid()) : null,
+            'php_groups'     => $phpGroups,
+            'open_basedir'   => ini_get('open_basedir') ?: null,
+            'path_chain'     => $chain,
+            'hint'           => 'The PHP user above must be the owner, or a member of the folder group, and the folder must be group-writable (2775). Check the exact "dir" path — it may not be the folder you chmod-ed.',
+        ];
+    }
+
+    /**
+     * GET /api/v1/expo-directory/files/diag?dir=
+     * Read-only: reports the resolved root, the PHP user, and permissions
+     * along the whole path chain. No filesystem changes.
+     */
+    public function diag()
+    {
+        if ($deny = $this->denyUnlessPrivileged()) return $deny;
+        $root = $this->root();
+        if ($root === null) {
+            return $this->response->setJSON([
+                'root'       => null,
+                'fcpath'     => FCPATH,
+                'configured' => getenv('EXPO_DIRECTORY_PATH') ?: null,
+                'error'      => 'expo_directory_missing',
+            ]);
+        }
+        $rel = (string) ($this->request->getGet('dir') ?? '');
+        $dir = $this->resolveDir($root, $rel) ?? $root;
+
+        return $this->response->setJSON([
+            'root'       => $root,
+            'fcpath'     => FCPATH,
+            'configured' => getenv('EXPO_DIRECTORY_PATH') ?: null,
+            'diag'       => $this->fsDiag($dir),
+        ]);
+    }
+
     // ----------------------------------------------------------------- routes
 
     /**
@@ -163,15 +242,10 @@ class ExpoDirectoryFilesController extends BaseApiController
         if (file_exists($target)) return $this->jsonError(409, 'already_exists');
 
         // Most failures here are filesystem permissions: the PHP user does not
-        // own the artwork tree. Say so instead of a bare mkdir_failed.
+        // own the artwork tree. Report exactly who PHP is and what it sees, so
+        // the fix is obvious instead of guessing at chmod values.
         if (!is_writable($parent)) {
-            return $this->jsonError(500, 'directory_not_writable', [
-                'dir'   => $this->relPath($root, $parent),
-                'owner' => function_exists('posix_getpwuid') && ($o = @fileowner($parent)) !== false
-                    ? (posix_getpwuid($o)['name'] ?? (string) $o) : null,
-                'perms' => substr(sprintf('%o', @fileperms($parent) ?: 0), -4),
-                'hint'  => 'Grant the PHP/web user write access to this folder (see README.expo-files.md).',
-            ]);
+            return $this->jsonError(500, 'directory_not_writable', $this->fsDiag($parent));
         }
 
         $old = umask(0022);
@@ -179,11 +253,7 @@ class ExpoDirectoryFilesController extends BaseApiController
         $err = $ok ? null : (error_get_last()['message'] ?? null);
         umask($old);
         if (!$ok) {
-            return $this->jsonError(500, 'directory_not_writable', [
-                'dir'    => $this->relPath($root, $parent),
-                'reason' => $err,
-                'hint'   => 'Grant the PHP/web user write access to this folder (see README.expo-files.md).',
-            ]);
+            return $this->jsonError(500, 'directory_not_writable', $this->fsDiag($parent) + ['reason' => $err]);
         }
         @chmod($target, 0755);
 
