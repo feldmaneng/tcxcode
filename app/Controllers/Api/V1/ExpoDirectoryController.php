@@ -109,6 +109,7 @@ class ExpoDirectoryController extends BaseApiController
             if (in_array($k, self::READONLY_API_FIELDS, true)) continue;
             if (!$privileged && in_array($k, self::PRIVILEGED_API_FIELDS, true)) continue;
             if (!isset(self::FIELD_MAP[$k])) continue;
+            if ($k === 'description' && is_string($v)) $v = mb_substr($v, 0, 330);
             $out[self::FIELD_MAP[$k]] = $v;
         }
         return $out;

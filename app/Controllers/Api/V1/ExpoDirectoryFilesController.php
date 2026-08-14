@@ -162,10 +162,29 @@ class ExpoDirectoryFilesController extends BaseApiController
         $target = $parent . '/' . $name;
         if (file_exists($target)) return $this->jsonError(409, 'already_exists');
 
+        // Most failures here are filesystem permissions: the PHP user does not
+        // own the artwork tree. Say so instead of a bare mkdir_failed.
+        if (!is_writable($parent)) {
+            return $this->jsonError(500, 'directory_not_writable', [
+                'dir'   => $this->relPath($root, $parent),
+                'owner' => function_exists('posix_getpwuid') && ($o = @fileowner($parent)) !== false
+                    ? (posix_getpwuid($o)['name'] ?? (string) $o) : null,
+                'perms' => substr(sprintf('%o', @fileperms($parent) ?: 0), -4),
+                'hint'  => 'Grant the PHP/web user write access to this folder (see README.expo-files.md).',
+            ]);
+        }
+
         $old = umask(0022);
         $ok  = @mkdir($target, 0755);
+        $err = $ok ? null : (error_get_last()['message'] ?? null);
         umask($old);
-        if (!$ok) return $this->jsonError(500, 'mkdir_failed');
+        if (!$ok) {
+            return $this->jsonError(500, 'directory_not_writable', [
+                'dir'    => $this->relPath($root, $parent),
+                'reason' => $err,
+                'hint'   => 'Grant the PHP/web user write access to this folder (see README.expo-files.md).',
+            ]);
+        }
         @chmod($target, 0755);
 
         return $this->response->setStatusCode(201)->setJSON([
