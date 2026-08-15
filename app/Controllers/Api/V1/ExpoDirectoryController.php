@@ -367,6 +367,50 @@ class ExpoDirectoryController extends BaseApiController
         ]);
     }
 
+    /**
+     * GET /api/v1/expo-directory/event-counts
+     *
+     * Exhibitor counts grouped by EventID. The list endpoint is paginated, so
+     * counting rows client-side under-reports whenever the directory holds more
+     * rows than one page. Removed (soft-deleted) rows are always excluded.
+     */
+    public function eventCounts()
+    {
+        [$userId, $privileged, $contactId] = $this->actorContext();
+
+        $builder = (new ExpoDirectoryModel())->builder();
+
+        if ($userId !== null && !$privileged) {
+            $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
+            if (!$ownIds) {
+                return $this->response->setJSON(['data' => [], 'unlinked' => 0, 'is_privileged' => 0]);
+            }
+            $builder->whereIn('EntryID', $ownIds);
+        }
+
+        $rows = $builder->select('EventID, COUNT(*) AS n', false)
+            ->where('DeletedAt', null)
+            ->groupBy('EventID')
+            ->get()->getResultArray();
+
+        $out = [];
+        $unlinked = 0;
+        foreach ($rows as $r) {
+            $eventId = (int) ($r['EventID'] ?? 0);
+            $n       = (int) $r['n'];
+            if ($eventId > 0) $out[] = ['event_id' => $eventId, 'count' => $n];
+            else $unlinked += $n;
+        }
+
+        return $this->response->setJSON([
+            'data'          => $out,
+            'unlinked'      => $unlinked,
+            'is_privileged' => $privileged ? 1 : 0,
+        ]);
+    }
+
+
+
     /** GET /api/v1/expo-directory/prior-entries?q=&exclude_event_id= */
     public function priorEntries()
     {
