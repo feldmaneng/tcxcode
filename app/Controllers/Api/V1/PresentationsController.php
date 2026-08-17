@@ -56,6 +56,12 @@ class PresentationsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
+        // Coerce numeric fields to int so strict comparisons on the client work
+        foreach (['id', 'year', 'session_id', 'presentation_number', 'wrangler_id', 'early_bird', 'coordinator1_id', 'coordinator2_id'] as $k) {
+            if (array_key_exists($k, $out)) {
+                $out[$k] = ($out[$k] === null || $out[$k] === '') ? null : (int) $out[$k];
+            }
+        }
         return $out;
     }
 

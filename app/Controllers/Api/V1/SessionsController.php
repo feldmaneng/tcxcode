@@ -29,6 +29,12 @@ class SessionsController extends BaseApiController
         foreach (self::FIELD_MAP as $api => $db) {
             if (array_key_exists($db, $row)) $out[$api] = $row[$db];
         }
+        // Coerce numeric id fields to int for strict-equality checks on the client
+        foreach (['id', 'event_id', 'coordinator1_id', 'coordinator2_id'] as $k) {
+            if (array_key_exists($k, $out)) {
+                $out[$k] = ($out[$k] === null || $out[$k] === '') ? null : (int) $out[$k];
+            }
+        }
         return $out;
     }
 
