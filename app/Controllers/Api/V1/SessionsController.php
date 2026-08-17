@@ -130,13 +130,25 @@ class SessionsController extends BaseApiController
     public function update(int $id)
     {
         if (!$this->requireAdmin()) return $this->response;
-        $model = new SessionModel();
-        if (!$model->find($id)) return $this->jsonError(404, 'not_found');
+        $model    = new SessionModel();
+        $existing = $model->find($id);
+        if (!$existing) return $this->jsonError(404, 'not_found');
         $payload = (array) $this->request->getJSON(true);
         $row     = $this->apiToDb($payload);
         if (!$model->update($id, $row)) return $this->jsonError(422, 'update_failed', $model->errors());
+
+        // Presentations mirror the session number in their legacy Session
+        // column; keep them in sync when the number changes.
+        if (array_key_exists('SessionNumber', $row)
+            && (string) $row['SessionNumber'] !== (string) ($existing['SessionNumber'] ?? '')) {
+            \Config\Database::connect()->table('presentations')
+                ->where('SessionID', $id)
+                ->update(['Session' => (string) $row['SessionNumber']]);
+        }
+
         return $this->response->setJSON(['data' => $this->dbToApi($model->find($id))]);
     }
+
 
     public function delete(int $id)
     {

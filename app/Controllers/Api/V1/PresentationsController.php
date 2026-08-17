@@ -77,6 +77,40 @@ class PresentationsController extends BaseApiController
         return $out;
     }
 
+    /**
+     * The linked session is the source of truth for the legacy Session text
+     * column (and the Event/Year pair). Whenever a write sets or keeps a
+     * SessionID, mirror the session's number onto the row and ignore any
+     * Session value the client sent.
+     */
+    private function applySessionMirror(array &$dbRow, ?array $existing = null): void
+    {
+        $sid = null;
+        if (array_key_exists('SessionID', $dbRow)) {
+            $sid = $dbRow['SessionID'] !== null && $dbRow['SessionID'] !== '' ? (int) $dbRow['SessionID'] : null;
+        } elseif ($existing !== null && !empty($existing['SessionID'])) {
+            $sid = (int) $existing['SessionID'];
+        }
+        if (!$sid) return;
+
+        $db      = Database::connect();
+        $session = $db->table('sessions')
+            ->select('SessionID, EventID, SessionNumber')
+            ->where('SessionID', $sid)->get()->getRowArray();
+        if (!$session) return;
+
+        $dbRow['Session'] = (string) $session['SessionNumber'];
+
+        $event = $db->table('events')
+            ->select('Name, Year')
+            ->where('EventID', (int) $session['EventID'])->get()->getRowArray();
+        if ($event) {
+            $dbRow['Event'] = $event['Name'];
+            $dbRow['Year']  = (int) $event['Year'];
+        }
+    }
+
+
     private function attachAuthors(array &$row): void
     {
         $db = \Config\Database::connect();
@@ -251,6 +285,8 @@ class PresentationsController extends BaseApiController
         if ($deny = $this->requireModule(['crm'])) return $deny;
         $payload = $this->request->getJSON(true) ?? [];
         $dbRow = $this->apiToDb($payload);
+        $this->applySessionMirror($dbRow);
+
         $model = new PresentationModel();
         $db = Database::connect();
 
@@ -307,6 +343,8 @@ class PresentationsController extends BaseApiController
         $dbRow = $this->apiToDb($payload);
         $hasAuthors = array_key_exists('authors', $payload) && is_array($payload['authors']);
         if (empty($dbRow) && !$hasAuthors) return $this->jsonError(400, 'no_updatable_fields');
+        $this->applySessionMirror($dbRow, $existing);
+
 
         // Stamp StatusChangedAt whenever Status changes.
         if (array_key_exists('Status', $dbRow) && $dbRow['Status'] !== ($existing['Status'] ?? null)) {
@@ -526,20 +564,47 @@ class PresentationsController extends BaseApiController
         $order = array_values(array_unique(array_map('intval', (array) ($body['presentation_ids'] ?? []))));
         if (!$order) return $this->jsonError(422, 'validation_failed', ['required' => ['presentation_ids']]);
 
-        $existing = array_map(
+        // Rows already linked to this session.
+        $linked = array_map(
             fn($r) => (int) $r['PresentationID'],
             $db->table('presentations')->select('PresentationID')->where('SessionID', $sid)->get()->getResultArray()
         );
-        sort($existing);
-        $check = $order; sort($check);
-        if ($existing !== $check) return $this->jsonError(422, 'order_mismatch');
+
+        // Legacy rows that belong to this session by Event/Year/Session but have no SessionID yet.
+        $legacy = [];
+        $sessionRow = $db->table('sessions')->select('EventID, SessionNumber')->where('SessionID', $sid)->get()->getRowArray();
+        $eventRow = $sessionRow
+            ? $db->table('events')->select('Name, Year')->where('EventID', (int) $sessionRow['EventID'])->get()->getRowArray()
+            : null;
+        if ($eventRow) {
+            $rows = $db->table('presentations')
+                ->select('PresentationID')
+                ->groupStart()->where('SessionID', null)->orWhere('SessionID', 0)->groupEnd()
+                ->where('Event', $eventRow['Name'])
+                ->where('Year', $eventRow['Year'])
+                ->where('Session', (string) $sessionRow['SessionNumber'])
+                ->get()->getResultArray();
+            $legacy = array_map(fn($r) => (int) $r['PresentationID'], $rows);
+        }
+
+        $allowed = array_flip(array_merge($linked, $legacy));
+        foreach ($order as $pid) {
+            if (!isset($allowed[$pid])) return $this->jsonError(422, 'order_mismatch');
+        }
 
         $db->transStart();
         $n = 1;
         foreach ($order as $pid) {
-            $db->table('presentations')->where('PresentationID', $pid)->update(['PresentationNumber' => $n++]);
+            $update = ['PresentationNumber' => $n++];
+            if (in_array($pid, $legacy, true)) {
+                $update['SessionID'] = $sid;
+                $update['Session']   = (string) $sessionRow['SessionNumber'];
+            }
+
+            $db->table('presentations')->where('PresentationID', $pid)->update($update);
         }
         $db->transComplete();
+
 
         (new AdminAuditLogModel())->log(
             $actorId,
