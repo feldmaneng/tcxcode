@@ -75,11 +75,28 @@ class Jotformpost extends BaseController {
 		}
 		//https://pci.jotform.com/form/260336014432142 add the current year ending url digits (that is 2026)
 		// Security check to make sure only certain forms are allowed
-		if (!str_contains('260336014432142,262158585479170, 260351610976154, 253415296943161, otherformnumbers', $_POST['formID'])) {
+		if (!str_contains('261098599172167,262167847418164, 260351610976154, 253415296943161, otherformnumbers', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
-		if (($_POST['formID'] == "262158585479170") ||
+		if (($_POST['formID'] == "261098599172167") ||
+			($_POST['formID'] == "262167847418164") ) 
+			{ //Test EXPO
+			$type = "Professional";
+		} 
+		if ($_POST['formID'] == "261098599172167")
+		{
+		$eventYear = "China2026";
+		
+		}
+		
+		if ($_POST['formID'] == "262167847418164")
+		{
+		$eventYear = "Korea2026";
+		
+		}
+		
+		/*if (($_POST['formID'] == "262158585479170") ||
 			($_POST['formID'] == "260351610976154") ) { //Test EXPO
 			$type = "EXPO";
 		} else {
@@ -98,13 +115,42 @@ class Jotformpost extends BaseController {
 			if (str_contains($fees,'Tutorial'))  {
 				$tutorial = '1'; 
 			}		
-		}
+		}*/
 			
 
 		// 253415296943161 Prof or Exhibitor
 		
+			$data = [
+			'GivenName' => $_POST['attendeesfull']['first'],
+			'FamilyName' => $_POST['attendeesfull']['last'],
+			'NativeName' => $_POST['nativeFull'],
+			'NameOnBadge' => $_POST['badgeName'],
+			'Company' => $_POST['company'],
+			'CN_Company' => $_POST['nativeCompany']
+			'Email' => $email,
+			'Title' => $_POST['jobtitle'],
+			'Address1' => $_POST['workAddress']['addr_line1'],
+			'Address2' => $_POST['workAddress']['addr_line2'],
+			'City' => $_POST['workAddress']['city'],
+			'State' => $_POST['workAddress']['state'],
+			'Country' => $_POST['workAddress']['country'],
+			'PCode' => $_POST['workAddress']['postal'],
+			'Phone' => $_POST['workphone27'],
+			'Mobile'=> $_POST['mobile28'],
+			
+			'SubmissionId' => $sid,
+			'EventYear' => $eventYear,
+			'ToPrint' => 'Yes',
+			'Fees' => $fees,
+			'Control' => $_POST['control'],
+			'SpecialNeeds' => $_POST['doyou'],
+			'Type' => $type,
+			'Tutorial' => $tutorial
+		];
 
-		$data = [
+
+
+		/* $data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
 			'NameOnBadge' => $_POST['nameon16'],
@@ -128,7 +174,7 @@ class Jotformpost extends BaseController {
 			'SpecialNeeds' => $_POST['doyou'],
 			'Type' => $type,
 			'Tutorial' => $tutorial
-		];
+		]; */
 		
 
 		
