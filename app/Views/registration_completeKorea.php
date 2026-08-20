@@ -1,0 +1,42 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>Login Page</title>  
+</head>  
+<body>  
+    <div style="text-align: center;"><h1>TestConX Korea 2026</h1></div>;
+
+	
+	<div style="text-align: center;">
+	<!--
+	
+	<h1><img src="https://www.jotform.com/uploads/bitsworkshop/form_files/TestConX_Logo_Design7_500x142.5b1b2ce602abf3.40814036.png" width="430" height="122" /></h1>
+	-->
+	
+	<h1>Thank You!</h1>
+	</div>
+	<div style="text-align: center;">Your registration has been received.</div>
+	<div style="text-align: center;">We look forward to seeing you at the&nbsp;TestConX&nbsp;workshop <strong>October 27, 2026</strong>&nbsp;in Suwon, South Korea.</div>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<div style="text-align: center;">For any questions or requests you may have, please contact the</div>
+	<div style="text-align: center;"><strong>TestConX&nbsp;Registration Office</strong></div>
+	<div style="text-align: center;"><a href="mailto:office@testconx.org">office@testconx.org</a></div>
+	<div style="text-align: center;">
+	<div style="text-align: center;">Phone: +1 650-690-2395</div>
+	<div style="text-align: center;">&nbsp;</div>
+	<div style="text-align: center;">
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<div style="text-align: center;">To enter another Registration please click <a href="https://pci.jotform.com/form/262167847418164" target="_self">here</a>.</div>
+	<p>&nbsp;</p>
+	</div>
+	</div>
+
+  
+  
+  <!-- <a href='<?php echo base_url()."tools/secure.php/Main/signin"; ?>'>Sign In</a> -->    
+</body>  
+</html>  

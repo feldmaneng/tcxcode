@@ -35,7 +35,7 @@ class Jotformpost extends BaseController {
 	
 	function postguest()
 	{
-		$eventYear = "Korea2026"; //$_POST["eventYearID"];
+		$eventYear = "Mesa2026"; //$_POST["eventYearID"];
 		
 		//die ("Reaching function");
 		
@@ -119,7 +119,7 @@ class Jotformpost extends BaseController {
 			
 
 		// 253415296943161 Prof or Exhibitor
-		
+		if($eventYear == "China2026" ){
 			$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
@@ -145,10 +145,40 @@ class Jotformpost extends BaseController {
 			'Control' => $_POST['control'],
 			'SpecialNeeds' => $_POST['doyou'],
 			'Type' => $type,
-			'Tutorial' => $tutorial
+			'Tutorial' => $tutorial,
+			'InvitedByCompanyID' => '204'
 		];
-
-
+		}
+	if($eventYear == "Korea2026" ){
+			$data = [
+			'GivenName' => $_POST['attendeesfull']['first'],
+			'FamilyName' => $_POST['attendeesfull']['last'],
+			'NativeName' => $_POST['nativeFull'],
+			'NameOnBadge' => $_POST['badgeName'],
+			'Company' => $_POST['company'],
+			'CN_Company' => $_POST['nativeCompany']
+			'Email' => $email,
+			'Title' => $_POST['jobtitle'],
+			'Address1' => $_POST['workAddress']['addr_line1'],
+			'Address2' => $_POST['workAddress']['addr_line2'],
+			'City' => $_POST['workAddress']['city'],
+			'State' => $_POST['workAddress']['state'],
+			'Country' => $_POST['workAddress']['country'],
+			'PCode' => $_POST['workAddress']['postal'],
+			'Phone' => $_POST['workphone27'],
+			'Mobile'=> $_POST['mobile28'],
+			
+			'SubmissionId' => $sid,
+			'EventYear' => $eventYear,
+			'ToPrint' => 'Yes',
+			'Fees' => $fees,
+			'Control' => $_POST['control'],
+			'SpecialNeeds' => $_POST['doyou'],
+			'Type' => $type,
+			'Tutorial' => $tutorial,
+			'InvitedByCompanyID' => '205'
+		];
+		}
 
 		/* $data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
@@ -254,10 +284,20 @@ class Jotformpost extends BaseController {
 			
 		}
 
-		if ($type === "EXPO") {
+		/* 
+if ($type === "EXPO") {
 			return view('registration_complete_expo');
 		} else {
 			return view('registration_complete');
+		}
+ */
+		
+		
+		if ($eventYear == "Korea2026"){
+		return view('registration_completeKorea');
+		}
+		if ($eventYear == "China2026"){
+		return view('registration_completeChina');
 		}
 	// return $this->_example_output($output);  
 
