@@ -126,7 +126,7 @@ class Jotformpost extends BaseController {
 			'NativeName' => $_POST['nativeFull'],
 			'NameOnBadge' => $_POST['badgeName'],
 			'Company' => $_POST['company'],
-			'CN_Company' => $_POST['nativeCompany']
+			'CN_Company' => $_POST['nativeCompany'],
 			'Email' => $email,
 			'Title' => $_POST['jobtitle'],
 			'Address1' => $_POST['workAddress']['addr_line1'],
@@ -156,7 +156,7 @@ class Jotformpost extends BaseController {
 			'NativeName' => $_POST['nativeFull'],
 			'NameOnBadge' => $_POST['badgeName'],
 			'Company' => $_POST['company'],
-			'CN_Company' => $_POST['nativeCompany']
+			'CN_Company' => $_POST['nativeCompany'],
 			'Email' => $email,
 			'Title' => $_POST['jobtitle'],
 			'Address1' => $_POST['workAddress']['addr_line1'],
