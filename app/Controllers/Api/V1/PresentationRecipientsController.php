@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers\Api\V1;
 
+use App\Libraries\ProgramAccess;
 use App\Models\UserModuleModel;
 use Config\Database;
 
@@ -69,11 +70,13 @@ class PresentationRecipientsController extends BaseApiController
 
         // Resolve presentation -> session -> event
         $pres = $db->table('presentations')
-            ->select('PresentationID, SessionID')
+            ->select('PresentationID, SessionID' . (ProgramAccess::hasCoordinatorColumns()
+                ? ', Coordinator1ID, Coordinator2ID, CoordinatorsPinned' : ''))
             ->where('PresentationID', $presentationId)
             ->get()->getRowArray();
         if (!$pres) return $this->jsonError(404, 'presentation_not_found');
 
+        $coordinatorIds = ProgramAccess::coordinatorIdsFromRow($pres);
         $eventId = null;
         $sessionId = $pres['SessionID'] ? (int) $pres['SessionID'] : null;
         if ($sessionId) {
@@ -130,16 +133,10 @@ class PresentationRecipientsController extends BaseApiController
                     'contact_id' => (int) $r['ContactID'],
                 ];
             }
-            if ($sessionId && isset($sess)) {
-                $addUser(isset($sess['Coordinator1ID']) ? (int) $sess['Coordinator1ID'] : null);
-                $addUser(isset($sess['Coordinator2ID']) ? (int) $sess['Coordinator2ID'] : null);
-            }
+            foreach ($coordinatorIds as $cid) $addUser($cid);
         } else {
-            // internal: session coordinators + event chairs
-            if ($sessionId && isset($sess)) {
-                $addUser(isset($sess['Coordinator1ID']) ? (int) $sess['Coordinator1ID'] : null);
-                $addUser(isset($sess['Coordinator2ID']) ? (int) $sess['Coordinator2ID'] : null);
-            }
+            // internal: presentation coordinators + event chairs
+            foreach ($coordinatorIds as $cid) $addUser($cid);
             if ($event) {
                 $addUser(isset($event['EventChair1ID']) ? (int) $event['EventChair1ID'] : null);
                 $addUser(isset($event['EventChair2ID']) ? (int) $event['EventChair2ID'] : null);
@@ -190,20 +187,17 @@ class PresentationRecipientsController extends BaseApiController
         $isAdmin = (new UserModuleModel())->userHasModule($userId, 'admin');
 
         // Resolve presentation -> session -> event
-        $pres = $db->table('presentations')->select('PresentationID, SessionID, Status')
+        $pres = $db->table('presentations')->select('PresentationID, SessionID, Status' . (ProgramAccess::hasCoordinatorColumns()
+                ? ', Coordinator1ID, Coordinator2ID, CoordinatorsPinned' : ''))
             ->where('PresentationID', $pid)->get()->getRowArray();
         if (!$pres) return $this->jsonError(404, 'presentation_not_found');
 
         $eventId = null;
-        $isCoord = false;
+        $isCoord = in_array($userId, ProgramAccess::coordinatorIdsFromRow($pres), true);
         if ($pres['SessionID']) {
-            $sess = $db->table('sessions')->select('EventID, Coordinator1ID, Coordinator2ID')
+            $sess = $db->table('sessions')->select('EventID')
                 ->where('SessionID', (int) $pres['SessionID'])->get()->getRowArray();
-            if ($sess) {
-                $eventId = (int) $sess['EventID'];
-                $isCoord = (int) ($sess['Coordinator1ID'] ?? 0) === $userId
-                        || (int) ($sess['Coordinator2ID'] ?? 0) === $userId;
-            }
+            if ($sess) $eventId = (int) $sess['EventID'];
         }
 
         $isChair = $isManager = $isGeneralChair = false;
@@ -269,7 +263,8 @@ class PresentationRecipientsController extends BaseApiController
 
         $contactId = $user['ContactID'] ? (int) $user['ContactID'] : null;
 
-        $pres = $db->table('presentations')->select('PresentationID, SessionID')
+        $pres = $db->table('presentations')->select('PresentationID, SessionID' . (ProgramAccess::hasCoordinatorColumns()
+                ? ', Coordinator1ID, Coordinator2ID, CoordinatorsPinned' : ''))
             ->where('PresentationID', $presentationId)->get()->getRowArray();
         if (!$pres) return $this->jsonError(404, 'presentation_not_found');
 
@@ -289,16 +284,12 @@ class PresentationRecipientsController extends BaseApiController
         // Session Coordinator
         $eventId = null;
         if ($pres['SessionID']) {
-            $sess = $db->table('sessions')
-                ->select('EventID, Coordinator1ID, Coordinator2ID')
+            $sess = $db->table('sessions')->select('EventID')
                 ->where('SessionID', (int) $pres['SessionID'])->get()->getRowArray();
-            if ($sess) {
-                $eventId = (int) $sess['EventID'];
-                if ((int) ($sess['Coordinator1ID'] ?? 0) === $userId
-                    || (int) ($sess['Coordinator2ID'] ?? 0) === $userId) {
-                    $roles[] = 'Session Coordinator';
-                }
-            }
+            if ($sess) $eventId = (int) $sess['EventID'];
+        }
+        if (in_array($userId, ProgramAccess::coordinatorIdsFromRow($pres), true)) {
+            $roles[] = 'Session Coordinator';
         }
 
         // Event Chair / Event Planner (Manager) / General Chair
@@ -352,11 +343,13 @@ class PresentationRecipientsController extends BaseApiController
         $dbC = Database::connect('control');
 
         $pres = $db->table('presentations')
-            ->select('PresentationID, SessionID')
+            ->select('PresentationID, SessionID' . (ProgramAccess::hasCoordinatorColumns()
+                ? ', Coordinator1ID, Coordinator2ID, CoordinatorsPinned' : ''))
             ->where('PresentationID', $presentationId)
             ->get()->getRowArray();
         if (!$pres) return $this->jsonError(404, 'presentation_not_found');
 
+        $coordinatorIds = ProgramAccess::coordinatorIdsFromRow($pres);
         $sessionId = $pres['SessionID'] ? (int) $pres['SessionID'] : null;
         $eventId = null;
         $sess = null;
@@ -388,11 +381,9 @@ class PresentationRecipientsController extends BaseApiController
         };
 
         $coords = [];
-        if ($sess) {
-            foreach ([$sess['Coordinator1ID'] ?? null, $sess['Coordinator2ID'] ?? null] as $cid) {
-                $row = $lookup($cid ? (int) $cid : null);
-                if ($row) $coords[] = $row;
-            }
+        foreach ($coordinatorIds as $cid) {
+            $row = $lookup((int) $cid);
+            if ($row) $coords[] = $row;
         }
         $chairs = [];
         if ($event) {
