@@ -75,7 +75,7 @@ class Jotformpost extends BaseController {
 		}
 		//https://pci.jotform.com/form/260336014432142 add the current year ending url digits (that is 2026)
 		// Security check to make sure only certain forms are allowed
-		if (!str_contains('261098599172167,262167847418164, 260351610976154, 253415296943161, otherformnumbers', $_POST['formID'])) {
+		if (!str_contains('262167847418164,262158585479170, 260351610976154, 253415296943161, otherformnumbers', $_POST['formID'])) {
 			die ("Not authorized");
 		}
 		
@@ -84,7 +84,7 @@ class Jotformpost extends BaseController {
 			{ //Test EXPO
 			$type = "Professional";
 		} 
-		if ($_POST['formID'] == "261098599172167")
+		if ($_POST['formID'] == "262158585479170")
 		{
 		$eventYear = "China2026";
 		

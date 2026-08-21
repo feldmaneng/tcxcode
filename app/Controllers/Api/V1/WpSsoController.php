@@ -284,7 +284,11 @@ class WpSsoController extends ResourceController
             return $this->failUnauthorized('account_disabled');
         }
 
+        // ---- 7b. Auto-link the CRM contact (never blocks sign-in) ----
+        $this->linkContact($db, $user, $wpUserId, $wpEmail);
+
         // ---- 8. Return same shape as /auth/login ----
+
         return $this->respond([
             'user' => [
                 'id'                   => (int) $user['UserID'],
@@ -299,6 +303,93 @@ class WpSsoController extends ResourceController
     }
 
     /**
+     * Resolves and persists users.ContactID for a WP-SSO user when it is empty.
+     *
+     * Match order:
+     *   1. contacts.WordPressID = wp_user_id  (authoritative)
+     *   2. unique normalized email match on contacts.Email
+     *
+     * `users` lives in the `control` DB group, `contacts` in the default group,
+     * so this is two queries — never a join. Any failure is logged and
+     * swallowed: a broken link must never block sign-in.
+     */
+    private function linkContact($db, array $user, int $wpUserId, string $wpEmail): void
+    {
+        try {
+            $userId = (int) ($user['UserID'] ?? 0);
+            if ($userId <= 0) return;
+            if (isset($user['ContactID']) && (int) $user['ContactID'] > 0) return;
+
+            $app = \Config\Database::connect();
+            $basis = null;
+
+            $row = $app->table('contacts')->select('ContactID, WordPressID, Email')
+                ->where('WordPressID', $wpUserId)->limit(2)->get()->getResultArray();
+            if (count($row) === 1) {
+                $contactId = (int) $row[0]['ContactID'];
+                $basis = 'wp_user_id';
+            } else {
+                if (count($row) > 1) {
+                    log_message('warning', '[WpSso] contact_link_ambiguous_wp_id wp_user_id=' . $wpUserId);
+                }
+                $email = \App\Libraries\EmailNormalizer::normalize($wpEmail);
+                if ($email === null) return;
+
+                $matches = $app->table('contacts')->select('ContactID, WordPressID')
+                    ->where('LOWER(Email)', $email)->limit(2)->get()->getResultArray();
+                if (count($matches) !== 1) {
+                    if (count($matches) > 1) {
+                        log_message('warning', '[WpSso] contact_link_ambiguous_email user_id=' . $userId);
+                    }
+                    return;
+                }
+                $contactId = (int) $matches[0]['ContactID'];
+                $basis = 'email';
+
+                // Make the link authoritative next time.
+                if (empty($matches[0]['WordPressID'])) {
+                    $app->table('contacts')->where('ContactID', $contactId)
+                        ->update(['WordPressID' => $wpUserId]);
+                }
+            }
+
+            if ($contactId <= 0) return;
+
+            // users.ContactID is UNIQUE — don't steal another user's link.
+            $owner = $db->table('users')->select('UserID')
+                ->where('ContactID', $contactId)
+                ->where('UserID !=', $userId)
+                ->limit(1)->get()->getRowArray();
+            if ($owner) {
+                log_message('warning', '[WpSso] contact_link_taken user_id=' . $userId
+                    . ' contact_id=' . $contactId . ' owned_by=' . $owner['UserID']);
+                return;
+            }
+
+            $db->table('users')->where('UserID', $userId)->update(['ContactID' => $contactId]);
+            log_message('info', '[WpSso] contact_auto_link user_id=' . $userId
+                . ' contact_id=' . $contactId . ' basis=' . $basis);
+
+            try {
+                (new \App\Models\AdminAuditLogModel())->log(
+                    $userId,
+                    'user.contact.auto_link',
+                    'user',
+                    (string) $userId,
+                    ['contact_id' => $contactId, 'basis' => $basis, 'wp_user_id' => $wpUserId],
+                    $this->request->getIPAddress()
+                );
+            } catch (\Throwable $e) {
+                log_message('warning', '[WpSso] contact_auto_link_audit_failed: ' . $e->getMessage());
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[WpSso] contact_auto_link_failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+
+
      * Returns true if the given user has the 'admin' module assigned.
      * Admins are required to authenticate locally (password + TOTP), never via WP SSO.
      */
