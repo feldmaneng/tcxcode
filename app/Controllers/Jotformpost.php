@@ -123,7 +123,7 @@ class Jotformpost extends BaseController {
 			$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
 			'FamilyName' => $_POST['attendeesfull']['last'],
-			//'NativeName' => $_POST['nativeFull'],
+			'NativeName' => $_POST['nativeFull'],
 			'NameOnBadge' => $_POST['badgeName'],
 			'Company' => $_POST['company'],
 			'CN_Company' => $_POST['nativeCompany'],
