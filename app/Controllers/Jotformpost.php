@@ -119,6 +119,27 @@ class Jotformpost extends BaseController {
 			
 
 		// 253415296943161 Prof or Exhibitor
+		$db = \Config\Database::connect('registration');
+		$builder = $db->table('guests');
+				
+		$builder->where('Email', $email);
+		$builder->where('EventYear', $eventYear);
+		$query = $builder->get();
+		
+		if ($query->getNumRows() > 0) {
+			
+			if($eventYear == "China2026" ){
+			$email = 'Dupe9170'.$email;
+			
+			}
+			if($eventYear == "Korea2026" ){
+			$email = 'Dupe8164'.$email;
+			
+			}
+			
+			
+		}
+		
 		if($eventYear == "China2026" ){
 			$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
@@ -149,6 +170,7 @@ class Jotformpost extends BaseController {
 			'InvitedByCompanyID' => '204'
 		];
 		}
+		
 	if($eventYear == "Korea2026" ){
 			$data = [
 			'GivenName' => $_POST['attendeesfull']['first'],
