@@ -143,10 +143,10 @@ class Jotformpost extends BaseController {
 			'EventYear' => $eventYear,
 			'ToPrint' => 'Yes',
 			'Fees' => $fees,
-			'Control' => $_POST['control'],
-			'SpecialNeeds' => $_POST['doyou'],
+			'Control' => $_POST['registrationtracker'],
+			//'SpecialNeeds' => $_POST['doyou'],
 			'Type' => $type,
-			'Tutorial' => $tutorial,
+			//'Tutorial' => $tutorial,
 			'InvitedByCompanyID' => '204'
 		];
 		}
@@ -173,10 +173,10 @@ class Jotformpost extends BaseController {
 			'EventYear' => $eventYear,
 			'ToPrint' => 'Yes',
 			'Fees' => $fees,
-			'Control' => $_POST['control'],
-			'SpecialNeeds' => $_POST['doyou'],
+			'Control' => $_POST['registrationtracker'],
+			//'SpecialNeeds' => $_POST['doyou'],
 			'Type' => $type,
-			'Tutorial' => $tutorial,
+			//'Tutorial' => $tutorial,
 			'InvitedByCompanyID' => '205'
 		];
 		}
