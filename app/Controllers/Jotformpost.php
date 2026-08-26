@@ -79,13 +79,12 @@ class Jotformpost extends BaseController {
 			die ("Not authorized");
 		}
 		
-		if (($_POST['formID'] == "261098599172167") ||
-			($_POST['formID'] == "262167847418164") ||
-			 $_POST['formID'] == "262364454825159") 
+		if (($_POST['formID'] == "262158585479170") ||
+			($_POST['formID'] == "262167847418164")) 
 			{ //Test EXPO
 			$type = "Professional";
 		} 
-		if ($_POST['formID'] == "262158585479170" || $_POST['formID'] == "262364454825159")
+		if ($_POST['formID'] == "262158585479170")
 		{
 		$eventYear = "China2026";
 		
