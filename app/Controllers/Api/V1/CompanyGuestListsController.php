@@ -162,6 +162,57 @@ class CompanyGuestListsController extends BaseApiController
         ]);
     }
 
+    /**
+     * GET /api/v1/company-guest-lists/guest-counts?ids=1,2,3
+     *
+     * Live (non-deleted) guest counts per guest list, so the event summary
+     * page can show used-vs-limit without loading every list separately.
+     * Returns { data: { "<companyGuestListsId>": {professional, exhibitor, banquet, golf} } }
+     */
+    public function guestCounts()
+    {
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
+
+        $raw = (string) $this->request->getGet('ids');
+        $ids = array_values(array_unique(array_filter(
+            array_map('intval', explode(',', $raw)),
+            fn($n) => $n > 0,
+        )));
+        if (!$ids) return $this->response->setJSON(['data' => (object) []]);
+
+        if (!$this->isAdmin($actorId)) {
+            $mine = array_map('intval', (new CompanyGuestListsManagerModel())->companyIdsForUser($actorId));
+            $ids  = array_values(array_intersect($ids, $mine));
+            if (!$ids) return $this->response->setJSON(['data' => (object) []]);
+        }
+
+        $out = [];
+        foreach ($ids as $id) {
+            $out[(string) $id] = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0, 'golf' => 0];
+        }
+
+        $rows = (new \App\Models\EventGuestModel())->builder()
+            ->select('InvitedByCompanyID, Type, BanquetCompanyID, GolfCompanyID')
+            ->whereIn('InvitedByCompanyID', $ids)
+            ->where('DeletedAt', null)
+            ->get()->getResultArray();
+
+        foreach ($rows as $r) {
+            $key = (string) (int) $r['InvitedByCompanyID'];
+            if (!isset($out[$key])) continue;
+            if (\App\Models\EventGuestModel::normalizeType($r['Type'] ?? null) === \App\Models\EventGuestModel::TYPE_EXHIBITOR) {
+                $out[$key]['exhibitor']++;
+            } else {
+                $out[$key]['professional']++;
+            }
+            if (!empty($r['BanquetCompanyID'])) $out[$key]['banquet']++;
+            if (!empty($r['GolfCompanyID']))    $out[$key]['golf']++;
+        }
+
+        return $this->response->setJSON(['data' => $out]);
+    }
+
     public function show(int $id)
     {
         $actorId = $this->requireActor();

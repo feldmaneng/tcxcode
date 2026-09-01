@@ -97,18 +97,78 @@ class SessionsController extends BaseApiController
         $rows  = $builder->limit($perPage, ($page - 1) * $perPage)->get()->getResultArray();
 
         return $this->response->setJSON([
-            'data'  => array_map(fn($r) => $this->dbToApi($r), $rows),
+            'data'  => $this->attachCoordinatorNames(array_map(fn($r) => $this->dbToApi($r), $rows)),
             'page'  => $page,
             'per_page' => $perPage,
             'total' => $total,
         ]);
     }
 
+    /**
+     * Adds coordinator1_name / coordinator2_name (Given "Nickname" Family)
+     * to already-mapped API rows. `users` lives in the control DB while
+     * nicknames live on `contacts` in the default DB, so both are resolved
+     * with two batched lookups rather than a cross-DB join.
+     *
+     * @param array<int,array<string,mixed>> $apiRows
+     * @return array<int,array<string,mixed>>
+     */
+    private function attachCoordinatorNames(array $apiRows): array
+    {
+        $userIds = [];
+        foreach ($apiRows as $r) {
+            foreach (['coordinator1_id', 'coordinator2_id'] as $k) {
+                $id = $r[$k] ?? null;
+                if ($id) $userIds[(int) $id] = true;
+            }
+        }
+        $names = [];
+        if ($userIds) {
+            $ids   = array_keys($userIds);
+            $users = \Config\Database::connect('control')->table('users')
+                ->select('UserID, GivenName, FamilyName, ContactID')
+                ->whereIn('UserID', $ids)
+                ->get()->getResultArray();
+
+            $contactIds = [];
+            foreach ($users as $u) {
+                if (!empty($u['ContactID'])) $contactIds[(int) $u['ContactID']] = true;
+            }
+            $nicknames = [];
+            if ($contactIds) {
+                $rows = \Config\Database::connect()->table('contacts')
+                    ->select('ContactID, Nickname')
+                    ->whereIn('ContactID', array_keys($contactIds))
+                    ->get()->getResultArray();
+                foreach ($rows as $c) {
+                    $nick = trim((string) ($c['Nickname'] ?? ''));
+                    if ($nick !== '') $nicknames[(int) $c['ContactID']] = $nick;
+                }
+            }
+            foreach ($users as $u) {
+                $nick = $nicknames[(int) ($u['ContactID'] ?? 0)] ?? null;
+                $name = PresentationRecipientsController::formatName(
+                    $u['GivenName'] ?? null,
+                    $nick,
+                    $u['FamilyName'] ?? null,
+                );
+                if ($name !== '') $names[(int) $u['UserID']] = $name;
+            }
+        }
+        foreach ($apiRows as &$r) {
+            $r['coordinator1_name'] = $names[(int) ($r['coordinator1_id'] ?? 0)] ?? null;
+            $r['coordinator2_name'] = $names[(int) ($r['coordinator2_id'] ?? 0)] ?? null;
+        }
+        unset($r);
+        return $apiRows;
+    }
+
     public function show(int $id)
     {
         $row = (new SessionModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
-        return $this->response->setJSON(['data' => $this->dbToApi($row)]);
+        $out = $this->attachCoordinatorNames([$this->dbToApi($row)]);
+        return $this->response->setJSON(['data' => $out[0]]);
     }
 
     public function create()

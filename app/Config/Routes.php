@@ -680,6 +680,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     // Company Guest Lists (guest-list limits per event/company) + managers + guests
     $routes->group('company-guest-lists', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',                       'CompanyGuestListsController::index');
+        $routes->get('guest-counts',            'CompanyGuestListsController::guestCounts');
         $routes->get('(:num)',                  'CompanyGuestListsController::show/$1');
         $routes->post('/',                      'CompanyGuestListsController::create');
         $routes->put('(:num)',                  'CompanyGuestListsController::update/$1');
@@ -759,6 +760,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('presentations/(:num)/contacts',   'PresentationRecipientsController::contacts/$1');
         $routes->get('presentations/(:num)/roles/(:num)', 'PresentationRecipientsController::userRoles/$1/$2');
         $routes->post('inbound/resolve',                'PresentationRecipientsController::resolveInbound');
+        // Affiliation snapshot on an author row (admin / event manager only)
+        $routes->put('authors/(:num)/company',          'AuthorPortalAuthorsController::updateCompany/$1');
         $routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
     });
 
@@ -886,7 +889,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
-
 
 
 /*
