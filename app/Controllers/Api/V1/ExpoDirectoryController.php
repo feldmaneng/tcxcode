@@ -448,9 +448,219 @@ class ExpoDirectoryController extends BaseApiController
         ]);
     }
 
+    // ------------------------------------------------------------ history
+
+    /**
+     * History views are restricted to event planners (explicit `expo` module),
+     * admins, and the chairs/managers of the relevant event. Exhibitor
+     * coordinators never see history.
+     *
+     * $eventId null = company-scoped history; then the chair/manager check
+     * passes when the user holds a chair/manager role on ANY event.
+     */
+    private function canViewHistory(int $userId, ?int $eventId): bool
+    {
+        if ($this->isPrivileged($userId)) return true;
+        $ev = new EventModel();
+        if ($eventId !== null && $eventId > 0) {
+            $row = $ev->select('EventChair1ID, EventChair2ID, EventManagerID, GeneralChairID')->find($eventId);
+            if (!$row) return false;
+            foreach ($row as $col => $val) {
+                if ((int) $val === $userId) return true;
+            }
+            return false;
+        }
+        // Company-scoped: any event role counts.
+        $rows = $ev->select('EventID')
+            ->groupStart()
+                ->where('EventChair1ID', $userId)
+                ->orWhere('EventChair2ID', $userId)
+                ->orWhere('EventManagerID', $userId)
+                ->orWhere('GeneralChairID', $userId)
+            ->groupEnd()
+            ->limit(1)->get()->getResultArray();
+        return !empty($rows);
+    }
+
+    /** Shape one expodirectory row for history output. */
+    private function historyRow(array $r, array $tagsByEntry, array $events): array
+    {
+        $eventId = $r['EventID'] === null ? null : (int) $r['EventID'];
+        $ev = $eventId ? ($events[$eventId] ?? null) : null;
+        return [
+            'entry_id'     => (int) $r['EntryID'],
+            'company_id'   => $r['CompanyID'] === null ? null : (int) $r['CompanyID'],
+            'company_name' => $r['CompanyName'],
+            'year'         => (int) $r['Year'],
+            'event'        => $r['Event'],
+            'event_id'     => $eventId,
+            'event_name'   => $ev['Name'] ?? null,
+            'booth_number' => $r['BoothNumber'] ?? null,
+            'booth_type'   => $r['BoothType'] ?? null,
+            'status'       => $r['Status'],
+            'tags'         => $tagsByEntry[(int) $r['EntryID']] ?? [],
+        ];
+    }
+
+    /** Batch tag hydration for history rows: {entryId: [{id,name,category}]} */
+    private function historyTags(array $entryIds): array
+    {
+        $entryIds = array_values(array_filter(array_map('intval', $entryIds)));
+        if (!$entryIds) return [];
+        $tagIdsByEntry = (new ExpoDirectoryTagModel())->tagIdsForEntries($entryIds);
+        $allIds = [];
+        foreach ($tagIdsByEntry as $ids) foreach ($ids as $tid) $allIds[$tid] = true;
+        if (!$allIds) return [];
+        $tagsById = [];
+        foreach ((new ExpoTagModel())->allSorted(false) as $t) {
+            $id = (int) $t['TagID'];
+            if (!isset($allIds[$id])) continue;
+            $tagsById[$id] = ['id' => $id, 'name' => (string) $t['Name'], 'category' => (string) ($t['Category'] ?? 'sponsorship')];
+        }
+        $out = [];
+        foreach ($tagIdsByEntry as $entryId => $ids) {
+            $out[$entryId] = array_values(array_filter(array_map(fn($tid) => $tagsById[$tid] ?? null, $ids)));
+        }
+        return $out;
+    }
+
+    /** GET /api/v1/expo-directory/history/(:num) — exhibiting history for one company + its corporate family. */
+    public function history($companyId = null)
+    {
+        [$userId, $privileged] = $this->actorContext();
+        if ($userId !== null && !$this->canViewHistory($userId, null)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+        $companyId = (int) $companyId;
+        if ($companyId <= 0) return $this->jsonError(400, 'invalid_company_id');
+
+        $family = \App\Libraries\CompanyFamily::familyIds($companyId);
+        if (!$family) $family = [$companyId];
+
+        $rows = (new ExpoDirectoryModel())->builder()
+            ->select('EntryID, CompanyID, CompanyName, Year, Event, EventID, BoothNumber, BoothType, Status')
+            ->whereIn('CompanyID', $family)
+            ->where('DeletedAt', null)
+            ->orderBy('Year', 'DESC')->orderBy('CompanyName', 'ASC')
+            ->get()->getResultArray();
+
+        $eventIds = array_values(array_filter(array_unique(array_map(fn($r) => (int) ($r['EventID'] ?? 0), $rows))));
+        $events = $this->eventsById($eventIds);
+        $tagsByEntry = $this->historyTags(array_map(fn($r) => (int) $r['EntryID'], $rows));
+
+        $self = [];
+        $related = [];
+        foreach ($rows as $r) {
+            $out = $this->historyRow($r, $tagsByEntry, $events);
+            if ((int) $r['CompanyID'] === $companyId) $self[] = $out;
+            else $related[] = $out;
+        }
+
+        return $this->response->setJSON([
+            'data' => [
+                'company_id' => $companyId,
+                'family_ids' => $family,
+                'self'       => $self,
+                'related'    => $related,
+            ],
+        ]);
+    }
+
+    /** GET /api/v1/expo-directory/history-report?event_id= — per-exhibitor history for one event. Privileged. */
+    public function eventHistoryReport()
+    {
+        [$userId, $privileged] = $this->actorContext();
+        $eventId = (int) ($this->request->getGet('event_id') ?? 0);
+        if ($eventId <= 0) return $this->jsonError(400, 'invalid_event_id');
+        if ($userId !== null && !$this->canViewHistory($userId, $eventId)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+
+        $entries = (new ExpoDirectoryModel())->builder()
+            ->select('EntryID, CompanyID, CompanyName')
+            ->where('EventID', $eventId)
+            ->where('DeletedAt', null)
+            ->orderBy('CompanyName', 'ASC')
+            ->get()->getResultArray();
+
+        // Resolve family ids per company, then fetch all family history rows in
+        // one query. Family lookups are level-batched (CompanyFamily), not per row.
+        $familyByCompany = [];
+        $allFamily = [];
+        foreach ($entries as $e) {
+            $cid = (int) ($e['CompanyID'] ?? 0);
+            if ($cid <= 0) { $familyByCompany[$cid] = []; continue; }
+            if (!isset($familyByCompany[$cid])) {
+                $familyByCompany[$cid] = \App\Libraries\CompanyFamily::familyIds($cid);
+            }
+            foreach ($familyByCompany[$cid] as $f) $allFamily[$f] = true;
+        }
+
+        $rows = [];
+        if ($allFamily) {
+            $rows = (new ExpoDirectoryModel())->builder()
+                ->select('EntryID, CompanyID, CompanyName, Year, Event, EventID, BoothNumber, BoothType, Status')
+                ->whereIn('CompanyID', array_keys($allFamily))
+                ->where('DeletedAt', null)
+                ->where('(EventID IS NULL OR EventID <> ' . $eventId . ')', null, false)
+                ->orderBy('Year', 'DESC')
+                ->get()->getResultArray();
+        }
+        $eventIds = array_values(array_filter(array_unique(array_map(fn($r) => (int) ($r['EventID'] ?? 0), $rows))));
+        $events = $this->eventsById($eventIds);
+        $tagsByEntry = $this->historyTags(array_map(fn($r) => (int) $r['EntryID'], $rows));
+
+        // Group history rows per exhibiting company of this event.
+        $historyByCompany = [];
+        foreach ($familyByCompany as $cid => $family) {
+            $historyByCompany[$cid] = [];
+        }
+        $lookup = []; // company_id => [entry company ids in this event]
+        foreach ($entries as $e) {
+            $cid = (int) ($e['CompanyID'] ?? 0);
+            $lookup[$cid][] = (int) $e['EntryID'];
+        }
+        foreach ($rows as $r) {
+            $rowCompany = (int) ($r['CompanyID'] ?? 0);
+            foreach ($familyByCompany as $cid => $family) {
+                if ($cid > 0 && in_array($rowCompany, $family, true)) {
+                    $out = $this->historyRow($r, $tagsByEntry, $events);
+                    $out['is_self'] = $rowCompany === $cid ? 1 : 0;
+                    $historyByCompany[$cid][] = $out;
+                }
+            }
+        }
+
+        $report = [];
+        foreach ($entries as $e) {
+            $cid = (int) ($e['CompanyID'] ?? 0);
+            $hist = $historyByCompany[$cid] ?? [];
+            $years = array_values(array_unique(array_map(fn($h) => (int) $h['year'], $hist)));
+            rsort($years);
+            $tags = [];
+            foreach ($hist as $h) {
+                foreach ($h['tags'] as $t) $tags[$t['id']] = $t;
+            }
+            $report[] = [
+                'entry_id'         => (int) $e['EntryID'],
+                'company_id'       => $cid > 0 ? $cid : null,
+                'company_name'     => $e['CompanyName'],
+                'prior_events'     => count($years),
+                'first_year'       => $years ? (int) min($years) : null,
+                'last_year'        => $years ? (int) max($years) : null,
+                'related_entries'  => count(array_filter($hist, fn($h) => $h['is_self'] === 0)),
+                'tags'             => array_values($tags),
+                'history'          => $hist,
+            ];
+        }
+
+        return $this->response->setJSON(['data' => $report]);
+    }
+
     /** GET /api/v1/expo-directory/{id} */
     public function show(int $id)
     {
+
         [$userId, $privileged, $contactId] = $this->actorContext();
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');

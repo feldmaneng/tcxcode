@@ -545,6 +545,7 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
+
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -712,6 +713,9 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('prior-entries',                'ExpoDirectoryController::priorEntries');
         $routes->get('event-counts',                 'ExpoDirectoryController::eventCounts');
         $routes->get('company-search',               'ExpoDirectoryController::companySearch');
+        $routes->get('history-report',               'ExpoDirectoryController::eventHistoryReport');
+        $routes->get('history/(:num)',               'ExpoDirectoryController::history/$1');
+
 
         // Exhibitor artwork file manager (/public_html/EXPOdirectory) — admin
         // and event managers only. Declared before the (:num) routes.
@@ -889,7 +893,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
-
 
 /*
  * --------------------------------------------------------------------
