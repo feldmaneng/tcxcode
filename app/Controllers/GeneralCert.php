@@ -247,14 +247,14 @@ class GeneralCert extends BaseController {
 						
 					 if(!empty($row2->Nickname)){
 						  if($FIRSTNAME == $NICKNAME){
-							 $pdf->MultiCell(150, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 						  }
 						  else{
-						$pdf->MultiCell(150, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".'"'.$NICKNAME.'" '.$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 						  }
 					 }
 					 else{
-						$pdf->MultiCell(150, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
+						$pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
 					 }
 					$pdf->SetFont('times', '', 18);
 					if($SESSION == 'Poster' || $SESSION == 'Best Poster')
