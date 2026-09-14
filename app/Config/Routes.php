@@ -545,7 +545,6 @@ $routes->post('/emailcheck/emailcheck', 'emailcheck::emailcheck');
 $routes->get('/test/testarray', 'test::testarray');  
 $routes->post('/test/testarray', 'test::testarray');
 
-
 // Merged CI4 routes — add these inside your existing app/Config/Routes.php
 // (do not replace the whole file).
 //
@@ -744,6 +743,15 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)', 'ExpoDirectoryController::options', ['filter' => 'cors']);
     });
 
+    // Messaging — recipient lists for the in-app exhibitor/author mailer.
+    // Admins, expo planners and the event's chairs/managers only.
+    $routes->group('messaging', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('access',                'MessagingController::access');
+        $routes->get('recipients/exhibitors', 'MessagingController::exhibitorRecipients');
+        $routes->get('recipients/authors',    'MessagingController::authorRecipients');
+        $routes->options('(:any)',            'MessagingController::options', ['filter' => 'cors']);
+    });
+
     // Global exhibitor tags (sponsorship levels / advertising packages)
     $routes->group('expo-tags', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',          'ExpoTagsController::index');
@@ -893,6 +901,8 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
+
+
 
 /*
  * --------------------------------------------------------------------
