@@ -245,6 +245,11 @@ class GeneralCert extends BaseController {
 						$pdf->SetFont('times', '', 20);
 						}
 						
+						 if($length > 24)
+						{
+						$pdf->SetFont('times', '', 18);
+						}
+						
 					 if(!empty($row2->Nickname)){
 						  if($FIRSTNAME == $NICKNAME){
 							 $pdf->MultiCell(100, 25,$FIRSTNAME." ".$LASTNAME, 0, 'C', 0, 0, $x, $y+2.5*$z, true);
