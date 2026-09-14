@@ -1872,7 +1872,7 @@ exit();
 	  }		
 
 
-		function Asia($eventYear = 'Korea2025')
+		function Asia($eventYear = 'Korea2026')
 		{
 			/* logic 
 			native name for that country and event
@@ -2268,7 +2268,7 @@ exit();
 			
 		}
 		
-		function Chinax($eventYear = 'China2025')
+		function Chinax($eventYear = 'China2026')
 		{
 			
 			
@@ -2467,10 +2467,10 @@ exit();
 			//hysmyeongjostdmedium.php
 			// use the font
 			if (!empty($results[$n]["NativeName"])){
-				if($EventYear == "Korea2025"){
+				if($EventYear == "Korea2026"){
 				$pdf->SetFont('cid0kr', '', 55,);
 				}
-				else if($EventYear == "China2025"){
+				else if($EventYear == "China2026"){
 					$pdf->SetFont('cid0cs', '', 55,);
 				}
 				else{
@@ -2594,11 +2594,11 @@ function BadgesMesaProfessional () {
 }
 
 function Korea () {
-	$this->Asia("Korea2025");
+	$this->Asia("Korea2026");
 }
 
 function China () {
-	$this->Asia("China2025");
+	$this->Asia("China2026");
 }
 
 function BadgesMesaExhibitor () {
