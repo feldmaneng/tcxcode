@@ -38,6 +38,12 @@ final class ModuleAccess
             $codes[] = 'author-portal';
         }
 
+        if (!in_array('expo', $codes, true)
+            && (self::isExpoCoordinator($userId) || self::isEventResponsible($userId))) {
+            $codes[] = 'expo';
+        }
+
+
         return self::$cache[$userId] = $codes;
     }
 
@@ -49,9 +55,56 @@ final class ModuleAccess
     private static function isGuestListManager(int $userId): bool
     {
         try {
-            return db_connect()->table('companyguestlists_managers')
+            // companyguestlists_managers lives in the 'registration' DB group.
+            return db_connect('registration')->table('companyguestlists_managers')
                 ->where('UserID', $userId)->countAllResults() > 0;
         } catch (\Throwable $e) {
+            log_message('error', '[modules] guest-list manager lookup failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * True when the user runs at least one event (event manager or general
+     * chair). Event chairs are excluded: they only handle the program.
+     */
+    private static function isEventResponsible(int $userId): bool
+    {
+        try {
+            return db_connect()->table('events')
+                ->groupStart()
+                    ->where('EventManagerID', $userId)
+                    ->orWhere('GeneralChairID', $userId)
+                ->groupEnd()
+                ->countAllResults() > 0;
+        } catch (\Throwable $e) {
+            log_message('error', '[modules] event responsibility lookup failed: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
+
+
+    /**
+     * True when the user is assigned as an exhibitor coordinator on at least
+     * one expodirectory row. expodirectory_coordinators lives in the
+     * `registration` DB group (bitswork_registration); the user -> contact link
+     * lives in `control`, so this is two queries, never a join.
+     */
+    private static function isExpoCoordinator(int $userId): bool
+    {
+        try {
+            $user = db_connect('control')->table('users')
+                ->select('ContactID')->where('UserID', $userId)->get()->getRowArray();
+            $contactId = (int) ($user['ContactID'] ?? 0);
+            if ($contactId <= 0) return false;
+
+            return db_connect('registration')->table('expodirectory_coordinators')
+                ->where('ContactID', $contactId)->countAllResults() > 0;
+        } catch (\Throwable $e) {
+            log_message('error', '[modules] expo coordinator lookup failed: ' . $e->getMessage());
             return false;
         }
     }
@@ -93,8 +146,10 @@ final class ModuleAccess
                 if ($authorCount > 0) return true;
             }
         } catch (\Throwable $e) {
+            log_message('error', '[modules] author-portal lookup failed: ' . $e->getMessage());
             return false;
         }
+
 
         return false;
     }

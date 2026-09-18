@@ -157,6 +157,58 @@ class ExpoDirectoryController extends BaseApiController
         return [$userId, $this->isPrivileged($userId), $this->actorContactId($userId)];
     }
 
+    /** @var array<int,int[]>|null cache of managed EventIDs per user */
+    private ?array $managedEventIdCache = null;
+
+    /**
+     * EventIDs where the user is the event manager or the general chair.
+     * Event chairs are deliberately excluded: they only handle the program.
+     *
+     * @return int[]
+     */
+    private function managedEventIds(int $userId): array
+    {
+        if (isset($this->managedEventIdCache[$userId])) return $this->managedEventIdCache[$userId];
+        $ids = [];
+        try {
+            $rows = (new EventModel())->select('EventID')
+                ->groupStart()
+                    ->where('EventManagerID', $userId)
+                    ->orWhere('GeneralChairID', $userId)
+                ->groupEnd()
+                ->get()->getResultArray();
+            foreach ($rows as $r) $ids[] = (int) $r['EventID'];
+        } catch (\Throwable $e) {
+            log_message('error', '[expo] managed events lookup failed: ' . $e->getMessage());
+        }
+        $this->managedEventIdCache[$userId] = $ids;
+        return $ids;
+    }
+
+    /** Full rights when globally privileged or responsible for this event. */
+    private function privilegedForEvent(int $userId, ?int $eventId): bool
+    {
+        if ($this->isPrivileged($userId)) return true;
+        if (!$eventId) return false;
+        return in_array((int) $eventId, $this->managedEventIds($userId), true);
+    }
+
+    /**
+     * Like actorContext(), but privilege is also granted to the event manager
+     * / general chair of the event this entry belongs to.
+     *
+     * @return array{0:?int,1:bool,2:int}
+     */
+    private function actorContextForEntry(int $entryId): array
+    {
+        [$userId, $privileged, $contactId] = $this->actorContext();
+        if ($userId === null || $privileged) return [$userId, $privileged, $contactId];
+        $row = (new ExpoDirectoryModel())->select('EventID')->find($entryId);
+        $eventId = ($row['EventID'] ?? null) === null ? null : (int) $row['EventID'];
+        return [$userId, $this->privilegedForEvent($userId, $eventId), $contactId];
+    }
+
+
     private function eventIsOpen(?int $eventId): bool
     {
         if (!$eventId) return false;
@@ -310,12 +362,26 @@ class ExpoDirectoryController extends BaseApiController
     public function index()
     {
         [$userId, $privileged, $contactId] = $this->actorContext();
+        $eventId = (int) ($this->request->getGet('event_id') ?? 0);
+
+        // Event managers / general chairs get full rights on their own events.
+        $managedEventIds = [];
+        if ($userId !== null && !$privileged) {
+            $managedEventIds = $this->managedEventIds($userId);
+            if ($eventId > 0 && in_array($eventId, $managedEventIds, true)) {
+                $privileged = true;
+                $managedEventIds = [];
+            }
+        }
+
+        $ownIds = null;
         if ($userId !== null && !$privileged) {
             $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
-            if (!$ownIds) return $this->response->setJSON(['data' => [], 'page' => 1, 'per_page' => 0, 'total' => 0]);
-        } else {
-            $ownIds = null;
+            if (!$ownIds && !$managedEventIds) {
+                return $this->response->setJSON(['data' => [], 'page' => 1, 'per_page' => 0, 'total' => 0]);
+            }
         }
+
 
         $page    = max(1, (int) ($this->request->getGet('page') ?? 1));
         $perPage = min(500, max(1, (int) ($this->request->getGet('per_page') ?? 200)));
@@ -327,15 +393,24 @@ class ExpoDirectoryController extends BaseApiController
         $model   = new ExpoDirectoryModel();
         $builder = $model->builder();
 
-        if ($ownIds !== null) $builder->whereIn('EntryID', $ownIds);
+        if ($ownIds !== null) {
+            if ($managedEventIds) {
+                $builder->groupStart();
+                if ($ownIds) $builder->whereIn('EntryID', $ownIds);
+                $builder->orWhereIn('EventID', $managedEventIds);
+                $builder->groupEnd();
+            } else {
+                $builder->whereIn('EntryID', $ownIds);
+            }
+        }
 
         // Removed entries are hidden unless a privileged caller asks for them.
         $includeDeleted = $privileged
             && in_array((string) ($this->request->getGet('include_deleted') ?? ''), ['1', 'true'], true);
         if (!$includeDeleted) $builder->where('DeletedAt', null);
 
-        $eventId = (int) ($this->request->getGet('event_id') ?? 0);
         if ($eventId > 0) $builder->where('EventID', $eventId);
+
 
         $year = (int) ($this->request->getGet('year') ?? 0);
         if ($year > 0) $builder->where('Year', $year);
@@ -381,12 +456,21 @@ class ExpoDirectoryController extends BaseApiController
         $builder = (new ExpoDirectoryModel())->builder();
 
         if ($userId !== null && !$privileged) {
+            $managedEventIds = $this->managedEventIds($userId);
             $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
-            if (!$ownIds) {
+            if (!$ownIds && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'unlinked' => 0, 'is_privileged' => 0]);
             }
-            $builder->whereIn('EntryID', $ownIds);
+            if ($managedEventIds) {
+                $builder->groupStart();
+                if ($ownIds) $builder->whereIn('EntryID', $ownIds);
+                $builder->orWhereIn('EventID', $managedEventIds);
+                $builder->groupEnd();
+            } else {
+                $builder->whereIn('EntryID', $ownIds);
+            }
         }
+
 
         $rows = $builder->select('EventID, COUNT(*) AS n', false)
             ->where('DeletedAt', null)
@@ -415,7 +499,10 @@ class ExpoDirectoryController extends BaseApiController
     public function priorEntries()
     {
         [$userId, $privileged] = $this->actorContext();
-        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+        if ($userId !== null && !$privileged && !$this->managedEventIds($userId)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+
 
         $q = trim((string) ($this->request->getGet('q') ?? ''));
         $builder = (new ExpoDirectoryModel())->builder()
@@ -463,19 +550,18 @@ class ExpoDirectoryController extends BaseApiController
         if ($this->isPrivileged($userId)) return true;
         $ev = new EventModel();
         if ($eventId !== null && $eventId > 0) {
-            $row = $ev->select('EventChair1ID, EventChair2ID, EventManagerID, GeneralChairID')->find($eventId);
+            // Event chairs are excluded: they only handle the program.
+            $row = $ev->select('EventManagerID, GeneralChairID')->find($eventId);
             if (!$row) return false;
             foreach ($row as $col => $val) {
                 if ((int) $val === $userId) return true;
             }
             return false;
         }
-        // Company-scoped: any event role counts.
+        // Company-scoped: any event-manager / general-chair role counts.
         $rows = $ev->select('EventID')
             ->groupStart()
-                ->where('EventChair1ID', $userId)
-                ->orWhere('EventChair2ID', $userId)
-                ->orWhere('EventManagerID', $userId)
+                ->where('EventManagerID', $userId)
                 ->orWhere('GeneralChairID', $userId)
             ->groupEnd()
             ->limit(1)->get()->getResultArray();
@@ -661,7 +747,8 @@ class ExpoDirectoryController extends BaseApiController
     public function show(int $id)
     {
 
-        [$userId, $privileged, $contactId] = $this->actorContext();
+        [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
+
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
         if (!empty($row['DeletedAt']) && !$privileged) return $this->jsonError(409, 'entry_removed');
@@ -690,11 +777,16 @@ class ExpoDirectoryController extends BaseApiController
     public function create()
     {
         [$userId, $privileged] = $this->actorContext();
-        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $payload = (array) $this->request->getJSON(true);
         $eventId = (int) ($payload['event_id'] ?? 0);
+        if ($userId !== null && !$privileged) {
+            $privileged = $this->privilegedForEvent($userId, $eventId ?: null);
+            if (!$privileged) return $this->jsonError(403, 'forbidden');
+        }
+
         if ($eventId <= 0) return $this->jsonError(422, 'validation_failed', ['required' => ['event_id']]);
+
 
         $event = $this->eventsById([$eventId])[$eventId] ?? null;
         if (!$event) return $this->jsonError(422, 'unknown_event');
@@ -828,7 +920,10 @@ class ExpoDirectoryController extends BaseApiController
     public function companySearch()
     {
         [$userId, $privileged] = $this->actorContext();
-        if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
+        if ($userId !== null && !$privileged && !$this->managedEventIds($userId)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+
 
         $q = trim((string) ($this->request->getGet('q') ?? ''));
         try {
@@ -854,7 +949,8 @@ class ExpoDirectoryController extends BaseApiController
     /** PUT /api/v1/expo-directory/{id}/tags  { tag_ids: number[] } */
     public function setTags(int $id)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $model = new ExpoDirectoryModel();
@@ -899,7 +995,8 @@ class ExpoDirectoryController extends BaseApiController
     /** PUT /api/v1/expo-directory/{id} */
     public function update(int $id)
     {
-        [$userId, $privileged, $contactId] = $this->actorContext();
+        [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
+
         $model = new ExpoDirectoryModel();
         $row   = $model->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
@@ -982,7 +1079,8 @@ class ExpoDirectoryController extends BaseApiController
      */
     public function delete(int $id)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $model = new ExpoDirectoryModel();
@@ -1002,7 +1100,8 @@ class ExpoDirectoryController extends BaseApiController
     /** POST /api/v1/expo-directory/{id}/restore */
     public function restore(int $id)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $model = new ExpoDirectoryModel();
@@ -1025,7 +1124,8 @@ class ExpoDirectoryController extends BaseApiController
     /** GET /api/v1/expo-directory/{id}/coordinators */
     public function coordinators(int $id)
     {
-        [$userId, $privileged, $contactId] = $this->actorContext();
+        [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged
             && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
             return $this->jsonError(403, 'forbidden');
@@ -1043,7 +1143,8 @@ class ExpoDirectoryController extends BaseApiController
      */
     public function addCoordinator(int $id)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $model = new ExpoDirectoryModel();
@@ -1121,7 +1222,8 @@ class ExpoDirectoryController extends BaseApiController
     /** POST /api/v1/expo-directory/{id}/coordinators/{contactId}/primary */
     public function setPrimaryCoordinator(int $id, int $contactId)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $coords = new ExpoDirectoryCoordinatorModel();
@@ -1135,7 +1237,8 @@ class ExpoDirectoryController extends BaseApiController
     /** DELETE /api/v1/expo-directory/{id}/coordinators/{contactId} */
     public function removeCoordinator(int $id, int $contactId)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $coords = new ExpoDirectoryCoordinatorModel();
@@ -1249,7 +1352,8 @@ class ExpoDirectoryController extends BaseApiController
     /** GET /api/v1/expo-directory/{id}/guest-list */
     public function guestList(int $id)
     {
-        [$userId, $privileged, $contactId] = $this->actorContext();
+        [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
+
         $row = (new ExpoDirectoryModel())->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
         if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
@@ -1267,7 +1371,8 @@ class ExpoDirectoryController extends BaseApiController
      */
     public function createGuestList(int $id)
     {
-        [$userId, $privileged] = $this->actorContext();
+        [$userId, $privileged] = $this->actorContextForEntry($id);
+
         if ($userId !== null && !$privileged) return $this->jsonError(403, 'forbidden');
 
         $row = (new ExpoDirectoryModel())->find($id);
