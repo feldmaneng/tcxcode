@@ -2,6 +2,7 @@
 namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
+use App\Libraries\ModuleAccess;
 use App\Models\UserModuleModel;
 use App\Models\UserWikiPermissionModel;
 
@@ -34,114 +35,18 @@ class MeController extends BaseApiController
                 ->orderBy('SortOrder', 'ASC')
                 ->get()->getResultArray();
         } else {
-            $rows = $ctrl->table('user_modules um')
-                ->select('m.Code AS code, m.Name AS name, m.Description AS description, m.SortOrder AS sort_order')
-                ->join('modules m', 'm.ModuleID = um.ModuleID')
-                ->where('um.UserID', $userId)
-                ->orderBy('m.SortOrder', 'ASC')
-                ->get()->getResultArray();
-
-            // Auto-grant `guests` module if the user is assigned as a
-            // guest-list manager on at least one companyguestlists row.
-            $hasGuests = false;
-            foreach ($rows as $r) { if (($r['code'] ?? '') === 'guests') { $hasGuests = true; break; } }
-            if (!$hasGuests) {
-                // companyguestlists_managers lives in the 'registration' DB group,
-                // not the default connection.
-                $mgrCount = 0;
-                try {
-                    $mgrCount = db_connect('registration')->table('companyguestlists_managers')
-                        ->where('UserID', $userId)->countAllResults();
-                } catch (\Throwable $e) {
-                    log_message('error', '[me/modules] guest-list manager lookup failed: ' . $e->getMessage());
-                }
-                if ($mgrCount > 0) {
-                    $mod = $ctrl->table('modules')
-                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
-                        ->where('Code', 'guests')->get()->getRowArray();
-                    if ($mod) $rows[] = $mod;
-                }
-            }
-
-
-            // Auto-grant `expo` module when the user is an exhibitor coordinator.
-            // expodirectory_coordinators lives in the 'registration' DB group
-            // (bitswork_registration); the contact link lives in 'control'.
-            $hasExpo = false;
-            foreach ($rows as $r) { if (($r['code'] ?? '') === 'expo') { $hasExpo = true; break; } }
-            if (!$hasExpo) {
-                $coordCount = 0;
-                $contactId  = isset($user['ContactID']) ? (int) $user['ContactID'] : 0;
-                if ($contactId > 0) {
-                    try {
-                        $coordCount = db_connect('registration')->table('expodirectory_coordinators')
-                            ->where('ContactID', $contactId)->countAllResults();
-                    } catch (\Throwable $e) {
-                        log_message('error', '[me/modules] expo coordinator lookup failed: ' . $e->getMessage());
-                    }
-                }
-                if ($coordCount > 0) {
-                    $mod = $ctrl->table('modules')
-                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
-                        ->where('Code', 'expo')->get()->getRowArray();
-                    if ($mod) $rows[] = $mod;
-                }
-            }
-
-
-            // Auto-grant `author-portal` module if the user has any author-portal
-            // role: event manager, event chair, session coordinator, or author on
-            // an active presentation (Authors = CRM contacts, matched via ContactID).
-            $hasAuthorPortal = false;
-            foreach ($rows as $r) { if (($r['code'] ?? '') === 'author-portal') { $hasAuthorPortal = true; break; } }
-            if (!$hasAuthorPortal) {
-                $appDb    = db_connect();
-                $isCandidate = false;
-
-                // Event manager / chair
-                $eventCount = $appDb->table('events')
-                    ->groupStart()
-                        ->where('EventManagerID', $userId)
-                        ->orWhere('EventChair1ID', $userId)
-                        ->orWhere('EventChair2ID', $userId)
-                    ->groupEnd()
-                    ->countAllResults();
-                if ($eventCount > 0) $isCandidate = true;
-
-                // Session coordinator
-                if (!$isCandidate) {
-                    $sessionCount = $appDb->table('sessions')
-                        ->groupStart()
-                            ->where('Coordinator1ID', $userId)
-                            ->orWhere('Coordinator2ID', $userId)
-                        ->groupEnd()
-                        ->countAllResults();
-                    if ($sessionCount > 0) $isCandidate = true;
-                }
-
-                // Author on an active presentation (via ContactID)
-                if (!$isCandidate) {
-                    $contactId = isset($user['ContactID']) ? (int) $user['ContactID'] : 0;
-                    if ($contactId > 0) {
-                        $authorCount = $appDb->table('authors')
-                            ->join('presentations', 'presentations.PresentationID = authors.PresentationID', 'left')
-                            ->where('authors.ContactID', $contactId)
-                            ->groupStart()
-                                ->where('presentations.Status', 'active')
-                                ->orWhere('presentations.Status IS NULL', null, false)
-                            ->groupEnd()
-                            ->countAllResults();
-                        if ($authorCount > 0) $isCandidate = true;
-                    }
-                }
-
-                if ($isCandidate) {
-                    $mod = $ctrl->table('modules')
-                        ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
-                        ->where('Code', 'author-portal')->get()->getRowArray();
-                    if ($mod) $rows[] = $mod;
-                }
-            }
+            // Single source of truth for explicit + implicit module grants
+            // (guest-list managers, exhibitor coordinators, event managers /
+            // general chairs, author-portal roles). Keeps the switcher in
+            // agreement with BaseApiController::requireModule.
+            $codes = ModuleAccess::codesForUser($userId);
+            $rows  = $codes
+                ? $ctrl->table('modules')
+                    ->select('Code AS code, Name AS name, Description AS description, SortOrder AS sort_order')
+                    ->whereIn('Code', $codes)
+                    ->orderBy('SortOrder', 'ASC')
+                    ->get()->getResultArray()
+                : [];
         }
 
         // contacts (default DB) is the source of truth for nicknames; users
