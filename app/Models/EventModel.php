@@ -81,5 +81,33 @@ class EventModel extends Model
         $managerId = $this->managerUserIdForYear($year);
         return $managerId !== null && $managerId === $userId;
     }
+
+    /**
+     * EventIDs the user runs as event manager or general chair.
+     * Event chairs are excluded: they only handle the program.
+     *
+     * @return int[]
+     */
+    public function managedEventIds(int $userId): array
+    {
+        if ($userId <= 0) return [];
+        $rows = $this->select('EventID')
+            ->groupStart()
+                ->where('EventManagerID', $userId)
+                ->orWhere('GeneralChairID', $userId)
+            ->groupEnd()
+            ->get()->getResultArray();
+        return array_map(fn($r) => (int) $r['EventID'], $rows);
+    }
+
+    /** True when $userId is the event manager or general chair of $eventId. */
+    public function isEventManagerForEvent(int $userId, int $eventId): bool
+    {
+        if ($userId <= 0 || $eventId <= 0) return false;
+        $row = $this->select('EventManagerID, GeneralChairID')->find($eventId);
+        if (!$row) return false;
+        return (int) ($row['EventManagerID'] ?? 0) === $userId
+            || (int) ($row['GeneralChairID'] ?? 0) === $userId;
+    }
 }
 

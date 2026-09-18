@@ -4,12 +4,13 @@ namespace App\Controllers\Api\V1;
 use App\Libraries\ApiAuthContext;
 use App\Models\CompanyGuestListsManagerModel;
 use App\Models\CompanyGuestListsModel;
+use App\Models\EventModel;
 use App\Models\UserModel;
 use App\Models\UserModuleModel;
 
 /**
  * Manage the up-to-4 guest-list managers assigned to a companyguestlists row.
- * Admin only.
+ * Admin, or the event manager / general chair of the list's event.
  */
 class CompanyGuestListsManagersController extends BaseApiController
 {
@@ -29,6 +30,36 @@ class CompanyGuestListsManagersController extends BaseApiController
         return true;
     }
 
+    /**
+     * Admin, or the event manager / general chair of the event this list
+     * belongs to (EventID first, Year fallback for legacy rows).
+     */
+    private function requireAdminOrEventManager(int $companyGuestListsId): bool
+    {
+        $actorId = ApiAuthContext::actingUserId();
+        if (!$actorId) {
+            $this->response->setStatusCode(401)->setJSON(['error' => 'acting_user_required']);
+            return false;
+        }
+        if ((new UserModuleModel())->userHasModule($actorId, 'admin')) return true;
+
+        $list = (new CompanyGuestListsModel())->select('CompanyID, EventID, Year')->find($companyGuestListsId);
+        if (!$list) {
+            $this->response->setStatusCode(404)->setJSON(['error' => 'not_found']);
+            return false;
+        }
+        $ev = new EventModel();
+        $eventId = (int) ($list['EventID'] ?? 0);
+        $ok = $eventId > 0
+            ? $ev->isEventManagerForEvent($actorId, $eventId)
+            : ((int) ($list['Year'] ?? 0) > 0 && $ev->isEventManagerForYear($actorId, (int) $list['Year']));
+        if (!$ok) {
+            $this->response->setStatusCode(403)->setJSON(['error' => 'admin_required']);
+            return false;
+        }
+        return true;
+    }
+
     /** GET /api/v1/company-guest-lists/{id}/managers */
     public function index(int $companyGuestListsId)
     {
@@ -37,7 +68,18 @@ class CompanyGuestListsManagersController extends BaseApiController
 
         $isAdmin = (new UserModuleModel())->userHasModule($actorId, 'admin');
         $manager = (new CompanyGuestListsManagerModel())->userManages($actorId, $companyGuestListsId);
-        if (!$isAdmin && !$manager) return $this->jsonError(403, 'forbidden');
+        $isEventManager = false;
+        if (!$isAdmin && !$manager) {
+            $list = (new CompanyGuestListsModel())->select('EventID, Year')->find($companyGuestListsId);
+            if ($list) {
+                $ev = new EventModel();
+                $eventId = (int) ($list['EventID'] ?? 0);
+                $isEventManager = $eventId > 0
+                    ? $ev->isEventManagerForEvent($actorId, $eventId)
+                    : ((int) ($list['Year'] ?? 0) > 0 && $ev->isEventManagerForYear($actorId, (int) $list['Year']));
+            }
+        }
+        if (!$isAdmin && !$manager && !$isEventManager) return $this->jsonError(403, 'forbidden');
 
         $userIds = (new CompanyGuestListsManagerModel())->userIdsForCompany($companyGuestListsId);
         $users = [];
@@ -62,8 +104,7 @@ class CompanyGuestListsManagersController extends BaseApiController
     /** POST /api/v1/company-guest-lists/{id}/managers  {user_id} */
     public function add(int $companyGuestListsId)
     {
-        if (!$this->requireAdmin()) return $this->response;
-        if (!(new CompanyGuestListsModel())->find($companyGuestListsId)) return $this->jsonError(404, 'not_found');
+        if (!$this->requireAdminOrEventManager($companyGuestListsId)) return $this->response;
         $payload = (array) $this->request->getJSON(true);
         $userId  = (int) ($payload['user_id'] ?? 0);
         if ($userId <= 0) return $this->jsonError(422, 'validation_failed', ['required' => ['user_id']]);
@@ -87,7 +128,7 @@ class CompanyGuestListsManagersController extends BaseApiController
     /** DELETE /api/v1/company-guest-lists/{id}/managers/{userId} */
     public function remove(int $companyGuestListsId, int $userId)
     {
-        if (!$this->requireAdmin()) return $this->response;
+        if (!$this->requireAdminOrEventManager($companyGuestListsId)) return $this->response;
         (new CompanyGuestListsManagerModel())
             ->where('CompanyGuestListsID', $companyGuestListsId)
             ->where('UserID', $userId)

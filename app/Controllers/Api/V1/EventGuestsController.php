@@ -188,7 +188,12 @@ class EventGuestsController extends BaseApiController
 
         $eventModel = new EventModel();
         $year = (int) ($company['Year'] ?? 0);
-        $isEventManager = $year > 0 && $eventModel->isEventManagerForYear((int) $actorId, $year);
+        // Prefer the list's EventID: several events can share a Year, so a
+        // Year-only match can recognize the wrong event's manager.
+        $listEventIdForAuth = (int) ($company['EventID'] ?? 0);
+        $isEventManager = $listEventIdForAuth > 0
+            ? $eventModel->isEventManagerForEvent((int) $actorId, $listEventIdForAuth)
+            : ($year > 0 && $eventModel->isEventManagerForYear((int) $actorId, $year));
         $isPrivileged = $isAdmin || $isEventManager;
 
         if (!$isPrivileged && !(new CompanyGuestListsManagerModel())->userManages($actorId, $companyGuestListsId)) {

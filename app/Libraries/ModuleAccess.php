@@ -30,7 +30,8 @@ final class ModuleAccess
             return self::$cache[$userId] = $codes;
         }
 
-        if (!in_array('guests', $codes, true) && self::isGuestListManager($userId)) {
+        if (!in_array('guests', $codes, true)
+            && (self::isGuestListManager($userId) || self::isEventResponsible($userId))) {
             $codes[] = 'guests';
         }
 

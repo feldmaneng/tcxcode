@@ -76,6 +76,20 @@ class CompanyGuestListsController extends BaseApiController
         return (new UserModuleModel())->userHasModule($actorId, 'admin');
     }
 
+    /**
+     * True when the user runs the list's event (event manager or general
+     * chair). Matches on EventID first because several events can share a
+     * Year; falls back to Year for legacy lists with no EventID yet.
+     */
+    private function isEventManagerForList(int $actorId, array $row): bool
+    {
+        $ev = new EventModel();
+        $eventId = (int) ($row['EventID'] ?? 0);
+        if ($eventId > 0) return $ev->isEventManagerForEvent($actorId, $eventId);
+        $year = (int) ($row['Year'] ?? 0);
+        return $year > 0 && $ev->isEventManagerForYear($actorId, $year);
+    }
+
     private function requireActor(): ?int
     {
         $id = $this->actorId();
@@ -138,10 +152,30 @@ class CompanyGuestListsController extends BaseApiController
 
         if (!$isAdmin) {
             $ids = (new CompanyGuestListsManagerModel())->companyIdsForUser($actorId);
-            if (!$ids) {
+            // Event managers / general chairs see every list for their events,
+            // not only lists they are personally assigned to.
+            $managedEventIds = (new EventModel())->managedEventIds($actorId);
+            $managedYears = [];
+            if ($managedEventIds) {
+                $yearRows = (new EventModel())->select('Year')->whereIn('EventID', $managedEventIds)->get()->getResultArray();
+                $managedYears = array_values(array_filter(array_map(fn($r) => (int) $r['Year'], $yearRows)));
+            }
+            if (!$ids && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'page' => $page, 'per_page' => $perPage, 'total' => 0]);
             }
-            $builder->whereIn('CompanyID', $ids);
+            $builder->groupStart();
+            if ($ids) $builder->whereIn('CompanyID', $ids);
+            if ($managedEventIds) {
+                $builder->orWhereIn('EventID', $managedEventIds);
+                // Legacy lists with no EventID yet still match their event's Year.
+                if ($managedYears) {
+                    $builder->orGroupStart()
+                        ->groupStart()->where('EventID IS NULL', null, false)->orWhere('EventID', 0)->groupEnd()
+                        ->whereIn('Year', $managedYears)
+                        ->groupEnd();
+                }
+            }
+            $builder->groupEnd();
         }
         foreach (explode(',', $sort) as $s) {
             $s = trim($s);
@@ -183,7 +217,14 @@ class CompanyGuestListsController extends BaseApiController
 
         if (!$this->isAdmin($actorId)) {
             $mine = array_map('intval', (new CompanyGuestListsManagerModel())->companyIdsForUser($actorId));
-            $ids  = array_values(array_intersect($ids, $mine));
+            $listRows = (new CompanyGuestListsModel())->builder()
+                ->select('CompanyID, EventID, Year')->whereIn('CompanyID', $ids)->get()->getResultArray();
+            $allowed = [];
+            foreach ($listRows as $lr) {
+                $lid = (int) $lr['CompanyID'];
+                if (in_array($lid, $mine, true) || $this->isEventManagerForList($actorId, $lr)) $allowed[] = $lid;
+            }
+            $ids = array_values(array_intersect($ids, $allowed));
             if (!$ids) return $this->response->setJSON(['data' => (object) []]);
         }
 
@@ -221,7 +262,8 @@ class CompanyGuestListsController extends BaseApiController
         $row = $model->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
         if (!$this->isAdmin($actorId)) {
-            if (!(new CompanyGuestListsManagerModel())->userManages($actorId, $id)) {
+            if (!(new CompanyGuestListsManagerModel())->userManages($actorId, $id)
+                && !$this->isEventManagerForList($actorId, $row)) {
                 return $this->jsonError(403, 'forbidden');
             }
         }
@@ -269,9 +311,8 @@ class CompanyGuestListsController extends BaseApiController
         $row = $model->find($id);
         if (!$row) return $this->jsonError(404, 'not_found');
 
-        $year = (int) ($row['Year'] ?? 0);
         $privileged = $this->isAdmin($actorId)
-            || ($year > 0 && (new EventModel())->isEventManagerForYear((int) $actorId, $year));
+            || $this->isEventManagerForList((int) $actorId, $row);
         if (!$privileged) return $this->jsonError(403, 'admin_required');
 
         $body = (array) $this->request->getJSON(true);
