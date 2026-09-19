@@ -2800,7 +2800,8 @@ $db  = \Config\Database::connect('registration');
 				 				
 				$codeContents .= 'FN:'.$GivenName." ".$FamilyName."\n";
 				$codeContents .= 'EMAIL:'.$Email."\n"; 
-				$codeContents .= 'ORG:'.$Company."\n"; 
+				$codeContents .= 'ORG:'.$Company."\n";
+				$codeContents .= 'Note:'.$Control."\n"; 
 				$codeContents .= 'END:VCARD'; 
 				
 				 $code="Name: ".$GivenName." ".$FamilyName."\n"
