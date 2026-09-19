@@ -2812,7 +2812,7 @@ $db  = \Config\Database::connect('registration');
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
-				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 94, 110, 30, 30, $style, 'N');
+				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 64, 110, 30, 30, $style, 'N');
 				
 					
 				 $q++;
