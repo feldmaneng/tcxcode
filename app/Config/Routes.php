@@ -133,6 +133,9 @@ $routes->post('/badgemesa/Korea', 'Badgemesa::Korea');
 $routes->get('/badgemesa/China', 'Badgemesa::China');          
 $routes->post('/badgemesa/China', 'Badgemesa::China');
 
+$routes->get('/badgemesa/EXPOBADGE', 'Badgemesa::EXPOBADGE');          
+$routes->post('/badgemesa/EXPOBADGE', 'Badgemesa::EXPOBADGE');
+
 
 $routes->get('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');          
 $routes->post('/badgemesa/BadgesMesaEXPOONLY', 'Badgemesa::BadgesMesaEXPOONLY');
