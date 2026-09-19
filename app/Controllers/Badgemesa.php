@@ -2770,7 +2770,7 @@ $db  = \Config\Database::connect('registration');
 				$pdf->SetFillColor(255,255,255);
 				$pdf->SetTextColor(0,0,0);
 				
-				$pdf->SetFont('helvetica', '', 32);
+				$pdf->SetFont('helvetica', '', 48);
 				$pdf->MultiCell(50,20,$year, 0, 'L', 0, 0, 7,120, true);
 			
 				
