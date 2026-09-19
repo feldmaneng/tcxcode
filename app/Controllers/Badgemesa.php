@@ -2770,14 +2770,15 @@ $db  = \Config\Database::connect('registration');
 				$pdf->SetFillColor(255,255,255);
 				$pdf->SetTextColor(0,0,0);
 				
-				
-				
+				$pdf->SetFont('helvetica', '', 32);
+				$pdf->MultiCell(100,30,$year, 0, 'L', 0, 0, 7,100, true);
 			
 				
 				$pdf->SetFont('helvetica', '', 8);
 				$Control = substr($Control, -4);
 				
-			
+				
+				
 				$pdf->MultiCell(100,10,$Dinnertext." ".$Tutorial." ".$Control." ".$i, 0, 'L', 0, 0, 7,140, true);
 				
 				
@@ -2810,7 +2811,8 @@ $db  = \Config\Database::connect('registration');
 				// QRCODE,H : QR-CODE Best error correction
 				//QR CODE IRA POSITION
 				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', x position, y position, x size, y size, $style, 'N');
-				$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
+				//$pdf->write2DBarcode($codeContents, 'QRCODE,L', 7, 110, 30, 30, $style, 'N');
+				$pdf->write2DBarcode($codeContents, 'QRCODE,L', -7, 110, 30, 30, $style, 'N');
 				
 					
 				 $q++;
