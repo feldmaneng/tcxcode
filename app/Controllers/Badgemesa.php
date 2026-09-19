@@ -2755,7 +2755,7 @@ $db  = \Config\Database::connect('registration');
 				
 				$pdf->SetFont('helvetica', 'B', 25);
 				
-				$pdf->Cell(0, 0,$Year, 0, 1, 'C', 0, '', 1);
+				$pdf->Cell(0, 0,$year, 0, 1, 'C', 0, '', 1);
 				
 				$pdf->Cell(0, 0,"EXPO", 0, 1, 'C', 0, '', 1);
 				
