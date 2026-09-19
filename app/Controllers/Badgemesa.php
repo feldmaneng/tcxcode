@@ -2753,7 +2753,7 @@ $db  = \Config\Database::connect('registration');
 				}*/
 				$pdf->Cell(0, 0,$Company, 0, 1, 'C', 0, '', 1);
 				
-				$pdf->SetFont('helvetica', 'B', 35);
+				$pdf->SetFont('helvetica', 'B', 32);
 				
 				$pdf->Cell(0, 0,$year, 0, 1, 'C', 0, '', 1);
 				
