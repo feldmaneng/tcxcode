@@ -609,6 +609,11 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)', 'ContactsController::options', ['filter' => 'cors']);
     });
 
+    // Mailchimp sync write-backs (called by the TanStack server)
+    $routes->group('mailchimp', ['filter' => ['throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->post('events', 'MailchimpController::events');
+    });
+
     // Companies
     $routes->group('companies', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->get('/',                    'CompaniesController::index');
@@ -904,7 +909,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
 
     });
 });
-
 
 
 /*
