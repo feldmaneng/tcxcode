@@ -15,11 +15,24 @@ class ThrottleFilter implements FilterInterface
         // CI4 cache keys cannot contain reserved characters: { } ( ) / \ @ :
         // API keys and IPv6 addresses commonly contain ":" so we hash the
         // identifier before using it as part of the cache key.
-        $identifier = $request->getHeaderLine('X-Api-Key') ?: $request->getIPAddress();
-        $key        = 'api_throttle_' . hash('sha256', $identifier);
+        //
+        // All calls from the portal arrive under ONE service API key, so
+        // keying on X-Api-Key would put every signed-in user in a single
+        // shared bucket — a busy page easily exhausts it and legitimate
+        // users see rate_limited errors. Key on the acting end user when
+        // present (each user gets their own bucket), falling back to the
+        // API key / IP for unauthenticated service calls.
+        $actingUser = $request->getHeaderLine('X-Acting-User');
+        if ($actingUser !== '') {
+            $identifier = 'user:' . $actingUser;
+            $capacity   = 240; // 240 requests per 60 seconds per user
+        } else {
+            $identifier = $request->getHeaderLine('X-Api-Key') ?: $request->getIPAddress();
+            $capacity   = 600; // service-to-service bucket (login, refresh, etc.)
+        }
+        $key = 'api_throttle_' . hash('sha256', $identifier);
 
-        // 60 requests per 60 seconds
-        if ($throttler->check($key, 60, MINUTE) === false) {
+        if ($throttler->check($key, $capacity, MINUTE) === false) {
             return service('response')
                 ->setStatusCode(429)
                 ->setJSON(['error' => 'rate_limited', 'retry_after' => $throttler->getTokenTime()]);
