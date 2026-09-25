@@ -48,12 +48,33 @@ class MessagingController extends BaseApiController
         return null;
     }
 
-    /** GET /api/v1/messaging/access?event_id= — cheap permission probe. */
+    /**
+     * GET /api/v1/messaging/access?event_id= — permission probe; also returns
+     * the event manager (events.EventManagerID) for the "Cc event manager" option.
+     */
     public function access()
     {
         $eventId = (int) ($this->request->getGet('event_id') ?? 0);
         if ($deny = $this->guard($eventId)) return $deny;
-        return $this->response->setJSON(['allowed' => true]);
+        $manager = null;
+        try {
+            $row = (new EventModel())->select('EventManagerID')->find($eventId);
+            $mid = (int) ($row['EventManagerID'] ?? 0);
+            if ($mid > 0) {
+                $u = $this->usersById([$mid])[$mid] ?? null;
+                if ($u) {
+                    $email = trim((string) ($u['Email'] ?? ''));
+                    $manager = [
+                        'user_id' => $mid,
+                        'name'    => self::displayName($u['GivenName'] ?? null, $u['FamilyName'] ?? null, $u['UserName'] ?? null),
+                        'email'   => $email !== '' ? $email : null,
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            log_message('error', '[messaging] event manager lookup failed: ' . $e->getMessage());
+        }
+        return $this->response->setJSON(['allowed' => true, 'event_manager' => $manager]);
     }
 
     /** @param int[] $ids @return array<int,array> keyed by ContactID */
