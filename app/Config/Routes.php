@@ -910,7 +910,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     });
 });
 
-
 /*
  * --------------------------------------------------------------------
  * Additional Routing
