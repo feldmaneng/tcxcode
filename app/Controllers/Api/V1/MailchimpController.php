@@ -69,8 +69,12 @@ class MailchimpController extends BaseApiController
                 return $this->respond(['ok' => true, 'applied' => true]);
 
             case 'subscribe':
-                // New Mailchimp subscribers always go to the review queue.
-                return $this->respond(['ok' => true, 'applied' => false]);
+            case 'resubscribe':
+                // Re-subscribed in Mailchimp: consent is back, so permission on, bounce cleared.
+                // Unknown subscribers are left for the review queue.
+                if (!$contact) return $this->respond(['ok' => true, 'applied' => false]);
+                $model->update($contact['ContactID'], ['EmailPermission' => 1, 'EmailBounce' => 0, 'DBuser' => $dbUser]);
+                return $this->respond(['ok' => true, 'applied' => true]);
 
             default:
                 return $this->jsonError(400, 'invalid_event', ['event' => $event]);
