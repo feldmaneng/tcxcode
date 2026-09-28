@@ -40,7 +40,8 @@ final class ModuleAccess
         }
 
         if (!in_array('expo', $codes, true)
-            && (self::isExpoCoordinator($userId) || self::isEventResponsible($userId))) {
+            && (self::isExpoCoordinator($userId) || self::isEventResponsible($userId)
+                || self::isGraphicDesigner($userId))) {
             $codes[] = 'expo';
         }
 
@@ -87,6 +88,12 @@ final class ModuleAccess
 
 
 
+
+    /** True when the user is the Graphic Designer (read-only exhibitors) on any event. */
+    private static function isGraphicDesigner(int $userId): bool
+    {
+        return (new \App\Models\EventModel())->designedEventIds($userId) !== [];
+    }
 
     /**
      * True when the user is assigned as an exhibitor coordinator on at least

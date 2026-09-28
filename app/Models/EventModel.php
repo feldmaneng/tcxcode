@@ -15,7 +15,7 @@ class EventModel extends Model
         'StartDate', 'EndDate',
         'City', 'Facility', 'FacilityAddress',
         'EventChair1ID', 'EventChair2ID', 'EventManagerID',
-        'GeneralChairID',
+        'GeneralChairID', 'GraphicDesignerID',
         'IsClosed', 'ClosedAt',
         'GuestListEnabled', 'GolfEnabled',
         'GuestFormChinese', 'GuestFormKorean',
@@ -109,5 +109,23 @@ class EventModel extends Model
         return (int) ($row['EventManagerID'] ?? 0) === $userId
             || (int) ($row['GeneralChairID'] ?? 0) === $userId;
     }
-}
 
+    /**
+     * EventIDs where the user is the Graphic Designer (read-only exhibitor
+     * access). Returns [] if the column has not been added yet.
+     *
+     * @return int[]
+     */
+    public function designedEventIds(int $userId): array
+    {
+        if ($userId <= 0) return [];
+        try {
+            if (!$this->db->fieldExists('GraphicDesignerID', 'events')) return [];
+            $rows = $this->select('EventID')->where('GraphicDesignerID', $userId)->get()->getResultArray();
+            return array_map(fn($r) => (int) $r['EventID'], $rows);
+        } catch (\Throwable $e) {
+            log_message('error', '[events] designer lookup failed: ' . $e->getMessage());
+            return [];
+        }
+    }
+}

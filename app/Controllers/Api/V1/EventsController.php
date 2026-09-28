@@ -25,6 +25,7 @@ class EventsController extends BaseApiController
         'event_chair2_id'       => 'EventChair2ID',
         'event_manager_id'      => 'EventManagerID',
         'general_chair_user_id' => 'GeneralChairID',
+        'graphic_designer_id'   => 'GraphicDesignerID',
         'is_closed'             => 'IsClosed',
         'closed_at'             => 'ClosedAt',
         'guest_list_enabled'    => 'GuestListEnabled',
@@ -35,7 +36,7 @@ class EventsController extends BaseApiController
     ];
 
     private const READONLY_API_FIELDS = ['id'];
-    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id', 'general_chair_user_id', 'logo_id'];
+    private const FILTERABLE = ['year', 'event_manager_id', 'event_chair1_id', 'event_chair2_id', 'general_chair_user_id', 'graphic_designer_id', 'logo_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'start_date'];
 
     private function dbToApi(array $row): array

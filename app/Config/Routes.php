@@ -722,6 +722,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('company-search',               'ExpoDirectoryController::companySearch');
         $routes->get('history-report',               'ExpoDirectoryController::eventHistoryReport');
         $routes->get('history/(:num)',               'ExpoDirectoryController::history/$1');
+        $routes->get('changes-report',               'ExpoDirectoryController::changesReport');
 
 
         // Exhibitor artwork file manager (/public_html/EXPOdirectory) — admin

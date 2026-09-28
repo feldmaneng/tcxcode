@@ -209,6 +209,18 @@ class ExpoDirectoryController extends BaseApiController
     }
 
 
+    /** @var array<int,int[]> */
+    private array $designedEventIdCache = [];
+
+    /** EventIDs where the user is the Graphic Designer (read-only access). */
+    private function designedEventIds(int $userId): array
+    {
+        if (!isset($this->designedEventIdCache[$userId])) {
+            $this->designedEventIdCache[$userId] = (new EventModel())->designedEventIds($userId);
+        }
+        return $this->designedEventIdCache[$userId];
+    }
+
     private function eventIsOpen(?int $eventId): bool
     {
         if (!$eventId) return false;
@@ -365,17 +377,26 @@ class ExpoDirectoryController extends BaseApiController
         $eventId = (int) ($this->request->getGet('event_id') ?? 0);
 
         // Event managers / general chairs get full rights on their own events.
+        // Graphic designers get read-only visibility of every entry on theirs.
         $managedEventIds = [];
+        $isDesigner = false;
         if ($userId !== null && !$privileged) {
             $managedEventIds = $this->managedEventIds($userId);
             if ($eventId > 0 && in_array($eventId, $managedEventIds, true)) {
                 $privileged = true;
                 $managedEventIds = [];
+            } else {
+                $designed = $this->designedEventIds($userId);
+                if ($eventId > 0 && in_array($eventId, $designed, true)) {
+                    $isDesigner = true;
+                } else {
+                    $managedEventIds = array_values(array_unique(array_merge($managedEventIds, $designed)));
+                }
             }
         }
 
         $ownIds = null;
-        if ($userId !== null && !$privileged) {
+        if ($userId !== null && !$privileged && !$isDesigner) {
             $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
             if (!$ownIds && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'page' => 1, 'per_page' => 0, 'total' => 0]);
@@ -439,6 +460,7 @@ class ExpoDirectoryController extends BaseApiController
         return $this->response->setJSON([
             'data' => $data, 'page' => $page, 'per_page' => $perPage, 'total' => $total,
             'is_privileged' => $privileged ? 1 : 0,
+            'is_designer'   => $isDesigner ? 1 : 0,
         ]);
     }
 
@@ -456,7 +478,8 @@ class ExpoDirectoryController extends BaseApiController
         $builder = (new ExpoDirectoryModel())->builder();
 
         if ($userId !== null && !$privileged) {
-            $managedEventIds = $this->managedEventIds($userId);
+            $managedEventIds = array_values(array_unique(array_merge(
+                $this->managedEventIds($userId), $this->designedEventIds($userId))));
             $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
             if (!$ownIds && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'unlinked' => 0, 'is_privileged' => 0]);
@@ -743,6 +766,135 @@ class ExpoDirectoryController extends BaseApiController
         return $this->response->setJSON(['data' => $report]);
     }
 
+    /** Fields compared by the directory changes report (api key => DB column). */
+    private const CHANGE_FIELDS = [
+        'company_name' => 'CompanyName',
+        'line1'        => 'Line1',
+        'line2'        => 'Line2',
+        'line3'        => 'Line3',
+        'line4'        => 'Line4',
+        'line5'        => 'Line5',
+        'line6'        => 'Line6',
+        'description'  => 'Description',
+        'url'          => 'URL',
+        'logo_file'    => 'LogoFile',
+        'booth_number' => 'BoothNumber',
+        'booth_type'   => 'BoothType',
+    ];
+
+    private static function normCompare($v): string
+    {
+        $s = str_replace(["\r\n", "\r"], "\n", (string) ($v ?? ''));
+        return trim(preg_replace('/[ \t]+/', ' ', $s));
+    }
+
+    private static function normName($v): string
+    {
+        return strtolower(preg_replace('/[^a-z0-9]+/i', '', (string) ($v ?? '')));
+    }
+
+    /**
+     * GET /api/v1/expo-directory/changes-report?event_id=
+     *
+     * Compares each exhibitor's directory listing with the same company's
+     * entry at the prior event of the same name (greatest Year below this one).
+     * Visible to admins / expo planners, the event's manager or general chair,
+     * and the event's graphic designer.
+     */
+    public function changesReport()
+    {
+        [$userId] = $this->actorContext();
+        $eventId = (int) ($this->request->getGet('event_id') ?? 0);
+        if ($eventId <= 0) return $this->jsonError(400, 'invalid_event_id');
+        if ($userId !== null
+            && !$this->privilegedForEvent($userId, $eventId)
+            && !in_array($eventId, $this->designedEventIds($userId), true)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+
+        $events = new EventModel();
+        $ev = $events->select('EventID, Name, Year')->find($eventId);
+        if (!$ev) return $this->jsonError(404, 'event_not_found');
+
+        $prior = null;
+        if (!empty($ev['Name']) && !empty($ev['Year'])) {
+            $prior = (new EventModel())->select('EventID, Name, Year')
+                ->where('Name', $ev['Name'])
+                ->where('Year <', (int) $ev['Year'])
+                ->orderBy('Year', 'DESC')
+                ->first();
+        }
+
+        $cols = 'EntryID, CompanyID, Status, SampleEntry, ' . implode(', ', array_values(self::CHANGE_FIELDS));
+        $load = function (int $eid) use ($cols): array {
+            return (new ExpoDirectoryModel())->builder()->select($cols)
+                ->where('EventID', $eid)->where('DeletedAt', null)
+                ->orderBy('CompanyName', 'ASC')->get()->getResultArray();
+        };
+        $current = $load($eventId);
+        $previous = $prior ? $load((int) $prior['EventID']) : [];
+
+        // Index prior rows by CompanyID, then by normalised company name.
+        $byCompany = [];
+        $byName = [];
+        foreach ($previous as $i => $p) {
+            $cid = (int) ($p['CompanyID'] ?? 0);
+            if ($cid > 0 && !isset($byCompany[$cid])) $byCompany[$cid] = $i;
+            $n = self::normName($p['CompanyName']);
+            if ($n !== '' && !isset($byName[$n])) $byName[$n] = $i;
+        }
+
+        $shape = function (array $r): array {
+            $out = [
+                'entry_id'     => (int) $r['EntryID'],
+                'company_id'   => $r['CompanyID'] === null ? null : (int) $r['CompanyID'],
+                'status'       => $r['Status'],
+                'sample_entry' => $r['SampleEntry'] ?? null,
+            ];
+            foreach (self::CHANGE_FIELDS as $api => $db) $out[$api] = $r[$db] ?? null;
+            return $out;
+        };
+
+        $used = [];
+        $rows = [];
+        foreach ($current as $c) {
+            $idx = null;
+            $cid = (int) ($c['CompanyID'] ?? 0);
+            if ($cid > 0 && isset($byCompany[$cid]) && !isset($used[$byCompany[$cid]])) $idx = $byCompany[$cid];
+            if ($idx === null) {
+                $n = self::normName($c['CompanyName']);
+                if ($n !== '' && isset($byName[$n]) && !isset($used[$byName[$n]])) $idx = $byName[$n];
+            }
+            $changes = [];
+            $priorShape = null;
+            if ($idx !== null) {
+                $used[$idx] = true;
+                $p = $previous[$idx];
+                $priorShape = $shape($p);
+                foreach (self::CHANGE_FIELDS as $api => $db) {
+                    if (self::normCompare($c[$db] ?? '') !== self::normCompare($p[$db] ?? '')) $changes[] = $api;
+                }
+            }
+            $rows[] = [
+                'current' => $shape($c),
+                'prior'   => $priorShape,
+                'changed' => $changes,
+            ];
+        }
+
+        $notReturning = [];
+        foreach ($previous as $i => $p) {
+            if (!isset($used[$i])) $notReturning[] = $shape($p);
+        }
+
+        return $this->response->setJSON(['data' => [
+            'event'         => ['id' => (int) $ev['EventID'], 'name' => $ev['Name'], 'year' => (int) $ev['Year']],
+            'prior_event'   => $prior ? ['id' => (int) $prior['EventID'], 'name' => $prior['Name'], 'year' => (int) $prior['Year']] : null,
+            'rows'          => $rows,
+            'not_returning' => $notReturning,
+        ]]);
+    }
+
     /** GET /api/v1/expo-directory/{id} */
     public function show(int $id)
     {
@@ -754,10 +906,20 @@ class ExpoDirectoryController extends BaseApiController
         if (!empty($row['DeletedAt']) && !$privileged) return $this->jsonError(409, 'entry_removed');
 
         $canWrite = $privileged;
+        $isDesigner = false;
         if ($userId !== null && !$privileged) {
             $coords = new ExpoDirectoryCoordinatorModel();
-            if (!$coords->isCoordinator($contactId, $id)) return $this->jsonError(403, 'forbidden');
-            $canWrite = $this->eventIsOpen($row['EventID'] === null ? null : (int) $row['EventID']);
+            $rowEventId = $row['EventID'] === null ? null : (int) $row['EventID'];
+            if ($coords->isCoordinator($contactId, $id)) {
+                $canWrite = $this->eventIsOpen($rowEventId);
+            } elseif ($rowEventId && in_array($rowEventId, $this->designedEventIds($userId), true)) {
+                // Graphic designer: read-only.
+                if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
+                $isDesigner = true;
+                $canWrite = false;
+            } else {
+                return $this->jsonError(403, 'forbidden');
+            }
         }
 
         $data = $this->hydrate([$this->dbToApi($row)])[0];
@@ -765,6 +927,7 @@ class ExpoDirectoryController extends BaseApiController
             'data'          => $data,
             'can_write'     => $canWrite ? 1 : 0,
             'is_privileged' => $privileged ? 1 : 0,
+            'is_designer'   => $isDesigner ? 1 : 0,
             'event_locked'  => $this->eventIsOpen($row['EventID'] === null ? null : (int) $row['EventID']) ? false : true,
             'guest_list_info' => $this->guestListPayload($row),
         ]);
@@ -1126,11 +1289,14 @@ class ExpoDirectoryController extends BaseApiController
     {
         [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
 
+        $entry = (new ExpoDirectoryModel())->find($id);
         if ($userId !== null && !$privileged
             && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
-            return $this->jsonError(403, 'forbidden');
+            $eid = (int) ($entry['EventID'] ?? 0);
+            if (!$entry || !$eid || !in_array($eid, $this->designedEventIds($userId), true)) {
+                return $this->jsonError(403, 'forbidden');
+            }
         }
-        $entry = (new ExpoDirectoryModel())->find($id);
         if (!$entry) return $this->jsonError(404, 'not_found');
         if (!empty($entry['DeletedAt']) && !$privileged) return $this->jsonError(409, 'entry_removed');
         $data = $this->hydrate([$this->dbToApi($entry)])[0];
