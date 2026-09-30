@@ -363,6 +363,9 @@ echo  $id;
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
 					$pdf->SetFont('cid0cs','',55,);
 				}
+				else if(preg_match('/[\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{4E00}-\x{9FBF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0jp','',55,);
+				}
 				else{
 					$pdf->SetFont('helvetica','B',55);
 				}
