@@ -124,7 +124,7 @@ class Badgemesa extends BaseController {
         $crud->setTable('guests');
         $crud->setSubject('Guest', 'Guests');
 		$crud->where([
-    'guests.EventYear' => 'mesa2026'
+    'guests.EventYear' => 'Korea2026'
 ]);
 		//echo site_url('/badgemesa/TestConXsingle/');
 		$crud->columns(['EventYear','ToPrint','GivenName','FamilyName','NameOnBadge','Email','Company','Type','Tutorial']);
@@ -348,10 +348,10 @@ echo  $id;
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2024"){
+			if($EventYear == "Korea2026"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
-			else if($EventYear == "China2024"){
+			else if($EventYear == "China2026"){
 				$pdf->SetFont('cid0cs', '', 55,);
 			}
 			else{
