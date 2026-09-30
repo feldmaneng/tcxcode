@@ -359,28 +359,46 @@ echo  $id;
 			} */
 			if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
 					  $pdf->SetFont('cid0kr','',55,);
-					  echo "Korean";
+					  //echo "Korean";
 				  }
 				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
 					$pdf->SetFont('cid0cs','',55,);
-					echo "Chinese";
+					//echo "Chinese";
 				}
 				else if(preg_match('/[\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{4E00}-\x{9FBF}]/u', $NameOnBadge)){
 					$pdf->SetFont('cid0jp','',55,);
-					echo "Japanese";
+					//echo "Japanese";
 				}
 				else{
 					$pdf->SetFont('helvetica','B',55);
-					echo "Other";
+					//echo "Other";
 				}
 			die(" This is the character");
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
+				$fsize = 25;
+			if(strlen($FamilyName)>8){
+				$fsize = 22;;
+				}	
 				
-			
-				$pdf->SetFont('helvetica', 'B', 25);
-				if(strlen($FamilyName)>8){
-				$pdf->SetFont('helvetica', 'B', 22);
+				
+				if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
+					  $pdf->SetFont('cid0kr','',$fsize,);
+					  //echo "Korean";
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0cs','',$fsize,);
+					//echo "Chinese";
 				}
+				else if(preg_match('/[\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{4E00}-\x{9FBF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0jp','',$fsize,);
+					//echo "Japanese";
+				}
+				else{
+					$pdf->SetFont('helvetica','B',$fsize);
+					//echo "Other";
+				}
+				
+				
 				$pdf->Cell(0, 0,$GivenName." ".$FamilyName, 0, 1, 'C', 0, '', 1);
 				$pdf->SetFont('helvetica', 'B', 25);
 				if(strlen($Company)>12){
