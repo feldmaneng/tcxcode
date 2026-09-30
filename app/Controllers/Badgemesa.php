@@ -373,7 +373,7 @@ echo  $id;
 					$pdf->SetFont('helvetica','B',55);
 					//echo "Other";
 				}
-			die(" This is the character");
+			//die(" This is the character");
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 				$fsize = 25;
 			if(strlen($FamilyName)>8){
