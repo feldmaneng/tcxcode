@@ -348,7 +348,7 @@ echo  $id;
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2026"){
+			/* if($EventYear == "Korea2026"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
 			else if($EventYear == "China2026"){
@@ -356,7 +356,16 @@ echo  $id;
 			}
 			else{
 				$pdf->SetFont('helvetica', 'B', 55);
-			}
+			} */
+			if (preg_match('/[\x{AC00}-\x{D7AF}\x{1100}-\x{11FF}]/u', $NameOnBadge)){
+					  $pdf->SetFont('cid0kr','',55,);
+				  }
+				else if(preg_match('/[\x{4E00}-\x{9FFF}]/u', $NameOnBadge)){
+					$pdf->SetFont('cid0cs','',55,);
+				}
+				else{
+					$pdf->SetFont('helvetica','B',55);
+				}
 			
 				$pdf->Cell(0, 0, $NameOnBadge, 0, 1, 'C', 0, '', 1);
 				
