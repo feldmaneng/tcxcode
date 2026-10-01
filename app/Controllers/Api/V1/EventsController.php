@@ -30,6 +30,7 @@ class EventsController extends BaseApiController
         'closed_at'             => 'ClosedAt',
         'guest_list_enabled'    => 'GuestListEnabled',
         'golf_enabled'          => 'GolfEnabled',
+        'exhibitor_portal_open' => 'ExhibitorPortalOpen',
         'guest_form_chinese'    => 'GuestFormChinese',
         'guest_form_korean'     => 'GuestFormKorean',
         'logo_id'               => 'LogoID',
@@ -52,7 +53,7 @@ class EventsController extends BaseApiController
             $v = $out['is_closed'];
             $out['is_closed'] = ($v === null || $v === '') ? null : (int) $v;
         }
-        foreach (['guest_list_enabled', 'golf_enabled'] as $k) {
+        foreach (['guest_list_enabled', 'golf_enabled', 'exhibitor_portal_open'] as $k) {
             if (array_key_exists($k, $out)) {
                 $v = $out[$k];
                 $out[$k] = ($v === null || $v === '') ? 0 : (int) $v;

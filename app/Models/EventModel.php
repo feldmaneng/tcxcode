@@ -17,7 +17,7 @@ class EventModel extends Model
         'EventChair1ID', 'EventChair2ID', 'EventManagerID',
         'GeneralChairID', 'GraphicDesignerID',
         'IsClosed', 'ClosedAt',
-        'GuestListEnabled', 'GolfEnabled',
+        'GuestListEnabled', 'GolfEnabled', 'ExhibitorPortalOpen',
         'GuestFormChinese', 'GuestFormKorean',
         'LogoID',
     ];

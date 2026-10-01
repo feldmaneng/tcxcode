@@ -221,6 +221,33 @@ class ExpoDirectoryController extends BaseApiController
         return $this->designedEventIdCache[$userId];
     }
 
+    /**
+     * Exhibitors (coordinators) may use an event's portal only when the event
+     * is not closed AND the admin has opened the Exhibitor Portal. If the
+     * ExhibitorPortalOpen column doesn't exist yet, the portal counts as open.
+     */
+    private array $portalOpenCache = [];
+    private function exhibitorAccessible(?int $eventId): bool
+    {
+        if (!$eventId || !$this->eventIsOpen($eventId)) return false;
+        if (!array_key_exists($eventId, $this->portalOpenCache)) {
+            try {
+                $r = db_connect()->table('events')->select('ExhibitorPortalOpen')
+                    ->where('EventID', $eventId)->get()->getRowArray();
+                $this->portalOpenCache[$eventId] = $r ? ((int) ($r['ExhibitorPortalOpen'] ?? 0) === 1) : false;
+            } catch (\Throwable $e) {
+                $this->portalOpenCache[$eventId] = true;
+            }
+        }
+        return $this->portalOpenCache[$eventId];
+    }
+
+    /** 403 reason for a coordinator blocked from an event. */
+    private function exhibitorBlockReason(?int $eventId): string
+    {
+        return $this->eventIsOpen($eventId) ? 'portal_closed' : 'event_closed';
+    }
+
     private function eventIsOpen(?int $eventId): bool
     {
         if (!$eventId) return false;
@@ -398,6 +425,16 @@ class ExpoDirectoryController extends BaseApiController
         $ownIds = null;
         if ($userId !== null && !$privileged && !$isDesigner) {
             $ownIds = (new ExpoDirectoryCoordinatorModel())->entryIdsForContact($contactId);
+            if ($ownIds) {
+                $rows = (new ExpoDirectoryModel())->builder()->select('EntryID, EventID')
+                    ->whereIn('EntryID', $ownIds)->get()->getResultArray();
+                $ownIds = [];
+                foreach ($rows as $r) {
+                    if ($this->exhibitorAccessible($r['EventID'] === null ? null : (int) $r['EventID'])) {
+                        $ownIds[] = (int) $r['EntryID'];
+                    }
+                }
+            }
             if (!$ownIds && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'page' => 1, 'per_page' => 0, 'total' => 0]);
             }
@@ -911,7 +948,10 @@ class ExpoDirectoryController extends BaseApiController
             $coords = new ExpoDirectoryCoordinatorModel();
             $rowEventId = $row['EventID'] === null ? null : (int) $row['EventID'];
             if ($coords->isCoordinator($contactId, $id)) {
-                $canWrite = $this->eventIsOpen($rowEventId);
+                if (!$this->exhibitorAccessible($rowEventId)) {
+                    return $this->jsonError(403, $this->exhibitorBlockReason($rowEventId));
+                }
+                $canWrite = true;
             } elseif ($rowEventId && in_array($rowEventId, $this->designedEventIds($userId), true)) {
                 // Graphic designer: read-only.
                 if (!empty($row['DeletedAt'])) return $this->jsonError(409, 'entry_removed');
@@ -1169,8 +1209,9 @@ class ExpoDirectoryController extends BaseApiController
             if (!(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
                 return $this->jsonError(403, 'forbidden');
             }
-            if (!$this->eventIsOpen($row['EventID'] === null ? null : (int) $row['EventID'])) {
-                return $this->jsonError(403, 'event_closed');
+            $evId = $row['EventID'] === null ? null : (int) $row['EventID'];
+            if (!$this->exhibitorAccessible($evId)) {
+                return $this->jsonError(403, $this->exhibitorBlockReason($evId));
             }
         }
 
@@ -1290,6 +1331,12 @@ class ExpoDirectoryController extends BaseApiController
         [$userId, $privileged, $contactId] = $this->actorContextForEntry($id);
 
         $entry = (new ExpoDirectoryModel())->find($id);
+        if ($userId !== null && !$privileged && $entry
+            && (new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)
+            && !in_array((int) ($entry['EventID'] ?? 0), $this->designedEventIds($userId), true)
+            && !$this->exhibitorAccessible((int) ($entry['EventID'] ?? 0) ?: null)) {
+            return $this->jsonError(403, $this->exhibitorBlockReason((int) ($entry['EventID'] ?? 0) ?: null));
+        }
         if ($userId !== null && !$privileged
             && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
             $eid = (int) ($entry['EventID'] ?? 0);
