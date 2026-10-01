@@ -44,6 +44,30 @@ class EventModel extends Model
         return false;
     }
 
+    /**
+     * Exhibitors (portal coordinators, guest-list managers, public guest
+     * registration) may use an event only when it is not closed AND its
+     * Exhibitor Portal is switched on. Missing column => treated as open.
+     */
+    public function exhibitorAccessible(?int $eventId): bool
+    {
+        if (!$eventId) return false;
+        if ($this->isLocked($eventId)) return false;
+        try {
+            $r = $this->db->table('events')->select('ExhibitorPortalOpen')
+                ->where('EventID', $eventId)->get()->getRowArray();
+            return $r ? ((int) ($r['ExhibitorPortalOpen'] ?? 0) === 1) : false;
+        } catch (\Throwable $e) {
+            return true;
+        }
+    }
+
+    /** 'event_closed' or 'portal_closed' — why exhibitors are blocked. */
+    public function exhibitorBlockReason(?int $eventId): string
+    {
+        return ($eventId && $this->isLocked($eventId)) ? 'event_closed' : 'portal_closed';
+    }
+
     /** Returns all currently-locked event IDs (for scope checks). */
     public function lockedEventIds(): array
     {

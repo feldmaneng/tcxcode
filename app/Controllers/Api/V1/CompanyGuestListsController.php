@@ -160,6 +160,7 @@ class CompanyGuestListsController extends BaseApiController
                 $yearRows = (new EventModel())->select('Year')->whereIn('EventID', $managedEventIds)->get()->getResultArray();
                 $managedYears = array_values(array_filter(array_map(fn($r) => (int) $r['Year'], $yearRows)));
             }
+            if ($ids) $ids = $this->filterAccessibleLists($ids, $managedEventIds);
             if (!$ids && !$managedEventIds) {
                 return $this->response->setJSON(['data' => [], 'page' => $page, 'per_page' => $perPage, 'total' => 0]);
             }
@@ -254,6 +255,36 @@ class CompanyGuestListsController extends BaseApiController
         return $this->response->setJSON(['data' => $out]);
     }
 
+    /** Event a guest list belongs to (EventID, else the Year's guest-list event). */
+    private function eventIdForList(array $row): ?int
+    {
+        $eid = (int) ($row['EventID'] ?? 0);
+        if ($eid > 0) return $eid;
+        $year = (int) ($row['Year'] ?? 0);
+        if ($year <= 0) return null;
+        $em = new EventModel();
+        $ev = $em->where('Year', $year)->where('GuestListEnabled', 1)->first() ?: $em->where('Year', $year)->first();
+        return $ev ? (int) $ev['EventID'] : null;
+    }
+
+    /** Drop lists whose event is closed or whose Exhibitor Portal is off (unless the user manages that event). */
+    private function filterAccessibleLists(array $ids, array $managedEventIds): array
+    {
+        $rows = (new CompanyGuestListsModel())->builder()->select('CompanyID, EventID, Year')
+            ->whereIn('CompanyID', $ids)->get()->getResultArray();
+        $em = new EventModel();
+        $cache = [];
+        $keep = [];
+        foreach ($rows as $r) {
+            $evId = $this->eventIdForList($r);
+            if ($evId === null) { $keep[] = (int) $r['CompanyID']; continue; }
+            if (in_array($evId, $managedEventIds, true)) { $keep[] = (int) $r['CompanyID']; continue; }
+            $cache[$evId] ??= $em->exhibitorAccessible($evId);
+            if ($cache[$evId]) $keep[] = (int) $r['CompanyID'];
+        }
+        return $keep;
+    }
+
     public function show(int $id)
     {
         $actorId = $this->requireActor();
@@ -265,6 +296,13 @@ class CompanyGuestListsController extends BaseApiController
             if (!(new CompanyGuestListsManagerModel())->userManages($actorId, $id)
                 && !$this->isEventManagerForList($actorId, $row)) {
                 return $this->jsonError(403, 'forbidden');
+            }
+        }
+        if (!$this->isAdmin($actorId) && !$this->isEventManagerForList($actorId, $row)) {
+            $evId = $this->eventIdForList($row);
+            $em = new EventModel();
+            if ($evId && !$em->exhibitorAccessible($evId)) {
+                return $this->jsonError(403, $em->exhibitorBlockReason($evId));
             }
         }
         $row = $this->ensureTokens($model, $row);

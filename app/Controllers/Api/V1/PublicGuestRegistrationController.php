@@ -159,6 +159,17 @@ class PublicGuestRegistrationController extends BaseApiController
         return (new EventGuestModel())->countsForCompany($companyGuestListsId);
     }
 
+    /** Closed status when the event is closed or its Exhibitor Portal is off; null otherwise. */
+    private function portalStatus(array $event): ?array
+    {
+        $em = new EventModel();
+        $id = (int) ($event['EventID'] ?? 0);
+        if ($em->exhibitorAccessible($id)) return null;
+        return $em->exhibitorBlockReason($id) === 'event_closed'
+            ? ['status' => 'closed', 'message' => 'Registration for this event is closed. Please contact Office@testconx.org for assistance.']
+            : ['status' => 'closed', 'message' => 'Registration for this event is not open yet. Please contact Office@testconx.org for assistance.'];
+    }
+
     private function statusFor(string $kind, array $company, array $counts, ?array $manager = null): array
     {
         if ($kind === self::KIND_FULL_CONF) {
@@ -250,6 +261,7 @@ class PublicGuestRegistrationController extends BaseApiController
         $manager = $this->primaryManager((int) $company['CompanyID']);
         $counts = $this->liveCounts((int) $company['CompanyID']);
         $status = $this->statusFor($kind, $company, $counts, $manager);
+        $status = $this->portalStatus($event) ?? $status;
 
         return $this->response->setJSON([
             'status'       => $status['status'],
@@ -286,7 +298,7 @@ class PublicGuestRegistrationController extends BaseApiController
 
         $manager = $this->primaryManager($companyId);
         $counts = $this->liveCounts($companyId);
-        $status = $this->statusFor($kind, $company, $counts, $manager);
+        $status = $this->portalStatus($event) ?? $this->statusFor($kind, $company, $counts, $manager);
         if ($status['status'] !== 'open') {
             return $this->jsonError(423, 'registration_closed', ['message' => $status['message']]);
         }

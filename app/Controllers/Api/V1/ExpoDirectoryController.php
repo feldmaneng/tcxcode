@@ -229,23 +229,14 @@ class ExpoDirectoryController extends BaseApiController
     private array $portalOpenCache = [];
     private function exhibitorAccessible(?int $eventId): bool
     {
-        if (!$eventId || !$this->eventIsOpen($eventId)) return false;
-        if (!array_key_exists($eventId, $this->portalOpenCache)) {
-            try {
-                $r = db_connect()->table('events')->select('ExhibitorPortalOpen')
-                    ->where('EventID', $eventId)->get()->getRowArray();
-                $this->portalOpenCache[$eventId] = $r ? ((int) ($r['ExhibitorPortalOpen'] ?? 0) === 1) : false;
-            } catch (\Throwable $e) {
-                $this->portalOpenCache[$eventId] = true;
-            }
-        }
-        return $this->portalOpenCache[$eventId];
+        if (!$eventId) return false;
+        return $this->portalOpenCache[$eventId] ??= (new EventModel())->exhibitorAccessible($eventId);
     }
 
     /** 403 reason for a coordinator blocked from an event. */
     private function exhibitorBlockReason(?int $eventId): string
     {
-        return $this->eventIsOpen($eventId) ? 'portal_closed' : 'event_closed';
+        return (new EventModel())->exhibitorBlockReason($eventId);
     }
 
     private function eventIsOpen(?int $eventId): bool
@@ -1573,6 +1564,10 @@ class ExpoDirectoryController extends BaseApiController
         if ($userId !== null && !$privileged
             && !(new ExpoDirectoryCoordinatorModel())->isCoordinator($contactId, $id)) {
             return $this->jsonError(403, 'forbidden');
+        }
+        if ($userId !== null && !$privileged) {
+            $gEv = $row['EventID'] === null ? null : (int) $row['EventID'];
+            if (!$this->exhibitorAccessible($gEv)) return $this->jsonError(403, $this->exhibitorBlockReason($gEv));
         }
         return $this->response->setJSON(['data' => $this->guestListPayload($row)]);
     }

@@ -213,6 +213,10 @@ class EventGuestsController extends BaseApiController
         if (!$event && $year > 0) {
             $event = $eventModel->where('Year', $year)->first();
         }
+        if (!$isPrivileged && $event && !$eventModel->exhibitorAccessible((int) $event['EventID'])) {
+            $this->response->setStatusCode(403)->setJSON(['error' => $eventModel->exhibitorBlockReason((int) $event['EventID'])]);
+            return null;
+        }
         if ($event) {
             $eventLocked = $eventModel->isLocked((int) $event['EventID']);
             $golfEnabled = (int) ($event['GuestListEnabled'] ?? 0) === 1
