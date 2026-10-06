@@ -1497,6 +1497,7 @@ class ExpoDirectoryController extends BaseApiController
             $lower = $db->escape(mb_strtolower($name));
             $gl    = $model->builder()
                 ->where('EventID', $eventId)
+                ->where('DeletedAt', null)
                 ->groupStart()
                     ->where('LOWER(Company) = ' . $lower, null, false)
                     ->orWhere('LOWER(Name) = ' . $lower, null, false)
@@ -1641,7 +1642,7 @@ class ExpoDirectoryController extends BaseApiController
         $model = new \App\Models\CompanyGuestListsModel();
         $candidate = $base;
         $n = 1;
-        while ($model->where('EventID', $eventId)->where('Name', $candidate)->first()) {
+        while ($model->withDeleted()->where('EventID', $eventId)->where('Name', $candidate)->first()) {
             $n++;
             $candidate = substr($base, 0, 10) . $n;
             if ($n > 50) { $candidate = substr($base, 0, 8) . strtoupper(bin2hex(random_bytes(2))); break; }

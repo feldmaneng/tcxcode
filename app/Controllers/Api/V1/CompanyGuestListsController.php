@@ -33,8 +33,9 @@ class CompanyGuestListsController extends BaseApiController
         'full_conf_token'  => 'FullConfToken',
         'exhibitor_token'  => 'ExhibitorToken',
         'cc_primary_on_registration' => 'CcPrimaryOnRegistration',
+        'deleted_at'     => 'DeletedAt',
     ];
-    private const READONLY_API_FIELDS = ['id', 'full_conf_token', 'exhibitor_token'];
+    private const READONLY_API_FIELDS = ['id', 'full_conf_token', 'exhibitor_token', 'deleted_at'];
 
     private const FILTERABLE = ['year', 'staff_id'];
     private const SORTABLE   = ['id', 'year', 'name', 'company'];
@@ -121,6 +122,16 @@ class CompanyGuestListsController extends BaseApiController
         $sort    = (string) ($req->getGet('sort') ?: '-year,company');
 
         $builder = (new CompanyGuestListsModel())->builder();
+        $includeDeleted = (string) $req->getGet('include_deleted') === '1';
+        if (!$includeDeleted) {
+            $builder->where('DeletedAt', null);
+        } elseif (!$isAdmin) {
+            // Only event managers see deleted lists, and only for their own events.
+            $mgd = (new EventModel())->managedEventIds($actorId);
+            $builder->groupStart()->where('DeletedAt', null);
+            if ($mgd) $builder->orWhereIn('EventID', $mgd);
+            $builder->groupEnd();
+        }
         foreach (self::FILTERABLE as $apiCol) {
             $val = $req->getGet($apiCol);
             if ($val === null || $val === '') continue;
@@ -219,7 +230,7 @@ class CompanyGuestListsController extends BaseApiController
         if (!$this->isAdmin($actorId)) {
             $mine = array_map('intval', (new CompanyGuestListsManagerModel())->companyIdsForUser($actorId));
             $listRows = (new CompanyGuestListsModel())->builder()
-                ->select('CompanyID, EventID, Year')->whereIn('CompanyID', $ids)->get()->getResultArray();
+                ->select('CompanyID, EventID, Year')->whereIn('CompanyID', $ids)->where('DeletedAt', null)->get()->getResultArray();
             $allowed = [];
             foreach ($listRows as $lr) {
                 $lid = (int) $lr['CompanyID'];
@@ -271,7 +282,7 @@ class CompanyGuestListsController extends BaseApiController
     private function filterAccessibleLists(array $ids, array $managedEventIds): array
     {
         $rows = (new CompanyGuestListsModel())->builder()->select('CompanyID, EventID, Year')
-            ->whereIn('CompanyID', $ids)->get()->getResultArray();
+            ->whereIn('CompanyID', $ids)->where('DeletedAt', null)->get()->getResultArray();
         $em = new EventModel();
         $cache = [];
         $keep = [];
@@ -499,37 +510,108 @@ class CompanyGuestListsController extends BaseApiController
     }
 
 
+    /**
+     * DELETE — hides the list (soft delete). Its active guests are removed with
+     * the same timestamp, which marks them as "removed with the list" so a
+     * restore brings back exactly those guests.
+     */
     public function delete(int $id)
     {
         if (!$this->requireAdmin()) return $this->response;
         $model = new CompanyGuestListsModel();
         if (!$model->find($id)) return $this->jsonError(404, 'not_found');
 
-        $db = db_connect('registration');
+        $actor = (int) $this->actorId();
+        $now   = date('Y-m-d H:i:s');
+        $db    = db_connect('registration');
         try {
-            $active = (int) $db->table('guests')
+            $db->transException(true)->transStart();
+            $removed = 0;
+            $db->table('guests')
                 ->where('InvitedByCompanyID', $id)
                 ->where('DeletedAt', null)
-                ->countAllResults();
-            if ($active > 0) {
-                return $this->jsonError(409, 'has_guests', [
-                    'message' => "This guest list still has {$active} guest" . ($active === 1 ? '' : 's') . '. Remove them first.',
-                ]);
-            }
-
-            $db->transException(true)->transStart();
-            if ($db->tableExists('companyguestlists_managers')) {
-                $db->table('companyguestlists_managers')->where('CompanyGuestListsID', $id)->delete();
-            }
-            $model->delete($id);
+                ->update(['DeletedAt' => $now, 'DeletedBy' => $actor]);
+            $removed = $db->affectedRows();
+            $db->table('companyguestlists')->where('CompanyID', $id)
+                ->update(['DeletedAt' => $now, 'DeletedBy' => $actor]);
             $db->transComplete();
+            $this->audit($actor, 'guestlist.deleted', $id, ['guests_removed' => $removed]);
             return $this->response->setStatusCode(204);
         } catch (\Throwable $e) {
             log_message('error', '[CompanyGuestLists] delete ' . $id . ' failed: ' . $e->getMessage());
-            $msg = stripos($e->getMessage(), 'foreign key') !== false
-                ? 'This guest list is still linked to other records (for example removed guests), so it can\'t be deleted.'
-                : 'The guest list could not be deleted. The reason was logged on the CRM server.';
-            return $this->jsonError(500, 'delete_failed', ['message' => $msg]);
+            $reason = mb_substr(preg_replace('/\s+/', ' ', $e->getMessage()), 0, 400);
+            return $this->jsonError(500, 'delete_failed', ['message' => 'The guest list could not be deleted. Reason: ' . $reason]);
         }
+    }
+
+    /**
+     * POST /{id}/restore — admin or event manager of the list's event.
+     * Brings back the list and the guests removed with it, skipping anyone who
+     * has since moved to another list or whose email is active elsewhere in
+     * the event.
+     */
+    public function restore(int $id)
+    {
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
+        $model = new CompanyGuestListsModel();
+        $row = $model->withDeleted()->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if (!$this->isAdmin($actorId) && !$this->isEventManagerForList($actorId, $row)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+        $deletedAt = $row['DeletedAt'] ?? null;
+        if ($deletedAt === null || $deletedAt === '') {
+            return $this->response->setJSON(['data' => ['restored' => 0, 'skipped' => []]]);
+        }
+
+        $db = db_connect('registration');
+        $gm = new \App\Models\EventGuestModel();
+        $eventYear = (string) ($row['EventYear'] ?? '');
+        $restored = 0;
+        $skipped  = [];
+        try {
+            $db->transException(true)->transStart();
+            $db->table('companyguestlists')->where('CompanyID', $id)
+                ->update(['DeletedAt' => null, 'DeletedBy' => null]);
+
+            // Guests moved to another list since then have a different
+            // InvitedByCompanyID, so they are not picked up here.
+            $guests = $db->table('guests')
+                ->where('InvitedByCompanyID', $id)
+                ->where('DeletedAt', $deletedAt)
+                ->get()->getResultArray();
+            foreach ($guests as $g) {
+                $name  = trim(($g['GivenName'] ?? '') . ' ' . ($g['FamilyName'] ?? ''));
+                $email = (string) ($g['Email'] ?? '');
+                $live  = $email !== '' ? $gm->liveByEmailInEvent((string) ($g['EventYear'] ?? '') ?: $eventYear, $email, (int) $g['GuestID'], $id) : null;
+                if ($live) {
+                    $other = (new CompanyGuestListsModel())->withDeleted()->find((int) ($live['InvitedByCompanyID'] ?? 0));
+                    $skipped[] = [
+                        'name'       => $name !== '' ? $name : $email,
+                        'email'      => $email,
+                        'other_list' => $other ? (string) ($other['Company'] ?: $other['Name']) : null,
+                    ];
+                    continue;
+                }
+                $db->table('guests')->where('GuestID', (int) $g['GuestID'])
+                    ->update(['DeletedAt' => null, 'DeletedBy' => null]);
+                $restored++;
+            }
+            $db->transComplete();
+        } catch (\Throwable $e) {
+            log_message('error', '[CompanyGuestLists] restore ' . $id . ' failed: ' . $e->getMessage());
+            $reason = mb_substr(preg_replace('/\s+/', ' ', $e->getMessage()), 0, 400);
+            return $this->jsonError(500, 'restore_failed', ['message' => 'The guest list could not be restored. Reason: ' . $reason]);
+        }
+        $this->audit($actorId, 'guestlist.restored', $id, ['restored' => $restored, 'skipped' => count($skipped)]);
+        return $this->response->setJSON(['data' => ['restored' => $restored, 'skipped' => $skipped]]);
+    }
+
+    private function audit(int $actorId, string $action, int $id, array $meta): void
+    {
+        try {
+            (new \App\Models\AdminAuditLogModel())->log($actorId, $action, 'companyguestlists', (string) $id, $meta, $this->request->getIPAddress());
+        } catch (\Throwable $e) {}
     }
 }

@@ -694,6 +694,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->put('(:num)',                  'CompanyGuestListsController::update/$1');
         $routes->delete('(:num)',               'CompanyGuestListsController::delete/$1');
         $routes->post('(:num)/rotate-token',    'CompanyGuestListsController::rotateToken/$1');
+        $routes->post('(:num)/restore',         'CompanyGuestListsController::restore/$1');
 
         $routes->get('(:num)/managers',         'CompanyGuestListsManagersController::index/$1');
         $routes->post('(:num)/managers',        'CompanyGuestListsManagersController::add/$1');

@@ -11,11 +11,15 @@ class CompanyGuestListsModel extends Model
     protected $returnType       = 'array';
     protected $useAutoIncrement = true;
     protected $useTimestamps    = false;
+    // Deleting a list hides it (DeletedAt) so it can be restored later.
+    protected $useSoftDeletes   = true;
+    protected $deletedField     = 'DeletedAt';
+    protected $dateFormat       = 'datetime';
     protected $allowedFields    = [
         'EventYear', 'Year', 'Name', 'SecretKey', 'Company',
         'InviteCount', 'EmployeeCount', 'BanquetCount', 'GolfCount', 'StaffID',
         'FullConfToken', 'ExhibitorToken', 'CcPrimaryOnRegistration',
-        'EventID',
+        'EventID', 'DeletedAt', 'DeletedBy',
     ];
 
 
