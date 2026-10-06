@@ -504,7 +504,32 @@ class CompanyGuestListsController extends BaseApiController
         if (!$this->requireAdmin()) return $this->response;
         $model = new CompanyGuestListsModel();
         if (!$model->find($id)) return $this->jsonError(404, 'not_found');
-        $model->delete($id);
-        return $this->response->setStatusCode(204);
+
+        $db = db_connect('registration');
+        try {
+            $active = (int) $db->table('guests')
+                ->where('InvitedByCompanyID', $id)
+                ->where('DeletedAt', null)
+                ->countAllResults();
+            if ($active > 0) {
+                return $this->jsonError(409, 'has_guests', [
+                    'message' => "This guest list still has {$active} guest" . ($active === 1 ? '' : 's') . '. Remove them first.',
+                ]);
+            }
+
+            $db->transException(true)->transStart();
+            if ($db->tableExists('companyguestlists_managers')) {
+                $db->table('companyguestlists_managers')->where('CompanyGuestListsID', $id)->delete();
+            }
+            $model->delete($id);
+            $db->transComplete();
+            return $this->response->setStatusCode(204);
+        } catch (\Throwable $e) {
+            log_message('error', '[CompanyGuestLists] delete ' . $id . ' failed: ' . $e->getMessage());
+            $msg = stripos($e->getMessage(), 'foreign key') !== false
+                ? 'This guest list is still linked to other records (for example removed guests), so it can\'t be deleted.'
+                : 'The guest list could not be deleted. The reason was logged on the CRM server.';
+            return $this->jsonError(500, 'delete_failed', ['message' => $msg]);
+        }
     }
 }
