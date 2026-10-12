@@ -108,8 +108,9 @@ class MessagingController extends BaseApiController
         if (!$ids) return [];
         try {
             $rows = db_connect('control')->table('users')
-                ->select('UserID, GivenName, FamilyName, UserName, Email')
+                ->select('UserID, ContactID, GivenName, FamilyName, UserName, Email')
                 ->whereIn('UserID', $ids)->get()->getResultArray();
+            $rows = \App\Libraries\CrmEmail::apply($rows);
         } catch (\Throwable $e) {
             log_message('error', '[messaging] user lookup failed: ' . $e->getMessage());
             return [];

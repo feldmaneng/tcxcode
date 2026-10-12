@@ -93,6 +93,7 @@ class PresentationRecipientsController extends BaseApiController
 
                 ->select('UserID, UserName, ContactID, GivenName, FamilyName, Email')
                 ->where('UserID', $userId)->get()->getRowArray();
+            $u = \App\Libraries\CrmEmail::applyOne($u ?: null);
             if (!$u || !$u['Email']) return;
             $key = strtolower(trim((string) $u['Email']));
             if (!$key || isset($collected[$key])) return;
@@ -173,12 +174,7 @@ class PresentationRecipientsController extends BaseApiController
 
         $db  = Database::connect();
         $dbC = Database::connect('control');
-        $user = $dbC->table('users')
-
-            ->select('UserID, UserName, ContactID, Email, GivenName, FamilyName')
-            ->where('LOWER(Email)', strtolower($email))
-            ->where('Active', 1)
-            ->get()->getRowArray();
+        $user = \App\Libraries\CrmEmail::findActiveUserByEmail($email, 'UserID, UserName, ContactID, Email, GivenName, FamilyName');
         if (!$user) return $this->jsonError(404, 'user_not_found');
 
         $userId    = (int) $user['UserID'];
@@ -369,6 +365,7 @@ class PresentationRecipientsController extends BaseApiController
             $u = $dbC->table('users')
                 ->select('UserID, UserName, ContactID, GivenName, FamilyName, Email')
                 ->where('UserID', $uid)->get()->getRowArray();
+            $u = \App\Libraries\CrmEmail::applyOne($u ?: null);
             if (!$u) return null;
             return [
                 'user_id'     => (int) $u['UserID'],
