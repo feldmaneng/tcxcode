@@ -34,6 +34,8 @@ class CompanyGuestListsController extends BaseApiController
         'exhibitor_token'  => 'ExhibitorToken',
         'cc_primary_on_registration' => 'CcPrimaryOnRegistration',
         'deleted_at'     => 'DeletedAt',
+        'related_domains'  => 'RelatedDomains',
+        'excluded_domains' => 'ExcludedDomains',
     ];
     private const READONLY_API_FIELDS = ['id', 'full_conf_token', 'exhibitor_token', 'deleted_at'];
 
@@ -242,11 +244,15 @@ class CompanyGuestListsController extends BaseApiController
 
         $out = [];
         foreach ($ids as $id) {
-            $out[(string) $id] = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0, 'golf' => 0];
+            $out[(string) $id] = ['professional' => 0, 'exhibitor' => 0, 'banquet' => 0, 'golf' => 0, 'related_full' => 0, 'related' => 0, 'total' => 0];
+        }
+        $domainsByList = [];
+        foreach ((new CompanyGuestListsModel())->withDeleted()->whereIn('CompanyID', $ids)->findAll() as $lr) {
+            $domainsByList[(string) (int) $lr['CompanyID']] = \App\Libraries\RelatedDomains::forList($lr);
         }
 
         $rows = (new \App\Models\EventGuestModel())->builder()
-            ->select('InvitedByCompanyID, Type, BanquetCompanyID, GolfCompanyID')
+            ->select('InvitedByCompanyID, Type, BanquetCompanyID, GolfCompanyID, Email')
             ->whereIn('InvitedByCompanyID', $ids)
             ->where('DeletedAt', null)
             ->get()->getResultArray();
@@ -256,9 +262,15 @@ class CompanyGuestListsController extends BaseApiController
             if (!isset($out[$key])) continue;
             if (\App\Models\EventGuestModel::normalizeType($r['Type'] ?? null) === \App\Models\EventGuestModel::TYPE_EXHIBITOR) {
                 $out[$key]['exhibitor']++;
+                $out[$key]['related']++;
             } else {
                 $out[$key]['professional']++;
+                if (\App\Libraries\RelatedDomains::match($r['Email'] ?? '', $domainsByList[$key] ?? []) !== null) {
+                    $out[$key]['related_full']++;
+                    $out[$key]['related']++;
+                }
             }
+            $out[$key]['total']++;
             if (!empty($r['BanquetCompanyID'])) $out[$key]['banquet']++;
             if (!empty($r['GolfCompanyID']))    $out[$key]['golf']++;
         }

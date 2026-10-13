@@ -2,6 +2,7 @@
 namespace App\Controllers\Api\V1;
 
 use App\Libraries\ApiAuthContext;
+use App\Libraries\RelatedDomains;
 use App\Models\CompanyGuestListsManagerModel;
 use App\Models\CompanyGuestListsModel;
 use App\Models\EventGuestModel;
@@ -301,8 +302,18 @@ class EventGuestsController extends BaseApiController
         $counts = $this->countsForRows($visibleLive);
         $visibleRows = array_merge($visibleLive, $deletedRows);
 
+        $domains = RelatedDomains::forList($ctx['company']);
+        $counts['related_full'] = 0;
+        foreach ($visibleLive as $r) {
+            if (EventGuestModel::normalizeType($r['Type'] ?? '') !== EventGuestModel::TYPE_EXHIBITOR
+                && RelatedDomains::match($r['Email'] ?? '', $domains) !== null) $counts['related_full']++;
+        }
+        $domainList = [];
+        foreach ($domains as $d => $why) $domainList[] = ['domain' => $d, 'source' => $why];
+
         return $this->response->setJSON([
-            'data'   => array_map(fn($r) => $this->dbToApi($r, $ctx['isPrivileged']), $visibleRows),
+            'data'   => array_map(fn($r) => $this->withRelated($this->dbToApi($r, $ctx['isPrivileged']), $r, $domains), $visibleRows),
+            'related_domains' => $domainList,
             'counts' => $counts,
             'duplicate_count' => max(0, count($liveRows) - count($visibleLive)),
             'limits' => [
@@ -315,6 +326,52 @@ class EventGuestsController extends BaseApiController
             'event_locked' => $ctx['eventLocked'],
             'is_privileged' => $ctx['isPrivileged'] ? 1 : 0,
         ]);
+    }
+
+    /** Adds related_match (reason or null) for Full Conference guests. */
+    private function withRelated(array $api, array $row, array $domains): array
+    {
+        $api['related_match'] = EventGuestModel::normalizeType($row['Type'] ?? '') === EventGuestModel::TYPE_EXHIBITOR
+            ? null
+            : RelatedDomains::match($row['Email'] ?? '', $domains);
+        return $api;
+    }
+
+    /**
+     * GET /api/v1/events/{eventId}/guests — every live guest at the event across
+     * all live guest lists. Admins and the event's Event Manager only.
+     */
+    public function eventIndex(int $eventId)
+    {
+        $actorId = ApiAuthContext::actingUserId();
+        if (!$actorId) return $this->jsonError(401, 'acting_user_required');
+        $isAdmin = (new UserModuleModel())->userHasModule($actorId, 'admin');
+        if (!$isAdmin && !(new EventModel())->isEventManagerForEvent((int) $actorId, $eventId)) {
+            return $this->jsonError(403, 'forbidden');
+        }
+        $lists = (new CompanyGuestListsModel())->where('EventID', $eventId)->findAll();
+        if (!$lists) return $this->response->setJSON(['data' => [], 'lists' => []]);
+        $byId = [];
+        $domainsById = [];
+        foreach ($lists as $l) {
+            $id = (int) $l['CompanyID'];
+            $byId[$id] = $l;
+            $domainsById[$id] = RelatedDomains::forList($l);
+        }
+        $rows = (new EventGuestModel())->whereIn('InvitedByCompanyID', array_keys($byId))
+            ->where('DeletedAt', null)
+            ->orderBy('FamilyName', 'ASC')->orderBy('GivenName', 'ASC')->findAll();
+        $out = [];
+        foreach ($rows as $r) {
+            $lid = (int) $r['InvitedByCompanyID'];
+            $api = $this->withRelated($this->dbToApi($r, true), $r, $domainsById[$lid] ?? []);
+            $api['list_name'] = (string) ($byId[$lid]['Company'] ?: $byId[$lid]['Name'] ?? '');
+            $api['added'] = $r['Added'] ?? null;
+            $out[] = $api;
+        }
+        $listOut = [];
+        foreach ($byId as $id => $l) $listOut[] = ['id' => $id, 'name' => (string) ($l['Company'] ?: $l['Name'])];
+        return $this->response->setJSON(['data' => $out, 'lists' => $listOut]);
     }
 
     /** POST /api/v1/company-guest-lists/{id}/guests */
