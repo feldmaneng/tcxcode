@@ -38,6 +38,12 @@ die();
 
 function TestConXsingle($graphics = TRUE)
  {
+	$expected = (string) env('badge.sharedToken', '');
+	$given    = (string) $this->request->getHeaderLine('X-Badge-Token');
+	if ($expected === '' || !hash_equals($expected, $given)) {
+		return $this->response->setStatusCode(403)->setBody('Forbidden');
+	}
+ 
 			 if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') 
 				$link = "https"; 
 			else
