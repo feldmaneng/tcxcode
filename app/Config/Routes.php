@@ -713,6 +713,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('(:num)/golf',      'EventGuestsController::golf/$1');
         $routes->post('mark-bounced',      'EventGuestsController::markBounced');
         $routes->get('event/(:num)',       'EventGuestsController::eventIndex/$1');
+        $routes->get('(:num)/badge',       'GuestBadgeController::show/$1');
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
 
