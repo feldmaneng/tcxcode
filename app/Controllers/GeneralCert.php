@@ -346,6 +346,10 @@ class GeneralCert extends BaseController {
 					{
 					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
 					}
+					else if($year == '2026' and $SESSION == '4')
+					{
+					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
+					}
 					else if($SESSION == 'Keynote'||$SESSION == 'Keynote 1'||$SESSION == 'Keynote 2')
 					{
 					$pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
