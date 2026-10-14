@@ -379,7 +379,7 @@ class GeneralCert extends BaseController {
 					$pdf->Line( $x3+88+4.4, 167,25.58+136+4.4, 167, $style = array() );
 					$pdf->Line( $x3+161+4.4, 167,25.58+209+4.4, 167, $style = array() );
 					$pdf->SetFont('times', '', 12);
-					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/YunSignature.png', $x3+17.7+4.4, 152,20,15, 'PNG', '', '',true,300, '', false, false, 0, false, false, true);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/YunSignature.png', $x3+17.7+4.4, 149,20,15, 'PNG', '', '',true,300, '', false, false, 0, false, false, true);
 					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
