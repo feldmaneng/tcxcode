@@ -1923,6 +1923,7 @@ function Asia($eventYear = 'Korea2026')
 			
 			$builder->where('EventYear', $eventYear);
 			$builder->where('ToPrint', 'Yes');
+			$builder->where('DeletedAt', 'NULL');
 			$builder->orderBy('FamilyName ASC, GivenName ASC');
 			$query = $builder->get();
 			$people = $query->getNumRows();

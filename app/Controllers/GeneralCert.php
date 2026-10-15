@@ -266,6 +266,15 @@ class GeneralCert extends BaseController {
 					{
 					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
 					}
+					else if($year == '2026' and $SESSION == '4')
+					{
+					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
+					}
+		
+					else if($year == '2026' and $SESSION == '1')
+					{
+					$pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
+					}
 					else if($SESSION == 'Keynote')
 					{
 					$pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
@@ -294,6 +303,7 @@ class GeneralCert extends BaseController {
 					$pdf->Line( $x3+88+4.4, 167,25.58+136+4.4, 167, $style = array() );
 					$pdf->Line( $x3+161+4.4, 167,25.58+209+4.4, 167, $style = array() );
 					$pdf->SetFont('times', '', 12);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/SignatureJZhou2026.png', $x3+17.7+6.4, 159,37,7, 'PNG', '', '',true,300, '', false, false, 0, false, false, true);
 					$pdf->MultiCell(60, 23,$chair1." \nChina Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 167, true);
 					$pdf->MultiCell(60, 23,$chair2." \nChina General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
 					$pdf->MultiCell(60, 23,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
@@ -346,10 +356,19 @@ class GeneralCert extends BaseController {
 					{
 					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
 					}
+					else if($year == '2026' and $SESSION == '4')
+					{
+					$pdf->MultiCell(100, 25,"for the poster", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
+					}
 					else if($SESSION == 'Keynote'||$SESSION == 'Keynote 1'||$SESSION == 'Keynote 2')
 					{
 					$pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
-					} else if($SESSION == 'Tutorial1' || $SESSION == 'Tutorial2'|| $SESSION == 'Tutorial')
+					}
+					else if($year == '2026' and $SESSION == '2')
+					{
+					$pdf->MultiCell(100, 25,"for the Keynote", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
+					}
+					else if($SESSION == 'Tutorial1' || $SESSION == 'Tutorial2'|| $SESSION == 'Tutorial')
 					{
 					$pdf->MultiCell(100, 25,"for the Tutorial", 0, 'C', 0, 0, $x,$y+3.9*$z, true);
 					}
@@ -379,6 +398,7 @@ class GeneralCert extends BaseController {
 					$pdf->Line( $x3+88+4.4, 167,25.58+136+4.4, 167, $style = array() );
 					$pdf->Line( $x3+161+4.4, 167,25.58+209+4.4, 167, $style = array() );
 					$pdf->SetFont('times', '', 12);
+					$pdf->Image($_SERVER["DOCUMENT_ROOT"].'/images_new/YunSignature.png', $x3+17.7+13.4, 149,20,15, 'PNG', '', '',true,300, '', false, false, 0, false, false, true);
 					$pdf->MultiCell(60, 25,$chair1." \nKorea Program Chair", 0, 'L', 0, 0, $x3+17.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,$chair2." \nKorea General Chair", 0, 'L', 0, 0, $x3+90.7+4.4, 167, true);
 					$pdf->MultiCell(60, 25,"Ira Feldman \nTestConX General Chair", 0, 'L', 0, 0, $x3+163.7+4.4, 167, true);
