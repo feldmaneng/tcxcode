@@ -717,6 +717,13 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
     });
 
+    $routes->group('guest-crm', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('event/(:num)',   'GuestCrmController::eventIndex/$1');
+        $routes->post('(:num)/apply',  'GuestCrmController::apply/$1');
+        $routes->post('(:num)/skip',   'GuestCrmController::skip/$1');
+        $routes->options('(:any)', 'GuestCrmController::options', ['filter' => 'cors']);
+    });
+
     // Exhibitor Portal — expodirectory lives in the `registration` database
     // (bitswork_registration); coordinators get implicit access to their rows.
     $routes->group('expo-directory', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
