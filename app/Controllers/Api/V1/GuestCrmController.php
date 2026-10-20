@@ -231,37 +231,44 @@ class GuestCrmController extends BaseApiController
             if ($cid) {
                 $co = $this->db()->table('company')->select('CompanyID, StandardName')->where('CompanyID', $cid)->get()->getRowArray();
                 if (!$co) return $this->jsonError(422, 'company_not_found');
-                if ($co['StandardName'] !== null && (int) $co['StandardName'] === 0) return $this->jsonError(422, 'company_not_standard');
+                $std = $co['StandardName'];
+                if ($std !== null && $std !== '' && (int) $std === 0) return $this->jsonError(422, 'company_not_standard');
             }
             $upd['CompanyID'] = $cid;
         }
         $contacts = new ContactModel();
 
-        if ($create) {
-            if (empty($upd['Email']) && empty($upd['FamilyName'])) return $this->jsonError(422, 'email_or_name_required');
-            if (!empty($upd['Email']) && $this->db()->table('contacts')->where('LOWER(TRIM(Email))', $upd['Email'])->countAllResults() > 0) {
-                return $this->jsonError(409, 'email_exists');
-            }
-            $upd['Source'] = 'Guest list';
-            $contactId = (int) $contacts->insert($upd, true);
-            if (!$contactId) return $this->jsonError(500, 'create_failed');
-        } else {
-            $contact = $contactId ? $contacts->find($contactId) : null;
-            if (!$contact) return $this->jsonError(404, 'contact_not_found');
-            $guestEmail = EventGuestModel::normalizeEmail($g['Email'] ?? '');
-            if ($emailMode === 'keep') {
-                unset($upd['Email']);
-                if ($guestEmail !== '' && $guestEmail !== EventGuestModel::normalizeEmail($contact['Email'] ?? '')
-                    && stripos((string) ($contact['Notes'] ?? ''), $guestEmail) === false) {
-                    $upd['Notes'] = trim(((string) ($contact['Notes'] ?? '')) . "\nAlt email (guest list " . date('Y-m-d') . "): " . $guestEmail);
+        try {
+            if ($create) {
+                if (empty($upd['Email']) && empty($upd['FamilyName'])) return $this->jsonError(422, 'email_or_name_required');
+                if (!empty($upd['Email']) && $this->db()->table('contacts')->where('LOWER(TRIM(Email))', $upd['Email'])->countAllResults() > 0) {
+                    return $this->jsonError(409, 'email_exists');
                 }
-            } elseif (!empty($upd['Email']) && $upd['Email'] !== EventGuestModel::normalizeEmail($contact['Email'] ?? '')) {
-                $dup = $this->db()->table('contacts')->where('LOWER(TRIM(Email))', $upd['Email'])->where('ContactID !=', $contactId)->countAllResults();
-                if ($dup > 0) return $this->jsonError(409, 'email_exists');
+                $upd['Source'] = 'Guest list';
+                $contactId = (int) $contacts->insert($upd, true);
+                if (!$contactId) return $this->jsonError(500, 'create_failed');
+            } else {
+                $contact = $contactId ? $contacts->find($contactId) : null;
+                if (!$contact) return $this->jsonError(404, 'contact_not_found');
+                $guestEmail = EventGuestModel::normalizeEmail($g['Email'] ?? '');
+                if ($emailMode === 'keep') {
+                    unset($upd['Email']);
+                    if ($guestEmail !== '' && $guestEmail !== EventGuestModel::normalizeEmail($contact['Email'] ?? '')
+                        && stripos((string) ($contact['Notes'] ?? ''), $guestEmail) === false) {
+                        $upd['Notes'] = trim(((string) ($contact['Notes'] ?? '')) . "\nAlt email (guest list " . date('Y-m-d') . "): " . $guestEmail);
+                    }
+                } elseif (!empty($upd['Email']) && $upd['Email'] !== EventGuestModel::normalizeEmail($contact['Email'] ?? '')) {
+                    $dup = $this->db()->table('contacts')->where('LOWER(TRIM(Email))', $upd['Email'])->where('ContactID !=', $contactId)->countAllResults();
+                    if ($dup > 0) return $this->jsonError(409, 'email_exists');
+                }
+                // Use the query builder so a CompanyID-only (or NULL) change is never dropped by model data filtering.
+                if ($upd) $this->db()->table('contacts')->where('ContactID', $contactId)->update($upd);
             }
-            if ($upd) $contacts->update($contactId, $upd);
+            $this->markReviewed($g, $contactId);
+        } catch (\Throwable $e) {
+            log_message('error', 'GuestCrm apply failed: ' . $e->getMessage());
+            return $this->jsonError(500, 'update_failed', ['detail' => $e->getMessage()]);
         }
-        $this->markReviewed($g, $contactId);
         return $this->response->setJSON(['ok' => true, 'contact_id' => $contactId]);
     }
 
