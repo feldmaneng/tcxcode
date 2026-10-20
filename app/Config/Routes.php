@@ -718,6 +718,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->get('event/(:num)',       'EventGuestsController::eventIndex/$1');
         $routes->get('(:num)/badge',       'GuestBadgeController::show/$1');
         $routes->options('(:any)', 'EventGuestsController::options', ['filter' => 'cors']);
+        $routes->post('(:num)/move', 'EventGuestsController::move/$1');
     });
 
     $routes->group('guest-crm', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
@@ -725,7 +726,7 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('(:num)/apply',  'GuestCrmController::apply/$1');
         $routes->post('(:num)/skip',   'GuestCrmController::skip/$1');
         $routes->options('(:any)', 'GuestCrmController::options', ['filter' => 'cors']);
-        $routes->post('(:num)/move', 'EventGuestsController::move/$1');
+
     });
 
     // Exhibitor Portal — expodirectory lives in the `registration` database
