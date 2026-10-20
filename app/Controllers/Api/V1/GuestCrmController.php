@@ -65,6 +65,18 @@ class GuestCrmController extends BaseApiController
     {
         $o = ['id' => (int) $c['ContactID']];
         foreach (self::FIELDS as $k => [, $cc]) $o[$k] = trim((string) ($c[$cc] ?? ''));
+        // CRM-only fields (not on guests)
+        $o['nickname']     = trim((string) ($c['Nickname'] ?? ''));
+        $o['company_id']   = !empty($c['CompanyID']) ? (int) $c['CompanyID'] : null;
+        $o['company_name'] = null;
+        if ($o['company_id']) {
+            static $names = [];
+            if (!array_key_exists($o['company_id'], $names)) {
+                $r = $this->db()->table('company')->select('Name')->where('CompanyID', $o['company_id'])->get()->getRowArray();
+                $names[$o['company_id']] = $r ? (string) $r['Name'] : null;
+            }
+            $o['company_name'] = $names[$o['company_id']];
+        }
         return $o;
     }
 
@@ -87,7 +99,7 @@ class GuestCrmController extends BaseApiController
             ->orderBy('FamilyName', 'ASC')->orderBy('GivenName', 'ASC')->findAll();
 
         $db = $this->db();
-        $cols = 'ContactID, ' . implode(', ', array_unique(array_map(fn($f) => $f[1], self::FIELDS)));
+        $cols = 'ContactID, Nickname, CompanyID, ' . implode(', ', array_unique(array_map(fn($f) => $f[1], self::FIELDS)));
 
         // Batch: linked IDs + emails
         $ids = array_values(array_filter(array_map(fn($g) => (int) ($g['ContactID'] ?? 0), $guests)));
@@ -207,6 +219,21 @@ class GuestCrmController extends BaseApiController
             $v = trim((string) $v);
             if (mb_strlen($v) > 255) return $this->jsonError(422, 'too_long', ['field' => $k]);
             $upd[self::FIELDS[$k][1]] = $k === 'email' ? EventGuestModel::normalizeEmail($v) : $v;
+        }
+        // CRM-only fields
+        if (array_key_exists('nickname', $fields)) {
+            $v = trim((string) $fields['nickname']);
+            if (mb_strlen($v) > 255) return $this->jsonError(422, 'too_long', ['field' => 'nickname']);
+            $upd['Nickname'] = $v;
+        }
+        if (array_key_exists('company_id', $fields)) {
+            $cid = $fields['company_id'] === null || $fields['company_id'] === '' ? null : (int) $fields['company_id'];
+            if ($cid) {
+                $co = $this->db()->table('company')->select('CompanyID, StandardName')->where('CompanyID', $cid)->get()->getRowArray();
+                if (!$co) return $this->jsonError(422, 'company_not_found');
+                if ($co['StandardName'] !== null && (int) $co['StandardName'] === 0) return $this->jsonError(422, 'company_not_standard');
+            }
+            $upd['CompanyID'] = $cid;
         }
         $contacts = new ContactModel();
 

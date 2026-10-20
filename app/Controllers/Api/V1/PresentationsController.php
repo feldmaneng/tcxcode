@@ -115,7 +115,7 @@ class PresentationsController extends BaseApiController
     {
         $db = \Config\Database::connect();
         $rows = $db->table('authors')
-            ->select('authors.*, contacts.Email AS ContactEmail, contacts.GivenName AS ContactGivenName, contacts.FamilyName AS ContactFamilyName, contacts.Nickname AS ContactNickname')
+            ->select('authors.*, contacts.Email AS ContactEmail, contacts.GivenName AS ContactGivenName, contacts.FamilyName AS ContactFamilyName, contacts.Nickname AS ContactNickname, contacts.Phone AS ContactPhone, contacts.Mobile AS ContactMobile')
             ->join('contacts', 'contacts.ContactID = authors.ContactID', 'left')
             ->where('authors.PresentationID', (int) $row['id'])
             ->orderBy('authors.AuthorNumber', 'ASC')
@@ -132,6 +132,8 @@ class PresentationsController extends BaseApiController
             }
             $nick = trim((string) ($r['ContactNickname'] ?? ''));
             $api['nickname'] = $nick !== '' ? $nick : null;
+            $api['phone']  = trim((string) ($r['ContactPhone'] ?? ''));
+            $api['mobile'] = trim((string) ($r['ContactMobile'] ?? ''));
             return $api;
         }, $rows);
     }
