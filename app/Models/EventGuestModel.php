@@ -35,16 +35,22 @@ class EventGuestModel extends Model
     /** Guest type constants (stored verbatim in `guests`.`Type`). */
     public const TYPE_PROFESSIONAL = 'Professional';
     public const TYPE_EXHIBITOR    = 'Exhibitor';
+    /** Set only by admins / event managers; counts with invited (Full Conference) guests. */
+    public const TYPE_EXPO         = 'EXPO';
 
-    /**
-     * Normalizes any stored/legacy value to one of the two supported types.
-     * Legacy 'EXPO' rows fall back to Professional.
-     */
+    /** Normalizes any stored value to Professional, Exhibitor or EXPO. */
     public static function normalizeType($value): string
     {
-        return strcasecmp(trim((string) $value), self::TYPE_EXHIBITOR) === 0
-            ? self::TYPE_EXHIBITOR
-            : self::TYPE_PROFESSIONAL;
+        $v = trim((string) $value);
+        if (strcasecmp($v, self::TYPE_EXHIBITOR) === 0) return self::TYPE_EXHIBITOR;
+        if (strcasecmp($v, self::TYPE_EXPO) === 0) return self::TYPE_EXPO;
+        return self::TYPE_PROFESSIONAL;
+    }
+
+    /** Invited / Full Conference bucket (Professional or EXPO), i.e. not exhibitor staff. */
+    public static function isInvitedType($value): bool
+    {
+        return self::normalizeType($value) !== self::TYPE_EXHIBITOR;
     }
 
     /**

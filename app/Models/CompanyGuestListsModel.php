@@ -20,7 +20,7 @@ class CompanyGuestListsModel extends Model
         'InviteCount', 'EmployeeCount', 'BanquetCount', 'GolfCount', 'StaffID',
         'FullConfToken', 'ExhibitorToken', 'CcPrimaryOnRegistration',
         'EventID', 'DeletedAt', 'DeletedBy',
-        'RelatedDomains', 'ExcludedDomains',
+        'RelatedDomains', 'ExcludedDomains', 'Notes',
     ];
 
 

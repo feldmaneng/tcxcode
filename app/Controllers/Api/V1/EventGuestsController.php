@@ -390,6 +390,10 @@ class EventGuestsController extends BaseApiController
         }
 
         $row['Type'] = EventGuestModel::normalizeType($row['Type'] ?? EventGuestModel::TYPE_PROFESSIONAL);
+        // EXPO may only be chosen by admins / event managers.
+        if ($row['Type'] === EventGuestModel::TYPE_EXPO && !$ctx['isPrivileged']) {
+            $row['Type'] = EventGuestModel::TYPE_PROFESSIONAL;
+        }
 
         // SignupType: privileged users may choose; everyone else is a coordinator entry.
         $signup = (string) ($row['SignupType'] ?? '');
@@ -607,6 +611,56 @@ class EventGuestsController extends BaseApiController
         return $this->response->setStatusCode(204);
     }
 
+    /**
+     * POST /api/v1/guests/{id}/move  {list_id}
+     * Admins / event managers move a live guest to another active list of the same event.
+     */
+    public function move(int $guestId)
+    {
+        $model = new EventGuestModel();
+        $existing = $model->find($guestId);
+        if (!$existing || !empty($existing['DeletedAt'])) return $this->jsonError(404, 'not_found');
+        $fromId = (int) ($existing['InvitedByCompanyID'] ?? 0);
+        $ctx = $this->loadContext($fromId);
+        if (!$ctx) return $this->response;
+        if (!$ctx['isPrivileged']) return $this->jsonError(403, 'admin_required');
+
+        $toId = (int) (($this->request->getJSON(true) ?? [])['list_id'] ?? 0);
+        if ($toId <= 0 || $toId === $fromId) return $this->jsonError(422, 'invalid_list');
+        $to = (new CompanyGuestListsModel())->find($toId);
+        if (!$to || !empty($to['DeletedAt'])) return $this->jsonError(404, 'list_not_found');
+        $fromEvent = (int) ($ctx['company']['EventID'] ?? 0);
+        if ($fromEvent <= 0 || (int) ($to['EventID'] ?? 0) !== $fromEvent) return $this->jsonError(422, 'different_event');
+        $toCtx = $this->loadContext($toId);
+        if (!$toCtx) return $this->response;
+
+        $email = EventGuestModel::normalizeEmail($existing['Email'] ?? '');
+        if ($email !== '') {
+            $dup = $model->where('InvitedByCompanyID', $toId)->where('DeletedAt', null)
+                ->where('LOWER(TRIM(Email))', $email)->where('GuestID !=', $guestId)->countAllResults();
+            if ($dup > 0) return $this->jsonError(409, 'already_attending', ['message' => 'That guest list already has this email']);
+        }
+
+        $upd = [
+            'InvitedByCompanyID' => $toId,
+            'BanquetCompanyID'   => !empty($existing['BanquetCompanyID']) ? $toId : null,
+            'GolfCompanyID'      => !empty($existing['GolfCompanyID']) ? $toId : null,
+            'UpdatedBy'          => $ctx['actorId'],
+            'UpdatedIP'          => $this->clientIp(),
+        ];
+        $sim = array_merge($existing, $upd);
+        $check = $this->checkLimits($toId, $to, $sim, $guestId);
+        $force = !empty(($this->request->getJSON(true) ?? [])['force']);
+        if ($check !== null && !$force) return $check;
+
+        $fromName = (string) ($ctx['company']['Company'] ?: $ctx['company']['Name']);
+        $toName   = (string) ($to['Company'] ?: $to['Name']);
+        $upd['OfficeNotes'] = $this->appendNote($existing['OfficeNotes'] ?? null,
+            sprintf('Moved from guest list "%s" (#%d) to "%s" (#%d) by user %d on %s', $fromName, $fromId, $toName, $toId, $ctx['actorId'], date('Y-m-d H:i')));
+        if (!$model->update($guestId, $upd)) return $this->jsonError(422, 'move_failed', $model->errors());
+        return $this->response->setJSON(['data' => $this->dbToApi($model->find($guestId), true)]);
+    }
+
     /** POST /api/v1/guests/{id}/restore — admin / event manager only */
     public function restore(int $guestId)
     {
@@ -749,7 +803,7 @@ class EventGuestsController extends BaseApiController
         $banquet = !empty($simulatedRow['BanquetCompanyID']);
         $golf    = !empty($simulatedRow['GolfCompanyID']);
 
-        if ($type === EventGuestModel::TYPE_PROFESSIONAL) {
+        if (EventGuestModel::isInvitedType($type)) {
             // Invite (Full Conference/EXPO) allows up to 150% of InviteCount, rounded up.
             $limit = $company['InviteCount'];
             if ($limit !== null && $limit !== '') {
