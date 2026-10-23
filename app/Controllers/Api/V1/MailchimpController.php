@@ -46,6 +46,11 @@ class MailchimpController extends BaseApiController
             case 'cleaned':
             case 'spam':
                 if (!$contact) return $this->respond(['ok' => true, 'applied' => false]);
+                // Mailchimp also cleans after repeated soft bounces; only hard bounces or abuse mark EmailBounce.
+                $reason = strtolower(trim((string) ($payload['reason'] ?? '')));
+                if ($event === 'cleaned' && array_key_exists('reason', $payload) && !in_array($reason, ['hard', 'abuse'], true)) {
+                    return $this->respond(['ok' => true, 'applied' => false, 'ignored' => 'not_hard_bounce']);
+                }
                 $model->update($contact['ContactID'], ['EmailBounce' => 1, 'DBuser' => $dbUser]);
                 return $this->respond(['ok' => true, 'applied' => true]);
 
