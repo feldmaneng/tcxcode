@@ -52,11 +52,13 @@ class EventGuestsController extends BaseApiController
         'complained_at'          => 'ComplainedAt',
         'email_suppressed'       => 'EmailSuppressed',
         'updated'                => 'Stamp',
+        'contact_id'             => 'ContactID',
     ];
     private const READONLY_API_FIELDS = [
         'id', 'company_guest_lists_id', 'event_year',
         'added_by', 'updated_by', 'deleted_at', 'deleted_by', 'updated',
         'bounced_at', 'bounce_reason', 'complained_at', 'email_suppressed',
+        'contact_id',
     ];
     /** Only admins / event managers may set these on update. */
     private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type'];
