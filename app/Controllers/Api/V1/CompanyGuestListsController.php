@@ -440,14 +440,51 @@ class CompanyGuestListsController extends BaseApiController
     }
 
 
+    /** GET /api/v1/company-guest-lists/{id}/notes — admins and that event's Event Manager only. */
+    public function notes(int $id)
+    {
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
+        $row = (new CompanyGuestListsModel())->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if (!$this->isAdmin($actorId) && !$this->isEventManagerForList($actorId, $row)) return $this->jsonError(403, 'forbidden');
+        return $this->response->setJSON(['data' => ['notes' => (string) ($row['Notes'] ?? '')]]);
+    }
+
+    /** PUT /api/v1/company-guest-lists/{id}/notes {notes} */
+    public function saveNotes(int $id)
+    {
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
+        $model = new CompanyGuestListsModel();
+        $row = $model->find($id);
+        if (!$row) return $this->jsonError(404, 'not_found');
+        if (!$this->isAdmin($actorId) && !$this->isEventManagerForList($actorId, $row)) return $this->jsonError(403, 'forbidden');
+        $notes = (string) (($this->request->getJSON(true) ?? [])['notes'] ?? '');
+        if (mb_strlen($notes) > 20000) return $this->jsonError(422, 'too_long');
+        $model->builder()->where('CompanyID', $id)->update(['Notes' => $notes === '' ? null : $notes]);
+        return $this->response->setJSON(['data' => ['notes' => $notes]]);
+    }
+
     public function update(int $id)
     {
-        if (!$this->requireAdmin()) return $this->response;
+        $actorId = $this->requireActor();
+        if (!$actorId) return $this->response;
         $model = new CompanyGuestListsModel();
         $existing = $model->find($id);
         if (!$existing) return $this->jsonError(404, 'not_found');
+        $isAdmin = $this->isAdmin($actorId);
+        if (!$isAdmin && !$this->isEventManagerForList($actorId, $existing)) {
+            return $this->jsonError(403, 'admin_required');
+        }
         $payload = (array) $this->request->getJSON(true);
         $row     = $this->apiToDb($payload);
+        if (!$isAdmin) {
+            // Event managers may change limits, primary contact and related
+            // domains; moving a list between events/years stays admin-only.
+            foreach (['EventID', 'EventYear', 'Year', 'SecretKey'] as $f) unset($row[$f]);
+            if ($row === []) return $this->jsonError(422, 'nothing_to_update');
+        }
 
         // Primary contact must have an email: they are cc'd on registration
         // emails and pre-provisioned into a user account by email.

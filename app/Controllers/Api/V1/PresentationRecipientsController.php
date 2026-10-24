@@ -367,6 +367,8 @@ class PresentationRecipientsController extends BaseApiController
                 ->where('UserID', $uid)->get()->getRowArray();
             $u = \App\Libraries\CrmEmail::applyOne($u ?: null);
             if (!$u) return null;
+            $phones = !empty($u['ContactID']) ? Database::connect()->table('contacts')
+                ->select('Phone, Mobile')->where('ContactID', (int) $u['ContactID'])->get()->getRowArray() : null;
             return [
                 'user_id'     => (int) $u['UserID'],
                 'username'    => $u['UserName'] ?? '',
@@ -374,6 +376,8 @@ class PresentationRecipientsController extends BaseApiController
                 'family_name' => $u['FamilyName'] ?? '',
                 'nickname'    => self::nicknameForContact(isset($u['ContactID']) ? (int) $u['ContactID'] : null),
                 'email'       => $u['Email'] ?? '',
+                'phone'       => $phones['Phone'] ?? '',
+                'mobile'      => $phones['Mobile'] ?? '',
             ];
         };
 
