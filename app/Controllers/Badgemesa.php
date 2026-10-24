@@ -2806,7 +2806,7 @@ $db  = \Config\Database::connect('registration');
 				$pdf->SetTextColor(0,0,0);
 				
 				$pdf->SetFont('helvetica', '', 48);
-				$pdf->MultiCell(50,20,$year, 0, 'L', 0, 0, 7,109, true);
+				$pdf->MultiCell(50,20,$year, 0, 'L', 0, 0, 7,106, true);
 				$pdf->MultiCell(50,20,"EXPO", 0, 'L', 0, 0, 7,120, true);
 				
 				$pdf->SetFont('helvetica', '', 8);
