@@ -238,14 +238,22 @@ class GuestCrmController extends BaseApiController
         }
         $contacts = new ContactModel();
 
+        $dbUser = mb_substr((string) (ApiAuthContext::actingUsername() ?: 'system'), 0, 50);
         try {
             if ($create) {
                 if (empty($upd['Email']) && empty($upd['FamilyName'])) return $this->jsonError(422, 'email_or_name_required');
                 if (!empty($upd['Email']) && $this->db()->table('contacts')->where('LOWER(TRIM(Email))', $upd['Email'])->countAllResults() > 0) {
                     return $this->jsonError(409, 'email_exists');
                 }
-                $upd['Source'] = 'Guest list';
-                $contactId = (int) $contacts->insert($upd, true);
+                $list  = (new CompanyGuestListsModel())->find((int) $g['InvitedByCompanyID']);
+                $event = $list ? (new EventModel())->find((int) ($list['EventID'] ?? 0)) : null;
+                $label = trim(((string) ($event['Name'] ?? '')) . ' ' . ((string) ($event['Year'] ?? '')));
+                $upd['Source'] = mb_substr($label !== '' ? $label . ' Guest List' : 'Guest List', 0, 50);
+                $upd['Active'] = 1;
+                $upd['DBuser'] = $dbUser;
+                // Query builder so Active/DBuser aren't filtered out by model allowedFields.
+                $this->db()->table('contacts')->insert($upd);
+                $contactId = (int) $this->db()->insertID();
                 if (!$contactId) return $this->jsonError(500, 'create_failed');
             } else {
                 $contact = $contactId ? $contacts->find($contactId) : null;
@@ -262,7 +270,10 @@ class GuestCrmController extends BaseApiController
                     if ($dup > 0) return $this->jsonError(409, 'email_exists');
                 }
                 // Use the query builder so a CompanyID-only (or NULL) change is never dropped by model data filtering.
-                if ($upd) $this->db()->table('contacts')->where('ContactID', $contactId)->update($upd);
+                if ($upd) {
+                    $upd['DBuser'] = $dbUser;
+                    $this->db()->table('contacts')->where('ContactID', $contactId)->update($upd);
+                }
             }
             $this->markReviewed($g, $contactId);
         } catch (\Throwable $e) {
