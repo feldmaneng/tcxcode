@@ -2622,7 +2622,7 @@ function Chinax($eventYear = 'China2026')
 			
 		}
 		
-function EXPOBADGEprint($event = 'Mesa2026',$year = '2027',$type = 'EXPO')
+function EXPOBADGEprint($event = 'China2026',$year = '2026',$type = 'EXPO')
 {
 $db  = \Config\Database::connect('registration');
 	$builder = $db->table('guests');
@@ -2747,10 +2747,10 @@ $db  = \Config\Database::connect('registration');
 			//hysmyeoungjostdmedium
 			//hysmyeongjostdmedium.php
 			// use the font
-			if($EventYear == "Korea2025"){
+			if($EventYear == "Korea2026"){
 			$pdf->SetFont('cid0kr', '', 55,);
 			}
-			else if($EventYear == "China2024"){
+			else if($EventYear == "China2026"){
 				$pdf->SetFont('cid0cs', '', 55,);
 			}
 			else{
@@ -2792,7 +2792,7 @@ $db  = \Config\Database::connect('registration');
 				
 				//$pdf->Cell(0, 0,$year, 0, 1, 'C', 0, '', 1);
 				
-				$pdf->Cell(0, 0,"EXPO", 0, 1, 'C', 0, '', 1);
+				//$pdf->Cell(0, 0,"EXPO", 0, 1, 'C', 0, '', 1);
 				
 				
 				
@@ -2806,8 +2806,8 @@ $db  = \Config\Database::connect('registration');
 				$pdf->SetTextColor(0,0,0);
 				
 				$pdf->SetFont('helvetica', '', 48);
-				$pdf->MultiCell(50,20,$year, 0, 'L', 0, 0, 7,120, true);
-			
+				$pdf->MultiCell(50,20,$year, 0, 'L', 0, 0, 8,106, true);
+				$pdf->MultiCell(50,20,"EXPO", 0, 'L', 0, 0, 7,120, true);
 				
 				$pdf->SetFont('helvetica', '', 8);
 				$Control = substr($Control, -4);
