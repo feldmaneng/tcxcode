@@ -1926,6 +1926,8 @@ function Asia($eventYear = 'Korea2026')
 			$builder->where('DeletedAt', NULL);
 			if (substr($eventYear,0,5) == "China") {
 				$builder->orderBy('GuestID ASC');
+			} elseif (substr($eventYear,0,5) == "Korea") {
+				$builder->orderBy('Company ASC, FamilyName ASC, GivenName ASC');
 			} else {
 				$builder->orderBy('FamilyName ASC, GivenName ASC');
 			}
