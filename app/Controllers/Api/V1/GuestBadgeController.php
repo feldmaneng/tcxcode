@@ -46,6 +46,14 @@ class GuestBadgeController extends BaseApiController
         if (!$res['ok']) return $this->jsonError(502, $res['error'] ?? 'badge_unavailable');
 
         try {
+            \Config\Database::connect('registration')->query(
+                'UPDATE guests SET BadgePrintCount = BadgePrintCount + 1 WHERE GuestID = ?', [$guestId]
+            );
+        } catch (\Throwable $e) {
+            log_message('error', '[GuestBadge] print count failed: ' . $e->getMessage());
+        }
+
+        try {
             (new \App\Models\AdminAuditLogModel())->log(
                 $actorId, 'guest.badge_printed', 'guests', (string) $guestId,
                 ['event_id' => $eventId], $this->request->getIPAddress()

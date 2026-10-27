@@ -26,7 +26,7 @@ class EventGuestModel extends Model
         'EventYear', 'Email', 'InvitedByCompanyID', 'BanquetCompanyID', 'GolfCompanyID',
         'GivenName', 'FamilyName', 'NativeName', 'Company', 'CN_Company',
         'Title', 'Mobile', 'WeChatID', 'KakaoID', 'Related', 'SignupType',
-        'OfficeNotes', 'ContactID', 'Type',
+        'OfficeNotes', 'ContactID', 'Type', 'NoShow',
         'AddedBy', 'UpdatedBy', 'AddedIP', 'UpdatedIP',
         'DeletedAt', 'DeletedBy', 'DeletedIP',
         'BouncedAt', 'BounceReason', 'ComplainedAt', 'EmailSuppressed',

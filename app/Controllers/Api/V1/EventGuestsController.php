@@ -53,15 +53,17 @@ class EventGuestsController extends BaseApiController
         'email_suppressed'       => 'EmailSuppressed',
         'updated'                => 'Stamp',
         'contact_id'             => 'ContactID',
+        'no_show'                => 'NoShow',
+        'badge_print_count'      => 'BadgePrintCount',
     ];
     private const READONLY_API_FIELDS = [
         'id', 'company_guest_lists_id', 'event_year',
         'added_by', 'updated_by', 'deleted_at', 'deleted_by', 'updated',
         'bounced_at', 'bounce_reason', 'complained_at', 'email_suppressed',
-        'contact_id',
+        'contact_id', 'badge_print_count',
     ];
     /** Only admins / event managers may set these on update. */
-    private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type'];
+    private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type', 'no_show'];
 
     private const SIGNUP_TYPES = ['URL', 'Exhibitor Coordinator', 'TestConX Office', 'Other'];
 
@@ -80,6 +82,12 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('GolfCompanyID', $row)) {
             $out['golf'] = ((int) $row['GolfCompanyID']) > 0 ? 1 : 0;
         }
+        if (array_key_exists('NoShow', $row)) {
+            $out['no_show'] = strcasecmp(trim((string) $row['NoShow']), 'Yes') === 0 ? 1 : 0;
+        }
+        if (array_key_exists('BadgePrintCount', $row)) {
+            $out['badge_print_count'] = (int) $row['BadgePrintCount'];
+        }
         $out['deleted'] = !empty($row['DeletedAt']) ? 1 : 0;
         foreach (['id', 'company_guest_lists_id', 'banquet', 'golf', 'added_by', 'updated_by', 'deleted_by', 'related', 'email_suppressed'] as $k) {
             if (array_key_exists($k, $out) && $out[$k] !== null && $out[$k] !== '') {
@@ -87,6 +95,7 @@ class EventGuestsController extends BaseApiController
             }
         }
         if (!$privileged) {
+            unset($out['no_show'], $out['badge_print_count']);
             unset($out['notes'], $out['signup_type'], $out['added_by'], $out['updated_by'], $out['deleted_by']);
         }
         return $out;
@@ -99,6 +108,11 @@ class EventGuestsController extends BaseApiController
             if (in_array($k, self::READONLY_API_FIELDS, true)) continue;
             if (!isset(self::FIELD_MAP[$k])) continue;
             $out[self::FIELD_MAP[$k]] = $v;
+        }
+        // NoShow is enum('No','Yes') in the legacy table.
+        if (array_key_exists('NoShow', $out)) {
+            $v = $out['NoShow'];
+            $out['NoShow'] = ($v === true || $v === 1 || $v === '1' || strcasecmp((string) $v, 'Yes') === 0) ? 'Yes' : 'No';
         }
         return $out;
     }
@@ -385,6 +399,7 @@ class EventGuestsController extends BaseApiController
 
         $payload = (array) $this->request->getJSON(true);
         $row     = $this->apiToDb($payload);
+        if (!$ctx['isPrivileged']) unset($row['NoShow']);
         $row['InvitedByCompanyID'] = $companyGuestListsId;
         $row['EventYear'] = (string) ($ctx['company']['EventYear'] ?? $ctx['company']['Year'] ?? '');
         if (empty($row['Company']) && empty($row['CN_Company']) && !empty($ctx['company']['Company'])) {
