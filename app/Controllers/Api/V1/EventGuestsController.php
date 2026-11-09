@@ -55,6 +55,10 @@ class EventGuestsController extends BaseApiController
         'contact_id'             => 'ContactID',
         'no_show'                => 'NoShow',
         'badge_print_count'      => 'BadgePrintCount',
+        'business_card'          => 'BusinessCard',
+        'tutorial'               => 'Tutorial',
+        'paid_amount'            => 'PaidAmount',
+        'paid_currency'          => 'PaidCurrency',
     ];
     private const READONLY_API_FIELDS = [
         'id', 'company_guest_lists_id', 'event_year',
@@ -63,7 +67,7 @@ class EventGuestsController extends BaseApiController
         'contact_id', 'badge_print_count',
     ];
     /** Only admins / event managers may set these on update. */
-    private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type', 'no_show'];
+    private const PRIVILEGED_API_FIELDS = ['related', 'signup_type', 'notes', 'guest_type', 'no_show', 'business_card', 'tutorial', 'paid_amount', 'paid_currency'];
 
     private const SIGNUP_TYPES = ['URL', 'Exhibitor Coordinator', 'TestConX Office', 'Other'];
 
@@ -85,6 +89,12 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('NoShow', $row)) {
             $out['no_show'] = strcasecmp(trim((string) $row['NoShow']), 'Yes') === 0 ? 1 : 0;
         }
+        if (array_key_exists('BusinessCard', $row)) {
+            $out['business_card'] = strcasecmp(trim((string) $row['BusinessCard']), 'Yes') === 0 ? 1 : 0;
+        }
+        if (array_key_exists('PaidAmount', $row)) {
+            $out['paid_amount'] = ($row['PaidAmount'] === null || $row['PaidAmount'] === '') ? null : (float) $row['PaidAmount'];
+        }
         if (array_key_exists('BadgePrintCount', $row)) {
             $out['badge_print_count'] = (int) $row['BadgePrintCount'];
         }
@@ -95,7 +105,7 @@ class EventGuestsController extends BaseApiController
             }
         }
         if (!$privileged) {
-            unset($out['no_show'], $out['badge_print_count']);
+            unset($out['no_show'], $out['badge_print_count'], $out['business_card'], $out['tutorial'], $out['paid_amount'], $out['paid_currency']);
             unset($out['notes'], $out['signup_type'], $out['added_by'], $out['updated_by'], $out['deleted_by']);
         }
         return $out;
@@ -113,6 +123,22 @@ class EventGuestsController extends BaseApiController
         if (array_key_exists('NoShow', $out)) {
             $v = $out['NoShow'];
             $out['NoShow'] = ($v === true || $v === 1 || $v === '1' || strcasecmp((string) $v, 'Yes') === 0) ? 'Yes' : 'No';
+        }
+        // BusinessCard is enum('No','Yes') in the legacy table.
+        if (array_key_exists('BusinessCard', $out)) {
+            $v = $out['BusinessCard'];
+            $out['BusinessCard'] = ($v === true || $v === 1 || $v === '1' || strcasecmp((string) $v, 'Yes') === 0) ? 'Yes' : 'No';
+        }
+        if (array_key_exists('PaidCurrency', $out)) {
+            $c = strtoupper(trim((string) $out['PaidCurrency']));
+            $out['PaidCurrency'] = in_array($c, ['USD', 'CNY', 'KRW', 'NTD'], true) ? $c : null;
+        }
+        if (array_key_exists('PaidAmount', $out)) {
+            $a = $out['PaidAmount'];
+            $out['PaidAmount'] = ($a === null || $a === '' || !is_numeric($a)) ? null : round((float) $a, 2);
+        }
+        if (array_key_exists('Tutorial', $out)) {
+            $out['Tutorial'] = mb_substr(trim((string) $out['Tutorial']), 0, 3);
         }
         return $out;
     }

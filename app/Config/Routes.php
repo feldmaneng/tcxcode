@@ -708,6 +708,16 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
     	$routes->put('(:num)/notes', 'CompanyGuestListsController::saveNotes/$1');
     });
     
+    // Post-Event Registration Audit (admins / event managers)
+    $routes->group('post-event', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->get('(:num)/adjustments-list', 'PostEventAuditController::adjustmentsList/$1');
+        $routes->post('(:num)/add-guest',       'PostEventAuditController::addGuest/$1');
+        $routes->get('(:num)/attendance',       'PostEventAuditController::attendancePreview/$1');
+        $routes->post('(:num)/attendance',      'PostEventAuditController::finalize/$1');
+        $routes->options('(:any)',              'PostEventAuditController::options', ['filter' => 'cors']);
+    });
+
+    
     $routes->group('guests', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->put('(:num)',            'EventGuestsController::update/$1');
         $routes->delete('(:num)',         'EventGuestsController::delete/$1');

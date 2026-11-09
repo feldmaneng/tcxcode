@@ -27,6 +27,7 @@ class EventGuestModel extends Model
         'GivenName', 'FamilyName', 'NativeName', 'Company', 'CN_Company',
         'Title', 'Mobile', 'WeChatID', 'KakaoID', 'Related', 'SignupType',
         'OfficeNotes', 'ContactID', 'Type', 'NoShow',
+        'BusinessCard', 'Tutorial', 'PaidAmount', 'PaidCurrency',
         'AddedBy', 'UpdatedBy', 'AddedIP', 'UpdatedIP',
         'DeletedAt', 'DeletedBy', 'DeletedIP',
         'BouncedAt', 'BounceReason', 'ComplainedAt', 'EmailSuppressed',

@@ -17,6 +17,8 @@ class AttendanceController extends BaseApiController
         'invite_company_id'  => 'InviteCompanyID',
         'event_reg_id'       => 'EventRegID',
         'tutorial'           => 'Tutorial',
+        'paid_amount'        => 'PaidAmount',
+        'paid_currency'      => 'PaidCurrency',
     ];
 
     private const READONLY_API_FIELDS = ['id'];

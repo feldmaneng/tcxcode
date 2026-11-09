@@ -13,5 +13,6 @@ class AttendanceModel extends Model
     protected $allowedFields    = [
         'ContactID', 'Email', 'Year', 'Event', 'Type', 'Payment',
         'Show', 'InviteCompanyID', 'EventRegID', 'Tutorial',
+        'PaidAmount', 'PaidCurrency', // Payment is DEPRECATED (kept for old rows)
     ];
 }
