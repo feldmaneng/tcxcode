@@ -93,6 +93,56 @@ class WpLookupClient
         return ['status' => $user ? 'found' : 'not_found', 'user' => $user];
     }
 
+    // -------- provisioning (signed POST) --------
+
+    /** @return array{status:int, body:?array} status 0 = unreachable */
+    public function createUser(array $payload): array
+    {
+        return $this->post('/wp-json/tcx/v1/user/create', $payload);
+    }
+
+    /** Raise s2member level (never lower) and add a ccap. */
+    public function grantAccess(int $wpUserId, int $level, string $ccap): array
+    {
+        return $this->post('/wp-json/tcx/v1/user/grant', ['wp_user_id' => $wpUserId, 'level' => $level, 'ccap' => $ccap]);
+    }
+
+    public function resetLink(int $wpUserId): array
+    {
+        return $this->post('/wp-json/tcx/v1/user/reset-link', ['wp_user_id' => $wpUserId]);
+    }
+
+    public function baseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
+    private function post(string $path, array $payload): array
+    {
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('WpLookupClient: WP_LOOKUP_BASE_URL or WP_SSO_SHARED_SECRET not configured');
+        }
+        $body = json_encode($payload);
+        $ts = (string) time();
+        $canonical = "POST\n" . $this->basePath . $path . "\n" . $ts . "\n" . hash('sha256', $body) . "\n";
+        $sig = hash_hmac('sha256', $canonical, $this->secret);
+        try {
+            $resp = Services::curlrequest(['timeout' => 20, 'connect_timeout' => 5, 'http_errors' => false])
+                ->request('POST', $this->baseUrl . $path, [
+                    'headers' => [
+                        'Accept' => 'application/json', 'Content-Type' => 'application/json',
+                        'X-TCX-Timestamp' => $ts, 'X-TCX-Signature' => $sig,
+                    ],
+                    'body' => $body,
+                ]);
+        } catch (\Throwable $e) {
+            log_message('warning', '[WpLookup] post_failed path=' . $path . ' err=' . $e->getMessage());
+            return ['status' => 0, 'body' => null];
+        }
+        $decoded = json_decode((string) $resp->getBody(), true);
+        return ['status' => $resp->getStatusCode(), 'body' => is_array($decoded) ? $decoded : null];
+    }
+
     // -------- internals --------
 
     /** @return array<string,mixed>|null Decoded JSON or null on failure. */

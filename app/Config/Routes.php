@@ -717,6 +717,19 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->options('(:any)',              'PostEventAuditController::options', ['filter' => 'cors']);
     });
 
+    // Guest / attendee TestConX.org accounts (admins only)
+    $routes->group('wp-accounts', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
+        $routes->post('email-failed',             'WpAccountsController::emailFailed');
+        $routes->get('(:num)/settings',           'WpAccountsController::settings/$1');
+        $routes->put('(:num)/settings',           'WpAccountsController::saveSettings/$1');
+        $routes->get('(:num)/people',             'WpAccountsController::peopleList/$1');
+        $routes->post('(:num)/process',           'WpAccountsController::process/$1');
+        $routes->post('(:num)/email-result',      'WpAccountsController::emailResult/$1');
+        $routes->post('(:num)/resend/(:num)',     'WpAccountsController::resend/$1/$2');
+        $routes->get('(:num)/log',                'WpAccountsController::log/$1');
+        $routes->options('(:any)',                'WpAccountsController::options', ['filter' => 'cors']);
+    });
+
     
     $routes->group('guests', ['filter' => ['cors', 'throttle', 'apiAuth', 'audit']], function ($routes) {
         $routes->put('(:num)',            'EventGuestsController::update/$1');
