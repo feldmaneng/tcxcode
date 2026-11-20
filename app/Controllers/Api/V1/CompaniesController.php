@@ -8,9 +8,9 @@ use Config\Database;
 
 class CompaniesController extends BaseApiController
 {
-    // Legacy `company` table has no Active or IsParent columns.
+    // Legacy `company` table has no Active column.
     // - `active` is synthesized as 1 for every row (UI keeps showing the field but it's read-only/always-on).
-    // - `is_parent` is computed on the fly from ParentID children.
+    // - `is_parent` is the stored IsParent flag, OR'd with actual ParentID children (see attachIsParentBulk).
     private const FIELD_MAP = [
         'id'             => 'CompanyID',
         'name'           => 'Name',
@@ -22,11 +22,12 @@ class CompaniesController extends BaseApiController
         'research_link'  => 'Research_link',
         'notes'          => 'Notes',
         'standard_name'  => 'StandardName',
+        'is_parent'      => 'IsParent',
         'added'          => 'Added',
         'stamp'          => 'Updated',
     ];
 
-    private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'is_parent', 'active'];
+    private const READONLY_API_FIELDS = ['id', 'added', 'stamp', 'active'];
 
     private const FILTERABLE = ['parent_id', 'stock_market', 'standard_name'];
     private const SORTABLE   = ['id', 'name', 'added', 'stamp'];
@@ -39,7 +40,8 @@ class CompaniesController extends BaseApiController
         }
         // Synthesize fields the legacy table doesn't store.
         $out['active'] = 1;
-        $out['is_parent'] = 0; // overwritten by attachIsParent() for list/show
+        // Stored IsParent flag (manual); attachIsParentBulk() also sets 1 when children exist.
+        $out['is_parent'] = (int) ($row['IsParent'] ?? 0) === 1 ? 1 : 0;
         return $out;
     }
 
@@ -78,7 +80,8 @@ class CompaniesController extends BaseApiController
         $set = [];
         foreach ($parents as $p) $set[(int) $p['ParentID']] = true;
         foreach ($rows as &$r) {
-            $r['is_parent'] = isset($set[(int) $r['id']]) ? 1 : 0;
+            $r['has_children'] = isset($set[(int) $r['id']]) ? 1 : 0;
+            $r['is_parent'] = ($r['has_children'] || (int) ($r['is_parent'] ?? 0) === 1) ? 1 : 0;
         }
         unset($r);
     }
@@ -471,6 +474,7 @@ class CompaniesController extends BaseApiController
             'research_link'  => 'permit_empty|max_length[200]',
             'notes'          => 'permit_empty|string',
             'standard_name'  => 'permit_empty|in_list[0,1]',
+            'is_parent'      => 'permit_empty|in_list[0,1]',
         ];
     }
 }
