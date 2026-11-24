@@ -96,6 +96,13 @@ class ContactsController extends BaseApiController
             if (!isset(self::FIELD_MAP[$k])) continue;
             $out[self::FIELD_MAP[$k]] = $v;
         }
+        // Email is optional in the CRM: blank is stored as NULL (never '' — that would
+        // collide with the unique check) and a contact without email cannot be mailed.
+        if (array_key_exists('Email', $out)) {
+            $e = trim((string) ($out['Email'] ?? ''));
+            $out['Email'] = $e === '' ? null : $e;
+            if ($out['Email'] === null) $out['EmailPermission'] = 0;
+        }
         return $out;
     }
 
@@ -469,13 +476,13 @@ class ContactsController extends BaseApiController
     }
 
     /**
-     * Validation rules. CREATE requires email; UPDATE only validates submitted fields.
+     * Validation rules. Email is optional (blank => NULL); UPDATE only validates submitted fields.
      */
     private function validationRules(bool $isUpdate, ?int $idForUnique = null): array
     {
         $emailUnique = 'is_unique[contacts.Email,ContactID,' . ($idForUnique ?? '{id}') . ']';
         $base = [
-            'email'             => ($isUpdate ? 'permit_empty' : 'required') . '|valid_email|max_length[100]|' . $emailUnique,
+            'email'             => 'permit_empty|valid_email|max_length[100]|' . $emailUnique,
             'given_name'        => 'permit_empty|string|max_length[50]',
             'family_name'       => 'permit_empty|string|max_length[50]',
             'nickname'          => 'permit_empty|string|max_length[50]',
