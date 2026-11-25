@@ -64,4 +64,29 @@ final class PresentationAssistants
             fn($r) => strtolower(trim((string) ($r['CrmEmail'] ?? $r['Email']))), self::rows($pid)
         ), fn($e) => filter_var($e, FILTER_VALIDATE_EMAIL))));
     }
+
+    /** Separate from authors; pending requests must not expose contact phones. */
+    public static function phonePeople(array $rows): array
+    {
+        return array_values(array_map(fn($r) => [
+            'assistant_id' => (int) $r['AssistantID'],
+            'contact_id' => (int) $r['ContactID'],
+            'given_name' => $r['GivenName'] ?? '',
+            'family_name' => $r['FamilyName'] ?? '',
+            'phone' => $r['Phone'] ?? '',
+            'mobile' => $r['Mobile'] ?? '',
+        ], array_filter($rows, fn($r) => ($r['Status'] ?? '') === 'approved' && (int) ($r['ContactID'] ?? 0) > 0)));
+    }
+
+    public static function phones(int $pid): array
+    {
+        if (!self::available()) return [];
+        self::reconcile($pid);
+        $rows = Database::connect()->table('presentation_assistants a')
+            ->select('a.AssistantID, a.ContactID, a.Status, contacts.GivenName, contacts.FamilyName, contacts.Phone, contacts.Mobile')
+            ->join('contacts', 'contacts.ContactID = a.ContactID')
+            ->where('a.PresentationID', $pid)->where('a.Status', 'approved')
+            ->orderBy('a.AssistantID')->get()->getResultArray();
+        return self::phonePeople($rows);
+    }
 }

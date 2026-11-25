@@ -414,6 +414,7 @@ class PresentationRecipientsController extends BaseApiController
                 'session_coordinators' => $coords,
                 'program_chairs'       => $chairs,
                 'event_manager'        => $manager,
+                'assistants'           => \App\Libraries\PresentationAssistants::phones($presentationId),
             ],
         ]);
     }
