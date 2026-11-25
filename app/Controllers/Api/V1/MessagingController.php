@@ -288,6 +288,7 @@ class MessagingController extends BaseApiController
                 'coordinator1'        => $userShape($c1),
                 'coordinator2'        => $userShape($c2),
                 'authors'             => $authorsByPres[$pid] ?? [],
+                'assistant_emails'    => \App\Libraries\PresentationAssistants::emails($pid),
             ];
         }
 

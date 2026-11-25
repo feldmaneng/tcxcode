@@ -124,6 +124,7 @@ class AuthorPortalAccessController extends BaseApiController
                 'coordinated_presentation_ids' => $coordinatedPresentations,
                 'pinned_away_presentation_ids' => $pinnedAway,
                 'general_chair_event_ids'   => array_map(fn($r) => (int) $r['EventID'], $generalChair),
+                'assistant_presentation_ids' => \App\Libraries\PresentationAssistants::presentationIds((int) $contactId),
                 'authored_presentation_ids' => array_map(fn($r) => (int) $r['PresentationID'], $authored),
                 'locked_event_ids'          => $lockedEventIds,
                 'hidden_presentation_ids'   => $hiddenPresentationIds,

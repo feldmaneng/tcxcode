@@ -152,6 +152,7 @@ final class ModuleAccess
                     ->groupEnd()
                     ->countAllResults();
                 if ($authorCount > 0) return true;
+                if (PresentationAssistants::presentationIds($contactId)) return true;
             }
         } catch (\Throwable $e) {
             log_message('error', '[modules] author-portal lookup failed: ' . $e->getMessage());

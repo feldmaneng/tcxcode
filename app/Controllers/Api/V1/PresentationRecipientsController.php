@@ -148,10 +148,19 @@ class PresentationRecipientsController extends BaseApiController
             $addUser((int) $event['GeneralChairID']);
         }
 
+        $assistantEmails = $scope === 'public' ? \App\Libraries\PresentationAssistants::emails($presentationId) : [];
+        if ($actor && $assistantEmails) {
+            $actorRow = $dbC->table('users')->where('UserID', $actor)->get()->getRowArray();
+            $actorRow = \App\Libraries\CrmEmail::applyOne($actorRow ?: null);
+            $actorEmail = strtolower(trim((string) ($actorRow['Email'] ?? '')));
+            $assistantEmails = array_values(array_filter($assistantEmails, fn($email) => $email !== $actorEmail));
+        }
+
         return $this->response->setJSON([
             'data' => [
                 'event_id'   => $eventId,
                 'recipients' => array_values($collected),
+                'assistant_emails' => $assistantEmails,
             ],
         ]);
     }
@@ -217,7 +226,8 @@ class PresentationRecipientsController extends BaseApiController
             $isAuthor = !empty($a);
         }
 
-        $hasAccess = $isAdmin || $isChair || $isManager || $isCoord || $isGeneralChair || $isAuthor;
+        $isAssistant = in_array($pid, \App\Libraries\PresentationAssistants::presentationIds((int) $contactId), true);
+        $hasAccess = $isAssistant || $isAdmin || $isChair || $isManager || $isCoord || $isGeneralChair || $isAuthor;
         if (!$hasAccess) return $this->jsonError(403, 'no_access');
 
         $display = self::formatName(
@@ -276,6 +286,8 @@ class PresentationRecipientsController extends BaseApiController
                 if (!empty($a['Presenter'])) $roles[] = 'Presenter';
             }
         }
+
+        if (in_array($presentationId, \App\Libraries\PresentationAssistants::presentationIds((int) $contactId), true)) $roles[] = 'Assistant';
 
         // Session Coordinator
         $eventId = null;
