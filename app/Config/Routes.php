@@ -683,12 +683,6 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('(:num)/presentation-order', 'PresentationsController::reorder/$1');
         $routes->delete('(:num)',  'SessionsController::delete/$1');
         $routes->options('(:any)', 'SessionsController::options', ['filter' => 'cors']);
-        $routes->get('presentations/(:num)/assistants', 'PresentationAssistantsController::index/$1');
-		$routes->post('presentations/(:num)/assistants', 'PresentationAssistantsController::create/$1');
-		$routes->delete('presentations/(:num)/assistants/(:num)', 'PresentationAssistantsController::delete/$1/$2');
-		$routes->get('presentations/(:num)/assistants/(:num)/notification', 'PresentationAssistantsController::notification/$1/$2');
-		$routes->put('presentations/(:num)/assistants/(:num)/notification', 'PresentationAssistantsController::notification/$1/$2');
-
     });
 
     // Company Guest Lists (guest-list limits per event/company) + managers + guests
@@ -827,7 +821,15 @@ $routes->group('api/v1', ['namespace' => 'App\Controllers\Api\V1'], function ($r
         $routes->post('inbound/resolve',                'PresentationRecipientsController::resolveInbound');
         // Affiliation snapshot on an author row (admin / event manager only)
         $routes->put('authors/(:num)/company',          'AuthorPortalAuthorsController::updateCompany/$1');
-        $routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
+        
+        $routes->get('presentations/(:num)/assistants', 'PresentationAssistantsController::index/$1');
+		$routes->post('presentations/(:num)/assistants', 'PresentationAssistantsController::create/$1');
+		$routes->delete('presentations/(:num)/assistants/(:num)', 'PresentationAssistantsController::delete/$1/$2');
+		$routes->get('presentations/(:num)/assistants/(:num)/notification', 'PresentationAssistantsController::notification/$1/$2');
+		$routes->put('presentations/(:num)/assistants/(:num)/notification', 'PresentationAssistantsController::notification/$1/$2');
+
+		$routes->options('(:any)', 'AuthorPortalAccessController::options', ['filter' => 'cors']);
+
     });
 
     // Markets (hierarchical tags)
