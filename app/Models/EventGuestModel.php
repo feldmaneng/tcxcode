@@ -31,7 +31,18 @@ class EventGuestModel extends Model
         'AddedBy', 'UpdatedBy', 'AddedIP', 'UpdatedIP',
         'DeletedAt', 'DeletedBy', 'DeletedIP',
         'BouncedAt', 'BounceReason', 'ComplainedAt', 'EmailSuppressed',
+        'Nickname', 'NameOnBadge', 'Source', 'ConfirmationStatus', 'ConfirmationToken',
+        'ConfirmationSentAt', 'ConfirmedAt', 'RegistrationOrderID', 'RegisteredByType',
+        'RegisteredByContactID', 'ComplimentaryReason', 'ClaimedPresentationID',
+        'ReplacedByGuestID', 'ReplacesGuestID',
     ];
+
+    /** NameOnBadge = Nickname when non-empty, otherwise GivenName. */
+    public static function badgeName(?string $nickname, ?string $givenName): string
+    {
+        $n = trim((string) $nickname);
+        return $n !== '' ? $n : trim((string) $givenName);
+    }
 
     /** Guest type constants (stored verbatim in `guests`.`Type`). */
     public const TYPE_PROFESSIONAL = 'Professional';
