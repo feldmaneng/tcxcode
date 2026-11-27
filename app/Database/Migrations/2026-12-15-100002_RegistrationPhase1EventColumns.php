@@ -13,7 +13,7 @@ use Config\Database;
  *
  * Run: php spark migrate
  */
-class AddRegistrationEventColumns extends Migration
+class RegistrationPhase1EventColumns extends Migration
 {
     public function up()
     {

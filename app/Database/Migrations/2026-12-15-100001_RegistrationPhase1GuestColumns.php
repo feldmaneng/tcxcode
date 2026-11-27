@@ -11,7 +11,7 @@ use Config\Database;
  *
  * Run: php spark migrate
  */
-class AddRegistrationGuestColumns extends Migration
+class RegistrationPhase1GuestColumns extends Migration
 {
     private const COLS = [
         'Source'                => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
@@ -24,6 +24,12 @@ class AddRegistrationGuestColumns extends Migration
         'RegisteredByContactID' => ['type' => 'INT', 'null' => true],
         'ComplimentaryReason'   => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
         'ClaimedPresentationID' => ['type' => 'INT', 'null' => true],
+        // Badge name = Nickname when set, otherwise GivenName (skipped if already present).
+        'Nickname'              => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
+        'NameOnBadge'           => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
+        // Swap tracking: outgoing row is soft-deleted and points at its replacement.
+        'ReplacedByGuestID'     => ['type' => 'INT', 'null' => true],
+        'ReplacesGuestID'       => ['type' => 'INT', 'null' => true],
     ];
 
     private const INDEXES = [
@@ -31,6 +37,7 @@ class AddRegistrationGuestColumns extends Migration
         'ix_guests_reg_order'          => 'ADD INDEX ix_guests_reg_order (RegistrationOrderID)',
         'ix_guests_claimed_pres'       => 'ADD INDEX ix_guests_claimed_pres (ClaimedPresentationID)',
         'ix_guests_list_confirm'       => 'ADD INDEX ix_guests_list_confirm (InvitedByCompanyID, ConfirmationStatus)',
+        'ix_guests_replaced_by'        => 'ADD INDEX ix_guests_replaced_by (ReplacedByGuestID)',
         'ix_guests_list_source'        => 'ADD INDEX ix_guests_list_source (InvitedByCompanyID, Source)',
     ];
 
